@@ -2,7 +2,7 @@
     "name": "vection-framework/vection",
     "type": "library",
     "description": "The Vection PHP Enterprise Framework",
-    "keywords": ["framework", "enterprise", "php"],
+    "keywords": ["framework", "enterprise", "php", "php-di"],
     "homepage": "https://vection.org",
     "license": "MIT",
     "authors": [
