@@ -1,0 +1,28 @@
+{
+    "name": "appsdock/vection-cache",
+    "type": "library",
+    "description": "The Vection Cache Framework Component",
+    "keywords": ["framework", "cache"],
+    "homepage": "https://vection.org",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Lung",
+            "email": "david@appsdock.de"
+        }
+    ],
+    "require": {
+        "php": "^7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vection\\Component\\Cache": "./"
+        }
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "grumphp": {
+            "config-default-path": "./grumphp.yml"
+        }
+    }
+}

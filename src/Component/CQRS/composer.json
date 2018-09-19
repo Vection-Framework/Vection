@@ -1,0 +1,12 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Vection\\Component\\CQRS\\": "../"
+    }
+  },
+  "extra": {
+    "grumphp": {
+      "config-default-path": "./grumphp.yml"
+    }
+  }
+}

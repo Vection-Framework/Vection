@@ -1,0 +1,24 @@
+{
+    "name": "appsdock/vection-contracts",
+    "type": "library",
+    "description": "The Vection Framework Contracts",
+    "keywords": ["framework"],
+    "homepage": "https://vection.org",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Lung",
+            "email": "david@appsdock.de"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Vection\\Contracts": "./"
+        }
+    },
+    "require": {
+        "php": "^7.2",
+        "psr/log": "~1.0",
+        "psr/container": "^1.0"
+    }
+}

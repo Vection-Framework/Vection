@@ -1,0 +1,29 @@
+{
+    "name": "appsdock/vection-utility",
+    "type": "library",
+    "description": "The Vection Utility Framework Component",
+    "keywords": ["framework"],
+    "homepage": "https://vection.org",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Lung",
+            "email": "david@appsdock.de"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vection\\Component\\Utility": "./"
+        }
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "grumphp": {
+            "config-default-path": "./grumphp.yml"
+        }
+    }
+}

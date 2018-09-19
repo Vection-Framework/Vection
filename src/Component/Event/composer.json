@@ -1,0 +1,34 @@
+{
+    "name": "appsdock/vection-di",
+    "type": "library",
+    "description": "The Vection Dependency Injection Container Framework Component",
+    "keywords": ["framework", "di", "container"],
+    "homepage": "https://vection.org",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Lung",
+            "email": "david@appsdock.de"
+        },
+        {
+            "name": "Björn Klemm",
+            "email": "bjoern@appsdock.de"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "psr/log": "~1.0",
+        "psr/container": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vection\\Component\\DI": "./"
+        }
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "grumphp": {
+            "config-default-path": "./grumphp.yml"
+        }
+    }
+}

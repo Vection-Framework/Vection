@@ -1,0 +1,29 @@
+{
+    "name": "appsdock/vection-di",
+    "type": "library",
+    "description": "The Vection Validator Framework Component",
+    "keywords": ["framework", "validation", "validator"],
+    "homepage": "https://vection.org",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Lung",
+            "email": "david@appsdock.de"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vection\\Component\\Validator": "./"
+        }
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "grumphp": {
+            "config-default-path": "./grumphp.yml"
+        }
+    }
+}
