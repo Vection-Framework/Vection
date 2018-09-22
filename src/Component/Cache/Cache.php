@@ -23,16 +23,29 @@ use Vection\Contracts\Cache\CacheProviderInterface;
 class Cache implements CacheInterface
 {
     /**
+     * Each cache instance can have a specific key namespace
+     * to separate the values from other cache instances.
+     * This make it possible to manage different cache domains
+     * in multiple nested levels.
+     *
      * @var string
      */
     protected $namespace;
 
     /**
+     * The specific cache provider. This cache class delegates
+     * all methods defined by CacheProviderInterface to this provider.
+     *
      * @var CacheProviderInterface
      */
     protected $cacheProvider;
 
     /**
+     * Pools are used for different Cache instances which can be
+     * managed in multiple nested levels. Each pool is a children
+     * Cache object of the Cache which has created the pool.
+     * Pools are aligned in a hierarchical structure.
+     *
      * @var CacheInterface[]
      */
     protected $pools;
@@ -41,7 +54,7 @@ class Cache implements CacheInterface
      * Cache constructor.
      *
      * @param CacheProviderInterface $cacheProvider
-     * @param null|string $namespace
+     * @param string $namespace
      */
     public function __construct(CacheProviderInterface $cacheProvider, string $namespace = '')
     {

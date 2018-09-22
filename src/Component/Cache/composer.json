@@ -1,8 +1,8 @@
 {
-    "name": "appsdock/vection-cache",
+    "name": "vection-framework/vection-cache",
     "type": "library",
     "description": "The Vection Cache Framework Component",
-    "keywords": ["framework", "cache"],
+    "keywords": ["php", "framework", "cache", "redis", "apcu", "lightweight"],
     "homepage": "https://vection.org",
     "license": "MIT",
     "authors": [
@@ -12,17 +12,16 @@
         }
     ],
     "require": {
-        "php": "^7.2"
+        "php": "^7.2",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "7.3.5"
     },
     "autoload": {
         "psr-4": {
-            "Vection\\Component\\Cache": "./"
+            "Vection\\Component\\Cache\\": "./"
         }
     },
-    "minimum-stability": "dev",
-    "extra": {
-        "grumphp": {
-            "config-default-path": "./grumphp.yml"
-        }
-    }
+    "minimum-stability": "dev"
 }

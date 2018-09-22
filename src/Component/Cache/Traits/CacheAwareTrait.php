@@ -21,7 +21,7 @@ use Vection\Contracts\Cache\CacheInterface;
  */
 trait CacheAwareTrait
 {
-    /** @var  CacheInterface */
+    /** @var CacheInterface */
     protected $cache;
 
     /**
