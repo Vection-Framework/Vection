@@ -1,8 +1,8 @@
 {
-    "name": "appsdock/vection-di",
+    "name": "vection-framework/vection-event",
     "type": "library",
-    "description": "The Vection Dependency Injection Container Framework Component",
-    "keywords": ["framework", "di", "container"],
+    "description": "The Vection Event Management Framework Component",
+    "keywords": ["php", "framework", "event", "event manager"],
     "homepage": "https://vection.org",
     "license": "MIT",
     "authors": [
@@ -16,19 +16,12 @@
         }
     ],
     "require": {
-        "php": "^7.2",
-        "psr/log": "~1.0",
-        "psr/container": "^1.0"
+        "php": "^7.2"
     },
     "autoload": {
         "psr-4": {
-            "Vection\\Component\\DI": "./"
+            "Vection\\Component\\Event": "./"
         }
     },
-    "minimum-stability": "dev",
-    "extra": {
-        "grumphp": {
-            "config-default-path": "./grumphp.yml"
-        }
-    }
+    "minimum-stability": "dev"
 }
