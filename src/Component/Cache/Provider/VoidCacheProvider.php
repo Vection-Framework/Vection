@@ -110,7 +110,7 @@ class VoidCacheProvider implements CacheProviderInterface
     /**
      * @inheritDoc
      */
-    public function get(string $key)
+    public function get(string $key, $default = null)
     {
         return null;
     }

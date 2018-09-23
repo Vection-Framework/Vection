@@ -163,9 +163,9 @@ class Cache implements CacheInterface
     /**
      * @inheritDoc
      */
-    public function get(string $key)
+    public function get(string $key, $default = null)
     {
-        return $this->cacheProvider->get($this->getNSKey($key));
+        return $this->cacheProvider->get($this->getNSKey($key), $default);
     }
 
     /**

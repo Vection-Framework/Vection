@@ -94,9 +94,9 @@ class APCuCacheProvider implements CacheProviderInterface
     /**
      * @inheritDoc
      */
-    public function get(string $key)
+    public function get(string $key, $default = null)
     {
-        return $this->contains($key) ? \apcu_fetch($key) : null;
+        return $this->contains($key) ? \apcu_fetch($key) : $default;
     }
 
     /**

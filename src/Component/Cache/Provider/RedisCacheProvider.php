@@ -125,9 +125,9 @@ class RedisCacheProvider implements CacheProviderInterface
     /**
      * @inheritDoc
      */
-    public function get(string $key)
+    public function get(string $key, $default = null)
     {
-        return $this->contains($key) ? $this->redis->get($key) : null;
+        return $this->contains($key) ? $this->redis->get($key) : $default;
     }
 
     /**

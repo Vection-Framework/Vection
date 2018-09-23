@@ -88,11 +88,12 @@ interface CacheProviderInterface
     /**
      * Returns the value by given key.
      *
-     * @param string $key
+     * @param string $key The unique key of this item in the cache.
+     * @param mixed $default Default value to return if the key does not exist.
      *
      * @return mixed
      */
-    public function get(string $key);
+    public function get(string $key, $default = null);
 
     /**
      * Sets the given string value into the cache.

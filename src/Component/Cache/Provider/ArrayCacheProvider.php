@@ -119,9 +119,9 @@ class ArrayCacheProvider implements CacheProviderInterface
     /**
      * @inheritDoc
      */
-    public function get(string $key)
+    public function get(string $key, $default = null)
     {
-        return $this->contains($key) ? $this->cache[$key] : null;
+        return $this->contains($key) ? $this->cache[$key] : $default;
     }
 
     /**
