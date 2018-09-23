@@ -22,7 +22,9 @@ use Vection\Contracts\Event\EventInterface;
 abstract class Event implements EventInterface
 {
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $propagationStopped = false;
 
     /**

@@ -88,14 +88,19 @@ class EventManager implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function dispatch(EventInterface $event): void
+    public function dispatch($event): void
     {
-        $eventClass = \get_class($event);
+        if( $event instanceof EventInterface ){
+            $eventClass = \get_class($event);
 
-        # Try to get the event name by registered event by class name
-        if ( ! $eventName = ( $this->events[$eventClass] ?? null ) ) {
-            # There is no event registered by class name, so use a NAME const if exists or takes the class name
-            $eventName = \defined("{$eventClass}::NAME") ? \constant("{$eventClass}::NAME") : $eventClass;
+            # Try to get the event name by registered event by class name
+            if ( ! $eventName = ( $this->events[$eventClass] ?? null ) ) {
+                # There is no event registered by class name, so use a NAME const if exists or takes the class name
+                $eventName = \defined("{$eventClass}::NAME") ? \constant("{$eventClass}::NAME") : $eventClass;
+            }
+        }else{
+            $eventName = (string) $event;
+            $event = new DefaultEvent($eventName);
         }
 
         if ( ! isset($this->handler[$eventName]) ) {

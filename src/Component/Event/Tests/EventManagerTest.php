@@ -12,14 +12,21 @@
 
 namespace Vection\Component\Event\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Vection\Component\Event\EventManager;
+use Vection\Component\Event\Tests\Fixtures\TestDefaultEventHandler;
 use Vection\Component\Event\Tests\Fixtures\TestEvent;
 use Vection\Component\Event\Tests\Fixtures\TestEventHandler;
 
-class EventManagerTest extends \PHPUnit_Framework_TestCase
+/**
+ * Class EventManagerTest
+ *
+ * @package Vection\Component\Event\Tests
+ */
+class EventManagerTest extends TestCase
 {
 
-    public function testDispatch()
+    public function testDispatchEventObject()
     {
         $eventManager = new EventManager();
 
@@ -37,5 +44,16 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $eventManager->dispatch($event);
 
         $this->assertEquals('someEventData', $handler->getString());
+    }
+
+    public function testStringEvent()
+    {
+        $eventManager = new EventManager();
+
+        $eventManager->addHandler('vection.test', [TestDefaultEventHandler::class, 'onTestEvent']);
+
+        $eventManager->dispatch('vection.test');
+
+        $this->assertEquals('vection.test', TEST_DEFAULT_EVENT_NAME);
     }
 }

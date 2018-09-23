@@ -19,7 +19,13 @@ namespace Vection\Contracts\Cache;
  */
 interface CacheAwareInterface
 {
+    /**
+     * @param CacheInterface $cache
+     */
     public function setCache(CacheInterface $cache): void;
 
-    public function getCache(): CacheInterface;
+    /**
+     * @return null|CacheInterface
+     */
+    public function getCache(): ? CacheInterface;
 }
