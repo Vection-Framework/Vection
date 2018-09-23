@@ -1,0 +1,26 @@
+{
+    "name": "vection-framework/symfony-cache-bridge",
+    "type": "library",
+    "description": "The Vection Cache Framework Bridge for Symfony",
+    "keywords": ["php", "framework", "cache", "redis", "apcu", "lightweight", "symfony"],
+    "homepage": "https://vection.org",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Lung",
+            "email": "david@appsdock.de"
+        }
+    ],
+    "require": {
+        "php": "^7.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "7.3.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vection\\Bridge\\Symfony\\": "./"
+        }
+    },
+    "minimum-stability": "dev"
+}
