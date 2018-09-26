@@ -17,7 +17,7 @@ namespace Vection\Component\Event\Annotation;
  *
  * @Annotation Subscribe
  *
- * @package Vection\Component\Event\Annotation
+ * @package    Vection\Component\Event\Annotation
  */
 final class Subscribe
 {

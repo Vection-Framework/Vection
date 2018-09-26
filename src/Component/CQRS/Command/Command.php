@@ -46,7 +46,7 @@ abstract class Command extends Message implements CommandInterface, ValidatableI
     /**
      * Command constructor.
      *
-     * @param int|string|null $identifier
+     * @param int|string|null  $identifier
      * @param PayloadInterface $payload
      */
     public function __construct(PayloadInterface $payload = null, $identifier = null)

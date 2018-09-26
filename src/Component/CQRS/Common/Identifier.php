@@ -63,6 +63,6 @@ class Identifier implements IdentifierInterface
      */
     public function __toString(): string
     {
-        return (string) $this->id;
+        return (string)$this->id;
     }
 }

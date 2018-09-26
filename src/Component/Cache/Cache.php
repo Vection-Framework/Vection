@@ -54,7 +54,7 @@ class Cache implements CacheInterface
      * Cache constructor.
      *
      * @param CacheProviderInterface $cacheProvider
-     * @param string $namespace
+     * @param string                 $namespace
      */
     public function __construct(CacheProviderInterface $cacheProvider, string $namespace = '')
     {

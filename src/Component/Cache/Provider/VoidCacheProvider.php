@@ -120,7 +120,7 @@ class VoidCacheProvider implements CacheProviderInterface
      *
      * @param string $key
      * @param string $value
-     * @param int $ttl
+     * @param int    $ttl
      *
      * @return bool
      */
@@ -134,7 +134,7 @@ class VoidCacheProvider implements CacheProviderInterface
      *
      * @param string $key
      * @param object $value
-     * @param int $ttl
+     * @param int    $ttl
      *
      * @return bool
      */
@@ -147,8 +147,8 @@ class VoidCacheProvider implements CacheProviderInterface
      * Sets the given array value into the cache.
      *
      * @param string $key
-     * @param array $value
-     * @param int $ttl
+     * @param array  $value
+     * @param int    $ttl
      *
      * @return bool
      */
@@ -161,8 +161,8 @@ class VoidCacheProvider implements CacheProviderInterface
      * Sets the given int value into the cache.
      *
      * @param string $key
-     * @param int $value
-     * @param int $ttl
+     * @param int    $value
+     * @param int    $ttl
      *
      * @return bool
      */
@@ -175,8 +175,8 @@ class VoidCacheProvider implements CacheProviderInterface
      * Sets the given float value into the cache.
      *
      * @param string $key
-     * @param float $value
-     * @param int $ttl
+     * @param float  $value
+     * @param int    $ttl
      *
      * @return bool
      */

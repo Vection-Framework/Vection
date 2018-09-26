@@ -38,7 +38,7 @@ abstract class UIComponent
     public function render(): string
     {
         extract($this->toArray());
-
+        /** @noinspection PhpIncludeInspection */
         ob_start() AND include( $this->templateDirectory . 'main.phtml' );
 
         return ob_get_clean();

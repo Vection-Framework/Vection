@@ -45,7 +45,7 @@ class EventAnnotationMapper implements CacheAwareInterface
     /**
      * @return CacheInterface
      */
-    public function getCache(): ? CacheInterface
+    public function getCache(): ?CacheInterface
     {
         return $this->cache;
     }
@@ -68,11 +68,11 @@ class EventAnnotationMapper implements CacheAwareInterface
     {
         $mapping = [];
 
-        if( $this->cache && $this->cache->contains('event_class_path') ){
+        if ( $this->cache && $this->cache->contains('event_class_path') ) {
             $mapping = $this->cache->getArray('event_class_path');
         }
 
-        if( ! $mapping ){
+        if ( ! $mapping ) {
             foreach ( \glob(\rtrim($path, '/') . '/*.php') as $classFile ) {
                 $classContent = \file_get_contents($classFile);
 
@@ -118,11 +118,11 @@ class EventAnnotationMapper implements CacheAwareInterface
     {
         $mapping = [];
 
-        if( $this->cache && $this->cache->contains('event_class_path') ){
+        if ( $this->cache && $this->cache->contains('event_class_path') ) {
             $mapping = $this->cache->getArray('event_class_path');
         }
 
-        if( ! $mapping ){
+        if ( ! $mapping ) {
             foreach ( \glob(\rtrim($path, '/') . '/*.php') as $classFile ) {
                 $classContent = \file_get_contents($classFile);
 

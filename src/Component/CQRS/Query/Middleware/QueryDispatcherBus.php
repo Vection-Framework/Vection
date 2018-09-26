@@ -30,6 +30,7 @@ class QueryDispatcherBus implements QueryBusMiddlewareInterface
 
     /**
      * DispatcherQueryBus constructor.
+     *
      * @param QueryResolverInterface $resolver
      */
     public function __construct(QueryResolverInterface $resolver)
@@ -38,7 +39,7 @@ class QueryDispatcherBus implements QueryBusMiddlewareInterface
     }
 
     /**
-     * @param QueryInterface $query
+     * @param QueryInterface            $query
      * @param QueryBusSequenceInterface $sequence
      *
      * @return ReadModelInterface|null

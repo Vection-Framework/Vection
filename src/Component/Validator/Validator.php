@@ -39,7 +39,7 @@ class Validator implements ValidatorInterface
      * contains all particular exceptions.
      *
      * @param ValidationChainInterface $assertionChain
-     * @param array $data
+     * @param array                    $data
      *
      * @throws ValidationChainFailedException
      */
@@ -78,7 +78,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -96,9 +96,9 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param int $min
-     * @param int $max
+     * @param        $value
+     * @param int    $min
+     * @param int    $max
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -116,9 +116,9 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param int $min
-     * @param int $max
+     * @param        $value
+     * @param int    $min
+     * @param int    $max
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -137,7 +137,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -155,8 +155,8 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param array $needle
+     * @param        $value
+     * @param array  $needle
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -174,8 +174,8 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param array $list
+     * @param        $value
+     * @param array  $list
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -193,7 +193,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -211,7 +211,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $format
      * @param string $message
      *
@@ -232,7 +232,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -250,7 +250,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -268,7 +268,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -286,7 +286,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $char
      * @param string $message
      *
@@ -294,7 +294,7 @@ class Validator implements ValidatorInterface
      */
     public function endsWith($value, string $char, string $message = ''): void
     {
-        if ( \substr($value, -1 ) !== $char ) {
+        if ( \substr($value, -1) !== $char ) {
             $message = \sprintf(
                 $message ?: 'Value "%s" does not ends with "%s".',
                 $value, $char
@@ -305,7 +305,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -323,7 +323,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -341,7 +341,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -359,8 +359,8 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param int $limit
+     * @param        $value
+     * @param int    $limit
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -378,8 +378,8 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param int $limit
+     * @param        $value
+     * @param int    $limit
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -397,8 +397,8 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param array $array
+     * @param        $value
+     * @param array  $array
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -416,7 +416,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -434,7 +434,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -452,7 +452,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -470,7 +470,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -488,7 +488,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -506,8 +506,8 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param int $length
+     * @param        $value
+     * @param int    $length
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -525,8 +525,8 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param int $limit
+     * @param        $value
+     * @param int    $limit
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -544,8 +544,8 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param int $limit
+     * @param        $value
+     * @param int    $limit
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -563,8 +563,8 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param int $max
+     * @param        $value
+     * @param int    $max
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -582,8 +582,8 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param int $length
+     * @param        $value
+     * @param int    $length
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -601,8 +601,8 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param int $limit
+     * @param        $value
+     * @param int    $limit
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -620,8 +620,8 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param int $length
+     * @param        $value
+     * @param int    $length
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -639,7 +639,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -657,8 +657,8 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param $equalValue
+     * @param        $value
+     * @param        $equalValue
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -676,8 +676,8 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param $equalValue
+     * @param        $value
+     * @param        $equalValue
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -695,8 +695,8 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param $sameValue
+     * @param        $value
+     * @param        $sameValue
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -714,8 +714,8 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param $sameValue
+     * @param        $value
+     * @param        $sameValue
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -733,8 +733,8 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param array $array
+     * @param        $value
+     * @param array  $array
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -752,7 +752,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -770,7 +770,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -788,7 +788,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -806,9 +806,9 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
-     * @param int $min
-     * @param int $max
+     * @param        $value
+     * @param int    $min
+     * @param int    $max
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -826,7 +826,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $pattern
      * @param string $message
      *
@@ -845,7 +845,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -863,7 +863,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $needle
      * @param string $message
      *
@@ -882,7 +882,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -900,7 +900,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -918,7 +918,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException
@@ -937,7 +937,7 @@ class Validator implements ValidatorInterface
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @throws ValidationFailedException

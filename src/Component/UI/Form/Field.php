@@ -37,7 +37,7 @@ abstract class Field implements \JsonSerializable
             'required'     => false,
             'info'         => null,
             'displayLabel' => true,
-            'rules'        => []
+            'rules'        => [],
         ], $this->onDefine());
     }
 
@@ -111,8 +111,8 @@ abstract class Field implements \JsonSerializable
     }
 
     /**
-     * @param string $type
-     * @param string $message
+     * @param string      $type
+     * @param string      $message
      * @param string|null $value
      */
     public function addRule(string $type, string $message, string $value = null): void

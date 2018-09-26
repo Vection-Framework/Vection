@@ -32,8 +32,8 @@ class QueryOrder implements QueryOrderInterface
     /**
      * QueryOrder constructor.
      *
-     * @param string $field The name of the field.
-     * @param int $direction Use QueryOrder constants, 0 = ASC, 1 = DESC
+     * @param string $field     The name of the field.
+     * @param int    $direction Use QueryOrder constants, 0 = ASC, 1 = DESC
      */
     public function __construct(string $field, int $direction = 0)
     {

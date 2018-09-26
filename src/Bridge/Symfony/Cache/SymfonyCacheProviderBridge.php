@@ -72,7 +72,7 @@ class SymfonyCacheProviderBridge implements CacheProviderInterface
      */
     public function getString(string $key): ?string
     {
-        return (string) $this->cache->get($key);
+        return (string)$this->cache->get($key);
     }
 
     /**
@@ -84,7 +84,7 @@ class SymfonyCacheProviderBridge implements CacheProviderInterface
      */
     public function getObject(string $key): ?object
     {
-        return (object) $this->cache->get($key);
+        return (object)$this->cache->get($key);
     }
 
     /**
@@ -96,7 +96,7 @@ class SymfonyCacheProviderBridge implements CacheProviderInterface
      */
     public function getArray(string $key): ?array
     {
-        return (array) $this->cache->get($key);
+        return (array)$this->cache->get($key);
     }
 
     /**
@@ -108,7 +108,7 @@ class SymfonyCacheProviderBridge implements CacheProviderInterface
      */
     public function getInt(string $key): ?int
     {
-        return (int) $this->cache->get($key);
+        return (int)$this->cache->get($key);
     }
 
     /**
@@ -120,14 +120,14 @@ class SymfonyCacheProviderBridge implements CacheProviderInterface
      */
     public function getFloat(string $key): ?float
     {
-        return (float) $this->cache->get($key);
+        return (float)$this->cache->get($key);
     }
 
     /**
      * Returns the value by given key.
      *
      * @param string $key
-     * @param null $default
+     * @param null   $default
      *
      * @return mixed
      */
@@ -141,7 +141,7 @@ class SymfonyCacheProviderBridge implements CacheProviderInterface
      *
      * @param string $key
      * @param string $value
-     * @param int $ttl
+     * @param int    $ttl
      *
      * @return bool
      */
@@ -155,7 +155,7 @@ class SymfonyCacheProviderBridge implements CacheProviderInterface
      *
      * @param string $key
      * @param object $value
-     * @param int $ttl
+     * @param int    $ttl
      *
      * @return bool
      */
@@ -168,8 +168,8 @@ class SymfonyCacheProviderBridge implements CacheProviderInterface
      * Sets the given array value into the cache.
      *
      * @param string $key
-     * @param array $value
-     * @param int $ttl
+     * @param array  $value
+     * @param int    $ttl
      *
      * @return bool
      */
@@ -182,8 +182,8 @@ class SymfonyCacheProviderBridge implements CacheProviderInterface
      * Sets the given int value into the cache.
      *
      * @param string $key
-     * @param int $value
-     * @param int $ttl
+     * @param int    $value
+     * @param int    $ttl
      *
      * @return bool
      */
@@ -196,8 +196,8 @@ class SymfonyCacheProviderBridge implements CacheProviderInterface
      * Sets the given float value into the cache.
      *
      * @param string $key
-     * @param float $value
-     * @param int $ttl
+     * @param float  $value
+     * @param int    $ttl
      *
      * @return bool
      */
@@ -210,8 +210,8 @@ class SymfonyCacheProviderBridge implements CacheProviderInterface
      * Sets the given value into the cache.
      *
      * @param string $key
-     * @param $value
-     * @param int $ttl
+     * @param        $value
+     * @param int    $ttl
      *
      * @return bool
      */

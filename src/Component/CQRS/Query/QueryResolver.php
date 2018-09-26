@@ -34,7 +34,7 @@ class QueryResolver implements QueryResolverInterface
      * QueryResolver constructor.
      *
      * @param null|QueryHandlerFactoryInterface $factory
-     * @param array $queryHandlerMap
+     * @param array                             $queryHandlerMap
      */
     public function __construct(? QueryHandlerFactoryInterface $factory = null, array $queryHandlerMap = [])
     {
@@ -58,15 +58,15 @@ class QueryResolver implements QueryResolverInterface
     {
         $className = $this->queryHandlerMap[get_class($query)] ?? null;
 
-        if( ! $className ){
+        if ( ! $className ) {
             throw new \RuntimeException(
-                'There is no handler registered for query "'.get_class($query).'"'
+                'There is no handler registered for query "' . get_class($query) . '"'
             );
         }
 
-        if( ! array_key_exists(QueryHandlerInterface::class, class_implements($className)) ){
+        if ( ! array_key_exists(QueryHandlerInterface::class, class_implements($className)) ) {
             throw new \RuntimeException(
-                'Invalid query handler mapping (type mismatch) for query "'.get_class($query).'"'
+                'Invalid query handler mapping (type mismatch) for query "' . get_class($query) . '"'
             );
         }
 

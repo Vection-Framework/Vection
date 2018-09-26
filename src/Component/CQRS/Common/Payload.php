@@ -60,8 +60,9 @@ class Payload implements PayloadInterface
      */
     public function pop($key)
     {
-        if( $value = $this->get($key) ){
+        if ( $value = $this->get($key) ) {
             unset($this->data[$key]);
+
             return $value;
         }
 
@@ -71,10 +72,10 @@ class Payload implements PayloadInterface
     /**
      * @inheritdoc
      */
-    public function getPayload($key): ? PayloadInterface
+    public function getPayload($key): ?PayloadInterface
     {
-        if( $value = $this->get($key) ){
-            return new Payload( \is_array($value) ? $value : [$value] );
+        if ( $value = $this->get($key) ) {
+            return new Payload(\is_array($value) ? $value : [ $value ]);
         }
 
         return null;

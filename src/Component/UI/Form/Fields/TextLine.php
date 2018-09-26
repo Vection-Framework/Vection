@@ -47,7 +47,7 @@ class TextLine extends Field
             'type'         => 'text',
             'icon'         => null,
             'iconPosition' => null,
-            'placeholder'  => ''
+            'placeholder'  => '',
         ];
     }
 }

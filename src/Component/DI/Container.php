@@ -71,9 +71,9 @@ class Container implements ContainerInterface, LoggerAwareInterface
             /** @noinspection PhpIncludeInspection */
             $definition = require $path;
 
-            if( \is_array($definition) ){
+            if ( \is_array($definition) ) {
                 $this->inventory->addDefinitionArray($definition);
-            }else{
+            } else {
                 throw new \RuntimeException("Cannot load definition from {$path}.");
             }
         }
@@ -201,7 +201,7 @@ class Container implements ContainerInterface, LoggerAwareInterface
      * Register a new entry by given identifier. The second parameter can be used
      * for entry settings
      *
-     * @param string $className
+     * @param string     $className
      * @param Definition $definition
      *
      * @return Container
@@ -405,9 +405,9 @@ class Container implements ContainerInterface, LoggerAwareInterface
      * second parameter is not set, otherwise the new object will be created
      * with given parameters.
      *
-     * @param string $identifier The identifier of registered entry.
-     * @param array $constructParams Parameter that should be passed to constructor.
-     * @param bool $shared Whether the new object should be shared or not.
+     * @param string $identifier      The identifier of registered entry.
+     * @param array  $constructParams Parameter that should be passed to constructor.
+     * @param bool   $shared          Whether the new object should be shared or not.
      *
      * @return mixed The new created object.
      *
@@ -463,7 +463,7 @@ class Container implements ContainerInterface, LoggerAwareInterface
      * Adds and register a new shared object to the container. The identifier
      * will be the FQCN of the given object.
      *
-     * @param object $object
+     * @param object     $object
      * @param Definition $definition
      *
      * @return mixed Returns the given object.

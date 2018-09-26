@@ -24,6 +24,7 @@ class TokenGenerator
      * @param int $length
      *
      * @return string
+     * @throws \Exception
      */
     public static function create(int $length): string
     {

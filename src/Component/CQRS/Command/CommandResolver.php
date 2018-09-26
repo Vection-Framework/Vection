@@ -34,7 +34,7 @@ class CommandResolver implements CommandResolverInterface
      * CommandResolver constructor.
      *
      * @param null|CommandHandlerFactoryInterface $factory
-     * @param array $commandHandlerMap
+     * @param array                               $commandHandlerMap
      */
     public function __construct(? CommandHandlerFactoryInterface $factory = null, array $commandHandlerMap = [])
     {
@@ -58,15 +58,15 @@ class CommandResolver implements CommandResolverInterface
     {
         $className = $this->commandHandlerMap[get_class($command)] ?? null;
 
-        if( ! $className ){
+        if ( ! $className ) {
             throw new \RuntimeException(
-                'There is no handler registered for command "'.get_class($command).'"'
+                'There is no handler registered for command "' . get_class($command) . '"'
             );
         }
 
-        if( ! array_key_exists(CommandHandlerInterface::class, class_implements($className)) ){
+        if ( ! array_key_exists(CommandHandlerInterface::class, class_implements($className)) ) {
             throw new \RuntimeException(
-                'Invalid command handler mapping (type mismatch) for command "'.get_class($command).'"'
+                'Invalid command handler mapping (type mismatch) for command "' . get_class($command) . '"'
             );
         }
 

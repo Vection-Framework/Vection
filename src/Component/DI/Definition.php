@@ -35,11 +35,11 @@ class Definition
     public function __construct(string $className)
     {
         $this->definition = [
-            'className' => ltrim($className,'\\'),
+            'className'       => ltrim($className, '\\'),
             'constructParams' => [],
-            'shared' => true,
+            'shared'          => true,
             'instanceClosure' => null,
-            'dependencies' => []
+            'dependencies'    => [],
         ];
     }
 
@@ -61,6 +61,7 @@ class Definition
     public function construct(...$params): Definition
     {
         $this->definition['constructParams'] = $params;
+
         return $this;
     }
 
@@ -72,6 +73,7 @@ class Definition
     public function instance(callable $closure): Definition
     {
         $this->definition['instanceClosure'] = $closure;
+
         return $this;
     }
 
@@ -84,6 +86,7 @@ class Definition
     public function inject(string $className, string $propertyName = ''): Definition
     {
         $this->definition['dependencies'][$propertyName ?: $className] = $className;
+
         return $this;
     }
 
@@ -95,6 +98,7 @@ class Definition
     public function shared(bool $shared): Definition
     {
         $this->definition['shared'] = $shared;
+
         return $this;
     }
 

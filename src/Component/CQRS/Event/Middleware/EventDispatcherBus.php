@@ -38,7 +38,7 @@ class EventDispatcherBus implements EventBusMiddlewareInterface
     }
 
     /**
-     * @param EventInterface $event
+     * @param EventInterface            $event
      * @param EventBusSequenceInterface $sequence
      */
     public function __invoke(EventInterface $event, EventBusSequenceInterface $sequence)

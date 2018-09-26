@@ -90,7 +90,7 @@ class EventManager implements EventDispatcherInterface
      */
     public function dispatch($event): void
     {
-        if( $event instanceof EventInterface ){
+        if ( $event instanceof EventInterface ) {
             $eventClass = \get_class($event);
 
             # Try to get the event name by registered event by class name
@@ -98,8 +98,8 @@ class EventManager implements EventDispatcherInterface
                 # There is no event registered by class name, so use a NAME const if exists or takes the class name
                 $eventName = \defined("{$eventClass}::NAME") ? \constant("{$eventClass}::NAME") : $eventClass;
             }
-        }else{
-            $eventName = (string) $event;
+        } else {
+            $eventName = (string)$event;
             $event = new DefaultEvent($eventName);
         }
 

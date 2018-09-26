@@ -37,7 +37,7 @@ abstract class Query extends Message implements QueryInterface, ValidatableInter
     /**
      * Query constructor.
      *
-     * @param int|string|null $identifier
+     * @param int|string|null  $identifier
      * @param PayloadInterface $payload
      */
     public function __construct($identifier = null, PayloadInterface $payload = null)

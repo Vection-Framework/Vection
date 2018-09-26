@@ -11,7 +11,7 @@ use Vection\Contracts\CQRS\Query\ReadModelInterface;
  */
 class ReadModelCollection extends ReadModel implements \IteratorAggregate
 {
-    /** @var ReadModel[]  */
+    /** @var ReadModel[] */
     protected $listKey = 'items';
 
     /** @var int */
@@ -22,8 +22,9 @@ class ReadModelCollection extends ReadModel implements \IteratorAggregate
 
     /**
      * ReadModelCollection constructor.
-     * @param array $items
-     * @param int $totalCount
+     *
+     * @param array  $items
+     * @param int    $totalCount
      * @param string $itemListKey
      */
     public function __construct(array $items, int $totalCount = 0, string $itemListKey = 'items')
@@ -35,8 +36,8 @@ class ReadModelCollection extends ReadModel implements \IteratorAggregate
 
     /**
      * @param string $readModel
-     * @param array $records
-     * @param int $totalCount
+     * @param array  $records
+     * @param int    $totalCount
      * @param string $itemListKey
      *
      * @return ReadModelCollection
@@ -44,7 +45,7 @@ class ReadModelCollection extends ReadModel implements \IteratorAggregate
     public static function of(string $readModel, array $records, int $totalCount = 0, string $itemListKey = 'items'): ReadModelCollection
     {
         $items = [];
-        foreach( $records ?? [] as $row ){
+        foreach ( $records ?? [] as $row ) {
             $items[] = new $readModel($row);
         }
 
@@ -72,20 +73,20 @@ class ReadModelCollection extends ReadModel implements \IteratorAggregate
      *
      * @return null|ReadModel
      */
-    public function getItem($key): ? ReadModel
+    public function getItem($key): ?ReadModel
     {
-        return $this->items[(string) $key] ?: null;
+        return $this->items[(string)$key] ?: null;
     }
 
     /**
      * Retrieve an external iterator
-     * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
+     * @link  http://php.net/manual/en/iteratoraggregate.getiterator.php
      * @return \Traversable An instance of an object implementing <b>Iterator</b> or
      * <b>Traversable</b>
      * @since 5.0.0
      */
     public function getIterator()
     {
-        return (new \ArrayObject($this->items))->getIterator();
+        return ( new \ArrayObject($this->items) )->getIterator();
     }
 }

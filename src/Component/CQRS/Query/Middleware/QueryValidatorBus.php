@@ -46,7 +46,7 @@ class QueryValidatorBus implements QueryBusMiddlewareInterface
     }
 
     /**
-     * @param QueryInterface $message
+     * @param QueryInterface            $message
      * @param QueryBusSequenceInterface $sequence
      *
      * @return ReadModelInterface|null

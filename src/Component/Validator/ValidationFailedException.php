@@ -40,9 +40,9 @@ class ValidationFailedException extends \Exception implements ValidationFailedEx
      * ValidationFailedException constructor.
      *
      * @param string $message
-     * @param $value
-     * @param array $constraints
-     * @param int $code
+     * @param        $value
+     * @param array  $constraints
+     * @param int    $code
      */
     public function __construct(string $message, $value, array $constraints = [], int $code = 0)
     {

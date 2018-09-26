@@ -33,6 +33,7 @@ class EventLoggerBus implements EventBusMiddlewareInterface
 
     /**
      * LoggerEventBus constructor.
+     *
      * @param LoggerInterface $logger
      */
     public function __construct(LoggerInterface $logger)
@@ -41,8 +42,9 @@ class EventLoggerBus implements EventBusMiddlewareInterface
     }
 
     /**
-     * @param EventInterface $event
+     * @param EventInterface            $event
      * @param EventBusSequenceInterface $sequence
+     *
      * @throws \Exception
      */
     public function __invoke(EventInterface $event, EventBusSequenceInterface $sequence)

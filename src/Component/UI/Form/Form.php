@@ -74,7 +74,7 @@ class Form extends UIComponent implements \JsonSerializable
 
     /**
      * @param string $name
-     * @param array $definition
+     * @param array  $definition
      *
      * @return Field
      */
@@ -90,7 +90,7 @@ class Form extends UIComponent implements \JsonSerializable
 
     /**
      * @param string $type
-     * @param array $definition
+     * @param array  $definition
      *
      * @return Control
      */
@@ -116,7 +116,7 @@ class Form extends UIComponent implements \JsonSerializable
 
     /**
      * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @link  http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      * @since 5.4.0
@@ -145,7 +145,7 @@ class Form extends UIComponent implements \JsonSerializable
             'action'   => $this->name,
             'title'    => $this->title,
             'fields'   => $fieldData,
-            'controls' => $controlData
+            'controls' => $controlData,
         ];
     }
 }

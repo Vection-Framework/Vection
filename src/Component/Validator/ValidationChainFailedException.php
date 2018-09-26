@@ -33,7 +33,7 @@ class ValidationChainFailedException extends \Exception implements ValidationCha
      * ValidationChainFailedException constructor.
      *
      * @param array $validationFailedExceptions
-     * @param int $code
+     * @param int   $code
      *
      */
     public function __construct(array $validationFailedExceptions, int $code = 0)

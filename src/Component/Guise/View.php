@@ -91,7 +91,7 @@ class View implements ViewInterface
         $this->data = new ViewData();
         $this->content = [
             self::PREPEND => [],
-            self::APPEND  => []
+            self::APPEND  => [],
         ];
         $this->template = $template;
     }
@@ -99,8 +99,8 @@ class View implements ViewInterface
     /**
      * Adds a new entry to the metadata list.
      *
-     * @param string $name The name of the metadata attribute.
-     * @param mixed $value The value for the meta attribute.
+     * @param string $name  The name of the metadata attribute.
+     * @param mixed  $value The value for the meta attribute.
      */
     public function addMetadata(string $name, $value): void
     {
@@ -110,8 +110,8 @@ class View implements ViewInterface
     /**
      * Adds a new data entry to the data list.
      *
-     * @param string $name The name which is used by templates content.
-     * @param mixed $value The value of the variable.
+     * @param string $name  The name which is used by templates content.
+     * @param mixed  $value The value of the variable.
      */
     public function assign(string $name, $value): void
     {

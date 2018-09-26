@@ -64,15 +64,15 @@ class ValidationChain implements ValidationChainInterface
     public function alnum(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['alnum'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param int $min
-     * @param int $max
+     * @param int    $min
+     * @param int    $max
      * @param string $message
      *
      * @return ValidationChain
@@ -80,15 +80,15 @@ class ValidationChain implements ValidationChainInterface
     public function betweenValue(int $min, int $max, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['betweenValue'] = [
-            'min' => $min, 'max' => $max, 'msg' => $message
+            'min' => $min, 'max' => $max, 'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param int $min
-     * @param int $max
+     * @param int    $min
+     * @param int    $max
      * @param string $message
      *
      * @return ValidationChain
@@ -96,7 +96,7 @@ class ValidationChain implements ValidationChainInterface
     public function betweenLength(int $min, int $max, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['betweenLength'] = [
-            'min' => $min, 'max' => $max, 'msg' => $message
+            'min' => $min, 'max' => $max, 'msg' => $message,
         ];
 
         return $this;
@@ -110,14 +110,14 @@ class ValidationChain implements ValidationChainInterface
     public function boolean(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['boolean'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param array $needle
+     * @param array  $needle
      * @param string $message
      *
      * @return ValidationChain
@@ -125,14 +125,14 @@ class ValidationChain implements ValidationChainInterface
     public function contains(array $needle, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['contains'] = [
-            $needle, 'msg' => $message
+            $needle, 'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param array $list
+     * @param array  $list
      * @param string $message
      *
      * @return ValidationChain
@@ -140,7 +140,7 @@ class ValidationChain implements ValidationChainInterface
     public function choice(array $list, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['choice'] = [
-            $list, 'msg' => $message
+            $list, 'msg' => $message,
         ];
 
         return $this;
@@ -154,7 +154,7 @@ class ValidationChain implements ValidationChainInterface
     public function notEmpty(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['notEmpty'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
@@ -169,7 +169,7 @@ class ValidationChain implements ValidationChainInterface
     public function date(string $format, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['date'] = [
-            $format, 'msg' => $message
+            $format, 'msg' => $message,
         ];
 
         return $this;
@@ -183,7 +183,7 @@ class ValidationChain implements ValidationChainInterface
     public function digit(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['digit'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
@@ -197,7 +197,7 @@ class ValidationChain implements ValidationChainInterface
     public function directory(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['directory'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
@@ -211,7 +211,7 @@ class ValidationChain implements ValidationChainInterface
     public function email(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['email'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
@@ -226,7 +226,7 @@ class ValidationChain implements ValidationChainInterface
     public function endsWith(string $char, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['endsWith'] = [
-            'char' => $char, 'msg' => $message
+            'char' => $char, 'msg' => $message,
         ];
 
         return $this;
@@ -240,7 +240,7 @@ class ValidationChain implements ValidationChainInterface
     public function false(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['false'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
@@ -254,7 +254,7 @@ class ValidationChain implements ValidationChainInterface
     public function true(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['true'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
@@ -268,14 +268,14 @@ class ValidationChain implements ValidationChainInterface
     public function file(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['file'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param int $limit
+     * @param int    $limit
      * @param string $message
      *
      * @return ValidationChain
@@ -283,14 +283,14 @@ class ValidationChain implements ValidationChainInterface
     public function greaterOrEqualThan(int $limit, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['greaterOrEqualThan'] = [
-            $limit, 'msg' => $message
+            $limit, 'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param int $limit
+     * @param int    $limit
      * @param string $message
      *
      * @return ValidationChain
@@ -298,14 +298,14 @@ class ValidationChain implements ValidationChainInterface
     public function greaterThan(int $limit, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['greaterThan'] = [
-            $limit, 'msg' => $message
+            $limit, 'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param array $array
+     * @param array  $array
      * @param string $message
      *
      * @return ValidationChain
@@ -313,7 +313,7 @@ class ValidationChain implements ValidationChainInterface
     public function inArray(array $array, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['inArray'] = [
-            $array, 'msg' => $message
+            $array, 'msg' => $message,
         ];
 
         return $this;
@@ -327,7 +327,7 @@ class ValidationChain implements ValidationChainInterface
     public function integer(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['integer'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
@@ -341,7 +341,7 @@ class ValidationChain implements ValidationChainInterface
     public function ip(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['ip'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
@@ -355,7 +355,7 @@ class ValidationChain implements ValidationChainInterface
     public function ipv4(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['ipv4'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
@@ -369,7 +369,7 @@ class ValidationChain implements ValidationChainInterface
     public function ipv6(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['ipv6'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
@@ -383,7 +383,7 @@ class ValidationChain implements ValidationChainInterface
     public function isArray(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['isArray'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
@@ -397,14 +397,14 @@ class ValidationChain implements ValidationChainInterface
     public function isJsonString(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['isJsonString'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param int $length
+     * @param int    $length
      * @param string $message
      *
      * @return ValidationChain
@@ -412,14 +412,14 @@ class ValidationChain implements ValidationChainInterface
     public function length(int $length, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['length'] = [
-            $length, 'msg' => $message
+            $length, 'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param int $limit
+     * @param int    $limit
      * @param string $message
      *
      * @return ValidationChain
@@ -427,14 +427,14 @@ class ValidationChain implements ValidationChainInterface
     public function lessOrEqualThan(int $limit, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['lessOrEqualThan'] = [
-            $limit, 'msg' => $message
+            $limit, 'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param int $limit
+     * @param int    $limit
      * @param string $message
      *
      * @return ValidationChain
@@ -442,14 +442,14 @@ class ValidationChain implements ValidationChainInterface
     public function lessThan(int $limit, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['lessThan'] = [
-            $limit, 'msg' => $message
+            $limit, 'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param int $value
+     * @param int    $value
      * @param string $message
      *
      * @return ValidationChain
@@ -457,14 +457,14 @@ class ValidationChain implements ValidationChainInterface
     public function max(int $value, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['max'] = [
-            $value, 'msg' => $message
+            $value, 'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param int $length
+     * @param int    $length
      * @param string $message
      *
      * @return ValidationChain
@@ -472,14 +472,14 @@ class ValidationChain implements ValidationChainInterface
     public function maxLength(int $length, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['maxLength'] = [
-            $length, 'msg' => $message
+            $length, 'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param int $limit
+     * @param int    $limit
      * @param string $message
      *
      * @return ValidationChain
@@ -487,14 +487,14 @@ class ValidationChain implements ValidationChainInterface
     public function min(int $limit, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['min'] = [
-            $limit, 'msg' => $message
+            $limit, 'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param int $limit
+     * @param int    $limit
      * @param string $message
      *
      * @return ValidationChain
@@ -502,7 +502,7 @@ class ValidationChain implements ValidationChainInterface
     public function minLength(int $limit, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['minLength'] = [
-            $limit, 'msg' => $message
+            $limit, 'msg' => $message,
         ];
 
         return $this;
@@ -516,14 +516,14 @@ class ValidationChain implements ValidationChainInterface
     public function notBlank(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['notBlank'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @return ValidationChain
@@ -531,14 +531,14 @@ class ValidationChain implements ValidationChainInterface
     public function notEquals($value, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['notEquals'] = [
-            $value, 'msg' => $message
+            $value, 'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @return ValidationChain
@@ -546,14 +546,14 @@ class ValidationChain implements ValidationChainInterface
     public function equals($value, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['equals'] = [
-            $value, 'msg' => $message
+            $value, 'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @return ValidationChain
@@ -561,14 +561,14 @@ class ValidationChain implements ValidationChainInterface
     public function notSame($value, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['notSame'] = [
-            $value, 'msg' => $message
+            $value, 'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param $value
+     * @param        $value
      * @param string $message
      *
      * @return ValidationChain
@@ -576,14 +576,14 @@ class ValidationChain implements ValidationChainInterface
     public function same($value, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['same'] = [
-            $value, 'msg' => $message
+            $value, 'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param array $array
+     * @param array  $array
      * @param string $message
      *
      * @return ValidationChain
@@ -591,7 +591,7 @@ class ValidationChain implements ValidationChainInterface
     public function notInArray(array $array, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['notInArray'] = [
-            $array, 'msg' => $message
+            $array, 'msg' => $message,
         ];
 
         return $this;
@@ -605,7 +605,7 @@ class ValidationChain implements ValidationChainInterface
     public function notNull(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['notNull'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
@@ -619,7 +619,7 @@ class ValidationChain implements ValidationChainInterface
     public function null(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['null'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
@@ -633,7 +633,7 @@ class ValidationChain implements ValidationChainInterface
     public function nullable(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['nullable'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
@@ -647,15 +647,15 @@ class ValidationChain implements ValidationChainInterface
     public function numeric(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['numeric'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
     }
 
     /**
-     * @param int $min
-     * @param int $max
+     * @param int    $min
+     * @param int    $max
      * @param string $message
      *
      * @return ValidationChain
@@ -663,7 +663,7 @@ class ValidationChain implements ValidationChainInterface
     public function range(int $min, int $max, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['range'] = [
-            'min' => $min, 'max' => $max, 'msg' => $message
+            'min' => $min, 'max' => $max, 'msg' => $message,
         ];
 
         return $this;
@@ -678,7 +678,7 @@ class ValidationChain implements ValidationChainInterface
     public function regex(string $pattern, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['regex'] = [
-            $pattern, 'msg' => $message
+            $pattern, 'msg' => $message,
         ];
 
         return $this;
@@ -692,7 +692,7 @@ class ValidationChain implements ValidationChainInterface
     public function scalar(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['scalar'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
@@ -707,7 +707,7 @@ class ValidationChain implements ValidationChainInterface
     public function startsWith(string $needle, string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['startsWith'] = [
-            $needle, 'msg' => $message
+            $needle, 'msg' => $message,
         ];
 
         return $this;
@@ -721,7 +721,7 @@ class ValidationChain implements ValidationChainInterface
     public function string(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['string'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
@@ -735,7 +735,7 @@ class ValidationChain implements ValidationChainInterface
     public function url(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['url'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
@@ -749,7 +749,7 @@ class ValidationChain implements ValidationChainInterface
     public function uuid(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['uuid'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;
@@ -763,7 +763,7 @@ class ValidationChain implements ValidationChainInterface
     public function phone(string $message = ''): ValidationChain
     {
         $this->definitions[\key($this->definitions)]['phone'] = [
-            'msg' => $message
+            'msg' => $message,
         ];
 
         return $this;

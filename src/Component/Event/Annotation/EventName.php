@@ -26,6 +26,7 @@ final class EventName
 
     /**
      * Event constructor.
+     *
      * @param string $event
      */
     public function __construct(string $event)

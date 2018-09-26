@@ -26,7 +26,7 @@ class APCuCacheProvider implements CacheProviderInterface
      */
     public function __construct()
     {
-        if( ! extension_loaded('apcu') ){
+        if ( ! extension_loaded('apcu') ) {
             throw new \RuntimeException('APCuCacheProvider requires the apcu extension.');
         }
     }
@@ -152,7 +152,7 @@ class APCuCacheProvider implements CacheProviderInterface
      */
     public function clear(string $namespace = ''): bool
     {
-        if( ! $namespace ){
+        if ( ! $namespace ) {
             return \apcu_clear_cache();
         }
 

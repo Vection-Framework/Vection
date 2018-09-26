@@ -35,7 +35,7 @@ class Inventory
     }
 
     /**
-     * @param string $className
+     * @param string     $className
      * @param Definition $definition
      */
     public function set(string $className, Definition $definition): void
@@ -105,7 +105,7 @@ class Inventory
 
     /**
      * @param string $className
-     * @param bool $shared
+     * @param bool   $shared
      */
     public function setShared(string $className, bool $shared): void
     {
@@ -114,7 +114,7 @@ class Inventory
 
     /**
      * @param string $className
-     * @param array $constructParams
+     * @param array  $constructParams
      */
     public function setConstructParams(string $className, array $constructParams): void
     {
@@ -123,7 +123,7 @@ class Inventory
 
     /**
      * @param string $className
-     * @param array $dependencies
+     * @param array  $dependencies
      */
     public function addDependencies(string $className, array $dependencies): void
     {
