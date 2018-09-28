@@ -24,11 +24,30 @@ if( ! $cache->contains('foo') ){
 
 $plain = $cache->get('foo');
 
-
 # You can work also with type safety values by using the "type-setter/getter"
+# So you can be sure you will get an array or null (or default value, by param 2)
 
 $cache->setArray('values', ['a','b']);
 
 $array = $cache->getArray('value');
 
-# So you can be sure you will get an array or null (or default value, by param 2)
+
+# So now you would like to have a separate cache for e.g. frontend and database which works independent of each other.
+
+$cache->getPool('Frontend');
+
+# Create a pool for the frontend cache
+
+$frontendCache = $cache->getPool('Frontend');
+$frontendCache->set('foo', 'bar');
+
+# Create a pool for the database cache
+
+$databaseCache = $cache->getPool('Database');
+$databaseCache->set('foo', 'foobar');
+
+# Each cache pools works internally with different cache namespaces
+
+echo $frontendCache->get('foo'); # outputs 'bar'
+
+echo $databaseCache->get('foo'); # outputs 'foobar'
