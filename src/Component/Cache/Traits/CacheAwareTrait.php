@@ -17,22 +17,37 @@ use Vection\Contracts\Cache\CacheInterface;
 /**
  * Trait CacheAwareTrait
  *
+ * This trait extends a class by a cache instance with its set and get
+ * methods. It also operate as a supplement for classes which
+ * implements the CacheAwareInterface.
+ *
+ * @see \Vection\Contracts\Cache\CacheAwareInterface
+ * @see \Vection\Contracts\Cache\CacheInterface
+ *
  * @package Vection\Component\Cache\Traits
  */
 trait CacheAwareTrait
 {
-    /** @var CacheInterface */
+    /**
+     * An instance of Cache.
+     *
+     * @var CacheInterface
+     */
     protected $cache;
 
     /**
-     * @return CacheInterface
+     * Returns the cache instance if exists or null otherwise.
+     *
+     * @return null|CacheInterface
      */
-    public function getCache(): CacheInterface
+    public function getCache(): ? CacheInterface
     {
         return $this->cache;
     }
 
     /**
+     * Sets a cache instance to this object.
+     *
      * @param CacheInterface $cache
      */
     public function setCache(CacheInterface $cache): void
