@@ -1,9 +1,9 @@
 {
-    "name": "appsdock/vection-di",
+    "name": "vection-framework/vection-di",
     "type": "library",
     "description": "The Vection Dependency Injection Container Framework Component",
-    "keywords": ["framework", "di", "container"],
-    "homepage": "https://vection.org",
+    "keywords": ["framework", "di", "container", "dependency-container", "php-di"],
+    "homepage": "https://vection.de",
     "license": "MIT",
     "authors": [
         {
@@ -25,10 +25,5 @@
             "Vection\\Component\\DI": "./"
         }
     },
-    "minimum-stability": "dev",
-    "extra": {
-        "grumphp": {
-            "config-default-path": "./grumphp.yml"
-        }
-    }
+    "minimum-stability": "dev"
 }

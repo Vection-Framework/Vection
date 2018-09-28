@@ -1,9 +1,9 @@
 {
-    "name": "appsdock/vection-guise",
+    "name": "vection-framework/vection-guise",
     "type": "library",
     "description": "The Vection Guise Template Engine Framework Component",
     "keywords": ["framework", "template", "engine"],
-    "homepage": "https://vection.org",
+    "homepage": "https://vection.de",
     "license": "MIT",
     "authors": [
         {
@@ -25,10 +25,5 @@
             "Vection\\Component\\Guise": "./"
         }
     },
-    "minimum-stability": "dev",
-    "extra": {
-        "grumphp": {
-            "config-default-path": "./grumphp.yml"
-        }
-    }
+    "minimum-stability": "dev"
 }

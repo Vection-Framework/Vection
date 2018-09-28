@@ -3,7 +3,7 @@
     "type": "library",
     "description": "The Vection Event Management Framework Component",
     "keywords": ["php", "framework", "event", "event manager"],
-    "homepage": "https://vection.org",
+    "homepage": "https://vection.de",
     "license": "MIT",
     "authors": [
         {
