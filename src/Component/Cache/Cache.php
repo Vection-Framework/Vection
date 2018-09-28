@@ -33,6 +33,15 @@ class Cache implements CacheInterface
     protected $namespace;
 
     /**
+     * A string that represents the separator between nested
+     * caching pools. E.g. when using the default separator ":"
+     * the namespaces would be "Vection-Cache:customPoolName:etc".
+     *
+     * @var string
+     */
+    protected $nsSeparator;
+
+    /**
      * The specific cache provider. This cache class delegates
      * all methods defined by CacheProviderInterface to this provider.
      *
@@ -54,12 +63,14 @@ class Cache implements CacheInterface
      * Cache constructor.
      *
      * @param CacheProviderInterface $cacheProvider
-     * @param string                 $namespace
+     * @param string $namespace
+     * @param string $nsSeparator
      */
-    public function __construct(CacheProviderInterface $cacheProvider, string $namespace = '')
+    public function __construct(CacheProviderInterface $cacheProvider, string $namespace = '', string $nsSeparator = '')
     {
         $this->cacheProvider = $cacheProvider;
         $this->namespace = $namespace ?: 'Vection-Cache';
+        $this->nsSeparator = $nsSeparator ?: ':';
     }
 
     /**
@@ -77,7 +88,7 @@ class Cache implements CacheInterface
     {
         if ( ! isset($this->pools[$namespace]) ) {
             # Create and save new Cache pool with extended pool namespace
-            $pool = new Cache($this->cacheProvider, $this->namespace . ':' . $namespace);
+            $pool = new Cache($this->cacheProvider, $this->namespace . $this->nsSeparator . $namespace);
             $this->pools[$namespace] = $pool;
         }
 
@@ -89,9 +100,7 @@ class Cache implements CacheInterface
      */
     public function clear(string $namespace = ''): bool
     {
-        $this->cacheProvider->clear($this->getNSKey($namespace));
-
-        return true;
+        return $this->cacheProvider->clear($this->getNSKey($namespace));
     }
 
     /**
@@ -101,7 +110,7 @@ class Cache implements CacheInterface
      */
     protected function getNSKey(string $key): string
     {
-        return $this->namespace . ( $key ? ':' . $key : '' );
+        return $this->namespace . ( $key ? $this->nsSeparator . $key : '' );
     }
 
     /**
