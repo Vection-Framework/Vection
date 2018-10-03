@@ -4,77 +4,36 @@
  * This file is part of the Vection project.
  * Visit project at https://www.vection.org
  *
- * (c) Vection <project@vection.org>
+ *  (c) Vection <project@vection.org>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
-namespace Vection\Component\Validator;
+namespace Vection\Component\Validator\Validator;
 
-use Vection\Contracts\Validator\ValidationChainInterface;
+use Vection\Component\Validator\Exception\ValidationFailedException;
 use Vection\Contracts\Validator\ValidatorInterface;
 
 /**
- * Class Validator
+ * Class GeneralValidator
  *
  * @package Vection\Component\Validator\Validator
  */
-class Validator implements ValidatorInterface
+class GeneralValidator implements ValidatorInterface
 {
-    /**
-     * Returns a new instance of AssertionChain.
-     *
-     * @return ValidationChainInterface
-     */
-    public function createValidationChain(): ValidationChainInterface
-    {
-        return new ValidationChain();
-    }
 
     /**
-     * Executes the validator to verify the data against the
-     * definition chain. If the data contains one or more
-     * invalid values, this method throws an exception which
-     * contains all particular exceptions.
+     * @param $value
+     * @param array $constraints
      *
-     * @param ValidationChainInterface $assertionChain
-     * @param array                    $data
-     *
-     * @throws ValidationChainFailedException
+     * @throws ValidationFailedException
      */
-    public function verify(ValidationChainInterface $assertionChain, array $data): void
+    public function validate($value, array $constraints): void
     {
-        $validationFailedExceptions = [];
-        $reflection = new \ReflectionObject($this);
-        foreach ( $assertionChain->getDefinitions() as $name => $definition ) {
-            # Get the value which will be validate
-            $value = \array_key_exists($name, $data) ? $data[$name] : null;
-
-            # Special case for values that can be null or XXX
-            if ( isset($definition['nullable']) ) {
-                if ( $value === null ) {
-                    continue;
-                }
-                unset($definition['nullable']);
-            }
-
-            # Validate all entries from chain
-            foreach ( $definition as $assertion => $params ) {
-                if ( $reflection->hasMethod($assertion) ) {
-                    \array_unshift($params, $value);
-                    try {
-                        $this->$assertion(...$params);
-                    } /** @noinspection PhpRedundantCatchClauseInspection */
-                    catch ( ValidationFailedException $e ) {
-                        $validationFailedExceptions[] = $e;
-                    }
-                }
-            }
-        }
-        if ( $validationFailedExceptions ) {
-            throw new ValidationChainFailedException($validationFailedExceptions);
-        }
+        $assertion = \array_shift($constraints);
+        \array_unshift($constraints, $value);
+        method_exists($this, $assertion) && $this->$assertion(...$constraints);
     }
 
     /**

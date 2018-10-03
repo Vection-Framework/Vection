@@ -4,20 +4,20 @@
  * This file is part of the Vection project.
  * Visit project at https://www.vection.org
  *
- * (c) Vection <project@vection.org>
+ *  (c) Vection <project@vection.org>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
-namespace Vection\Component\Validator;
+namespace Vection\Component\Validator\Exception;
 
 use Vection\Contracts\Validator\ValidationChainFailedExceptionInterface;
 
 /**
  * Class ValidationChainFailedException
  *
- * @package Vection\Component\Validator\Validator
+ * @package Vection\Component\Validator\Exception
  */
 class ValidationChainFailedException extends \Exception implements ValidationChainFailedExceptionInterface
 {
