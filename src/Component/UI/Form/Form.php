@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of the Vection project.
- * Visit project at https://www.vection.org
+ * Visit project at https://www.vection.de
  *
  * (c) David Lung <aleqz.lung@gmail.com>
  *

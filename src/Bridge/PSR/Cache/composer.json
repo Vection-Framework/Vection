@@ -3,7 +3,7 @@
     "type": "library",
     "description": "The Vection Cache Framework Bridge for PSR",
     "keywords": ["php", "framework", "cache", "redis", "apcu", "lightweight", "psr"],
-    "homepage": "https://vection.org",
+    "homepage": "https://vection.de",
     "license": "MIT",
     "authors": [
         {

@@ -1,9 +1,9 @@
 {
-    "name": "appsdock/vection-contracts",
+    "name": "vection-framework/vection-contracts",
     "type": "library",
     "description": "The Vection Framework Contracts",
     "keywords": ["framework"],
-    "homepage": "https://vection.org",
+    "homepage": "https://vection.de",
     "license": "MIT",
     "authors": [
         {

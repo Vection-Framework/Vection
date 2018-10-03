@@ -3,7 +3,7 @@
     "type": "library",
     "description": "The Vection Cache Framework Bridge for Symfony",
     "keywords": ["php", "framework", "cache", "redis", "apcu", "lightweight", "symfony"],
-    "homepage": "https://vection.org",
+    "homepage": "https://vection.de",
     "license": "MIT",
     "authors": [
         {

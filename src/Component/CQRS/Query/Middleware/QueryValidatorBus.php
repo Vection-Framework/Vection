@@ -2,9 +2,9 @@
 
 /**
  * This file is part of the Vection project.
- * Visit project at https://www.vection.org
+ * Visit project at https://www.vection.de
  *
- * (c) Vection <project@vection.org>
+ * (c) Vection <project@vection.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,7 +18,7 @@ use Vection\Contracts\CQRS\Query\QueryInterface;
 use Vection\Contracts\CQRS\Query\ReadModelInterface;
 use Vection\Contracts\Validator\ValidatableInterface;
 use Vection\Contracts\Validator\ValidationChainFailedExceptionInterface;
-use Vection\Contracts\Validator\ValidatorInterface;
+use Vection\Contracts\Validator\ValidationMediatorInterface;
 
 
 /**
@@ -31,16 +31,16 @@ class QueryValidatorBus implements QueryBusMiddlewareInterface
     /**
      * The validator that validates the payload of the query.
      *
-     * @var ValidatorInterface
+     * @var ValidationMediatorInterface
      */
     protected $validator;
 
     /**
      * QueryValidatorBus constructor.
      *
-     * @param ValidatorInterface $validator
+     * @param ValidationMediatorInterface $validator
      */
-    public function __construct(ValidatorInterface $validator)
+    public function __construct(ValidationMediatorInterface $validator)
     {
         $this->validator = $validator;
     }
