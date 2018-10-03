@@ -1,8 +1,8 @@
-Vection with DDD
+Using Vection Framework in DDD Applications
 ================
 
 - Architecture Layer: Onion
-- Princip: CQRS
+- Principe: CQRS
 - Approach: Domain Driven Design
 
 Layers
@@ -10,7 +10,7 @@ Layers
 
 - Application
 - Domain
-- Persistence
+- Infrastructure
 - Presentation
 
 Application Layer
@@ -25,18 +25,23 @@ Domain Layer
 
 Keeps your Business Logic in form of:
 
-- Entities
+- Domain Models (Entities)
 - Domain Events
-- Factories
+- Factories (maybe interfaces, depends on situation)
 - Repository Interfaces (only -> Onion Arch)
 - Value Objects
 
-
-Infrastructure Layers
+Infrastructure Layer
 ---------------------
 
 - Persistence Layer
-- Presentation Layer
 
 As persistence we will use the most powerful ORM named Doctrine
+
+Presentation Layers
+---------------------
+
+- Actions
+- Presenters
+- REST
 
