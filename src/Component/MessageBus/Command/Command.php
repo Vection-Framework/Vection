@@ -19,13 +19,14 @@ use Vection\Contracts\Validator\ValidatableInterface;
 use Vection\Component\MessageBus\Identifier;
 use Vection\Component\MessageBus\Message;
 use Vection\Component\MessageBus\Payload;
+use Vection\Contracts\Validator\ValidationChainInterface;
 
 /**
  * Class Command
  *
  * @package Vection\Component\MessageBus\Command
  */
-abstract class Command extends Message implements CommandInterface
+abstract class Command extends Message implements CommandInterface, ValidatableInterface
 {
     /**
      * An instance of Identifier that can contains the
@@ -72,4 +73,11 @@ abstract class Command extends Message implements CommandInterface
     {
         return $this->transactional;
     }
+
+    /**
+     * Defines constraints for a set of data.
+     *
+     * @param ValidationChainInterface $chain
+     */
+    public function defineValidation(ValidationChainInterface $chain): void {}
 }
