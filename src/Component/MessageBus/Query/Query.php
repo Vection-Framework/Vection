@@ -24,7 +24,7 @@ use Vection\Contracts\Validator\ValidatableInterface;
  *
  * @package Vection\Component\MessageBus\Query
  */
-abstract class Query extends Message implements QueryInterface, ValidatableInterface
+abstract class Query extends Message implements QueryInterface
 {
     /**
      * An instance of Identifier that can contains the

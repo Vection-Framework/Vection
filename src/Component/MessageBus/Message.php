@@ -14,6 +14,7 @@ namespace Vection\Component\MessageBus;
 
 use Vection\Contracts\MessageBus\MessageInterface;
 use Vection\Contracts\MessageBus\PayloadInterface;
+use Vection\Contracts\Validator\ValidationChainInterface;
 
 /**
  * Class Message
@@ -83,4 +84,11 @@ abstract class Message implements MessageInterface
     {
         return $this->payload;
     }
+
+    /**
+     * Defines constraints for a set of data.
+     *
+     * @param ValidationChainInterface $chain
+     */
+    public function defineValidation(ValidationChainInterface $chain): void {}
 }

@@ -25,7 +25,7 @@ use Vection\Component\MessageBus\Payload;
  *
  * @package Vection\Component\MessageBus\Command
  */
-abstract class Command extends Message implements CommandInterface, ValidatableInterface
+abstract class Command extends Message implements CommandInterface
 {
     /**
      * An instance of Identifier that can contains the
