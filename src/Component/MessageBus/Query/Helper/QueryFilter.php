@@ -21,6 +21,13 @@ use Vection\Contracts\MessageBus\Query\Helper\QueryFilterInterface;
 class QueryFilter implements QueryFilterInterface
 {
     /**
+     * Mapping from public to internal field names.
+     *
+     * @var string[]
+     */
+    protected $fieldMapping;
+
+    /**
      * The applied filter which will be returned.
      *
      * @var string
@@ -33,6 +40,17 @@ class QueryFilter implements QueryFilterInterface
      * @var string[]
      */
     protected $values;
+
+    /**
+     * QueryFilter constructor.
+     *
+     * @param array $fieldMapping
+     *
+     */
+    public function __construct(array $fieldMapping = [])
+    {
+        $this->fieldMapping = $fieldMapping;
+    }
 
     /**
      * @param string $filter
