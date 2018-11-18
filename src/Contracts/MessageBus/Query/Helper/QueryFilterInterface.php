@@ -18,5 +18,31 @@ namespace Vection\Contracts\MessageBus\Query\Helper;
  */
 interface QueryFilterInterface
 {
+    /**
+     * @param string $filter
+     */
+    public function apply(string $filter): void;
 
+    /**
+     * Returns one filter values by its name.
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    public function getValue(string $name): string;
+
+    /**
+     * Returns all filter values as assoc array with name as key.
+     *
+     * @return array
+     */
+    public function getValues(): array;
+
+    /**
+     * Returns the applied filter as string.
+     *
+     * @return string
+     */
+    public function __toString(): string;
 }
