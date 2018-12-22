@@ -62,8 +62,14 @@ class ReadModel implements ReadModelInterface
             return [];
         }
 
-        if ( $this instanceof ReadModelCollection && $data[$data['listKey']] ) {
+        if ( $this instanceof ReadModelCollection && $data['items'] ) {
             $listKey = $data['listKey'];
+
+            if( $data['listKey'] !== 'items' ){
+                $data[$listKey] = $data['items'];
+                unset($data['items']);
+            }
+
             /** @var ReadModel $item */
             foreach ( $data[$listKey] as $key => $item ) {
                 unset($data[$listKey][$key]);
