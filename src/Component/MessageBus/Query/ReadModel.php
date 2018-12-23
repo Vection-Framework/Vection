@@ -73,7 +73,11 @@ class ReadModel implements ReadModelInterface
             /** @var ReadModel $item */
             foreach ( $data[$listKey] as $key => $item ) {
                 unset($data[$listKey][$key]);
-                $data[$listKey][$key] = $item->toArray();
+                if( $item instanceof ReadModel){
+                    $data[$listKey][$key] = $item->toArray();
+                }else{
+                    $data[$listKey][$key] = (array) $item;
+                }
             }
         }
 
