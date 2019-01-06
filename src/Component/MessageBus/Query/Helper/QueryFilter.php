@@ -85,7 +85,7 @@ class QueryFilter implements QueryFilterInterface
      *
      * @return string
      */
-    public function getValue(string $name): string
+    public function getValue(string $name): ?string
     {
         return $this->values[$name] ?? null;
     }
