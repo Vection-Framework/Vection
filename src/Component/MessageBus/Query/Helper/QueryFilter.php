@@ -76,6 +76,8 @@ class QueryFilter implements QueryFilterInterface
         preg_replace_callback('/([a-zA-Z_.0-9-]+)(\s?=|\s+IS)/', function($match){
             return ($this->fieldMapping[$match[1]]??$match[1]).$match[2];
         }, $filter);
+        
+        $this->filter = $filter;
     }
 
     /**
