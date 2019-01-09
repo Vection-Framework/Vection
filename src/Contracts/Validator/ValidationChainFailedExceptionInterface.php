@@ -22,7 +22,7 @@ interface ValidationChainFailedExceptionInterface extends \Throwable
     /**
      * Returns all validation failed exceptions for a set of data.
      *
-     * @return array
+     * @return ValidationFailedExceptionInterface[]
      */
     public function getValidationFailedExceptions(): array;
 }
