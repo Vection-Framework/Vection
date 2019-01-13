@@ -24,7 +24,7 @@ interface PayloadInterface
      * if the key does not exists.
      *
      * @param int|string $key
-     * @return mixed
+     * @return string
      */
     public function get($key);
 
@@ -42,7 +42,7 @@ interface PayloadInterface
      * not exists.
      *
      * @param int|string $key
-     * @return mixed
+     * @return string
      */
     public function pop($key);
 
