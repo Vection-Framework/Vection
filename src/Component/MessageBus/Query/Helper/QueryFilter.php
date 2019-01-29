@@ -63,7 +63,7 @@ class QueryFilter implements QueryFilterInterface
     public function apply(string $filter): void
     {
         # e.g.: ?filter=name="peter" AND (gender="female" OR age="33") OR color IS NULL
-        $pattern = '/\(?([\w-]+.{0,1})\s?(=|<=|>=|<|>|(IS\s+(NOT\s+)?(NULL)?)|(NOT\s+)?LIKE)\s?"(\w*)"\)?\s?(AND|OR)?/iU';
+        $pattern = '/\(?([\w-]+.{0,1})\s?(=|<=|>=|<|>|(IS\s+(NOT\s+)?(NULL)?)|(NOT\s+)?LIKE)\s?"([\w\s-]*)"\)?\s?(AND|OR)?/iU';
 
         if( ! \preg_match_all($pattern, $filter, $matches) ){
             throw new InvalidArgumentException('Filter syntax error');
