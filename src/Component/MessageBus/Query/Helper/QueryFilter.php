@@ -11,6 +11,7 @@
 
 namespace Vection\Component\MessageBus\Query\Helper;
 
+use InvalidArgumentException;
 use Vection\Contracts\MessageBus\Query\Helper\QueryFilterInterface;
 
 /**
@@ -53,28 +54,32 @@ class QueryFilter implements QueryFilterInterface
     }
 
     /**
+     * Apply filter
+     *
      * @param string $filter
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function apply(string $filter): void
     {
-        # e.g.: ?filter=name="peter" AND (gender="female" OR age="33") OR color IS EMPTY
-        $validate = '/\(?([a-zA-Z_.0-9-]+)\s?((=\s?"([^"]+)")|IS\s+(NOT\s+)?EMPTY)\)?(\s+(AND|OR)\s+)?/';
+        # e.g.: ?filter=name="peter" AND (gender="female" OR age="33") OR color IS NULL
+        $pattern = '/\(?([\w-]+.{0,1})\s?(=|<=|>=|<|>|(IS\s+(NOT\s+)?(NULL)?)|(NOT\s+)?LIKE)\s?"(\w*)"\)?\s?(AND|OR)?/iU';
 
-        if( ! \preg_match_all($validate, $filter, $matches) ){
-            throw new \InvalidArgumentException('Filter syntax error');
+        if( ! \preg_match_all($pattern, $filter, $matches) ){
+            throw new InvalidArgumentException('Filter syntax error');
         }
 
         # Extract all values from filter string
-        $this->values = array_filter(array_combine($matches[1], $matches[4]));
+        $this->values = \array_filter(\array_combine($matches[1], $matches[7]));
 
         # Replace all values with ? for using prepared statement
-        $filter = preg_replace('/("[^"]+")/', '?', $filter);
+        $filter = \preg_replace('/("[^"]+")/', '?', $filter);
 
         # Replace all public fields with internal fields
-        preg_replace_callback('/([a-zA-Z_.0-9-]+)(\s?=|\s+IS)/', function($match){
-            return ($this->fieldMapping[$match[1]]??$match[1]).$match[2];
+        $pattern = '/([\w-]+.{0,1})\s?(=|<=|>=|<|>|(IS\s+(NOT\s+)?(NULL)?)|(NOT\s+)?LIKE)\s?/iU';
+        /** @var string $filter */
+        $filter = \preg_replace_callback($pattern, function($match){
+            return ($this->fieldMapping[$match[1]] ?? $match[1]) . ' ' . $match[2];
         }, $filter);
         
         $this->filter = $filter;
