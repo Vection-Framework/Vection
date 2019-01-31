@@ -39,6 +39,9 @@ class QueryFilterTest extends TestCase
         $queryFilter->apply($filter);
     }
 
+    /**
+     * Test case field mapping
+     */
     public function testFieldMapping()
     {
         $filter = 'name = "max mustermann" and age > "18" and (size < "180" or fingers >= "5") and time <= "987654321"';
@@ -59,5 +62,24 @@ class QueryFilterTest extends TestCase
         $this->assertEquals('180', $values['size']);
         $this->assertEquals('5', $values['fingers']);
         $this->assertEquals('987654321', $values['time']);
+    }
+
+    /**
+     * Test case custom field mapping
+     */
+    public function testCustomFieldMapping()
+    {
+        $fieldMapping = [
+            'name' => 'customer',
+            'age' => 'db.age',
+            'time' => '`ts`'
+        ];
+
+        $filter = 'name = "max mustermann" and age > "18" and (size < "180" or fingers >= "5") and time <= "987654321"';
+
+        $queryFilter = new QueryFilter($fieldMapping);
+        $queryFilter->apply($filter);
+
+        $this->assertEquals('customer = ? and db.age > ? and (size < ? or fingers >= ?) and `ts` <= ?', $queryFilter);
     }
 }
