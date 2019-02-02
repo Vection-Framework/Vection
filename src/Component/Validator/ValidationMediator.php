@@ -111,7 +111,9 @@ class ValidationMediator implements ValidationMediatorInterface
                 }
 
                 try{
-                    $this->validators[$validatorClass]->validate($value, $constraints);
+                    foreach( $constraints as $constraint ){
+                        $this->validators[$validatorClass]->validate($value, $constraint);
+                    }
                 } catch( ValidationFailedExceptionInterface $e ) {
                     $validationFailedExceptions[] = $e;
                 }
