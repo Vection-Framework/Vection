@@ -71,7 +71,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function getString(string $key): ?string
     {
-        return $this->contains($key) ? (string)$this->redis->get($key) : null;
+        return $this->contains($key) ? (string) $this->redis->get($key) : null;
     }
 
     /**
@@ -83,7 +83,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function getObject(string $key): ?object
     {
-        return $this->contains($key) ? (object)$this->redis->get($key) : null;
+        return $this->contains($key) ? \unserialize($this->redis->get($key)) : null;
     }
 
     /**
@@ -95,7 +95,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function getArray(string $key): ?array
     {
-        return $this->contains($key) ? (array)$this->redis->get($key) : null;
+        return $this->contains($key) ? \json_decode($this->redis->get($key), true) : null;
     }
 
     /**
@@ -107,7 +107,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function getInt(string $key): ?int
     {
-        return $this->contains($key) ? (int)$this->redis->get($key) : null;
+        return $this->contains($key) ? (int) $this->redis->get($key) : null;
     }
 
     /**
@@ -119,7 +119,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function getFloat(string $key): ?float
     {
-        return $this->contains($key) ? (float)$this->redis->get($key) : null;
+        return $this->contains($key) ? (float) $this->redis->get($key) : null;
     }
 
     /**
@@ -155,7 +155,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function setObject(string $key, object $value, int $ttl = 0): bool
     {
-        return $this->redis->set($key, $value, $ttl === 0 ? null : $ttl);
+        return $this->redis->set($key, \serialize($value), $ttl === 0 ? null : $ttl);
     }
 
     /**
@@ -183,7 +183,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function setInt(string $key, int $value, int $ttl = 0): bool
     {
-        return $this->redis->set($key, (string)$value, $ttl === 0 ? null : $ttl);
+        return $this->redis->set($key, (string) $value, $ttl === 0 ? null : $ttl);
     }
 
     /**
@@ -197,7 +197,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function setFloat(string $key, float $value, int $ttl = 0): bool
     {
-        return $this->redis->set($key, (string)$value, $ttl === 0 ? null : $ttl);
+        return $this->redis->set($key, (string) $value, $ttl === 0 ? null : $ttl);
     }
 
     /**
@@ -214,6 +214,7 @@ class RedisCacheProvider implements CacheProviderInterface
     public function clear(string $namespace = ''): bool
     {
         # TODO: Redis Cache Provider - Implement clear method with namespace support
+        $this->redis->flushAll();
         return true;
     }
 
