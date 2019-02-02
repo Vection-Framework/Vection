@@ -118,8 +118,8 @@ class EventAnnotationMapper implements CacheAwareInterface
     {
         $mapping = [];
 
-        if ( $this->cache && $this->cache->contains('event_class_path') ) {
-            $mapping = $this->cache->getArray('event_class_path');
+        if ( $this->cache && $this->cache->contains('event_handler_class_path') ) {
+            $mapping = $this->cache->getArray('event_handler_class_path');
         }
 
         if ( ! $mapping ) {
@@ -151,7 +151,7 @@ class EventAnnotationMapper implements CacheAwareInterface
                     }
                 }
             }
-            $this->cache && $mapping && $this->cache->setArray('event_class_path', $mapping);
+            $this->cache && $mapping && $this->cache->setArray('event_handler_class_path', $mapping);
         }
 
         $this->eventDispatcher->addHandlerMapping($mapping);
