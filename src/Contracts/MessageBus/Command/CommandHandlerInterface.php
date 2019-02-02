@@ -15,8 +15,6 @@ namespace Vection\Contracts\MessageBus\Command;
  * Interface CommandHandlerInterface
  *
  * @package Vection\Contracts\MessageBus\Command
- *
- * @method __invoke(CommandInterface $message);
  */
 interface CommandHandlerInterface
 {
