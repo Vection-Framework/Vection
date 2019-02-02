@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Vection project.
@@ -56,8 +56,13 @@ abstract class Message implements MessageInterface
     public function __construct(? PayloadInterface $payload = null)
     {
         $this->msgID = \uniqid(\time());
-        $this->msgCreatedTime = new \DateTime();
         $this->payload = $payload ?: new Payload();
+
+        try {
+            $this->msgCreatedTime = new \DateTime();
+        } catch( \Exception $e ) {
+            # Never happens without construct param.
+        }
     }
 
     /**
@@ -88,9 +93,9 @@ abstract class Message implements MessageInterface
      * Add a value to payload
      *
      * @param string $key
-     * @param        $value
+     * @param string $value
      */
-    protected function add(string $key, $value): void
+    protected function add(string $key, string $value): void
     {
         $this->payload->set($key, $value);
     }
