@@ -55,7 +55,12 @@ abstract class Message implements MessageInterface
      */
     public function __construct(? PayloadInterface $payload = null)
     {
-        $this->msgID = \uniqid(\time());
+        try {
+            $this->msgID = \bin2hex(\random_bytes(16));
+        } catch( \Exception $e ) {
+            $this->msgID = \uniqid( (string) \time());
+        }
+
         $this->payload = $payload ?: new Payload();
 
         try {
