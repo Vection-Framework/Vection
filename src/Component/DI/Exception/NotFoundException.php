@@ -19,7 +19,7 @@ use Psr\Container\NotFoundExceptionInterface;
  *
  * @package Vection\Component\DI\Exception
  */
-class NotFoundException extends \Exception implements NotFoundExceptionInterface
+class NotFoundException extends \RuntimeException implements NotFoundExceptionInterface
 {
 
 }

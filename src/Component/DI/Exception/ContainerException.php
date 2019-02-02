@@ -19,7 +19,7 @@ use Psr\Container\ContainerExceptionInterface;
  *
  * @package Vection\Component\DI\Exception
  */
-class ContainerException extends \Exception implements ContainerExceptionInterface
+class ContainerException extends \RuntimeException implements ContainerExceptionInterface
 {
 
 }
