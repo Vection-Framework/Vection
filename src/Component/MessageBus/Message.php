@@ -83,4 +83,27 @@ abstract class Message implements MessageInterface
     {
         return $this->payload;
     }
+
+    /**
+     * Add a value to payload
+     *
+     * @param string $key
+     * @param        $value
+     */
+    protected function add(string $key, $value): void
+    {
+        $this->payload->set($key, $value);
+    }
+
+    /**
+     * Get a value from payload
+     *
+     * @param string $key
+     *
+     * @return mixed|string|null
+     */
+    protected function get(string $key)
+    {
+        return $this->payload->get($key);
+    }
 }

@@ -30,7 +30,7 @@ interface QueryFilterInterface
      *
      * @return string
      */
-    public function getValue(string $name): string;
+    public function getValue(string $name): ?string;
 
     /**
      * Returns all filter values as assoc array with name as key.
