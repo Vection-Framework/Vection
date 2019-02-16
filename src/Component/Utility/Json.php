@@ -50,9 +50,9 @@ class Json implements \JsonSerializable
      * Decodes a json string or file.
      *
      * @param string $json
-     * @param bool $assoc
-     * @param int $depth
-     * @param int $options
+     * @param bool   $assoc
+     * @param int    $depth
+     * @param int    $options
      *
      * @throws JsonException
      *
@@ -62,9 +62,9 @@ class Json implements \JsonSerializable
     {
         $filePath = '';
 
-        if ( $json[0] !== '{' ) {
+        if( $json[0] !== '{' ) {
 
-            if ( ! \file_exists($json) ) {
+            if( !\file_exists($json) ) {
                 throw new JsonException('Invalid path or file does not exists: ' . $json, JsonException::NOT_FOUND);
             }
 
@@ -74,7 +74,7 @@ class Json implements \JsonSerializable
 
         $data = \json_decode($json, $assoc, $depth, $options);
 
-        if ( \json_last_error() !== JSON_ERROR_NONE ) {
+        if( \json_last_error() !== JSON_ERROR_NONE ) {
             throw new JsonException($filePath, JsonException::INVALID);
         }
 
@@ -96,19 +96,25 @@ class Json implements \JsonSerializable
     /**
      * Encodes an array to json formatted string.
      *
-     * @param array $data
-     * @param int $options
-     * @param int $depth
+     * @param mixed $data
+     * @param int   $options
+     * @param int   $depth
      *
      * @return string
+     * @throws JsonException
      */
-    public static function encode(array $data, $options = 0, $depth = 512): string
+    public static function encode($data, $options = 0, $depth = 512): string
     {
-        return \json_encode($data, $options, $depth);
+        $json = \json_encode($data, $options, $depth);
+        if( \json_last_error() !== JSON_ERROR_NONE ) {
+            throw new JsonException('Json Encode Error', JsonException::INVALID);
+        }
+        return $json;
     }
 
     /**
      * @param array|int ...$indexes
+     *
      * @return mixed|null
      */
     public function getKeyByIndex(...$indexes)
@@ -117,12 +123,12 @@ class Json implements \JsonSerializable
         $key = array_keys($this->data)[$index] ?? null;
         $data = null;
 
-        if ( $key && isset($this->data[$key]) ) {
+        if( $key && isset($this->data[$key]) ) {
             $data = $this->data[$key];
-            if ( \count($indexes) ) {
-                foreach ( $indexes as $i ) {
+            if( \count($indexes) ) {
+                foreach( $indexes as $i ) {
                     $key = array_keys($data)[$i] ?? null;
-                    if ( ! isset($data[$key]) || ! \is_array($data) ) {
+                    if( !isset($data[$key]) || !\is_array($data) ) {
                         return null;
                     }
                     $data = $data[$key];
@@ -135,6 +141,7 @@ class Json implements \JsonSerializable
 
     /**
      * @param array|int ...$indexes
+     *
      * @return mixed|null
      */
     public function getByIndex(...$indexes)
@@ -143,12 +150,12 @@ class Json implements \JsonSerializable
         $key = array_keys($this->data)[$index] ?? null;
         $data = null;
 
-        if ( $key &&  isset($this->data[$key]) ) {
+        if( $key && isset($this->data[$key]) ) {
             $data = $this->data[$key];
-            if ( \count($indexes) ) {
-                foreach ( $indexes as $index ) {
+            if( \count($indexes) ) {
+                foreach( $indexes as $index ) {
                     $key = array_keys($data)[$index] ?? null;
-                    if ( ! isset($data[$key]) || ! \is_array($data) ) {
+                    if( !isset($data[$key]) || !\is_array($data) ) {
                         return null;
                     }
                     $data = $data[$key];
@@ -161,6 +168,7 @@ class Json implements \JsonSerializable
 
     /**
      * @param string $keyPath
+     *
      * @return bool
      */
     public function has(string $keyPath): bool
@@ -168,8 +176,8 @@ class Json implements \JsonSerializable
         $keys = explode('.', $keyPath);
         $data = $this->data;
 
-        while ( $key = array_shift($keys) ) {
-            if ( ! array_key_exists($key, $data) ) {
+        while( $key = array_shift($keys) ) {
+            if( !array_key_exists($key, $data) ) {
                 return false;
             }
             $data = $data[$key];
@@ -180,6 +188,7 @@ class Json implements \JsonSerializable
 
     /**
      * @param string $keyPath
+     *
      * @return mixed|null
      */
     public function get(string $keyPath)
@@ -188,11 +197,11 @@ class Json implements \JsonSerializable
         $key = array_shift($keys);
         $data = null;
 
-        if ( isset($this->data[$key]) ) {
+        if( isset($this->data[$key]) ) {
             $data = $this->data[$key];
-            if ( \count($keys) ) {
-                foreach ( $keys as $key ) {
-                    if ( ! isset($data[$key]) || ! \is_array($data) ) {
+            if( \count($keys) ) {
+                foreach( $keys as $key ) {
+                    if( !isset($data[$key]) || !\is_array($data) ) {
                         return null;
                     }
                     $data = $data[$key];
@@ -205,7 +214,7 @@ class Json implements \JsonSerializable
 
     /**
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function set(string $key, $value): void
     {
@@ -224,7 +233,7 @@ class Json implements \JsonSerializable
 
     /**
      * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @link  http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      * @since 5.4.0

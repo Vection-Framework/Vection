@@ -12,6 +12,8 @@
 
 namespace Vection\Contracts\MessageBus\Query;
 
+use Vection\Component\Utility\Exception\JsonException;
+
 /**
  * Interface ReadModelInterface
  *
@@ -37,6 +39,7 @@ interface ReadModelInterface extends \JsonSerializable
      * Returns the response data in json format.
      *
      * @return string
+     * @throws JsonException
      */
     public function toJson(): string;
 }

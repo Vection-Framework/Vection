@@ -23,7 +23,7 @@ class FSHelper
      * Returns the a relative path between to absolute paths.
      *
      * @param string $from Absolute path (source)
-     * @param string $to Absolute path (target)
+     * @param string $to   Absolute path (target)
      *
      * @return string
      */

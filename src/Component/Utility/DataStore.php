@@ -40,7 +40,7 @@ class DataStore implements \JsonSerializable
      * DataStore constructor.
      *
      * @param string $file
-     * @param bool $create
+     * @param bool   $create
      *
      * @throws \Vection\Component\Utility\Exception\JsonException
      */
@@ -51,21 +51,21 @@ class DataStore implements \JsonSerializable
 
     /**
      * @param string $file
-     * @param bool $create
+     * @param bool   $create
      *
      * @return DataStore
-     * @throws \Vection\Component\Utility\Exception\JsonException
+     * @throws Exception\JsonException
      */
     public function fromFile(string $file, bool $create = false): DataStore
     {
-        if ( $create && ! \file_exists($file) && ! \touch($file) ) {
+        if( $create && !\file_exists($file) && !\touch($file) ) {
             throw new \RuntimeException("DataStore: Could not create file store, check file permissions for {$file}");
         }
 
         $this->file = $file;
 
         try {
-            switch ( strtolower(pathinfo($file, PATHINFO_EXTENSION)) ) {
+            switch( strtolower(pathinfo($file, PATHINFO_EXTENSION)) ) {
                 case 'json':
                     $this->data = Json::decode($file);
                     $this->type = static::TYPE_JSON;
@@ -78,7 +78,7 @@ class DataStore implements \JsonSerializable
                 default:
                     throw new \RuntimeException("DataStore: Unsupported file type ({$file})");
             }
-        } catch ( \RuntimeException $ex ) {
+        } catch( \RuntimeException $ex ) {
             throw new \RuntimeException('DataStore: Cannot load from file.', 0, $ex);
         }
 
@@ -109,7 +109,7 @@ class DataStore implements \JsonSerializable
      */
     public function get(...$keys)
     {
-        if ( \count($keys) === 1 && strpos($keys[0], '.') !== false ) {
+        if( \count($keys) === 1 && strpos($keys[0], '.') !== false ) {
             $keys = explode('.', $keys[0]);
         }
 
@@ -117,9 +117,9 @@ class DataStore implements \JsonSerializable
         $key = array_shift($keys);
         $data = $this->data[$key] ?? null;
 
-        if ( $data && $keys ) {
-            foreach ( $keys as $key ) {
-                if ( ! \is_array($data) || ! isset($data[$key]) ) {
+        if( $data && $keys ) {
+            foreach( $keys as $key ) {
+                if( !\is_array($data) || !isset($data[$key]) ) {
                     return null;
                 }
                 $data = $data[$key];
@@ -136,22 +136,22 @@ class DataStore implements \JsonSerializable
 
     /**
      * @param string $key
-     * @param $value
+     * @param        $value
      */
     public function set(string $key, $value): void
     {
-        if ( $key ) {
+        if( $key ) {
             $keys = explode('.', $key);
             $key = array_shift($keys);
 
-            if ( ! isset($this->data[$key]) ) {
+            if( !isset($this->data[$key]) ) {
                 $this->data[$key] = [];
             }
 
             $data =& $this->data[$key];
 
-            foreach ( $keys as $k ) {
-                if ( ! isset($data[$k]) ) {
+            foreach( $keys as $k ) {
+                if( !isset($data[$k]) ) {
                     $data[$k] = [];
                 }
                 $data =& $data[$k];
@@ -168,11 +168,11 @@ class DataStore implements \JsonSerializable
      */
     public function save(): void
     {
-        if ( $this->type === self::TYPE_JSON ) {
+        if( $this->type === self::TYPE_JSON ) {
             file_put_contents($this->file, json_encode($this->data, JSON_PRETTY_PRINT));
         }
 
-        if ( $this->type === self::TYPE_YAML ) {
+        if( $this->type === self::TYPE_YAML ) {
             file_put_contents($this->file, Yaml::dump($this->data));
         }
     }
@@ -206,7 +206,7 @@ class DataStore implements \JsonSerializable
      */
     public function toString(): string
     {
-        switch ( $this->type ) {
+        switch( $this->type ) {
             case self::TYPE_JSON:
                 return json_encode($this);
             case self::TYPE_YAML:

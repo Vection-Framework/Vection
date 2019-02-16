@@ -22,8 +22,8 @@ interface ViewInterface
     /**
      * Adds a new entry to the metadata list.
      *
-     * @param string $name The name of the metadata attribute.
-     * @param mixed $value The value for the meta attribute.
+     * @param string $name  The name of the metadata attribute.
+     * @param mixed  $value The value for the meta attribute.
      */
     public function addMetadata(string $name, $value): void;
 

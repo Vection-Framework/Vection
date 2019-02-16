@@ -66,7 +66,7 @@ class Slugifier
     /**
      * Transforms the given text into a slug and return it.
      *
-     * @param string $text The original text.
+     * @param string $text      The original text.
      * @param string $separator The word separator.
      *
      * @return string

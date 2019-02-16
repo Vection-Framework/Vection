@@ -40,9 +40,9 @@ interface EventDispatcherInterface
      * If the handler is an array with FQCN and method name, this class will be
      * instantiated in default way by this event manager or by a custom handler factory
      *
-     * @param string $event
+     * @param string         $event
      * @param array|callable $handler
-     * @param int $priority
+     * @param int            $priority
      */
     public function addHandler(string $event, $handler, int $priority = 0): void;
 

@@ -12,7 +12,7 @@
 
 namespace Vection\Component\Guise\Tests;
 
-class ViewTest extends \PHPUnit_Framework_TestCase
+class ViewTest extends TestCase
 {
 
 }

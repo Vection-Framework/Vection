@@ -2,6 +2,7 @@
 
 namespace Vection\Component\MessageBus\Query;
 
+use Vection\Component\Utility\Json;
 use Vection\Contracts\MessageBus\Query\ReadModelInterface;
 
 /**
@@ -29,6 +30,7 @@ class ReadModel implements ReadModelInterface
 
     /**
      * @return string
+     * @throws \Vection\Component\Utility\Exception\JsonException
      */
     public function __toString()
     {
@@ -40,7 +42,7 @@ class ReadModel implements ReadModelInterface
      */
     public function toJson(): string
     {
-        return \json_encode($this);
+        return Json::encode($this);
     }
 
     /**
@@ -73,7 +75,7 @@ class ReadModel implements ReadModelInterface
             /** @var ReadModel $item */
             foreach ( $data[$listKey] as $key => $item ) {
                 unset($data[$listKey][$key]);
-                if( $item instanceof ReadModel){
+                if( $item instanceof self){
                     $data[$listKey][$key] = $item->toArray();
                 }else{
                     $data[$listKey][$key] = (array) $item;
@@ -85,7 +87,7 @@ class ReadModel implements ReadModelInterface
             if ( $value instanceof self ) {
                 $value = $value->toArray();
             }
-            if ( $key[0] === '_' ) {
+            if ( strpos($key,'_') === 0 ) {
                 if ( $value !== null ) {
                     $data[\substr($key, 1)] = $value;
                 }

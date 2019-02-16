@@ -31,7 +31,7 @@ interface ViewDataInterface
      * Adds new key value pair.
      *
      * @param string $key
-     * @param $value
+     * @param        $value
      */
     public function add(string $key, $value): void;
 

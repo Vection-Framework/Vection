@@ -70,7 +70,7 @@ class EventManager implements EventDispatcherInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function setHandlerFactoryCallback(callable $closure): void
     {
@@ -78,7 +78,7 @@ class EventManager implements EventDispatcherInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function addHandler(string $event, $handler, int $priority = 0): void
     {
@@ -86,7 +86,7 @@ class EventManager implements EventDispatcherInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function dispatch($event): void
     {

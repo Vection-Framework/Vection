@@ -19,13 +19,14 @@ namespace Vection\Component\Utility\Exception;
  */
 class JsonException extends \Exception
 {
-    const NOT_FOUND = 10;
-    const INVALID = 11;
+    public const NOT_FOUND = 10;
+    public const INVALID = 11;
+
     /**
      * JsonException constructor.
      *
-     * @param string $message
-     * @param int $code
+     * @param string          $message
+     * @param int             $code
      * @param \Throwable|null $previous
      */
     public function __construct(string $message = '', int $code = 0, \Throwable $previous = null)
