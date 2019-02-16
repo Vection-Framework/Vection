@@ -2,7 +2,6 @@
 
 namespace Vection\Component\MessageBus\Query;
 
-use Vection\Component\Utility\Json;
 use Vection\Contracts\MessageBus\Query\ReadModelInterface;
 
 /**
@@ -42,7 +41,11 @@ class ReadModel implements ReadModelInterface
      */
     public function toJson(): string
     {
-        return Json::encode($this);
+        $json = \json_encode($this);
+        if( \json_last_error() !== JSON_ERROR_NONE ) {
+            throw new \InvalidArgumentException('Json Encode Error: ' .\json_last_error_msg());
+        }
+        return $json;
     }
 
     /**
