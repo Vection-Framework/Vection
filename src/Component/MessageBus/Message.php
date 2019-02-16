@@ -97,10 +97,10 @@ abstract class Message implements MessageInterface
     /**
      * Set a value to payload
      *
-     * @param string $key
+     * @param int|string $key
      * @param string $value
      */
-    protected function set(string $key, string $value): void
+    protected function set(string $key, $value): void
     {
         $this->payload->set($key, $value);
     }
