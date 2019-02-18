@@ -94,7 +94,7 @@ class ValidationChain implements ValidationChainInterface
 
     /**
      * @param string $validatorClassName
-     * @param array $constraints
+     * @param array  $constraints
      *
      * @return ValidationChainInterface
      */
