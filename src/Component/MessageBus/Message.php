@@ -110,9 +110,9 @@ abstract class Message implements MessageInterface
      *
      * @param string $key
      *
-     * @return string|null
+     * @return mixed
      */
-    protected function get(string $key): ? string
+    protected function get(string $key)
     {
         return $this->payload->get($key);
     }
