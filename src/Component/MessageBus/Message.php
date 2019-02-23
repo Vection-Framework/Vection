@@ -58,7 +58,7 @@ abstract class Message implements MessageInterface
         try {
             $this->msgID = \bin2hex(\random_bytes(16));
         } catch( \Exception $e ) {
-            $this->msgID = \uniqid( (string) \time());
+            $this->msgID = \md5(\uniqid( (string) \time(),true));
         }
 
         $this->payload = $payload ?: new Payload();
@@ -98,9 +98,9 @@ abstract class Message implements MessageInterface
      * Set a value to payload
      *
      * @param string $key
-     * @param string $value
+     * @param string|int $value
      */
-    protected function set(string $key, string $value): void
+    protected function set(string $key, $value): void
     {
         $this->payload->set($key, $value);
     }
@@ -110,7 +110,7 @@ abstract class Message implements MessageInterface
      *
      * @param string $key
      *
-     * @return mixed|string|null
+     * @return mixed
      */
     protected function get(string $key)
     {

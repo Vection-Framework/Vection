@@ -42,15 +42,15 @@ class Payload implements PayloadInterface
     /**
      * @inheritdoc
      */
-    public function get($key)
+    public function get($key): ? string
     {
-        return \array_key_exists($key, $this->data) ? $this->data[$key] : null;
+        return $this->data[$key] ?? null;
     }
 
     /**
      * @inheritdoc
      */
-    public function set($key, $value)
+    public function set($key, $value): void
     {
         $this->data[$key] = $value;
     }
@@ -58,7 +58,7 @@ class Payload implements PayloadInterface
     /**
      * @inheritdoc
      */
-    public function pop($key)
+    public function pop($key): ? string
     {
         if ( $value = $this->get($key) ) {
             unset($this->data[$key]);

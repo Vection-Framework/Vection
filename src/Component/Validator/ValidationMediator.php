@@ -13,7 +13,6 @@
 namespace Vection\Component\Validator;
 
 use Vection\Component\Validator\Exception\ValidationChainFailedException;
-use Vection\Component\Validator\Exception\ValidationFailedException;
 use Vection\Component\Validator\Validator\GeneralValidator;
 use Vection\Contracts\Validator\ValidationChainInterface;
 use Vection\Contracts\Validator\ValidationFailedExceptionInterface;
@@ -86,7 +85,7 @@ class ValidationMediator implements ValidationMediatorInterface
             $value = \array_key_exists($name, $data) ? $data[$name] : null;
 
             # Skip if value is null and validate against nullable
-            if( $value === null && \in_array('nullable', \array_column($validation[GeneralValidator::class], 0)) ){
+            if( $value === null && \in_array('nullable', \array_column($validation[GeneralValidator::class], 0), true) ){
                 continue;
             }
 
@@ -98,7 +97,7 @@ class ValidationMediator implements ValidationMediatorInterface
                         if( ! $reflection->implementsInterface(ValidatorInterface::class) ){
                             throw new \RuntimeException(
                                 "Vection-Validator: Invalid class type for {$validatorClass}. Except an class
-                                from type ".ValidatorInterface::class."."
+                                from type ".ValidatorInterface::class.'.'
                             );
                         }
                     } catch( \ReflectionException $e ) {

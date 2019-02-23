@@ -23,28 +23,28 @@ interface PayloadInterface
      * Returns the value of the given key or null
      * if the key does not exists.
      *
-     * @param int|string $key
-     * @return string
+     * @param string $key
+     * @return null|string
      */
-    public function get($key);
+    public function get($key): ? string;
 
     /**
      * Sets a value by the given key.
      *
-     * @param int|string $key
-     * @param mixed $value
+     * @param string $key
+     * @param int|string $value
      */
-    public function set($key, $value);
+    public function set($key, $value): void;
 
     /**
      * Returns the value by given key and removes
      * it from this payload. Returns null if the key does
      * not exists.
      *
-     * @param int|string $key
-     * @return string
+     * @param string $key
+     * @return null|string
      */
-    public function pop($key);
+    public function pop($key): ? string;
 
     /**
      * Returns the given key as a new instance of
