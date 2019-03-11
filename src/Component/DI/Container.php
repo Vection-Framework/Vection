@@ -63,19 +63,18 @@ class Container implements ContainerInterface, LoggerAwareInterface
      */
     public function load(string $path): void
     {
-        if ( ! $pathArray = \glob($path) ) {
+        if( ! ($pathArray = \glob($path)) ) {
             throw new \InvalidArgumentException("Given path is not valid or doesn't exists.");
         }
 
-        foreach ( $pathArray as $path ) {
+        foreach( $pathArray as $_path ) {
             /** @noinspection PhpIncludeInspection */
-            $definition = require $path;
+            $definition = require $_path;
 
-            if ( \is_array($definition) ) {
-                $this->inventory->addDefinitionArray($definition);
-            } else {
-                throw new \RuntimeException("Cannot load definition from {$path}.");
+            if( ! \is_array($definition) ) {
+                throw new \RuntimeException("Cannot load definition from {$_path}.");
             }
+            $this->inventory->addDefinitionArray($definition);
         }
     }
 
@@ -107,40 +106,37 @@ class Container implements ContainerInterface, LoggerAwareInterface
         $className = ltrim($id, "\\");
 
         # RETURN IF OBJECT IS A SHARED ONE AND ALREADY EXIST
-        if ( isset($this->shares[$className]) ) {
+        if( isset($this->shares[$className]) ) {
             return $this->shares[$className];
         }
 
         # CHECK IF REQUESTED OBJECT HAS AN ENTRY
-        if ( ! $this->evaluate($className) ) {
-            throw new NotFoundException('DI Container: Unregistered identifier: ' . $className);
+        if( ! $this->evaluate($className) ) {
+            throw new NotFoundException('DI Container: Unregistered identifier: '.$className);
         }
 
         # OBJECT CREATION + INJECT BY CONFIG / CONSTRUCTOR PARAMETERS
         try {
             $object = $this->createObject($className);
-        } catch ( \ReflectionException $e ) {
+        } catch( \ReflectionException $e ) {
             $this->logger->error($e->getMessage());
-            throw new ContainerException(sprintf(
-                '%s: Error while creating object for id "%s": %s %s.',
-                self::class, $className, $e->getMessage(), $e->getTraceAsString()
-            ), 0, $e);
+            throw new ContainerException(sprintf('%s: Error while creating object for id "%s": %s %s.', self::class, $className, $e->getMessage(), $e->getTraceAsString()), 0, $e);
         }
 
         # INJECTIONS BY SEVERAL WAYS
         $this->injectIntoObject($object);
 
         # OBJECT HANDLING (SINGLETON/FACTORY)
-        if ( $this->inventory->isShared($className) ) {
+        if( $this->inventory->isShared($className) ) {
             $this->shares[$className] = $object;
         }
 
         # CALL INITIAL METHOD IF EXISTS
-        if ( method_exists($object, '__initialize') ) {
+        if( method_exists($object, '__init') ) {
             try {
-                $method = new \ReflectionMethod(\get_class($object), '__initialize');
-                $method->isPublic() AND $object->__initialize();
-            } catch ( \ReflectionException $e ) {
+                $method = new \ReflectionMethod(\get_class($object), '__init');
+                $method->isPublic() AND $object->__init();
+            } catch( \ReflectionException $e ) {
                 # This class has no init function, so ignore this call
             }
         }
@@ -156,23 +152,23 @@ class Container implements ContainerInterface, LoggerAwareInterface
     private function evaluate($id): bool
     {
         # Check if there is an defined entry for the given id
-        if ( ! $this->has($id) ) {
+        if( ! $this->has($id) ) {
             # There is no entry for this id
 
-            if ( ! $this->scopes ) {
+            if( ! $this->scopes ) {
                 # There is no entry and no scope, so return an empty array
                 return false;
             }
 
             # Check if the id is part of a registered namespace scope
-            foreach ( $this->scopes as $scope ) {
-                if ( \strpos($id, $scope) === 0 ) {
+            foreach( $this->scopes as $scope ) {
+                if( \strpos($id, $scope) === 0 ) {
                     # The id matches a scope, so we allow to register a default definition for this id
                     $this->set($id);
                 }
             }
 
-            if ( ! $this->has($id) ) {
+            if( ! $this->has($id) ) {
                 # There is no entry for this id and it is not a part of a scope
                 return false;
             }
@@ -222,15 +218,15 @@ class Container implements ContainerInterface, LoggerAwareInterface
      */
     private function createObject(string $className): object
     {
-        if ( $params = $this->inventory->getConstructParams($className) ) {
+        if( $params = $this->inventory->getConstructParams($className) ) {
             return new $className(...$params);
         }
 
-        if ( $closure = $this->inventory->getInstanceClosure($className) ) {
+        if( $closure = $this->inventory->getInstanceClosure($className) ) {
             return $closure($this);
         }
 
-        if ( $params = $this->getConstructorDependencies($className) ) {
+        if( $params = $this->getConstructorDependencies($className) ) {
             return new $className(...$params);
         }
 
@@ -251,11 +247,12 @@ class Container implements ContainerInterface, LoggerAwareInterface
     private function getConstructorDependencies(string $className): array
     {
         $params = [];
-        $constructor = ( new \ReflectionClass($className) )->getConstructor();
+        $constructor = (new \ReflectionClass($className))->getConstructor();
 
-        if ( $constructor && ( $constructParams = $constructor->getParameters() ) ) {
-            foreach ( $constructParams as $param ) {
-                if ( $param->hasType() && ! $param->getType()->isBuiltin() ) {
+        if( $constructor && ($constructParams = $constructor->getParameters()) ) {
+            foreach( $constructParams as $param ) {
+                if( $param->hasType() && $param->getType() !== null && ! $param->getType()
+                                                                               ->isBuiltin() ) {
                     $params[] = $this->get($param->getClass()->name);
                 } else {
                     return [];
@@ -263,10 +260,10 @@ class Container implements ContainerInterface, LoggerAwareInterface
             }
         }
 
-        if ( ! $params && ( $parent = get_parent_class($className) ) ) {
+        if( ! $params && ($parent = get_parent_class($className)) ) {
             do {
                 $params = $this->getConstructorDependencies($parent);
-            } while ( ! $params && ( $parent = get_parent_class($parent) ) );
+            } while( ! $params && ($parent = get_parent_class($parent)) );
         }
 
         return $params;
@@ -295,34 +292,34 @@ class Container implements ContainerInterface, LoggerAwareInterface
         $className = \trim(\get_class($object), "\\");
 
         # Add setter injections by interfaces
-        if ( $interfaces = class_implements($className, true) ) {
-            foreach ( $interfaces as $interface ) {
-                if ( $this->has($interface) && ( $dependencies = $this->inventory->getDependencies($interface) ) ) {
+        if( $interfaces = class_implements($className, true) ) {
+            foreach( $interfaces as $interface ) {
+                if( $this->has($interface) && ($dependencies = $this->inventory->getDependencies($interface)) ) {
                     $this->inventory->addDependencies($className, $dependencies);
                 }
             }
         }
 
         # Add setter injection by parent classes
-        if ( $parents = class_parents($className, true) ) {
-            foreach ( $parents as $parent ) {
-                if ( $this->has($parent) && ( $dependencies = $this->inventory->getDependencies($parent) ) ) {
+        if( $parents = class_parents($className, true) ) {
+            foreach( $parents as $parent ) {
+                if( $this->has($parent) && ($dependencies = $this->inventory->getDependencies($parent)) ) {
                     $this->inventory->addDependencies($className, $dependencies);
                 }
             }
         }
 
-        foreach ( $this->inventory->getDependencies($className) as $property => $dependency ) {
+        foreach( $this->inventory->getDependencies($className) as $property => $dependency ) {
 
             $property = \ltrim($property, '\\');
 
-            if ( \strpos($property, '\\') !== false ) {
+            if( \strpos($property, '\\') !== false ) {
                 $property = \substr($property, \strrpos($property, '\\') + 1);
             }
 
-            $setter = 'set' . \ucfirst($property);
+            $setter = 'set'.\ucfirst($property);
 
-            if ( \method_exists($object, $setter) ) {
+            if( \method_exists($object, $setter) ) {
                 $object->$setter($this->get($dependency));
             }
         }
@@ -335,36 +332,36 @@ class Container implements ContainerInterface, LoggerAwareInterface
     private function injectByTraits(object $object): void
     {
         # ContainerAware trait
-        if ( \method_exists($object, '__setContainer') ) {
+        if( \method_exists($object, '__setContainer') ) {
             $object->__setContainer($this);
         }
 
         # AnnotationInjection trait
-        if ( \method_exists($object, '__annotationInjection') ) {
+        if( \method_exists($object, '__annotationInjection') ) {
 
             $dependencies = [];
 
             try {
-                foreach ( ( new \ReflectionClass($object) )->getProperties() as $property ) {
+                foreach( (new \ReflectionClass($object))->getProperties() as $property ) {
 
-                    if ( ! ( $doc = $property->getDocComment() ) ) {
+                    if( ! ($doc = $property->getDocComment()) ) {
                         continue;
                     }
 
                     $regex = '/@Inject\("([a-zA-Z\\\\_0-9]+)"\)/';
 
-                    if ( \preg_match_all($regex, $doc, $match, PREG_SET_ORDER) ) {
-                        foreach ( $match as $m ) {
+                    if( \preg_match_all($regex, $doc, $match, PREG_SET_ORDER) ) {
+                        foreach( $match as $m ) {
                             $dependencies[$property->getName()] = $m[1];
                         }
                     }
 
                 }
-            } catch ( \ReflectionException $e ) {
+            } catch( \ReflectionException $e ) {
                 # This line is never reached, covered by method_exists condition
             }
 
-            foreach ( $dependencies as $property => $dependencyId ) {
+            foreach( $dependencies as $property => $dependencyId ) {
                 $dependencies[$property] = $this->get($dependencyId);
             }
 
@@ -377,23 +374,24 @@ class Container implements ContainerInterface, LoggerAwareInterface
      */
     private function injectByMethod(object $object): void
     {
-        if ( \method_exists($object, '__inject') ) {
+        if( \method_exists($object, '__inject') ) {
             $dependencies = [];
             try {
                 $method = new \ReflectionMethod($object, '__inject');
 
-                foreach ( $method->getParameters() ?? [] as $param ) {
-                    if ( $param->hasType() && ! $param->getType()->isBuiltin() ) {
+                foreach( $method->getParameters() ?? [] as $param ) {
+                    if( $param->hasType() && $param->getType() !== null && ! $param->getType()
+                                                                                   ->isBuiltin() ) {
                         $dependencies[] = $this->get($param->getClass()->name);
                     } else {
                         return;
                     }
                 }
 
-                if ( $dependencies ) {
-                    \call_user_func_array([ $object, '__inject' ], $dependencies);
+                if( $dependencies ) {
+                    \call_user_func_array([$object, '__inject'], $dependencies);
                 }
-            } catch ( \ReflectionException $e ) {
+            } catch( \ReflectionException $e ) {
                 # Never run in this line, covered by method_exists condition
             }
         }
@@ -419,8 +417,8 @@ class Container implements ContainerInterface, LoggerAwareInterface
         # REMOVE LEADING BACKSLASH
         $className = ltrim($identifier, "\\");
 
-        if ( ! $this->evaluate($className) ) {
-            throw new NotFoundException('DI Container: Unregistered identifier: ' . $className);
+        if( ! $this->evaluate($className) ) {
+            throw new NotFoundException('DI Container: Unregistered identifier: '.$className);
         }
 
         # CREATE OBJECT CONFIG
@@ -430,28 +428,25 @@ class Container implements ContainerInterface, LoggerAwareInterface
         # OBJECT CREATION + INJECT BY CONFIG / CONSTRUCTOR PARAMETERS
         try {
             $object = $this->createObject($className);
-        } catch ( \ReflectionException $e ) {
+        } catch( \ReflectionException $e ) {
             $this->logger->error($e->getMessage());
-            throw new ContainerException(sprintf(
-                '%s: Error while creating object for id "%s": %s %s.',
-                self::class, $className, $e->getMessage(), $e->getTraceAsString()
-            ));
+            throw new ContainerException(sprintf('%s: Error while creating object for id "%s": %s %s.', self::class, $className, $e->getMessage(), $e->getTraceAsString()));
         }
 
         # INJECTIONS BY SEVERAL WAYS
         $this->injectIntoObject($object);
 
         # OBJECT HANDLING (SINGLETON/FACTORY)
-        if ( $shared ) {
+        if( $shared ) {
             $this->shares[$className] = $object;
         }
 
         # CALL INITIAL METHOD IF EXISTS
-        if ( method_exists($object, '__initialize') ) {
+        if( method_exists($object, '__init') ) {
             try {
-                $method = new \ReflectionMethod(\get_class($object), '__initialize');
-                $method->isPublic() AND $object->__initialize();
-            } catch ( \ReflectionException $e ) {
+                $method = new \ReflectionMethod(\get_class($object), '__init');
+                $method->isPublic() AND $object->__init();
+            } catch( \ReflectionException $e ) {
                 # This class has no init function, so ignore this call
             }
         }
