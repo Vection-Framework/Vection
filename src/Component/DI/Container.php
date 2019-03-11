@@ -18,17 +18,19 @@ use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
+use Vection\Component\Cache\Traits\CacheAwareTrait;
 use Vection\Component\DI\Exception\ContainerException;
 use Vection\Component\DI\Exception\NotFoundException;
+use Vection\Contracts\Cache\CacheAwareInterface;
 
 /**
  * Class Container
  *
  * @package Vection\Component\DI
  */
-class Container implements ContainerInterface, LoggerAwareInterface
+class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareInterface
 {
-    use LoggerAwareTrait;
+    use LoggerAwareTrait, CacheAwareTrait;
 
     /** @var array */
     protected $scopes;
@@ -341,24 +343,34 @@ class Container implements ContainerInterface, LoggerAwareInterface
 
             $dependencies = [];
 
-            try {
-                foreach( (new \ReflectionClass($object))->getProperties() as $property ) {
+            if( $this->cache ){
+                $pool = $this->cache->getPool('Vection.DI');
+                $key = 'annotatedDependencies.'.\get_class($object);
+                if( $pool->contains($key) ){
+                    $dependencies = $pool->getArray($key);
+                }
+            }
 
-                    if( ! ($doc = $property->getDocComment()) ) {
+            if( ! $dependencies ){
+                foreach ( ( new \ReflectionObject($object) )->getProperties() as $property ) {
+                    if ( ! ($doc = $property->getDocComment()) ) {
                         continue;
                     }
 
                     $regex = '/@Inject\("([a-zA-Z\\\\_0-9]+)"\)/';
 
-                    if( \preg_match_all($regex, $doc, $match, PREG_SET_ORDER) ) {
-                        foreach( $match as $m ) {
+                    if ( \preg_match_all($regex, $doc, $match, PREG_SET_ORDER) ) {
+                        foreach ( $match as $m ) {
                             $dependencies[$property->getName()] = $m[1];
                         }
                     }
-
                 }
-            } catch( \ReflectionException $e ) {
-                # This line is never reached, covered by method_exists condition
+
+                if( $this->cache && $dependencies ){
+                    $pool = $this->cache->getPool('Vection.DI');
+                    $key = 'annotatedDependencies.'.\get_class($object);
+                    $pool->setArray($key, $dependencies);
+                }
             }
 
             foreach( $dependencies as $property => $dependencyId ) {
@@ -376,23 +388,40 @@ class Container implements ContainerInterface, LoggerAwareInterface
     {
         if( \method_exists($object, '__inject') ) {
             $dependencies = [];
-            try {
-                $method = new \ReflectionMethod($object, '__inject');
 
-                foreach( $method->getParameters() ?? [] as $param ) {
-                    if( $param->hasType() && $param->getType() !== null && ! $param->getType()
-                                                                                   ->isBuiltin() ) {
-                        $dependencies[] = $this->get($param->getClass()->name);
-                    } else {
-                        return;
+            if( $this->cache ){
+                $pool = $this->cache->getPool('Vection.DI');
+                $key = 'injectionDependencies.'.\get_class($object);
+                if( $pool->contains($key) ){
+                    $dependencies = $pool->getArray($key);
+                }
+            }
+
+            if( ! $dependencies ){
+                try {
+                    $method = new \ReflectionMethod($object, '__inject');
+
+                    foreach ( $method->getParameters() ?? [] as $param ) {
+                        if ( $param->hasType() && ! $param->getType()->isBuiltin() ) {
+                            $dependencies[] = $this->get($param->getClass()->name);
+                        } else {
+                            return;
+                        }
+                    }
+
+                    if( $this->cache && $dependencies ){
+                        $pool = $this->cache->getPool('Vection.DI');
+                        $key = 'injectionDependencies.'.\get_class($object);
+                        $pool->setArray($key, $dependencies);
                     }
                 }
-
-                if( $dependencies ) {
-                    \call_user_func_array([$object, '__inject'], $dependencies);
+                catch ( \ReflectionException $e ) {
+                    # Never run in this line, covered by method_exists condition
                 }
-            } catch( \ReflectionException $e ) {
-                # Never run in this line, covered by method_exists condition
+            }
+
+            if ( $dependencies ) {
+                \call_user_func_array([ $object, '__inject' ], $dependencies);
             }
         }
     }
