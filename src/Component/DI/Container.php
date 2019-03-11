@@ -402,7 +402,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
                     $method = new \ReflectionMethod($object, '__inject');
 
                     foreach ( $method->getParameters() ?? [] as $param ) {
-                        if ( $param->hasType() && ! $param->getType()->isBuiltin() ) {
+                        if ( $param->hasType() && $param->getType() !== null && ! $param->getType()->isBuiltin() ) {
                             $dependencies[] = $this->get($param->getClass()->name);
                         } else {
                             return;
