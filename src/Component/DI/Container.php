@@ -122,7 +122,11 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
             $object = $this->createObject($className);
         } catch( \ReflectionException $e ) {
             $this->logger->error($e->getMessage());
-            throw new ContainerException(sprintf('%s: Error while creating object for id "%s": %s %s.', self::class, $className, $e->getMessage(), $e->getTraceAsString()), 0, $e);
+            throw new ContainerException(
+                sprintf('%s: Error while creating object for id "%s": %s %s.',
+                    self::class, $className, $e->getMessage(), $e->getTraceAsString()
+                ), 0, $e
+            );
         }
 
         # INJECTIONS BY SEVERAL WAYS
@@ -139,7 +143,9 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
                 $method = new \ReflectionMethod(\get_class($object), '__init');
                 $method->isPublic() AND $object->__init();
             } catch( \ReflectionException $e ) {
-                # This class has no init function, so ignore this call
+                if( \strpos($e->getMessage(), '__init') === false ){
+                    throw new $e;
+                }
             }
         }
 
@@ -253,8 +259,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
 
         if( $constructor && ($constructParams = $constructor->getParameters()) ) {
             foreach( $constructParams as $param ) {
-                if( $param->hasType() && $param->getType() !== null && ! $param->getType()
-                                                                               ->isBuiltin() ) {
+                if( $param->hasType() && $param->getType() !== null && ! $param->getType()->isBuiltin() ) {
                     $params[] = $this->get($param->getClass()->name);
                 } else {
                     return [];
@@ -459,7 +464,12 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
             $object = $this->createObject($className);
         } catch( \ReflectionException $e ) {
             $this->logger->error($e->getMessage());
-            throw new ContainerException(sprintf('%s: Error while creating object for id "%s": %s %s.', self::class, $className, $e->getMessage(), $e->getTraceAsString()));
+            throw new ContainerException(
+                sprintf(
+                    '%s: Error while creating object for id "%s": %s %s.',
+                    self::class, $className, $e->getMessage(), $e->getTraceAsString()
+                )
+            );
         }
 
         # INJECTIONS BY SEVERAL WAYS
@@ -476,7 +486,9 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
                 $method = new \ReflectionMethod(\get_class($object), '__init');
                 $method->isPublic() AND $object->__init();
             } catch( \ReflectionException $e ) {
-                # This class has no init function, so ignore this call
+                if( \strpos($e->getMessage(), '__init') === false ){
+                    throw new $e;
+                }
             }
         }
 

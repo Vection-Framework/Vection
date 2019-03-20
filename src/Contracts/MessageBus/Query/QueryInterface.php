@@ -12,7 +12,6 @@
 
 namespace Vection\Contracts\MessageBus\Query;
 
-use Vection\Contracts\MessageBus\IdentifiableInterface;
 use Vection\Contracts\MessageBus\MessageInterface;
 
 /**
@@ -20,7 +19,7 @@ use Vection\Contracts\MessageBus\MessageInterface;
  *
  * @package Vection\Contracts\MessageBus\Query
  */
-interface QueryInterface extends MessageInterface, IdentifiableInterface
+interface QueryInterface extends MessageInterface
 {
     # TYPE SAFETY
 }
