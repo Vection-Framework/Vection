@@ -29,6 +29,7 @@ class ReadModel implements ReadModelInterface
 
     /**
      * @return string
+     * @throws \Vection\Component\Utility\Exception\JsonException
      */
     public function __toString()
     {
