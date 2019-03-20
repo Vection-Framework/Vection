@@ -20,7 +20,9 @@
         "psr/log": "~1.0",
         "psr/container": "^1.0",
         "psr/http-message":"1.*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-yaml": "*",
+        "ext-pdo": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "7.3.5"
