@@ -36,7 +36,7 @@ class Column implements ColumnInterface
     /** @var string */
     protected $collate;
 
-    /** @var string[] */
+    /** @var string */
     protected $extra;
 
     /**
@@ -50,7 +50,7 @@ class Column implements ColumnInterface
         $this->name = trim($name);
         $this->type = trim($type);
         $this->nullable = false;
-        $this->extra = [];
+        $this->extra = '';
     }
 
     # region Getter / Setter
@@ -162,22 +162,11 @@ class Column implements ColumnInterface
     }
 
     /**
-     * @return string[]
+     * @return string
      */
-    public function getExtra(): array
+    public function getExtra(): string
     {
         return $this->extra;
-    }
-
-    /**
-     * @param string[] $extra
-     *
-     * @return ColumnInterface
-     */
-    public function setExtra(array $extra): ColumnInterface
-    {
-        $this->extra = $extra;
-        return $this;
     }
 
     /**
@@ -185,9 +174,9 @@ class Column implements ColumnInterface
      *
      * @return ColumnInterface
      */
-    public function addExtra(string $extra): ColumnInterface
+    public function setExtra(string $extra): ColumnInterface
     {
-        $this->extra[] = $extra;
+        $this->extra = $extra;
         return $this;
     }
 
@@ -255,17 +244,12 @@ class Column implements ColumnInterface
         $def[] = $this->nullable ? 'NULL' : 'NOT NULL';
 
         if( ($this->nullable && $this->default === null) || $this->default ){
-            $def[] = 'DEFAULT '.($this->default === null ? 'NULL' : "'{$this->default}'");
+            $def[] = 'DEFAULT '.($this->default === null ? 'NULL'
+                : (\in_array($this->default, ['CURRENT_TIMESTAMP']) ? $this->default : "'{$this->default}'"));
         }
 
         if( $this->extra ){
-            foreach( $this->extra as $extra ) {
-                if( \strtoupper($extra) === 'AUTO_INCREMENT' ){
-                    $def[] = 'AUTO_INCREMENT';
-                }
-                # TODO: currently supports auto_increment only
-                # add other extra
-            }
+            $def[] = \strtoupper($this->extra);
         }
 
         return \implode("\t", $def);

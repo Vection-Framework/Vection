@@ -75,23 +75,16 @@ interface ColumnInterface
     public function setCollate(string $collate): ColumnInterface;
 
     /**
-     * @return string[]
+     * @return string
      */
-    public function getExtra(): array;
-
-    /**
-     * @param string[] $extra
-     *
-     * @return ColumnInterface
-     */
-    public function setExtra(array $extra): ColumnInterface;
+    public function getExtra(): string;
 
     /**
      * @param string $extra
      *
      * @return ColumnInterface
      */
-    public function addExtra(string $extra): ColumnInterface;
+    public function setExtra(string $extra): ColumnInterface;
 
     # endregion
 
