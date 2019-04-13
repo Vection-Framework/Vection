@@ -60,4 +60,27 @@ class FSHelper
 
         return \implode('/', $relPath);
     }
+
+    /**
+     * @param string      $path
+     * @param array       $fileparts last array entry must be the filename
+     * @param string|null $ext
+     *
+     * <example>
+     *    $fileparts = ['data','list','myDatalist'];
+     *    $path = '/home/user';
+     *    $filepath = FsHelper::buildFilePath($path,$fileparts,'json');
+     *    echo $filepath; // /home/user/data/list/myDatalist.json
+     * </example>
+     *
+     * @return string
+     */
+    public static function buildFilePath(string $path, array $fileparts, string $ext = null): string
+    {
+        $ext = $ext ? '.' . $ext: '';
+
+        $path = substr($path, -strlen($path)) === '/' ? $path : $path . DIRECTORY_SEPARATOR;
+
+        return $path . implode(DIRECTORY_SEPARATOR, $fileparts) . $ext;
+    }
 }
