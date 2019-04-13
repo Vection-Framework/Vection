@@ -83,4 +83,24 @@ class FSHelper
 
         return $path . implode(DIRECTORY_SEPARATOR, $fileparts) . $ext;
     }
+
+
+    /**
+     * Search in file for a string
+     *
+     * @param string $file
+     * @param string $search
+     *
+     * @return bool
+     */
+    public static function matchInFile(string $file, string $search): bool
+    {
+        if ( ! is_file($file) ){
+            return false;
+        }
+
+        $content = file_get_contents($file);
+
+        return strpos($content,$search) !== false;
+    }
 }
