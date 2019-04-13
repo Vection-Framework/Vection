@@ -79,7 +79,7 @@ class FSHelper
     {
         $ext = $ext ? '.' . $ext: '';
 
-        $path = substr($path, -strlen($path)) === '/' ? $path : $path . DIRECTORY_SEPARATOR;
+        $path = (substr($path, -1) === '/') ? $path : $path . DIRECTORY_SEPARATOR;
 
         return $path . implode(DIRECTORY_SEPARATOR, $fileparts) . $ext;
     }
