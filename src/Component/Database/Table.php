@@ -122,6 +122,17 @@ class Table implements TableInterface
     }
 
     /**
+     * @param array  $columns
+     *
+     * @return TableInterface
+     */
+    public function setPrimaryCompositeKey(array $columns): TableInterface
+    {
+        $this->keys['primary'] = $columns;
+        return $this;
+    }
+
+    /**
      * @param string $column
      *
      * @return TableInterface
@@ -285,7 +296,13 @@ class Table implements TableInterface
         $colDef[] = \implode(",\n", $this->columns);
 
         if( isset($this->keys['primary']) ){
-            $colDef[] = "PRIMARY KEY (`{$this->keys['primary']}`)";
+            $pkContent = $this->keys['primary'];
+
+            if( \is_array($pkContent) ){
+                $pkContent = \implode('`,`', $this->keys['primary']);
+            }
+
+            $colDef[] = "PRIMARY KEY (`{$pkContent}`)";
         }
 
         foreach( $this->keys['unique'] ?? [] as $key ){

@@ -16,8 +16,6 @@ namespace Vection\Contracts\MessageBus\Query;
  * Interface QueryHandlerInterface
  *
  * @package Vection\Contracts\MessageBus\Query
- * 
- * @method ReadModelInterface __invoke(QueryInterface $message);
  */
 interface QueryHandlerInterface
 {
