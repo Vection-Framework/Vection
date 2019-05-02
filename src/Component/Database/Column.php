@@ -198,7 +198,9 @@ class Column implements ColumnInterface
         isset($definition['extra'])    AND $this->setExtra($definition['extra']);
 
         if( \array_key_exists('default', $definition) ){
-            $this->setDefault($definition['default']);
+            $this->setDefault(
+                \is_numeric($definition['default']) ? (string) $definition['default'] : $definition['default']
+            );
         }
 
         return $this;
