@@ -245,7 +245,7 @@ class Column implements ColumnInterface
 
         $def[] = $this->nullable ? 'NULL' : 'NOT NULL';
 
-        if( ($this->nullable && $this->default === null) || $this->default ){
+        if( ($this->nullable && $this->default === null) || ($this->default || is_string($this->default)) ){
             $def[] = 'DEFAULT '.($this->default === null ? 'NULL'
                 : (\in_array($this->default, ['CURRENT_TIMESTAMP']) ? $this->default : "'{$this->default}'"));
         }
