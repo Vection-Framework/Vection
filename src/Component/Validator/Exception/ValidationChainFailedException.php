@@ -37,7 +37,12 @@ class ValidationChainFailedException extends \Exception implements ValidationCha
      */
     public function __construct(array $validationFailedExceptions, int $code = 0)
     {
-        parent::__construct('The data contains invalid values.', $code);
+        $exceptString = [];
+        /** @var ValidationChainFailedException $exception */
+        foreach($validationFailedExceptions as $exception){
+            $exceptString[] = 'Message: '.$exception->getMessage();
+        }
+        parent::__construct(implode(PHP_EOL, $exceptString), $code);
         $this->validationFailedExceptions = $validationFailedExceptions;
     }
 
