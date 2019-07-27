@@ -9,10 +9,6 @@
         {
             "name": "David Lung",
             "email": "david@appsdock.de"
-        },
-        {
-            "name": "Björn Klemm",
-            "email": "bjoern@appsdock.de"
         }
     ],
     "require": {

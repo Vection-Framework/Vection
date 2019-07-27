@@ -22,7 +22,7 @@ use Vection\Component\Event\Event;
  */
 final class TestEvent extends Event
 {
-    const NAME = 'test';
+    const NAME = 'vection.unit.test';
 
     /** @var string */
     private $string;

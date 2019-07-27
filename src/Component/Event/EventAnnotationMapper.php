@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Vection project.
@@ -43,7 +43,7 @@ class EventAnnotationMapper implements CacheAwareInterface
     }
 
     /**
-     * @return CacheInterface
+     * @inheritdoc
      */
     public function getCache(): ?CacheInterface
     {
@@ -51,7 +51,7 @@ class EventAnnotationMapper implements CacheAwareInterface
     }
 
     /**
-     * @param CacheInterface $cache
+     * @inheritdoc
      */
     public function setCache(CacheInterface $cache): void
     {
@@ -59,101 +59,110 @@ class EventAnnotationMapper implements CacheAwareInterface
     }
 
     /**
-     * Adds a class path where to search for
+     * Sets the class paths where to search for
      * events classes with annotations.
      *
-     * @param string $path Path to event folder.
+     * @param array  $paths Paths to event folders.
+     * @param string $pathPrefix A path prefix which will set to each path.
      */
-    public function addEventClassPath(string $path): void
+    public function setEventClassPaths(array $paths, string $pathPrefix = ''): void
     {
         $mapping = [];
 
-        if ( $this->cache && $this->cache->contains('event_class_path') ) {
-            $mapping = $this->cache->getArray('event_class_path');
+        if ( $this->cache && $this->cache->contains('event_class_paths') ) {
+            $mapping = $this->cache->getArray('event_class_paths');
         }
 
         if ( ! $mapping ) {
-            foreach ( \glob(\rtrim($path, '/') . '/*.php') as $classFile ) {
-                $classContent = \file_get_contents($classFile);
+            foreach( $paths as $path ){
+                foreach ( \glob(\rtrim($pathPrefix.$path, '/') . '/*.php') as $classFile ) {
+                    $classContent = \file_get_contents($classFile);
 
-                if ( ! \preg_match('/[\s]?namespace[\s]+([^;{]+)/', $classContent, $matches) ) {
-                    # Ignore php classes without namespace
-                    continue;
-                }
-                $namespace = \trim($matches[1]);
+                    if ( ! \preg_match('/[\s]?namespace[\s]+([^;{]+)/', $classContent, $matches) ) {
+                        # Ignore php classes without namespace
+                        continue;
+                    }
+                    $namespace = \trim($matches[1]);
 
-                if ( ! \preg_match('/\s?class\s+([^{* ]+)[^{*]+{/', $classContent, $matches) ) {
-                    # Ignore php files which not contains class
-                    continue;
-                }
-                $className = \trim($matches[1]);
+                    if ( ! \preg_match('/\s?class\s+([^{* ]+)[^{*]+{/', $classContent, $matches) ) {
+                        # Ignore php files which not contains class
+                        continue;
+                    }
+                    $className = \trim($matches[1]);
 
-                $className = $namespace . '\\' . $className;
+                    $className = $namespace . '\\' . $className;
 
-                if ( \class_exists($className) ) {
-                    try {
-                        $classDoc = ( new \ReflectionClass($className) )->getDocComment();
-                        \preg_match('/@EventName\("([a-zA-Z\\\\_0-9.]+)"\)/', $classDoc, $matches);
-                        if ( $definition = ( $matches[1] ?? null ) ) {
-                            $mapping[$className] = $matches[1];
+                    if ( \class_exists($className) ) {
+                        try {
+                            $classDoc = ( new \ReflectionClass($className) )->getDocComment();
+                            \preg_match('/@EventName\("?([a-zA-Z\\\\_0-9.:\\/-]+)"?\)/', $classDoc, $matches);
+                            if ( $definition = ( $matches[1] ?? null ) ) {
+                                # Mapping e.g. My\Event\EventClass => 'my.event.identifier'
+                                $mapping[$className] = $matches[1];
+                            }
+                        } catch ( \ReflectionException $e ) {
+                            # Never get in, because of class_exists condition
                         }
-                    } catch ( \ReflectionException $e ) {
-                        # Never get in, because of class_exists condition
                     }
                 }
             }
-            $this->cache && $mapping && $this->cache->setArray('event_class_path', $mapping);
+
+            $this->cache && $mapping && $this->cache->setArray('event_class_paths', $mapping);
         }
 
-        $this->eventDispatcher->addEventMapping($mapping);
+        $this->eventDispatcher->setEventClassMap($mapping);
     }
 
     /**
-     * Adds a class path where to search for
-     * handler classes with annotations.
+     * Sets the class paths where to search for
+     * listener classes with annotations.
      *
-     * @param string $path Path to handler folder.
+     * @param array  $paths Paths to listener folders.
+     * @param string $pathPrefix A path prefix which will set to each path.
      */
-    public function addHandlerClassPath(string $path): void
+    public function setListenerClassPaths(array $paths, string $pathPrefix = ''): void
     {
         $mapping = [];
 
-        if ( $this->cache && $this->cache->contains('event_handler_class_path') ) {
-            $mapping = $this->cache->getArray('event_handler_class_path');
+        if ( $this->cache && $this->cache->contains('event_listener_class_paths') ) {
+            $mapping = $this->cache->getArray('event_listener_class_paths');
         }
 
         if ( ! $mapping ) {
-            foreach ( \glob(\rtrim($path, '/') . '/*.php') as $classFile ) {
-                $classContent = \file_get_contents($classFile);
+            foreach( $paths as $path ){
+                foreach ( \glob(\rtrim($pathPrefix.$path, '/') . '/*.php') as $classFile ) {
+                    $classContent = \file_get_contents($classFile);
 
-                \preg_match('/[\s]?namespace[\s]+([^;{]+)/', $classContent, $matches);
-                $namespace = \trim($matches[1]);
+                    \preg_match('/[\s]?namespace[\s]+([^;{]+)/', $classContent, $matches);
+                    $namespace = \trim($matches[1]);
 
-                \preg_match('/\s?class\s+([^{* ]+)[^{*]+{/', $classContent, $matches);
-                $className = \trim($matches[1]);
+                    \preg_match('/\s?class\s+([^{* ]+)[^{*]+{/', $classContent, $matches);
+                    $className = \trim($matches[1]);
 
-                $class = $namespace . '\\' . $className;
+                    $class = $namespace . '\\' . $className;
 
-                if ( \class_exists($class) ) {
-                    try {
-                        $classDoc = ( new \ReflectionClass($class) )->getDocComment();
-                        \preg_match('/@Subscribe\((["= ,a-zA-Z\\\\_0-9.]+)\)/', $classDoc, $matches);
-                        if ( $definition = ( $matches[1] ?? null ) ) {
-                            $regex = '/event="([^"]+)"|method="([^"]+)"|priority="?([^ ,]+)"?/';
-                            \preg_match_all($regex, $matches[1], $m, PREG_SET_ORDER);
-                            $eventName = $m[0][1];
-                            $method = $m[1][2];
-                            $priority = isset($m[2]) ? $m[2][3] : 0;
-                            $mapping[$eventName][] = [ [ $class, $method ], $priority ];
+                    if ( \class_exists($class) ) {
+                        try {
+                            $classDoc = ( new \ReflectionClass($class) )->getDocComment();
+                            \preg_match('/@Subscribe\((["= ,a-zA-Z\\\\_0-9.:\\/-]+)\)/', $classDoc, $matches);
+                            if ( $definition = ( $matches[1] ?? null ) ) {
+                                $regex = '/event="([^"]+)"|method="([^"]+)"|priority="?([^ ,]+)"?/';
+                                \preg_match_all($regex, $matches[1], $m, PREG_SET_ORDER);
+                                $eventName = $m[0][1];
+                                $method = $m[1][2];
+                                $priority = isset($m[2]) ? $m[2][3] : 0;
+                                $mapping[$eventName][] = [ [ $class, $method ], $priority ];
+                            }
+                        } catch ( \ReflectionException $e ) {
+                            # Never get in, because of class_exists condition
                         }
-                    } catch ( \ReflectionException $e ) {
-                        # Never get in, because of class_exists condition
                     }
                 }
             }
-            $this->cache && $mapping && $this->cache->setArray('event_handler_class_path', $mapping);
+
+            $this->cache && $mapping && $this->cache->setArray('event_listener_class_paths', $mapping);
         }
 
-        $this->eventDispatcher->addHandlerMapping($mapping);
+        $this->eventDispatcher->setEventListenerMap($mapping);
     }
 }

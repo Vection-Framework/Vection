@@ -66,7 +66,7 @@ class ReadModel implements ReadModelInterface
             return [];
         }
 
-        if ( $this instanceof ReadModelCollection && $data['items'] ) {
+        if ( $this instanceof ReadModelCollection ) {
             $listKey = $data['listKey'];
 
             if( $data['listKey'] !== 'items' ){

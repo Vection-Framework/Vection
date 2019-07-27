@@ -17,12 +17,23 @@ namespace Vection\Component\Event\Tests\Fixtures;
  *
  * @package Vection\Component\Event\Tests\Fixtures
  */
-class TestEventHandler
+class TestEventListener
 {
     /** @var string */
-    private $string = ''; 
+    private $string = '';
 
+    /**
+     * @param TestEvent $event
+     */
     public function onSetString(TestEvent $event): void
+    {
+        $this->string = $event->getString();
+    }
+
+    /**
+     * @param TestEvent $event
+     */
+    public function onNotifyByWildcard(TestEvent $event): void
     {
         $this->string = $event->getString();
     }

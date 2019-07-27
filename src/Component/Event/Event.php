@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Vection project.
@@ -23,6 +23,9 @@ abstract class Event implements EventInterface
 {
 
     /**
+     * Stops the event propagation if set to true.
+     * Use this to abort the event rising.
+     *
      * @var bool
      */
     protected $propagationStopped = false;

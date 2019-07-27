@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Vection project.
@@ -12,19 +12,19 @@
 
 namespace Vection\Component\Event;
 
-use Vection\Contracts\Event\EventDispatcherInterface;
 use Vection\Contracts\Event\EventInterface;
+use Vection\Contracts\Event\EventManagerInterface;
 
 /**
  * Class EventManager
  *
  * @package Vection\Component\Event
  */
-class EventManager implements EventDispatcherInterface
+class EventManager implements EventManagerInterface
 {
     /**
      * This property contains a callable that
-     * creates a new handler object.
+     * creates a new listener object.
      *
      * @var callable
      */
@@ -39,40 +39,55 @@ class EventManager implements EventDispatcherInterface
     protected $events = [];
 
     /**
-     * Contains all registered event handler which are
+     * Contains all registered event listeners which are
      * mapped by the event name. One event can have multiple
-     * event handlers.
+     * event listeners.
      *
      * @var array[]
      */
-    protected $handler = [];
+    protected $listeners = [];
 
     /**
-     * Adds a set of event mapping that contains all event classes
-     * which are mapped by event names.
+     * If this property is set, the this event manager will supports
+     * the notification of listeners by event wildcard matching. The
+     * wildcard separator will be used to limit the matching.
+     *
+     * @var string
+     */
+    protected $eventWildcardSeparator;
+
+    /**
+     * This method is an alternative way to register event classes
+     * instead using the EventManager::addEventListener method.
+     * Adds an array that contains all event names mapped by event FQCNs.
+     *
+     * E.g. [.., FQCN => eventName, ..]
      *
      * @param array $mapping
      */
-    public function addEventMapping(array $mapping): void
+    public function setEventClassMap(array $mapping): void
     {
-        $this->events = ! $this->events ? $mapping : array_merge($this->events, $mapping);
+        $this->events = $mapping;
     }
 
     /**
-     * Adds a set of handler mapping that contains all handler
-     * mapped by event names.
+     * This method is an alternative way to register event listeners
+     * instead using the EventManager::addEventListener method.
+     * Add an array that contains all listener data mapped by event names.
+     *
+     * E.g. [.., eventName => [.., [handler<callable>, priority<int>], ..]
      *
      * @param array $mapping
      */
-    public function addHandlerMapping(array $mapping): void
+    public function setEventListenerMap(array $mapping): void
     {
-        $this->handler = ! $this->handler ? $mapping : array_merge($this->handler, $mapping);
+        $this->listeners = $mapping;
     }
 
     /**
      * @inheritdoc
      */
-    public function setHandlerFactoryCallback(callable $closure): void
+    public function setEventListenerFactory(callable $closure): void
     {
         $this->factory = $closure;
     }
@@ -80,17 +95,31 @@ class EventManager implements EventDispatcherInterface
     /**
      * @inheritdoc
      */
-    public function addHandler(string $event, $handler, int $priority = 0): void
+    public function addEventListener(string $event, $listener, int $priority = 0): void
     {
-        $this->handler[$event][] = [ $handler, $priority ];
+        $this->listeners[$event][] = [ $listener, $priority ];
     }
 
     /**
      * @inheritdoc
      */
-    public function dispatch($event): void
+    public function setWildcardSeparator(string $separator): void
+    {
+        if( ! in_array($separator, ['.', ':', '-', '/']) ){
+            throw new \InvalidArgumentException(
+                'The event name wildcard separator support only ".:-/" characters.'
+            );
+        }
+        $this->eventWildcardSeparator = $separator;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function fire($event): void
     {
         if ( $event instanceof EventInterface ) {
+            # We have already the event object, now we need the event name
             $eventClass = \get_class($event);
 
             # Try to get the event name by registered event by class name
@@ -99,54 +128,85 @@ class EventManager implements EventDispatcherInterface
                 $eventName = \defined("{$eventClass}::NAME") ? \constant("{$eventClass}::NAME") : $eventClass;
             }
         } else {
-            $eventName = (string)$event;
+            $eventName = (string) $event;
             $event = new DefaultEvent($eventName);
         }
 
-        if ( ! isset($this->handler[$eventName]) ) {
-            # There is no handler registered for this event
+        # Matched listeners that will be notified
+        $listeners = [];
+        $registeredListeners = [];
+
+        if( ! $this->eventWildcardSeparator ){
+            $registeredListeners = $this->listeners[$eventName] ?? [];
+        }else{
+            # We have to compare the event parts by wildcard separator
+            $eventNameParts = explode($this->eventWildcardSeparator, $eventName);
+
+            # Filter all listeners which matching the fired event by comparing the event parts
+            foreach( $this->listeners as $keyEventName => $eventListeners ){
+                $keyEventNameParts = explode($this->eventWildcardSeparator, $keyEventName);
+
+                # The section count from fired event must be at least
+                # equals or higher then the one of listeners registered event name sections
+                if( count($keyEventNameParts) > count($eventNameParts) ){
+                    continue;
+                }
+
+                # This listener wil only be notified if all section matching against the fired event
+                foreach($keyEventNameParts as $i => $part){
+                    if( $part !== $eventNameParts[$i] ){
+                        continue 2;
+                    }
+                }
+
+                foreach( $eventListeners as $eventListener ){
+                    $registeredListeners[] = $eventListener;
+                }
+            }
+        }
+
+        if ( ! $registeredListeners ) {
+            # There is no listener registered for this event
             return;
         }
 
-        $handlers = [];
-
-        foreach ( $this->handler[$eventName] as $definition ) {
+        foreach ( array_values($registeredListeners) as $definition ) {
             # Saves the callable array as handler [xxx, method]
             $handler = $definition[0];
 
             # If the first element of the callable array is a string
-            # then first create the handler object on which we will call the method
+            # then first create the listener object on which we will call the method
             if ( \is_array($handler) && \is_string($handler[0]) ) {
-                $className = $handler[0];
+                $listenerClassName = $handler[0];
 
-                if ( ! \class_exists($className) ) {
+                if ( ! \class_exists($listenerClassName) ) {
                     throw new \InvalidArgumentException(
-                        'EventManager::createHandler expect an existing fqn of handler class, got "' . $className . '"'
+                        'Vection.EventManager: The creation of the listener object expect an existing FQCN, got "' . $listenerClassName . '"'
                     );
                 }
 
                 if ( $this->factory ) {
-                    $handler[0] = ( $this->factory )($className);
+                    $handler[0] = ( $this->factory )($listenerClassName);
                 } else {
                     try {
-                        $handler[0] = new $className();
+                        $handler[0] = new $listenerClassName();
                     } catch ( \Exception $e ) {
-                        throw new \RuntimeException('Error when try to create event handler.', 0, $e);
+                        throw new \RuntimeException('Error when try to create event listener.', 0, $e);
                     }
                 }
 
             }
 
             # Saves the callable array by considering the priority
-            $handlers[$definition[1] ?? 0][] = $handler;
+            $listeners[$definition[1] ?? 0][] = $handler;
         }
 
-        for ( $i = \count($handlers) - 1; $i >= 0; $i-- ) {
-            foreach ( $handlers[$i] as $handler ) {
+        for ( $i = \count($listeners) - 1; $i >= 0; $i-- ) {
+            foreach ( $listeners[$i] as $listener ) {
                 if ( $event->isPropagationStopped() ) {
                     return;
                 }
-                call_user_func($handler, $event, $this);
+                call_user_func($listener, $event, $this);
             }
         }
     }

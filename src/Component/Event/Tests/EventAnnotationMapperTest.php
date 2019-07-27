@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Vection project.
@@ -25,18 +25,21 @@ use Vection\Component\Event\Tests\Fixtures\AnnotatedTestEvent;
 class EventAnnotationMapperTest extends TestCase
 {
 
+    /**
+     * Test the event annotation mapper.
+     */
     public function testAnnotatedEvent()
     {
         $eventManager = new EventManager();
 
         $mapper = new EventAnnotationMapper($eventManager);
-        $mapper->addEventClassPath(__DIR__.'/Fixtures');
-        $mapper->addHandlerClassPath(__DIR__.'/Fixtures');
+        $mapper->setEventClassPaths([__DIR__.'/Fixtures']);
+        $mapper->setListenerClassPaths([__DIR__.'/Fixtures']);
 
         $event = new AnnotatedTestEvent('quark');
-        $eventManager->dispatch($event);
+        $eventManager->fire($event);
 
-        $this->assertTrue(\defined('TEST_ANNOTATED_EVENT_NAME'), 'Handler was not executed.');
+        $this->assertTrue(\defined('TEST_ANNOTATED_EVENT_NAME'), 'listener was not executed.');
         $this->assertEquals('quark', TEST_ANNOTATED_EVENT_NAME);
     }
 }

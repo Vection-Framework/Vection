@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Vection project.
@@ -21,6 +21,7 @@ class DefaultEvent extends Event
 {
     /**
      * The name of the event.
+     * This name is used to identify a specific registered event.
      *
      * @var string
      */

@@ -12,10 +12,10 @@
 
 namespace Vection\Component\MessageBus\Event\Middleware;
 
+use Vection\Contracts\Event\EventManagerInterface;
 use Vection\Contracts\MessageBus\Event\EventBusMiddlewareInterface;
 use Vection\Contracts\MessageBus\Event\EventBusSequenceInterface;
 use Vection\Contracts\MessageBus\Event\EventInterface;
-use Vection\Contracts\Event\EventDispatcherInterface;
 
 /**
  * Class EventPublisherBus
@@ -24,15 +24,15 @@ use Vection\Contracts\Event\EventDispatcherInterface;
  */
 class EventDispatcherBus implements EventBusMiddlewareInterface
 {
-    /** @var EventDispatcherInterface */
+    /** @var EventManagerInterface */
     protected $dispatcher;
 
     /**
      * DispatcherEventBus constructor.
      *
-     * @param EventDispatcherInterface $dispatcher
+     * @param EventManagerInterface $dispatcher
      */
-    public function __construct(EventDispatcherInterface $dispatcher)
+    public function __construct(EventManagerInterface $dispatcher)
     {
         $this->dispatcher = $dispatcher;
     }
@@ -43,7 +43,7 @@ class EventDispatcherBus implements EventBusMiddlewareInterface
      */
     public function __invoke(EventInterface $event, EventBusSequenceInterface $sequence)
     {
-        $this->dispatcher->dispatch($event);
+        $this->dispatcher->fire($event);
         $sequence->invokeNext($event);
     }
 }
