@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Vection project.
@@ -88,8 +88,9 @@ class Cache implements CacheInterface
     {
         if ( ! isset($this->pools[$namespace]) ) {
             # Create and save new Cache pool with extended pool namespace
-            $pool = new Cache($this->cacheProvider, $this->namespace . $this->nsSeparator . $namespace);
-            $this->pools[$namespace] = $pool;
+            $this->pools[$namespace] =  new Cache(
+                $this->cacheProvider, $this->namespace . $this->nsSeparator . $namespace, $this->nsSeparator
+            );
         }
 
         return $this->pools[$namespace];

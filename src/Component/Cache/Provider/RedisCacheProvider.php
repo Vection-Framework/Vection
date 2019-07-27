@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Vection project.
@@ -37,13 +37,7 @@ class RedisCacheProvider implements CacheProviderInterface
     }
 
     /**
-     * Checks whether the key exists in the cache.
-     * Returns true id the cache item is containing
-     * by the cache, otherwise false.
-     *
-     * @param string $key
-     *
-     * @return bool
+     * @inheritDoc
      */
     public function contains(string $key): bool
     {
@@ -51,11 +45,7 @@ class RedisCacheProvider implements CacheProviderInterface
     }
 
     /**
-     * Deletes a value by given key.
-     *
-     * @param string $key
-     *
-     * @return bool
+     * @inheritDoc
      */
     public function delete(string $key): bool
     {
@@ -63,11 +53,7 @@ class RedisCacheProvider implements CacheProviderInterface
     }
 
     /**
-     * Returns the string value by given key.
-     *
-     * @param string $key
-     *
-     * @return null|string
+     * @inheritDoc
      */
     public function getString(string $key): ?string
     {
@@ -75,11 +61,7 @@ class RedisCacheProvider implements CacheProviderInterface
     }
 
     /**
-     * Returns the object value by given key.
-     *
-     * @param string $key
-     *
-     * @return null|object
+     * @inheritDoc
      */
     public function getObject(string $key): ?object
     {
@@ -87,11 +69,7 @@ class RedisCacheProvider implements CacheProviderInterface
     }
 
     /**
-     * Returns the array value by given key.
-     *
-     * @param string $key
-     *
-     * @return array|null
+     * @inheritDoc
      */
     public function getArray(string $key): ?array
     {
@@ -99,11 +77,7 @@ class RedisCacheProvider implements CacheProviderInterface
     }
 
     /**
-     * Returns the int value by given key.
-     *
-     * @param string $key
-     *
-     * @return int|null
+     * @inheritDoc
      */
     public function getInt(string $key): ?int
     {
@@ -111,11 +85,7 @@ class RedisCacheProvider implements CacheProviderInterface
     }
 
     /**
-     * Returns the float value by given key.
-     *
-     * @param string $key
-     *
-     * @return float|null
+     * @inheritDoc
      */
     public function getFloat(string $key): ?float
     {
@@ -131,13 +101,7 @@ class RedisCacheProvider implements CacheProviderInterface
     }
 
     /**
-     * Sets the given string value into the cache.
-     *
-     * @param string $key
-     * @param string $value
-     * @param int    $ttl
-     *
-     * @return bool
+     * @inheritDoc
      */
     public function setString(string $key, string $value, int $ttl = 0): bool
     {
@@ -145,13 +109,7 @@ class RedisCacheProvider implements CacheProviderInterface
     }
 
     /**
-     * Sets the given object value into the cache.
-     *
-     * @param string $key
-     * @param object $value
-     * @param int    $ttl
-     *
-     * @return bool
+     * @inheritDoc
      */
     public function setObject(string $key, object $value, int $ttl = 0): bool
     {
@@ -159,13 +117,7 @@ class RedisCacheProvider implements CacheProviderInterface
     }
 
     /**
-     * Sets the given array value into the cache.
-     *
-     * @param string $key
-     * @param array  $value
-     * @param int    $ttl
-     *
-     * @return bool
+     * @inheritDoc
      */
     public function setArray(string $key, array $value, int $ttl = 0): bool
     {
@@ -173,13 +125,7 @@ class RedisCacheProvider implements CacheProviderInterface
     }
 
     /**
-     * Sets the given int value into the cache.
-     *
-     * @param string $key
-     * @param int    $value
-     * @param int    $ttl
-     *
-     * @return bool
+     * @inheritDoc
      */
     public function setInt(string $key, int $value, int $ttl = 0): bool
     {
@@ -187,13 +133,7 @@ class RedisCacheProvider implements CacheProviderInterface
     }
 
     /**
-     * Sets the given float value into the cache.
-     *
-     * @param string $key
-     * @param float  $value
-     * @param int    $ttl
-     *
-     * @return bool
+     * @inheritDoc
      */
     public function setFloat(string $key, float $value, int $ttl = 0): bool
     {
@@ -213,8 +153,20 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function clear(string $namespace = ''): bool
     {
-        # TODO: Redis Cache Provider - Implement clear method with namespace support
-        $this->redis->flushAll();
+        if( ! $namespace ){
+            $this->redis->flushAll();
+            return true;
+        }
+
+        $infinityLoopProtection = 0;
+        $iterator = null;
+        $this->redis->setOption(\Redis::OPT_SCAN, \Redis::SCAN_RETRY);
+
+        while( ($keys = $this->redis->scan($iterator, $namespace, 10000)) || $infinityLoopProtection > 1000 ){
+            $this->redis->delete($keys);
+            $infinityLoopProtection++;
+        }
+
         return true;
     }
 
