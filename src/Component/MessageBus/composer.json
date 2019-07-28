@@ -1,25 +1,28 @@
 {
   "name": "vection-framework/vection-message-bus",
   "type": "library",
-  "description": "The Vection CQRS Framework Component",
-  "keywords": ["framework", "cqrs", "command-bus", "query-bus", "event-bus", "message-bus"],
+  "description": "The Vection Framework CQRS-Based MessageBus Component",
+  "keywords": [
+      "php",
+      "framework",
+      "cqrs",
+      "command-bus",
+      "query-bus",
+      "event-bus",
+      "message-bus",
+      "php-cqrs"
+  ],
   "homepage": "https://vection.de",
   "license": "MIT",
   "authors": [
     {
       "name": "David Lung",
-      "email": "david@appsdock.de"
-    },
-    {
-      "name": "Björn Klemm",
-      "email": "bjoern@appsdock.de"
+      "email": "vection@davidlung.de"
     }
   ],
   "require": {
     "php": "^7.2",
-    "psr/log": "~1.0",
-    "psr/container": "^1.0",
-    "ext-gettext": "*"
+    "psr/log": "~1.0"
   },
   "autoload": {
     "psr-4": {

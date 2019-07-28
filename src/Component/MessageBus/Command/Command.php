@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Vection project.
@@ -12,13 +12,13 @@
 
 namespace Vection\Component\MessageBus\Command;
 
+use Vection\Component\MessageBus\Identifier;
+use Vection\Component\MessageBus\Message;
+use Vection\Component\MessageBus\Payload;
 use Vection\Contracts\MessageBus\Command\CommandInterface;
 use Vection\Contracts\MessageBus\IdentifierInterface;
 use Vection\Contracts\MessageBus\PayloadInterface;
 use Vection\Contracts\Validator\ValidatableInterface;
-use Vection\Component\MessageBus\Identifier;
-use Vection\Component\MessageBus\Message;
-use Vection\Component\MessageBus\Payload;
 use Vection\Contracts\Validator\ValidationChainInterface;
 
 /**
@@ -35,14 +35,6 @@ abstract class Command extends Message implements CommandInterface, ValidatableI
      * @var IdentifierInterface
      */
     protected $identifier;
-
-    /**
-     * This property determines whether this command
-     * should be send by a transactional bus.
-     *
-     * @var bool
-     */
-    protected $transactional = false;
 
     /**
      * Command constructor.
@@ -64,14 +56,6 @@ abstract class Command extends Message implements CommandInterface, ValidatableI
     public function getIdentity(): IdentifierInterface
     {
         return $this->identifier;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function isTransactional(): bool
-    {
-        return $this->transactional;
     }
 
     /**

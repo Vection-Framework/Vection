@@ -12,10 +12,10 @@
 
 namespace Vection\Component\MessageBus\Command\Middleware;
 
-use Vection\Contracts\MessageBus\Command\CommandBusSequenceInterface;
-use Vection\Contracts\MessageBus\Command\CommandBusMiddlewareInterface;
-use Vection\Contracts\MessageBus\Command\CommandInterface;
 use Psr\Log\LoggerInterface;
+use Vection\Contracts\MessageBus\Command\CommandBusMiddlewareInterface;
+use Vection\Contracts\MessageBus\Command\CommandBusSequenceInterface;
+use Vection\Contracts\MessageBus\Command\CommandInterface;
 
 /**
  * Class CommandLoggerBus
@@ -83,7 +83,7 @@ class CommandLoggerBus implements CommandBusMiddlewareInterface
     public function logException(\Exception $ex): void
     {
         $this->logger->critical(
-            sprintf(_("Exception@CommandBus: %s \n%s in line %s\nTrace:\n %s"),
+            sprintf("Exception@CommandBus: %s \n%s in line %s\nTrace:\n %s",
                 $ex->getMessage(),
                 $ex->getFile(),
                 $ex->getLine(),

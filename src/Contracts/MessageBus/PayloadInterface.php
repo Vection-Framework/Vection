@@ -37,16 +37,6 @@ interface PayloadInterface
     public function set($key, $value): void;
 
     /**
-     * Returns the value by given key and removes
-     * it from this payload. Returns null if the key does
-     * not exists.
-     *
-     * @param string $key
-     * @return null|string
-     */
-    public function pop($key): ? string;
-
-    /**
      * Returns the given key as a new instance of
      * PayloadInterface that contains the content of the
      * selected key. Returns null if the key does not exists.
@@ -63,4 +53,11 @@ interface PayloadInterface
      * @return array
      */
     public function toArray(): array;
+
+    /**
+     * Returns a fingerprint from containing data.
+     *
+     * @return string
+     */
+    public function getFingerprint(): string;
 }

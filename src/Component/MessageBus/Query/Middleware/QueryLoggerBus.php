@@ -86,7 +86,7 @@ class QueryLoggerBus implements QueryBusMiddlewareInterface
     public function logException(\Exception $ex): void
     {
         $this->logger->critical(
-            sprintf(_("Exception@QueryBus: %s \n%s in line %s\nTrace:\n %s"),
+            sprintf("Exception@QueryBus: %s \n%s in line %s\nTrace:\n %s",
                 $ex->getMessage(),
                 $ex->getFile(),
                 $ex->getLine(),

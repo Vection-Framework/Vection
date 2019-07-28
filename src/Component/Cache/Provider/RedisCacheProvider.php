@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 /**
  * This file is part of the Vection project.
@@ -154,15 +154,14 @@ class RedisCacheProvider implements CacheProviderInterface
     public function clear(string $namespace = ''): bool
     {
         if( ! $namespace ){
-            $this->redis->flushAll();
-            return true;
+            return $this->redis->flushAll();
         }
 
-        $infinityLoopProtection = 0;
         $iterator = null;
+        $infinityLoopProtection = 0;
         $this->redis->setOption(\Redis::OPT_SCAN, \Redis::SCAN_RETRY);
 
-        while( ($keys = $this->redis->scan($iterator, $namespace, 10000)) || $infinityLoopProtection > 1000 ){
+        while( ($keys = $this->redis->scan($iterator, addslashes($namespace).'*', 10000)) || $infinityLoopProtection > 1000 ){
             $this->redis->delete($keys);
             $infinityLoopProtection++;
         }

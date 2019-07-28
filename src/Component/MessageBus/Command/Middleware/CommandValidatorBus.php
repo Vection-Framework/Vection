@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Vection project.
@@ -12,8 +12,8 @@
 
 namespace Vection\Component\MessageBus\Command\Middleware;
 
-use Vection\Contracts\MessageBus\Command\CommandBusSequenceInterface;
 use Vection\Contracts\MessageBus\Command\CommandBusMiddlewareInterface;
+use Vection\Contracts\MessageBus\Command\CommandBusSequenceInterface;
 use Vection\Contracts\MessageBus\Command\CommandInterface;
 use Vection\Contracts\Validator\ValidatableInterface;
 use Vection\Contracts\Validator\ValidationChainFailedExceptionInterface;

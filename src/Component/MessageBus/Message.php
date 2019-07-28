@@ -95,7 +95,7 @@ abstract class Message implements MessageInterface
     }
 
     /**
-     * Set a value to payload
+     * Set a value to payload.
      *
      * @param string $key
      * @param string|int $value
@@ -106,7 +106,7 @@ abstract class Message implements MessageInterface
     }
 
     /**
-     * Get a value from payload
+     * Returns a value from payload.
      *
      * @param string $key
      *

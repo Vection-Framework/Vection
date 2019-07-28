@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Vection project.
@@ -58,20 +58,6 @@ class Payload implements PayloadInterface
     /**
      * @inheritdoc
      */
-    public function pop($key): ? string
-    {
-        if ( $value = $this->get($key) ) {
-            unset($this->data[$key]);
-
-            return $value;
-        }
-
-        return null;
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function getPayload($key): ?PayloadInterface
     {
         if ( $value = $this->get($key) ) {
@@ -87,5 +73,15 @@ class Payload implements PayloadInterface
     public function toArray(): array
     {
         return $this->data;
+    }
+
+    /**
+     * Returns a fingerprint from containing data.
+     *
+     * @return string
+     */
+    public function getFingerprint(): string
+    {
+        return md5(json_encode($this->data));
     }
 }
