@@ -12,8 +12,10 @@
 
 namespace Vection\Component\Event;
 
+use Vection\Component\Event\Exception\InvalidAnnotationException;
 use Vection\Contracts\Cache\CacheAwareInterface;
 use Vection\Contracts\Cache\CacheInterface;
+use Vection\Contracts\Event\EventHandlerMethodInterface;
 
 /**
  * Class EventAnnotationMapper
@@ -139,24 +141,54 @@ class EventAnnotationMapper implements CacheAwareInterface
                     \preg_match('/\s?class\s+([^{* ]+)[^{*]+{/', $classContent, $matches);
                     $className = \trim($matches[1]);
 
-                    $class = $namespace . '\\' . $className;
+                    $className = $namespace . '\\' . $className;
 
-                    if ( \class_exists($class) ) {
-                        try {
-                            $classDoc = ( new \ReflectionClass($class) )->getDocComment();
-                            \preg_match('/@Subscribe\((["= ,a-zA-Z\\\\_0-9.:\\/-]+)\)/', $classDoc, $matches);
-                            if ( $definition = ( $matches[1] ?? null ) ) {
-                                $regex = '/event="([^"]+)"|method="([^"]+)"|priority="?([^ ,]+)"?/';
-                                \preg_match_all($regex, $matches[1], $m, PREG_SET_ORDER);
-                                $eventName = $m[0][1];
-                                $method = $m[1][2];
-                                $priority = isset($m[2]) ? $m[2][3] : 0;
-                                $mapping[$eventName][] = [ [ $class, $method ], $priority ];
-                            }
-                        } catch ( \ReflectionException $e ) {
-                            # Never get in, because of class_exists condition
+                    try {
+                        # required for autoloading or not?
+                        class_exists($className);
+                        $reflection = new \ReflectionClass($className);
+                    }
+                    catch( \ReflectionException $e ) {
+                        continue;
+                    }
+
+                    $classDoc = $reflection->getDocComment();
+
+                    preg_match('/@Subscribe\((["= ,a-zA-Z\\\\_0-9.:\\/-]+)\)/', $classDoc, $matches);
+
+                    if ( ! $definition = ( $matches[1] ?? null ) ) {
+                        continue;
+                    }
+
+                    \preg_match_all(
+                        '/((event|method|priority)="([^"]+))+"?/',
+                        $matches[1], $m, PREG_SET_ORDER
+                    );
+
+                    $subscription = array_column($m, 3, 2);
+
+                    if( ! isset($subscription['event']) ){
+                        throw new InvalidAnnotationException(sprintf(
+                            'Missing event name for subscription in %s.', $className
+                        ));
+                    }
+
+                    if( ! isset($subscription['method']) ){
+                        if( $reflection->implementsInterface(EventHandlerMethodInterface::class) ){
+                            $subscription['method'] = '';
+                        }else{
+                            throw new InvalidAnnotationException(sprintf(
+                                'Missing handler method definition or implementation of %s in class %s.',
+                                EventHandlerMethodInterface::class, $className
+                            ));
                         }
                     }
+
+                    $mapping[$subscription['event']][] = [
+                        [ $className, $subscription['method'] ],
+                        $subscription['priority']
+                    ];
+
                 }
             }
 

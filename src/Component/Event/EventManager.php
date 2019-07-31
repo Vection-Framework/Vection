@@ -12,6 +12,7 @@
 
 namespace Vection\Component\Event;
 
+use Vection\Contracts\Event\EventHandlerMethodInterface;
 use Vection\Contracts\Event\EventInterface;
 use Vection\Contracts\Event\EventManagerInterface;
 
@@ -206,6 +207,13 @@ class EventManager implements EventManagerInterface
                 if ( $event->isPropagationStopped() ) {
                     return;
                 }
+
+                if( $listener[0] instanceof EventHandlerMethodInterface ){
+                    # This listener provides a method to determine the handler method
+                    # instead of using the method section of the annotation
+                    $listener[1] = $listener[0]->getHandlerMethodName();
+                }
+
                 call_user_func($listener, $event, $this);
             }
         }
