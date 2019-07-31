@@ -22,11 +22,5 @@ use Vection\Contracts\MessageBus\MessageInterface;
  */
 interface CommandInterface extends MessageInterface, IdentifiableInterface
 {
-    /**
-     * Returns true if this command uses a bus
-     * which executes the handler within a transaction.
-     *
-     * @return bool
-     */
-    public function isTransactional(): bool;
+
 }
