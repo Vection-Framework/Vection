@@ -27,4 +27,13 @@ interface QueryCacheHandlerInterface
      * @return bool
      */
     public function invalidateCache(): bool;
+
+    /**
+     * This method will be used to determine if the query
+     * should be cached or not. If returns false, the query will
+     * be skipped for caching.
+     *
+     * @return bool
+     */
+    public function isCacheVolitional(): bool;
 }

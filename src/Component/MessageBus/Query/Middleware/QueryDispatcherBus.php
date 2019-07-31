@@ -57,7 +57,7 @@ class QueryDispatcherBus implements QueryBusMiddlewareInterface
         $handler = $this->resolver->resolve($message);
 
         # Check if this Middleware uses cache for query models and handler supports caching
-        if( $this->cache && $handler instanceof QueryCacheHandlerInterface){
+        if( $this->cache && $handler instanceof QueryCacheHandlerInterface && $handler->isCacheVolitional()){
 
             # Each handler have an own cache pools for all payload variants
             $pool = $this->cache->getPool(get_class($handler));
