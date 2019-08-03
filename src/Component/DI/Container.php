@@ -20,7 +20,9 @@ use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
 use Vection\Component\Cache\Traits\CacheAwareTrait;
 use Vection\Component\DI\Exception\ContainerException;
+use Vection\Component\DI\Exception\InvalidArgumentException;
 use Vection\Component\DI\Exception\NotFoundException;
+use Vection\Component\DI\Exception\RuntimeException;
 use Vection\Contracts\Cache\CacheAwareInterface;
 
 /**
@@ -60,13 +62,13 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      *
      * @param string $path
      *
-     * @throws \InvalidArgumentException
-     * @throws \RuntimeException
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
     public function load(string $path): void
     {
         if( ! ($pathArray = \glob($path)) ) {
-            throw new \InvalidArgumentException("Given path is not valid or doesn't exists.");
+            throw new InvalidArgumentException("Given path is not valid or doesn't exists.");
         }
 
         foreach( $pathArray as $_path ) {
@@ -74,7 +76,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
             $definition = require $_path;
 
             if( ! \is_array($definition) ) {
-                throw new \RuntimeException("Cannot load definition from {$_path}.");
+                throw new RuntimeException("Cannot load definition from {$_path}.");
             }
             $this->inventory->addDefinitionArray($definition);
         }
