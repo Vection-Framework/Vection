@@ -48,7 +48,7 @@ class Date extends Validator
      */
     public function getMessage(): string
     {
-        return 'Date "{value}" is invalid or does not match format {format}.';
+        return 'Date "{value}" is invalid or does not match format "{format}".';
     }
 
     /**
