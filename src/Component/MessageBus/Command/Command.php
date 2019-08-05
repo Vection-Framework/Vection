@@ -18,16 +18,15 @@ use Vection\Component\MessageBus\Payload;
 use Vection\Contracts\MessageBus\Command\CommandInterface;
 use Vection\Contracts\MessageBus\IdentifierInterface;
 use Vection\Contracts\MessageBus\PayloadInterface;
-use Vection\Contracts\Validator\ValidatableInterface;
-use Vection\Contracts\Validator\ValidationChainInterface;
 
 /**
  * Class Command
  *
  * @package Vection\Component\MessageBus\Command
  */
-abstract class Command extends Message implements CommandInterface, ValidatableInterface
+abstract class Command extends Message implements CommandInterface
 {
+
     /**
      * An instance of Identifier that can contains the
      * identifier for the requested resource.
@@ -58,10 +57,4 @@ abstract class Command extends Message implements CommandInterface, ValidatableI
         return $this->identifier;
     }
 
-    /**
-     * Defines constraints for a set of data.
-     *
-     * @param ValidationChainInterface $chain
-     */
-    public function defineValidation(ValidationChainInterface $chain): void {}
 }

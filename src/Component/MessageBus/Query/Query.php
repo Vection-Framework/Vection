@@ -1,13 +1,13 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the AppsDock project.
+ *  Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ *  (c) David Lung <vection@davidlung.de>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 namespace Vection\Component\MessageBus\Query;
@@ -15,16 +15,15 @@ namespace Vection\Component\MessageBus\Query;
 use Vection\Component\MessageBus\Message;
 use Vection\Contracts\MessageBus\PayloadInterface;
 use Vection\Contracts\MessageBus\Query\QueryInterface;
-use Vection\Contracts\Validator\ValidatableInterface;
-use Vection\Contracts\Validator\ValidationChainInterface;
 
 /**
  * Class Query
  *
  * @package Vection\Component\MessageBus\Query
  */
-abstract class Query extends Message implements QueryInterface, ValidatableInterface
+abstract class Query extends Message implements QueryInterface
 {
+
     /**
      * Query constructor.
      *
@@ -35,10 +34,4 @@ abstract class Query extends Message implements QueryInterface, ValidatableInter
         parent::__construct($payload);
     }
 
-    /**
-     * Defines constraints for a set of data.
-     *
-     * @param ValidationChainInterface $chain
-     */
-    public function defineValidation(ValidationChainInterface $chain): void {}
 }
