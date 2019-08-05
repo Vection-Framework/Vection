@@ -8,13 +8,12 @@
     "authors": [
         {
             "name": "David Lung",
-            "email": "david@appsdock.de"
+            "email": "vection@davidlung.de"
         }
     ],
     "require": {
         "php": "^7.2",
-        "ext-json": "*",
-        "ext-ctype": "*"
+        "ext-json": "*"
     },
     "autoload": {
         "psr-4": {

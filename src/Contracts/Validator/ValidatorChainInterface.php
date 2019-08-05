@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Vection project.
@@ -13,23 +13,22 @@
 namespace Vection\Contracts\Validator;
 
 /**
- * Interface AbstractValidationFailedException
+ * Interface ValidationChainInterface
  *
  * @package Vection\Contracts\Validator
  */
-interface ValidationFailedExceptionInterface extends \Throwable
+interface ValidatorChainInterface
 {
-    /**
-     * Returns the validated value.
-     *
-     * @return mixed
-     */
-    public function getValidatedValue();
 
     /**
-     * Returns the constraints that were used to validate the value.
      *
-     * @return array
+     * @return ViolationInterface[]
      */
-    public function getConstraints(): array;
+    public function getViolations(): array;
+
+    /**
+     *
+     * @param array $data
+     */
+    public function verify(array $data): void;
 }

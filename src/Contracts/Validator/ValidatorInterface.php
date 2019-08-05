@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Vection project.
@@ -19,16 +19,11 @@ namespace Vection\Contracts\Validator;
  */
 interface ValidatorInterface
 {
-
     /**
-     * Validates the given value by considering
-     * the constraints specified by the validator.
+     * @param $value
      *
-     * @param mixed $value
-     * @param array $constraints
-     *
-     * @throws ValidationFailedExceptionInterface
+     * @return ViolationInterface|null
      */
-    public function validate($value, array $constraints): void;
+    public function validate($value): ? ViolationInterface;
 
 }
