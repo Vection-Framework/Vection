@@ -95,4 +95,4 @@ After implementation you can use this validator as standalone or with the valida
 ~~~
 
 You can use the second parameter of the ValidatorChain::use method to pass one or more constraints to the constructor
-of you custom validator.
+of your custom validator.
