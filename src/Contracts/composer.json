@@ -1,14 +1,14 @@
 {
-    "name": "vection-framework/vection-contracts",
+    "name": "vection-framework/contracts",
     "type": "library",
     "description": "The Vection Framework Contracts",
-    "keywords": ["framework"],
+    "keywords": ["vection", "vection-contracts", "framework"],
     "homepage": "https://vection.de",
     "license": "MIT",
     "authors": [
         {
             "name": "David Lung",
-            "email": "david@appsdock.de"
+            "email": "vection@davidlung.de"
         }
     ],
     "autoload": {
@@ -20,5 +20,6 @@
         "php": "^7.2",
         "psr/log": "~1.0",
         "psr/container": "^1.0"
-    }
+    },
+    "minimum-stability": "dev"
 }

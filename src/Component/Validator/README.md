@@ -2,6 +2,21 @@
 
 The PHP Vection validator component provides a flexible and complex validation of single values up to a whole set of data against a chain of several validators. The validator can be extended by custom validator which are can be used also with the chain.
 
+### Installation / Composer
+
+Vection Framework Components are works only via composer. So first ensure your composer is configured and read to use.
+~~~
+    "require": {
+        "vection-framework/vection": "dev-master"
+    }
+~~~
+
+OR
+
+~~~
+    $ composer install vection-framework/vection
+~~~
+
 ### Minimal usage of validators
 ~~~
     # First create the validator with validator specific constraints
