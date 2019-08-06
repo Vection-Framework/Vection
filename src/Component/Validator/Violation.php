@@ -17,6 +17,11 @@ use Vection\Contracts\Validator\ViolationInterface;
 /**
  * Class Violation
  *
+ * This class represents a violation of rules defined by a validator.
+ * Every time a validator failed validation, an object of this class
+ * will be created an returned. This class contains the information
+ * about the invalid value and an user message.
+ *
  * @package Vection\Component\Validator
  */
 class Violation implements ViolationInterface, \JsonSerializable
@@ -48,8 +53,7 @@ class Violation implements ViolationInterface, \JsonSerializable
     }
 
     /**
-     *
-     * @return mixed
+     * @inheritDoc
      */
     public function getValue()
     {
@@ -57,7 +61,7 @@ class Violation implements ViolationInterface, \JsonSerializable
     }
 
     /**
-     * @return string
+     * @inheritDoc
      */
     public function getMessage(): string
     {
@@ -79,8 +83,7 @@ class Violation implements ViolationInterface, \JsonSerializable
     }
 
     /**
-     *
-     * @return string
+     * @inheritDoc
      */
     public function __toString(): string
     {
@@ -88,6 +91,23 @@ class Violation implements ViolationInterface, \JsonSerializable
     }
 
     /**
+     * Specify data which should be serialized to JSON
+     * @link  https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'value' => $this->valueToString($this->value),
+            'message' => $this->getMessage()
+        ];
+    }
+
+    /**
+     * Converts the given value into a string representation.
+     *
      * @param $value
      *
      * @return string
@@ -104,20 +124,5 @@ class Violation implements ViolationInterface, \JsonSerializable
             case 'object':  return 'Object';
             default:        return '<unsupported-type>';
         }
-    }
-
-    /**
-     * Specify data which should be serialized to JSON
-     * @link  https://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
-     */
-    public function jsonSerialize()
-    {
-        return [
-            'value' => $this->valueToString($this->value),
-            'message' => $this->getMessage()
-        ];
     }
 }

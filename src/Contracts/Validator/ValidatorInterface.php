@@ -15,11 +15,20 @@ namespace Vection\Contracts\Validator;
 /**
  * Interface ValidatorInterface
  *
+ * This interface defines a validator that determines the
+ * correctness of an given value by using specific rules and
+ * dynamic constraints.
+ *
  * @package Vection\Contracts\Validator
  */
 interface ValidatorInterface
 {
     /**
+     * Validates the given value.
+     * Returns null if the validations succeeded. If the value is invalid,
+     * this method returns an object of ViolationInterface that contains
+     * the invalid value and an user message.
+     *
      * @param $value
      *
      * @return ViolationInterface|null

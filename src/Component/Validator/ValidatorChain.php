@@ -18,6 +18,11 @@ use Vection\Contracts\Validator\ViolationInterface;
 /**
  * Class ValidationChain
  *
+ * This class builds a chain of validator instances.
+ * Each validation method creates an specific instance of a validator.
+ * This validator chain provides the possibility to validate one or more
+ * values by multiple validators at once.
+ *
  * @package Vection\Component\Validator
  *
  * @method ValidatorChain alphaNumeric()
@@ -69,12 +74,18 @@ class ValidatorChain implements ValidatorChainInterface
     protected $chain = [];
 
     /**
+     * This property contains all violation objects
+     * that are collected during the verify method.
      *
      * @var ViolationInterface[]
      */
     protected $violations = [];
 
     /**
+     * Contains the mapping of given data value names and
+     * the virtual validator "nullable" to determine the null
+     * values that can be skipped by defined nullable validator.
+     *
      * @var int[]
      */
     protected $nullable = [];
@@ -106,10 +117,12 @@ class ValidatorChain implements ValidatorChainInterface
     public function __call($name, $constraints = []): ValidatorChain
     {
         if( $name === 'nullable' ){
+            # This is a virtual validator that marks the subject as nullable
             $this->nullable[key($this->chain)] = 1;
             return $this;
         }
 
+        # Create the validator object and save for current subject
         $validatorClass = __NAMESPACE__ .'\\Validator\\'. ucfirst($name);
         $this->chain[key($this->chain)][] = new $validatorClass(...$constraints);
 
@@ -117,8 +130,7 @@ class ValidatorChain implements ValidatorChainInterface
     }
 
     /**
-     *
-     * @return ViolationInterface[]
+     * @inheritDoc
      */
     public function getViolations(): array
     {
@@ -126,12 +138,13 @@ class ValidatorChain implements ValidatorChainInterface
     }
 
     /**
-     * @param array $data
+     * @inheritDoc
      */
     public function verify(array $data): void
     {
         foreach( $this->chain as $subject => $validators ){
 
+            # First we have to know the current value
             $value = \array_key_exists($subject, $data) ? $data[$subject] : null;
 
             # Skip if value is null and validate against nullable
@@ -141,6 +154,7 @@ class ValidatorChain implements ValidatorChainInterface
 
             foreach( $validators as $validator ){
                 if( $violation = $validator->validate($value) ){
+                    # The value is invalid so take the violation and continue to next subject
                     $this->violations[$subject] = $violation;
                     continue 2;
                 }

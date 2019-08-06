@@ -18,6 +18,10 @@ use Vection\Contracts\Validator\ViolationInterface;
 /**
  * Class Validator
  *
+ * This class is an abstract validator that determines the
+ * correctness of an given value by using specific rules and
+ * dynamic constraints.
+ *
  * @package Vection\Component\Validator
  */
 abstract class Validator implements ValidatorInterface
@@ -33,17 +37,33 @@ abstract class Validator implements ValidatorInterface
     abstract protected function onValidate($value): bool;
 
     /**
+     * Returns an array of the validator implementation specific constraints
+     * which are used to validate the given value. This returned array
+     * should using the constraint names as key.
+     *
+     * E.g. constraints: min and max:
+     * ['min' => $min, 'max' => $max]
+     *
      * @return array
      */
     abstract protected function getConstraints(): array;
 
     /**
+     * Returns an message which will be display when the validation
+     * failed. The message can contains the constraint names in curly brackets
+     * that will be replaced with the values from constraints get by getConstraints method.
+     *
+     * E.g. "Value {value} does not match the given format {format}.
+     *
+     * By default you can use the {value} token to place the current value.
+     *
      * @return string
      */
     abstract protected function getMessage(): string;
 
     /**
      * Sets an alternative message to display if validation failed.
+     * The use of this method will override the default message.
      *
      * @param string $message
      */
