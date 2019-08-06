@@ -24,10 +24,8 @@ namespace Vection\Contracts\Validator;
  */
 interface ValidatorChainInterface
 {
-
     /**
-     * Returns all violation objects collected during the verify method
-     * and returned by validators that fails.
+     * Returns all violation objects collected during the verify method.
      *
      * @return ViolationInterface[]
      */

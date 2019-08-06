@@ -131,6 +131,8 @@ class ValidatorChain implements ValidatorChainInterface
 
     /**
      * @inheritDoc
+     *
+     * @return ViolationInterface[]
      */
     public function getViolations(): array
     {
