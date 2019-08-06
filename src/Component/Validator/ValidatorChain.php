@@ -123,8 +123,21 @@ class ValidatorChain implements ValidatorChainInterface
         }
 
         # Create the validator object and save for current subject
-        $validatorClass = __NAMESPACE__ .'\\Validator\\'. ucfirst($name);
-        $this->chain[key($this->chain)][] = new $validatorClass(...$constraints);
+        $validatorClassName = __NAMESPACE__ .'\\Validator\\'. ucfirst($name);
+        return $this->use($validatorClassName, ...$constraints);
+    }
+
+    /**
+     * Registers a custom validator with its constraints.
+     *
+     * @param string $className
+     * @param array  $constraints
+     *
+     * @return ValidatorChain
+     */
+    public function use(string $className, array $constraints = []): ValidatorChain
+    {
+        $this->chain[key($this->chain)][] = new $className(...$constraints);
 
         return $this;
     }

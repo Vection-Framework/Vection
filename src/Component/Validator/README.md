@@ -75,4 +75,24 @@ Now we can validate the data set against one or more validators
 
 ### Custom validators 
 
-Work in progress.... soon!
+You can define custom validators by extending the abstract Vection\Component\Validator\Validator class.
+After implementation you can use this validator as standalone or with the validator chain too.
+
+~~~
+
+    $chain = new ValidatorChain();
+
+    $chain('b')
+        ->notNull()
+        ->alphaNumeric()
+        ->use(My\Awesome\CustomValidator::class, ['Y-m-d'])
+    ;
+
+    $chain->verify(['b' => '2019-03-13']);
+
+    $violations = $chain->getViolations();
+
+~~~
+
+You can use the second parameter of the ValidatorChain::use method to pass one or more constraints to the constructor
+of you custom validator.

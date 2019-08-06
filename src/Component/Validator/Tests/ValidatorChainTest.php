@@ -13,6 +13,7 @@
 namespace Vection\Component\Validator\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Vection\Component\Validator\Tests\Fixtures\CustomValidator;
 use Vection\Component\Validator\Validator\AlphaNumeric;
 use Vection\Component\Validator\Validator\BetweenLength;
 use Vection\Component\Validator\ValidatorChain;
@@ -84,4 +85,34 @@ class ValidatorChainTest extends TestCase
         $this->assertEquals($violationA->getMessage(), $violations['a']->getMessage());
         $this->assertEquals($violationB->getMessage(), $violations['b']->getMessage());
     }
+
+    /**
+     *
+     */
+    public function testCustomValidator()
+    {
+        $chain = new ValidatorChain();
+
+        $chain('a')
+            ->notNull()
+            ->use(CustomValidator::class)
+            ->alphaNumeric()
+        ;
+
+        $chain('b')
+            ->notNull()
+            ->use(CustomValidator::class)
+            ->alphaNumeric()
+        ;
+
+        $chain->verify([
+            'a' => 'abcxxxdef',
+            'b' => 'abcdef'
+        ]);
+
+        $violations = $chain->getViolations();
+
+        $this->assertTrue(count($violations) === 1);
+    }
+
 }
