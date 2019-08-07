@@ -78,7 +78,7 @@ Now we can validate the data set against one or more validators
 You can define custom validators by extending the abstract Vection\Component\Validator\Validator class.
 The custom implementation can be used as standalone validator or with the validator chain too.
 
-~~~
+```php
 
     $chain = new ValidatorChain();
 
@@ -92,7 +92,7 @@ The custom implementation can be used as standalone validator or with the valida
 
     $violations = $chain->getViolations();
 
-~~~
+```
 
 You can use the second parameter of the ValidatorChain::use method to pass one or more constraints to the constructor
 of your custom validator.

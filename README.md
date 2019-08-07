@@ -1,6 +1,10 @@
-# Vection Framework
-## PHP Framework for Enterprise Applications
+# Vection - PHP Enterprise Framework
 
-Vection is a modern and component based enterprise framework.
+Vection is a modern and component based enterprise framework..
 
-**WORK IN PROGRESS - DEV STATUS**
+
+ATTENTION - This framework is currently in its first development stage, api / interfaces could still change until a stable version is released!!
+
+**DO NOT USE FOR PRODUCTION YET**
+
+
