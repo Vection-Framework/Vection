@@ -5,21 +5,22 @@ The PHP Vection validator component provides a flexible and complex validation o
 ### Installation / Composer
 
 Vection Framework Components are works only via composer. So first ensure your composer is configured and ready to use.
-~~~
+
+```json
     "require": {
         "vection-framework/vection": "dev-master"
     }
-~~~
+```
 
 OR
 
-~~~
+```shell script
     $ composer install vection-framework/vection
-~~~
+```
 
 ### Minimal usage of validators
-~~~
 
+```php
     $validator = new Vection\Component\Validator\Validator\Date("H:i:s");
 
     # Each validator returns null on success or an object of Violation on fail
@@ -31,12 +32,13 @@ OR
         # This will trigger the __toString and output the message
         # -> Date "17:12-43" is invalid or does not match format "H:i:s".
     } 
-~~~
+```
 
 
 ### Validator chain
 Use the chain to validate a value or a set of data against several validators.
-~~~
+
+```php
     # First we define the data set we got via request payload or other input
 
     $data = [
@@ -44,9 +46,10 @@ Use the chain to validate a value or a set of data against several validators.
         'start' => 0,
         'limit' => 20
     ];
-~~~
+```
 Now we can validate the data set against one or more validators
-~~~
+
+```php
     $chain = new Vection\Component\Validator\ValidatorChain();
     
     $chain('date')
@@ -71,7 +74,7 @@ Now we can validate the data set against one or more validators
         # There are some failed validations, so print them to see
         print json_encode($violations);
     } 
-~~~
+```
 
 ### Custom validators 
 
@@ -79,7 +82,6 @@ You can define custom validators by extending the abstract Vection\Component\Val
 The custom implementation can be used as standalone validator or with the validator chain too.
 
 ```php
-
     $chain = new ValidatorChain();
 
     $chain('b')
@@ -91,7 +93,6 @@ The custom implementation can be used as standalone validator or with the valida
     $chain->verify(['b' => '2019-03-13']);
 
     $violations = $chain->getViolations();
-
 ```
 
 You can use the second parameter of the ValidatorChain::use method to pass one or more constraints to the constructor
