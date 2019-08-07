@@ -73,6 +73,7 @@ Now we can validate the data set against one or more validators
     if( $violations = $chain->getViolations() ){
         # There are some failed validations, so print them to see
         print json_encode($violations);
+        # output: {"date": {"value":"2019-02-03", "message":"..."}, "start": {...}}
     } 
 ```
 
