@@ -4,7 +4,7 @@ The PHP Vection validator component provides a flexible and complex validation o
 
 ### Installation / Composer
 
-Vection Framework Components are works only via composer. So first ensure your composer is configured and read to use.
+Vection Framework Components are works only via composer. So first ensure your composer is configured and ready to use.
 ~~~
     "require": {
         "vection-framework/vection": "dev-master"
@@ -76,7 +76,7 @@ Now we can validate the data set against one or more validators
 ### Custom validators 
 
 You can define custom validators by extending the abstract Vection\Component\Validator\Validator class.
-After implementation you can use this validator as standalone or with the validator chain too.
+The custom implementation can be used as standalone validator or with the validator chain too.
 
 ~~~
 
@@ -85,7 +85,7 @@ After implementation you can use this validator as standalone or with the valida
     $chain('b')
         ->notNull()
         ->alphaNumeric()
-        ->use(My\Awesome\CustomValidator::class, ['Y-m-d'])
+        ->use(new My\Awesome\CustomValidator('Y-m-d'))
     ;
 
     $chain->verify(['b' => '2019-03-13']);

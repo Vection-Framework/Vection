@@ -95,15 +95,15 @@ class ValidatorChainTest extends TestCase
 
         $chain('a')
             ->notNull()
-            ->use(CustomValidator::class)
+            ->use(new CustomValidator())
             ->alphaNumeric()
         ;
 
         $chain('b')
-            ->notNull()
-            ->use(CustomValidator::class)
-            ->alphaNumeric()
-        ;
+        ->notNull()
+        ->use(new CustomValidator())
+        ->alphaNumeric()
+    ;
 
         $chain->verify([
             'a' => 'abcxxxdef',
