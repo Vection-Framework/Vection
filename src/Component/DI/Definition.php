@@ -1,10 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -19,13 +19,17 @@ namespace Vection\Component\DI;
  */
 class Definition
 {
-    /**
-     * This property contains all the definitions for
-     * the given class.
-     *
-     * @var string
-     */
-    protected $definition;
+    /** @var string */
+    protected $id;
+
+    /** @var callable */
+    protected $factory;
+
+    /** @var bool */
+    protected $shared = true;
+
+    /** @var array */
+    protected $dependencies = [];
 
     /**
      * Definition constructor.
@@ -34,23 +38,18 @@ class Definition
      */
     public function __construct(string $className)
     {
-        $this->definition = [
-            'className'       => ltrim($className, '\\'),
-            'constructParams' => [],
-            'shared'          => true,
-            'instanceClosure' => null,
-            'dependencies'    => [],
-        ];
+        $this->id = ltrim($className, '\\');
     }
 
     /**
-     * Returns the class name as target for this definition.
+     * @param callable $closure
      *
-     * @return string
+     * @return Definition
      */
-    public function getClassName(): string
+    public function factory(callable $closure): Definition
     {
-        return $this->definition['className'];
+        $this->factory = $closure;
+        return $this;
     }
 
     /**
@@ -60,20 +59,7 @@ class Definition
      */
     public function construct(...$params): Definition
     {
-        $this->definition['constructParams'] = $params;
-
-        return $this;
-    }
-
-    /**
-     * @param callable $closure
-     *
-     * @return Definition
-     */
-    public function instance(callable $closure): Definition
-    {
-        $this->definition['instanceClosure'] = $closure;
-
+        $this->dependencies['construct'] = $params;
         return $this;
     }
 
@@ -85,7 +71,19 @@ class Definition
      */
     public function inject(string $className, string $propertyName = ''): Definition
     {
-        $this->definition['dependencies'][$propertyName ?: $className] = $className;
+        $setter = $propertyName ?: $className;
+
+        if( strpos($setter, "\\") !== false ){
+            $setter = substr(strrchr($setter, "\\"), 1);
+        }
+
+        $setter = 'set' . ucfirst($setter);
+
+        if( ! isset($this->dependencies['setter']) ){
+            $this->dependencies['setter'] = [];
+        }
+
+        $this->dependencies['setter'][$setter] = $className;
 
         return $this;
     }
@@ -97,18 +95,39 @@ class Definition
      */
     public function shared(bool $shared): Definition
     {
-        $this->definition['shared'] = $shared;
-
+        $this->shared = $shared;
         return $this;
     }
 
     /**
-     * Returns the definition as array.
-     *
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    /**
      * @return array
      */
-    public function toArray(): array
+    public function getDependencies(): array
     {
-        return $this->definition;
+        return $this->dependencies;
+    }
+
+    /**
+     * @return callable|null
+     */
+    public function getFactory(): ? callable
+    {
+        return $this->factory;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isShared(): bool
+    {
+        return $this->shared;
     }
 }

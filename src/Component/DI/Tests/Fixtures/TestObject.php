@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * This file is part of the Vection project.
  * Visit project at https://www.vection.de
@@ -13,30 +12,56 @@
 
 namespace Vection\Component\DI\Tests\Fixtures;
 
+use Vection\Component\DI\Annotations\Inject;
+use Vection\Component\DI\Traits\AnnotationInjection;
+use Vection\Component\DI\Traits\ContainerAwareTrait;
+
 /**
  * Class TestObject
  *
  * @package Vection\Component\DI\Tests\Fixtures
  */
-class TestObject
+class TestObject implements InterfaceInjectedObjectInterface
 {
-    private $byDef;
+    use AnnotationInjection, ContainerAwareTrait;
 
     /**
-     * TestObject constructor.
-     *
-     * @param bool $byDef
+     * @Inject("Vection\Component\DI\Tests\Fixtures\AnnotationInjectedObject")
+     * @var AnnotationInjectedObject
      */
-    public function __construct(bool $byDef = false)
+    protected $annotationInjectedObject;
+
+    /** @var ExplicitInjectedObject */
+    private $explicitInjectedObject;
+
+    /** @var InterfaceInjectedObject */
+    protected $logger;
+
+    /**
+     * @param ExplicitInjectedObject $o
+     */
+    public function __inject(ExplicitInjectedObject $o): void
     {
-        $this->byDef = $byDef;
+        $this->explicitInjectedObject = $o;
     }
 
-    /**
-     * @return bool
-     */
-    public function instantiatedByDef(): bool
+    public function getExplicitInjectedObject()
     {
-        return $this->byDef;
+        return $this->explicitInjectedObject;
+    }
+
+    public function getAnnotationInjectedObject()
+    {
+        return $this->annotationInjectedObject;
+    }
+
+    public function getInterfaceInjectedObject()
+    {
+        return $this->logger;
+    }
+
+    public function setInterfaceInjectedObject($logger)
+    {
+        $this->logger = $logger;
     }
 }

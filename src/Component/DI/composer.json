@@ -1,29 +1,25 @@
 {
-    "name": "vection-framework/vection-di",
+    "name": "vection-framework/dic",
     "type": "library",
-    "description": "The Vection Dependency Injection Container Framework Component",
-    "keywords": ["framework", "di", "container", "dependency-container", "php-di"],
-    "homepage": "https://vection.de",
+    "description": "The Vection Framework Dependency Injection Container Component",
+    "keywords": ["php dependency injection", "di", "container", "dependency-container", "php-di"],
+    "homepage": "https://vection.appsdock.org",
     "license": "MIT",
     "authors": [
         {
             "name": "David Lung",
-            "email": "david@appsdock.de"
-        },
-        {
-            "name": "Björn Klemm",
-            "email": "bjoern@appsdock.de"
+            "email": "vection@davidlung.de"
         }
     ],
-    "require": {
-        "php": "^7.2",
-        "psr/log": "~1.0",
-        "psr/container": "^1.0"
-    },
     "autoload": {
         "psr-4": {
             "Vection\\Component\\DI": "./"
         }
+    },
+    "require": {
+        "php": "^7.2",
+        "psr/log": "~1.0",
+        "psr/container": "^1.0"
     },
     "minimum-stability": "dev"
 }

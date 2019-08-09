@@ -1,10 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,36 +12,52 @@
 
 namespace Vection\Component\DI;
 
-use Psr\Container\ContainerExceptionInterface;
+use ArrayObject;
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
-use Vection\Component\Cache\Traits\CacheAwareTrait;
-use Vection\Component\DI\Exception\ContainerException;
+use ReflectionException;
+use ReflectionMethod;
 use Vection\Component\DI\Exception\InvalidArgumentException;
 use Vection\Component\DI\Exception\NotFoundException;
 use Vection\Component\DI\Exception\RuntimeException;
 use Vection\Contracts\Cache\CacheAwareInterface;
+use Vection\Contracts\Cache\CacheInterface;
 
 /**
  * Class Container
+ *
+ * This class provides dependency injection by constructor, interface, annotation
+ * and explicit definition. An optional configuration file can be used to register
+ * and define dependencies.
  *
  * @package Vection\Component\DI
  */
 class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareInterface
 {
-    use LoggerAwareTrait, CacheAwareTrait;
+    use LoggerAwareTrait;
 
-    /** @var array */
-    protected $scopes;
+    /** @var CacheInterface */
+    protected $cache;
 
-    /** @var Inventory */
-    protected $inventory;
+    /** @var Resolver */
+    protected $resolver;
+
+    /** @var Injector */
+    protected $injector;
 
     /** @var object[] */
-    protected $shares;
+    protected $sharedObjects;
+
+    /** @var Definition[]|ArrayObject */
+    protected $definitions;
+
+    /** @var string[][][]|ArrayObject */
+    protected $dependencies;
+
+    /** @var array */
+    protected $registeredNamespaces;
 
     /**
      * Container constructor.
@@ -49,8 +65,43 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
     public function __construct()
     {
         $this->logger = new NullLogger();
-        $this->inventory = new Inventory();
-        $this->shares[self::class] = $this;
+        $this->sharedObjects[self::class] = $this;
+        $this->definitions = new ArrayObject();
+        $this->dependencies = new ArrayObject();
+        $this->resolver = new Resolver($this->definitions, $this->dependencies);
+        $this->injector = new Injector($this, $this->dependencies);
+    }
+
+    /**
+     * All objects of the given namespaces will be auto registered at runtime
+     * for injection into other objects without the need to define them
+     * in the config or by set/add methods. Pass ['*'] as wildcard to register all namespaces.
+     *
+     * @param array $scopes
+     */
+    public function registerNamespace(array $scopes): void
+    {
+        $this->registeredNamespaces = $scopes;
+    }
+
+    /**
+     * Returns the cache instance if exists or null otherwise.
+     *
+     * @return null|CacheInterface
+     */
+    public function getCache(): ? CacheInterface
+    {
+        return $this->cache;
+    }
+
+    /**
+     * Sets a cache instance to this object.
+     *
+     * @param CacheInterface $cache
+     */
+    public function setCache(CacheInterface $cache): void
+    {
+        $this->cache = $cache;
     }
 
     /**
@@ -61,97 +112,60 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      * to add multiple files.
      *
      * @param string $path
-     *
-     * @throws InvalidArgumentException
-     * @throws RuntimeException
      */
     public function load(string $path): void
     {
-        if( ! ($pathArray = \glob($path)) ) {
+        if( ! ($pathArray = glob($path)) ) {
             throw new InvalidArgumentException("Given path is not valid or doesn't exists.");
         }
 
         foreach( $pathArray as $_path ) {
             /** @noinspection PhpIncludeInspection */
-            $definition = require $_path;
+            $definitions = require $_path;
 
-            if( ! \is_array($definition) ) {
+            if( ! is_array($definitions) ) {
                 throw new RuntimeException("Cannot load definition from {$_path}.");
             }
-            $this->inventory->addDefinitionArray($definition);
-        }
-    }
 
-    /**
-     * Sets a new set of namespace scopes which can be
-     * used to load all classes in the scopes without
-     * to define them in the container configuration.
-     *
-     * @param array $scopes
-     */
-    public function setNamespaceScopes(array $scopes): void
-    {
-        $this->scopes = $scopes;
-    }
-
-    /**
-     * Finds an entry of the container by its identifier and returns it.
-     *
-     * @param string $id Identifier of the entry to look for.
-     *
-     * @throws NotFoundExceptionInterface  No entry was found for **this** identifier.
-     * @throws ContainerExceptionInterface Error while retrieving the entry.
-     *
-     * @return mixed Entry.
-     */
-    public function get($id)
-    {
-        # REMOVE LEADING BACKSLASH
-        $className = ltrim($id, "\\");
-
-        # RETURN IF OBJECT IS A SHARED ONE AND ALREADY EXIST
-        if( isset($this->shares[$className]) ) {
-            return $this->shares[$className];
-        }
-
-        # CHECK IF REQUESTED OBJECT HAS AN ENTRY
-        if( ! $this->evaluate($className) ) {
-            throw new NotFoundException('DI Container: Unregistered identifier: '.$className);
-        }
-
-        # OBJECT CREATION + INJECT BY CONFIG / CONSTRUCTOR PARAMETERS
-        try {
-            $object = $this->createObject($className);
-        } catch( \ReflectionException $e ) {
-            $this->logger->error($e->getMessage());
-            throw new ContainerException(
-                sprintf('%s: Error while creating object for id "%s": %s %s.',
-                    self::class, $className, $e->getMessage(), $e->getTraceAsString()
-                ), 0, $e
-            );
-        }
-
-        # INJECTIONS BY SEVERAL WAYS
-        $this->injectIntoObject($object);
-
-        # OBJECT HANDLING (SINGLETON/FACTORY)
-        if( $this->inventory->isShared($className) ) {
-            $this->shares[$className] = $object;
-        }
-
-        # CALL INITIAL METHOD IF EXISTS
-        if( method_exists($object, '__init') ) {
-            try {
-                $method = new \ReflectionMethod(\get_class($object), '__init');
-                $method->isPublic() AND $object->__init();
-            } catch( \ReflectionException $e ) {
-                if( \strpos($e->getMessage(), '__init') === false ){
-                    throw new $e;
+            foreach( $definitions as $definition ){
+                if( ! $definition instanceof Definition ){
+                    throw new RuntimeException(
+                        'Invalid configuration file: Each entry must be of type Definition.'
+                    );
                 }
+
+                $this->definitions[$definition->getId()] = $definition;
+            }
+        }
+    }
+
+    /**
+     * @param string $className
+     *
+     * @param array  $constructParams
+     *
+     * @return object
+     */
+    private function createObject(string $className, array $constructParams = []): object
+    {
+        if( $constructParams ){
+            return new $className(...$constructParams);
+        }
+
+        if( $this->definitions->offsetExists($className) ){
+
+            if( $factory = $this->definitions[$className]->getFactory() ){
+                return $factory($this);
+            }
+
+            $dependencies = $params = $this->definitions[$className]->getDependencies();
+
+            if( $params = ($dependencies['construct'] ?? []) ){
+                return new $className(...$params);
             }
         }
 
-        return $object;
+        return new $className();
     }
 
     /**
@@ -165,14 +179,18 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
         if( ! $this->has($id) ) {
             # There is no entry for this id
 
-            if( ! $this->scopes ) {
+            if( ! $this->registeredNamespaces ) {
                 # There is no entry and no scope, so return an empty array
                 return false;
             }
 
+            if( $this->registeredNamespaces[0] === '*' ){
+                return true;
+            }
+
             # Check if the id is part of a registered namespace scope
-            foreach( $this->scopes as $scope ) {
-                if( \strpos($id, $scope) === 0 ) {
+            foreach( $this->registeredNamespaces as $namespace ) {
+                if( strpos($id, $namespace) === 0 ) {
                     # The id matches a scope, so we allow to register a default definition for this id
                     $this->set($id);
                 }
@@ -188,6 +206,24 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
     }
 
     /**
+     * @param object $object
+     */
+    private function initializeObject(object $object): void
+    {
+        if( method_exists($object, '__init') ) {
+            try {
+                $method = new ReflectionMethod(get_class($object), '__init');
+                $method->isPublic() AND $object->__init();
+            }
+            catch( ReflectionException $e ) {
+                if( strpos($e->getMessage(), '__init') === false ){
+                    throw new $e;
+                }
+            }
+        }
+    }
+
+    /**
      * Returns true if the container can return an entry for the given identifier.
      * Returns false otherwise.
      *
@@ -200,12 +236,13 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      */
     public function has($id): bool
     {
-        return $this->inventory->has(\trim($id, "\\"));
+        $className = trim($id, "\\");
+        return isset($this->definitions[$className]) || isset($this->dependencies[$className]);
     }
 
     /**
      * Register a new entry by given identifier. The second parameter can be used
-     * for entry settings
+     * for entry definition
      *
      * @param string     $className
      * @param Definition $definition
@@ -214,223 +251,48 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      */
     public function set(string $className, ? Definition $definition = null): Container
     {
-        $this->inventory->set(\trim($className, "\\"), $definition ?: new Definition($className));
+        $className = trim($className, "\\");
+        $this->definitions[$className] = $definition ?: new Definition($className);
+
+        if( ! isset($this->dependencies[$className]) ){
+            $this->resolver->resolveDependencies($className);
+        }
 
         return $this;
     }
 
     /**
-     * @param string $className
+     * Finds an entry of the container by its identifier and returns it.
+     * If the requested entry has dependencies, these will be injected before
+     * return this object.
+     *
+     * @param string $id Identifier of the entry to look for.
      *
      * @return object
-     *
-     * @throws \ReflectionException
      */
-    private function createObject(string $className): object
+    public function get($id)
     {
-        if( $params = $this->inventory->getConstructParams($className) ) {
-            return new $className(...$params);
+        $className = ltrim($id, "\\");
+
+        if( isset($this->sharedObjects[$className]) ) {
+            return $this->sharedObjects[$className];
         }
 
-        if( $closure = $this->inventory->getInstanceClosure($className) ) {
-            return $closure($this);
+        if( ! $this->evaluate($className) ) {
+            throw new NotFoundException('DI Container: Unregistered identifier: '.$className);
         }
 
-        if( $params = $this->getConstructorDependencies($className) ) {
-            return new $className(...$params);
+        $this->resolver->resolveDependencies($className);
+        $object = $this->createObject($className);
+        $this->injector->injectDependencies($object);
+
+        if( ($definition = $this->definitions[$className] ?? null) && $definition->isShared() ) {
+            $this->sharedObjects[$className] = $object;
         }
 
-        return new $className();
-    }
+        $this->initializeObject($object);
 
-    ///////////////////////////////////////////////////////////////////////
-    // OBJECT HANDLING (CREATION + INJECTION)
-    ///////////////////////////////////////////////////////////////////////
-
-    /**
-     * @param string $className
-     *
-     * @return array
-     *
-     * @throws \ReflectionException
-     */
-    private function getConstructorDependencies(string $className): array
-    {
-        $params = [];
-        $constructor = (new \ReflectionClass($className))->getConstructor();
-
-        if( $constructor && ($constructParams = $constructor->getParameters()) ) {
-            foreach( $constructParams as $param ) {
-                if( $param->hasType() && $param->getType() !== null && ! $param->getType()->isBuiltin() ) {
-                    $params[] = $this->get($param->getClass()->name);
-                } else {
-                    return [];
-                }
-            }
-        }
-
-        if( ! $params && ($parent = get_parent_class($className)) ) {
-            do {
-                $params = $this->getConstructorDependencies($parent);
-            } while( ! $params && ($parent = get_parent_class($parent)) );
-        }
-
-        return $params;
-    }
-
-    /**
-     * @param object $object
-     */
-    private function injectIntoObject(object $object): void
-    {
-        # INJECTION BY (Object) CONFIG (SETTER / __SET)
-        $this->injectBySetter($object);
-
-        # INJECTION BY TRAIT (__dependencyInjection)
-        $this->injectByTraits($object);
-
-        # INJECTION BY METHOD (__inject)
-        $this->injectByMethod($object);
-    }
-
-    /**
-     * @param object $object
-     */
-    private function injectBySetter(object $object): void
-    {
-        $className = \trim(\get_class($object), "\\");
-
-        # Add setter injections by interfaces
-        if( $interfaces = class_implements($className, true) ) {
-            foreach( $interfaces as $interface ) {
-                if( $this->has($interface) && ($dependencies = $this->inventory->getDependencies($interface)) ) {
-                    $this->inventory->addDependencies($className, $dependencies);
-                }
-            }
-        }
-
-        # Add setter injection by parent classes
-        if( $parents = class_parents($className, true) ) {
-            foreach( $parents as $parent ) {
-                if( $this->has($parent) && ($dependencies = $this->inventory->getDependencies($parent)) ) {
-                    $this->inventory->addDependencies($className, $dependencies);
-                }
-            }
-        }
-
-        foreach( $this->inventory->getDependencies($className) as $property => $dependency ) {
-
-            $property = \ltrim($property, '\\');
-
-            if( \strpos($property, '\\') !== false ) {
-                $property = \substr($property, \strrpos($property, '\\') + 1);
-            }
-
-            $setter = 'set'.\ucfirst($property);
-
-            if( \method_exists($object, $setter) ) {
-                $object->$setter($this->get($dependency));
-            }
-        }
-
-    }
-
-    /**
-     * @param object $object
-     */
-    private function injectByTraits(object $object): void
-    {
-        # ContainerAware trait
-        if( \method_exists($object, '__setContainer') ) {
-            $object->__setContainer($this);
-        }
-
-        # AnnotationInjection trait
-        if( \method_exists($object, '__annotationInjection') ) {
-
-            $dependencies = [];
-
-            if( $this->cache ){
-                $pool = $this->cache->getPool('Vection.DI');
-                $key = 'annotatedDependencies.'.\get_class($object);
-                if( $pool->contains($key) ){
-                    $dependencies = $pool->getArray($key);
-                }
-            }
-
-            if( ! $dependencies ){
-                foreach ( ( new \ReflectionObject($object) )->getProperties() as $property ) {
-                    if ( ! ($doc = $property->getDocComment()) ) {
-                        continue;
-                    }
-
-                    $regex = '/@Inject\("([a-zA-Z\\\\_0-9]+)"\)/';
-
-                    if ( \preg_match_all($regex, $doc, $match, PREG_SET_ORDER) ) {
-                        foreach ( $match as $m ) {
-                            $dependencies[$property->getName()] = $m[1];
-                        }
-                    }
-                }
-
-                if( $this->cache && $dependencies ){
-                    $pool = $this->cache->getPool('Vection.DI');
-                    $key = 'annotatedDependencies.'.\get_class($object);
-                    $pool->setArray($key, $dependencies);
-                }
-            }
-
-            foreach( $dependencies as $property => $dependencyId ) {
-                $dependencies[$property] = $this->get($dependencyId);
-            }
-
-            $object->__annotationInjection($dependencies);
-        }
-    }
-
-    /**
-     * @param object $object
-     */
-    private function injectByMethod(object $object): void
-    {
-        if( \method_exists($object, '__inject') ) {
-            $dependencies = [];
-
-            if( $this->cache ){
-                $pool = $this->cache->getPool('Vection.DI');
-                $key = 'injectionDependencies.'.\get_class($object);
-                if( $pool->contains($key) ){
-                    $dependencies = $pool->getArray($key);
-                }
-            }
-
-            if( ! $dependencies ){
-                try {
-                    $method = new \ReflectionMethod($object, '__inject');
-
-                    foreach ( $method->getParameters() ?? [] as $param ) {
-                        if ( $param->hasType() && $param->getType() !== null && ! $param->getType()->isBuiltin() ) {
-                            $dependencies[] = $this->get($param->getClass()->name);
-                        } else {
-                            return;
-                        }
-                    }
-
-                    if( $this->cache && $dependencies ){
-                        $pool = $this->cache->getPool('Vection.DI');
-                        $key = 'injectionDependencies.'.\get_class($object);
-                        $pool->setArray($key, $dependencies);
-                    }
-                }
-                catch ( \ReflectionException $e ) {
-                    # Never run in this line, covered by method_exists condition
-                }
-            }
-
-            if ( $dependencies ) {
-                \call_user_func_array([ $object, '__inject' ], $dependencies);
-            }
-        }
+        return $object;
     }
 
     /**
@@ -443,56 +305,31 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      * @param array  $constructParams Parameter that should be passed to constructor.
      * @param bool   $shared          Whether the new object should be shared or not.
      *
-     * @return mixed The new created object.
-     *
-     * @throws NotFoundException
-     * @throws ContainerException
+     * @return object The new created object.
      */
     public function create(string $identifier, array $constructParams = [], bool $shared = true): object
     {
-        # REMOVE LEADING BACKSLASH
-        $className = ltrim($identifier, "\\");
+        $className = trim($identifier, "\\");
 
         if( ! $this->evaluate($className) ) {
             throw new NotFoundException('DI Container: Unregistered identifier: '.$className);
         }
 
-        # CREATE OBJECT CONFIG
-        $this->inventory->setShared($className, $shared);
-        $this->inventory->setConstructParams($className, $constructParams);
-
-        # OBJECT CREATION + INJECT BY CONFIG / CONSTRUCTOR PARAMETERS
-        try {
-            $object = $this->createObject($className);
-        } catch( \ReflectionException $e ) {
-            $this->logger->error($e->getMessage());
-            throw new ContainerException(
-                sprintf(
-                    '%s: Error while creating object for id "%s": %s %s.',
-                    self::class, $className, $e->getMessage(), $e->getTraceAsString()
-                )
-            );
+        if( ! isset($this->definitions[$className]) ){
+            $this->definitions[$className] = new Definition($className);
         }
 
-        # INJECTIONS BY SEVERAL WAYS
-        $this->injectIntoObject($object);
+        $this->definitions[$className]->shared($shared);
 
-        # OBJECT HANDLING (SINGLETON/FACTORY)
+        $this->resolver->resolveDependencies($className);
+        $object = $this->createObject($className, $constructParams);
+        $this->injector->injectDependencies($object);
+
         if( $shared ) {
-            $this->shares[$className] = $object;
+            $this->sharedObjects[$className] = $object;
         }
 
-        # CALL INITIAL METHOD IF EXISTS
-        if( method_exists($object, '__init') ) {
-            try {
-                $method = new \ReflectionMethod(\get_class($object), '__init');
-                $method->isPublic() AND $object->__init();
-            } catch( \ReflectionException $e ) {
-                if( \strpos($e->getMessage(), '__init') === false ){
-                    throw new $e;
-                }
-            }
-        }
+        $this->initializeObject($object);
 
         return $object;
     }
@@ -502,19 +339,19 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      * will be the FQCN of the given object.
      *
      * @param object     $object
-     * @param Definition $definition
      *
-     * @return mixed Returns the given object.
+     * @return object Returns the given object.
      */
-    public function add(object $object, ? Definition $definition = null): object
+    public function add(object $object): object
     {
-        $className = \trim(\get_class($object), "\\");
-        $this->set($className, $definition);
-        $this->shares[$className] = $object;
-        $this->injectIntoObject($object);
+        $className = trim(get_class($object), "\\");
+        $this->set($className);
+        $this->sharedObjects[$className] = $object;
+        $this->injector->injectDependencies($object);
 
         return $object;
     }
+
 }
 
 /**
@@ -524,7 +361,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
  *
  * @return Definition
  */
-function def(string $className): Definition
+function set(string $className): Definition
 {
     return new Definition($className);
 }
