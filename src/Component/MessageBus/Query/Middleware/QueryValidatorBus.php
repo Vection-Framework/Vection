@@ -1,10 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,14 +12,12 @@
 
 namespace Vection\Component\MessageBus\Query\Middleware;
 
+use Vection\Component\MessageBus\Exception\InvalidPayloadException;
 use Vection\Contracts\MessageBus\Query\QueryBusMiddlewareInterface;
 use Vection\Contracts\MessageBus\Query\QueryBusSequenceInterface;
 use Vection\Contracts\MessageBus\Query\QueryInterface;
 use Vection\Contracts\MessageBus\Query\ReadModelInterface;
 use Vection\Contracts\Validator\ValidatableInterface;
-use Vection\Contracts\Validator\ValidationChainFailedExceptionInterface;
-use Vection\Contracts\Validator\ValidationMediatorInterface;
-
 
 /**
  * Class QueryValidatorBus
@@ -29,40 +27,23 @@ use Vection\Contracts\Validator\ValidationMediatorInterface;
 class QueryValidatorBus implements QueryBusMiddlewareInterface
 {
     /**
-     * The validator that validates the payload of the query.
-     *
-     * @var ValidationMediatorInterface
-     */
-    protected $validator;
-
-    /**
-     * QueryValidatorBus constructor.
-     *
-     * @param ValidationMediatorInterface $validator
-     */
-    public function __construct(ValidationMediatorInterface $validator)
-    {
-        $this->validator = $validator;
-    }
-
-    /**
      * @param QueryInterface            $message
      * @param QueryBusSequenceInterface $sequence
      *
      * @return ReadModelInterface|null
      *
-     * @throws ValidationChainFailedExceptionInterface
+     * @throws InvalidPayloadException
      */
     public function __invoke(QueryInterface $message, QueryBusSequenceInterface $sequence)
     {
-        # Create a new validation chain
-        $validationChain = $this->validator->createValidationChain();
+        if( $message instanceof ValidatableInterface ){
+            $chain = $message->getValidationChain();
+            $chain->verify($message->payload()->toArray());
 
-        # Let the query define its validation chain for its payload
-        $message instanceof ValidatableInterface && $message->defineValidation($validationChain);
-
-        # Validate the query payload data by the validation chain
-        $this->validator->verify($validationChain, $message->payload()->toArray());
+            if( $violations = $chain->getViolations() ){
+                throw new InvalidPayloadException($violations);
+            }
+        }
 
         # If data is valid then invoke next bus
         return $sequence->invokeNext($message);
