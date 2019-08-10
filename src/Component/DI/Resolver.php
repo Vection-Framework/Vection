@@ -76,7 +76,13 @@ class Resolver implements CacheAwareInterface
         $this->cache = $cache;
 
         if( $cache->contains('dependencies') ){
-            $this->dependencies->exchangeArray($cache->getArray('dependencies'));
+            if( $existing = $this->dependencies->getArrayCopy() ){
+                $cachedDependencies = $cache->getArray('dependencies');
+                $dependencies = array_merge($existing, $cachedDependencies);
+                $this->dependencies->exchangeArray($dependencies);
+            }else{
+                $this->dependencies->exchangeArray($cache->getArray('dependencies'));
+            }
         }
     }
 
@@ -186,9 +192,10 @@ class Resolver implements CacheAwareInterface
         if( $interfaces = class_implements($className, true) ) {
             foreach( $interfaces as $interface ) {
                 if( isset($this->definitions[$interface]) ) {
-                    $dependencies = $this->definitions[$interface]->getDependencies()['setter'] ?? [];
-                    foreach( $dependencies as $dependency ){
+                    $deps = $this->definitions[$interface]->getDependencies()['setter'] ?? [];
+                    foreach( $deps as $method => $dependency ){
                         $this->resolveDependencies($dependency);
+                        $dependencies[$method] = $dependency;
                     }
                 }
             }
@@ -223,7 +230,16 @@ class Resolver implements CacheAwareInterface
         $reflection = new ReflectionClass($className);
         $dependencies = [];
 
-        if( $reflection->getTraits()[AnnotationInjection::class] ?? null ) {
+        # Add annotation injection by parent classes
+        if( $parents = class_parents($className, true) ) {
+            foreach( $parents as $parent ) {
+                if( $parentAnnotationDependencies = $this->resolveAnnotatedDependencies($parent) ) {
+                    $dependencies = $parentAnnotationDependencies;
+                }
+            }
+        }
+
+        if( $reflection->getTraits()[AnnotationInjection::class] ?? null || $dependencies ) {
 
             foreach ( $reflection->getProperties() as $property ) {
                 if ( ! ($doc = $property->getDocComment()) ) {

@@ -169,17 +169,16 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
             return new $className(...$constructParams);
         }
 
-        if( $this->definitions->offsetExists($className) ){
+        if( $factory = $this->definitions[$className]->getFactory() ){
+            return $factory($this);
+        }
 
-            if( $factory = $this->definitions[$className]->getFactory() ){
-                return $factory($this);
+        if( $constructParams = $this->dependencies[$className]['construct'] ){
+            $paramObjects = [];
+            foreach( $constructParams as $param ){
+                $paramObjects[] = $this->get($param);
             }
-
-            $dependencies = $params = $this->definitions[$className]->getDependencies();
-
-            if( $params = ($dependencies['construct'] ?? []) ){
-                return new $className(...$params);
-            }
+            return new $className(...$paramObjects);
         }
 
         return new $className();
@@ -254,7 +253,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
     public function has($id): bool
     {
         $className = trim($id, "\\");
-        return isset($this->definitions[$className]) || isset($this->dependencies[$className]);
+        return isset($this->definitions[$className]);
     }
 
     /**
