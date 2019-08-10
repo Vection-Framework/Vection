@@ -17,28 +17,50 @@ use ReflectionClass;
 use ReflectionException;
 use Vection\Component\DI\Exception\ContainerException;
 use Vection\Component\DI\Traits\AnnotationInjection;
+use Vection\Contracts\Cache\CacheAwareInterface;
+use Vection\Contracts\Cache\CacheInterface;
 
 /**
  * Class Resolver
  *
+ * This class resolves the dependencies for a given class name and
+ * saves only the information of the dependency classes and how
+ * they have to be injected by the Injector class.
+ *
  * @package Vection\Component\DI
  */
-class Resolver
+class Resolver implements CacheAwareInterface
 {
+    /**
+     * The cache saves all resolved dependency tree information
+     * to avoid resolving on each request. Each new resolved information
+     * will be saved directly into the cache storage.
+     *
+     * @var CacheInterface|null
+     */
+    protected $cache;
 
-    /** @var ArrayObject|Definition[] */
+    /**
+     * This array object contains custom dependency definitions
+     * which will be considered by the resolving process.
+     *
+     * @var ArrayObject|Definition[]
+     */
     protected $definitions;
 
     /**
-     * @var ArrayObject
+     * This property contains all resolved dependency information
+     * which will be cached and reused on each injection by the Injector class.
+     *
+     * @var ArrayObject|string[][][]
      */
     protected $dependencies;
 
     /**
      * Resolver constructor.
      *
-     * @param ArrayObject $definitions
-     * @param ArrayObject $dependencies
+     * @param ArrayObject         $definitions
+     * @param ArrayObject         $dependencies
      */
     public function __construct(ArrayObject $definitions, ArrayObject $dependencies)
     {
@@ -47,9 +69,23 @@ class Resolver
     }
 
     /**
-     * @param string $id
+     * @param CacheInterface $cache
+     */
+    public function setCache(CacheInterface $cache): void
+    {
+        $this->cache = $cache;
+
+        if( $cache->contains('dependencies') ){
+            $this->dependencies->exchangeArray($cache->getArray('dependencies'));
+        }
+    }
+
+    /**
+     * Resolves all dependencies of the given class.
      *
-     * @return array
+     * @param string $id FQCN
+     *
+     * @return array An array that contains dependency information.
      */
     public function resolveDependencies(string $id): array
     {
@@ -60,10 +96,10 @@ class Resolver
                 }
 
                 if( ! isset($this->dependencies[$id]['construct']) ){
-                    $this->dependencies[$id]['construct'] = $this->getConstructorDependencies($id);
+                    $this->dependencies[$id]['construct'] = $this->resolveConstructorDependencies($id);
                 }
 
-                $setter = $this->getInterfaceDependencies($id);
+                $setter = $this->resolveInterfaceDependencies($id);
 
                 if( isset($this->dependencies[$id]['setter']) ){
                     $setter = array_merge($this->dependencies[$id]['setter'], $setter);
@@ -73,10 +109,14 @@ class Resolver
                 $this->dependencies[$id]['setter'] = $setter;
 
                 # This will used the __annotationInjection method from AnnotationInjection trait
-                $this->dependencies[$id]['annotation'] = $this->getAnnotatedDependencies($id);
+                $this->dependencies[$id]['annotation'] = $this->resolveAnnotatedDependencies($id);
 
                 # This is for the explicit inject by __inject method
-                $this->dependencies[$id]['explicit'] = $this->getExplicitDependencies($id);
+                $this->dependencies[$id]['explicit'] = $this->resolveExplicitDependencies($id);
+
+                if( $this->cache ){
+                    $this->cache->setArray('dependencies', $this->dependencies->getArrayCopy());
+                }
             }
             catch( ReflectionException $e ) {
                 throw new ContainerException(
@@ -90,13 +130,18 @@ class Resolver
     }
 
     /**
+     * Resolves the dependency information defined by the constructor of the given class.
+     *
+     * Returns an array contains the class names of the dependencies in the same order
+     * as defined by the constructor.
+     *
      * @param string $className
      *
-     * @return array
+     * @return array Contains class names of the dependencies.
      *
      * @throws ReflectionException
      */
-    protected function getConstructorDependencies(string $className): array
+    public function resolveConstructorDependencies(string $className): array
     {
         $dependencies = [];
         $constructor = (new ReflectionClass($className))->getConstructor();
@@ -114,7 +159,7 @@ class Resolver
 
         if( ! $dependencies && ($parent = get_parent_class($className)) ) {
             do {
-                $dependencies = $this->getConstructorDependencies($parent);
+                $dependencies = $this->resolveConstructorDependencies($parent);
             } while( ! $dependencies && ($parent = get_parent_class($parent)) );
         }
 
@@ -122,13 +167,18 @@ class Resolver
     }
 
     /**
+     * Resolves the dependencies information by interface definition.
+     *
+     * Returns an array contains the setter as key and class name of the
+     * dependencies which will be injected as value.
+     *
      * @param string $className
      *
-     * @return array
+     * @return array Contains setter methods as key and class as value.
      *
      * @throws ReflectionException
      */
-    protected function getInterfaceDependencies(string $className): array
+    public function resolveInterfaceDependencies(string $className): array
     {
         $dependencies = [];
 
@@ -147,7 +197,7 @@ class Resolver
         # Add setter injection by parent classes
         if( $parents = class_parents($className, true) ) {
             foreach( $parents as $parent ) {
-                if( $parentInterfaceDependencies = $this->getInterfaceDependencies($parent) ) {
+                if( $parentInterfaceDependencies = $this->resolveInterfaceDependencies($parent) ) {
                     $dependencies = array_merge($dependencies, $parentInterfaceDependencies);
                 }
             }
@@ -157,13 +207,18 @@ class Resolver
     }
 
     /**
+     * Resolves the annotated dependencies defined by the given class.
+     *
+     * Returns an array with the internal property name as key and the
+     * class name of the dependency as value.
+     *
      * @param string $className
      *
      * @return array
      *
      * @throws ReflectionException
      */
-    protected function getAnnotatedDependencies(string $className): array
+    public function resolveAnnotatedDependencies(string $className): array
     {
         $reflection = new ReflectionClass($className);
         $dependencies = [];
@@ -190,13 +245,18 @@ class Resolver
     }
 
     /**
+     * Resolves the explicit requested dependencies by the __inject method.
+     *
+     * Returns an array contains the class names of the dependencies in same
+     * order as defined by the given class __inject method.
+     *
      * @param string $className
      *
      * @return array
      *
      * @throws ReflectionException
      */
-    protected function getExplicitDependencies(string $className): array
+    public function resolveExplicitDependencies(string $className): array
     {
         $dependencies = [];
         $reflection = new ReflectionClass($className);

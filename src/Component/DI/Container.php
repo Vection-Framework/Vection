@@ -38,26 +38,55 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
 {
     use LoggerAwareTrait;
 
-    /** @var CacheInterface */
-    protected $cache;
+    /**
+     * Contains namespaces which will be used for auto setting classes
+     * into the registry. All classes in this namespaces no longer have
+     * to be registered by the Container::set or config file.
+     * 
+     * @var array
+     */
+    protected $registeredNamespaces;
 
-    /** @var Resolver */
+    /**
+     * This class resolves all dependencies of a given class and saves
+     * the information about the dependency and how they have to be injected.
+     *
+     * @var Resolver
+     */
     protected $resolver;
 
-    /** @var Injector */
+    /**
+     * The Injector is responsible for the injection of dependencies
+     * into the given object. It uses the dependency information resolved
+     * by the Resolver class.
+     *
+     * @var Injector
+     */
     protected $injector;
 
-    /** @var object[] */
+    /**
+     * Contains all shared objects which will be only instantiate
+     * once an injected into all other objects.
+     *
+     * @var object[]
+     */
     protected $sharedObjects;
 
-    /** @var Definition[]|ArrayObject */
+    /**
+     * This array object contains custom dependency definitions
+     * which will be considered by the resolving process.
+     *
+     * @var Definition[]|ArrayObject
+     */
     protected $definitions;
 
-    /** @var string[][][]|ArrayObject */
+    /**
+     * This property contains all resolved dependency information
+     * which will be cached and reused on each injection by the Injector class.
+     *
+     * @var string[][][]|ArrayObject
+     */
     protected $dependencies;
-
-    /** @var array */
-    protected $registeredNamespaces;
 
     /**
      * Container constructor.
@@ -73,6 +102,14 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
     }
 
     /**
+     * @inheritDoc
+     */
+    public function setCache(CacheInterface $cache): void
+    {
+        $this->resolver->setCache($cache->getPool('DI'));
+    }
+
+    /**
      * All objects of the given namespaces will be auto registered at runtime
      * for injection into other objects without the need to define them
      * in the config or by set/add methods. Pass ['*'] as wildcard to register all namespaces.
@@ -82,26 +119,6 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
     public function registerNamespace(array $scopes): void
     {
         $this->registeredNamespaces = $scopes;
-    }
-
-    /**
-     * Returns the cache instance if exists or null otherwise.
-     *
-     * @return null|CacheInterface
-     */
-    public function getCache(): ? CacheInterface
-    {
-        return $this->cache;
-    }
-
-    /**
-     * Sets a cache instance to this object.
-     *
-     * @param CacheInterface $cache
-     */
-    public function setCache(CacheInterface $cache): void
-    {
-        $this->cache = $cache;
     }
 
     /**
@@ -253,10 +270,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
     {
         $className = trim($className, "\\");
         $this->definitions[$className] = $definition ?: new Definition($className);
-
-        if( ! isset($this->dependencies[$className]) ){
-            $this->resolver->resolveDependencies($className);
-        }
+        $this->resolver->resolveDependencies($className);
 
         return $this;
     }

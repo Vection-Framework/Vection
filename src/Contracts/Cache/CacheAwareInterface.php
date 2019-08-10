@@ -23,9 +23,4 @@ interface CacheAwareInterface
      * @param CacheInterface $cache
      */
     public function setCache(CacheInterface $cache): void;
-
-    /**
-     * @return null|CacheInterface
-     */
-    public function getCache(): ? CacheInterface;
 }

@@ -31,11 +31,24 @@ class TestObject implements InterfaceInjectedObjectInterface
      */
     protected $annotationInjectedObject;
 
+    /** @var ConstructorInjectedObject */
+    private $constructorInjectedObject;
+
     /** @var ExplicitInjectedObject */
     private $explicitInjectedObject;
 
     /** @var InterfaceInjectedObject */
     protected $logger;
+
+    /**
+     * TestObject constructor.
+     *
+     * @param ConstructorInjectedObject $constructorInjectedObject
+     */
+    public function __construct(ConstructorInjectedObject $constructorInjectedObject)
+    {
+        $this->constructorInjectedObject;
+    }
 
     /**
      * @param ExplicitInjectedObject $o
