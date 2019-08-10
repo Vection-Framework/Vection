@@ -201,6 +201,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
             }
 
             if( $this->registeredNamespaces[0] === '*' ){
+                $this->set($id);
                 return true;
             }
 
