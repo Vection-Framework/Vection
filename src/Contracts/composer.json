@@ -3,7 +3,7 @@
     "type": "library",
     "description": "The Vection Framework Contracts",
     "keywords": ["vection", "vection-contracts", "framework"],
-    "homepage": "https://vection.de",
+    "homepage": "https://vection.appsdock.org",
     "license": "MIT",
     "authors": [
         {
@@ -13,7 +13,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Vection\\Contracts": "./"
+            "Vection\\Contracts\\": "./"
         }
     },
     "require": {
