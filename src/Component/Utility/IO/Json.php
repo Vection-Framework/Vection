@@ -1,18 +1,18 @@
 <?php
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) Bjoern Klemm <vection@bjoernklemm.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Utility;
+namespace Vection\Component\Utility\IO;
 
-use Vection\Component\Utility\Exception\JsonException;
+use Vection\Component\Utility\IO\Exception\JsonException;
 
 /**
  * Class Json

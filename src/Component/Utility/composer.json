@@ -7,14 +7,14 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "David Lung",
-            "email": "david@appsdock.de"
+            "name": "Bjoern Klemm",
+            "email": "bjoern.klemm@appsdock.de"
         }
     ],
     "require": {
         "php": "^7.2",
-        "ext-json": "*",
-        "ext-gettext": "*"
+        "ext-mbstring": "*",
+        "ext-ctype": "*"
     },
     "autoload": {
         "psr-4": {

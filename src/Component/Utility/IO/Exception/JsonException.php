@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Utility\Exception;
+namespace Vection\Component\Utility\IO\Exception;
 
 /**
  * Class JsonException
