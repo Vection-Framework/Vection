@@ -3,7 +3,7 @@
     "type": "library",
     "description": "PHP DI - Dependency Injection Container Component - Vection Framework",
     "keywords": [
-        "php dependency injection", "di", "php-dic", "container", "dependency-container", "php-di", "dependency-resolver"
+        "php dependency injection","container", "di", "php-dic", "container", "dependency-container", "php-di", "dependency-resolver"
     ],
     "homepage": "https://vection.appsdock.org",
     "license": "MIT",
