@@ -42,7 +42,7 @@ class Injector
     }
 
     /**
-     * Injects all dependencies needed by the given object.
+     * Injects all dependencies defined by the given object.
      *
      * @param object $object
      */
