@@ -42,6 +42,8 @@ class Injector
     }
 
     /**
+     * Injects all dependencies needed by the given object.
+     *
      * @param object $object
      */
     public function injectDependencies(object $object): void
