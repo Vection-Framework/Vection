@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ This file is part of the AppsDock project.
+  ~ Visit project at https://www.appsdock.de
+  ~
+  ~ (c) AppsDock <project@appsdock.de>
+  ~
+  ~ For the full copyright and license information, please view the LICENSE
+  ~ file that was distributed with this source code.
+  -->
+
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+        https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+
+    <entity
+            name="Example\Domain\Customer\Entity\Customer"
+            table="customer"
+            repository-class="Example\Persistence\Doctrine\Repository\CustomerRepository"
+            schema="parking">
+
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="onPrePersist"/>
+            <lifecycle-callback type="preUpdate" method="onPreUpdate" />
+        </lifecycle-callbacks>
+
+        <id name="identity" type="string" column="customer_id">
+            <generator strategy="NONE"/>
+        </id>
+
+        <field name="createdAt" type="DateTime" />
+        <field name="modifiedAt" type="DateTime" />
+
+        <field name="formOfAddress" column="customer_form_of_address"/>
+        <field name="firstName" column="customer_first_name"/>
+        <field name="lastName" column="customer_last_name"/>
+        <field name="no" column="customer_no"/>
+        <field name="email" column="customer_email"/>
+
+        <one-to-many field="phonenumbers" target-entity="Phonenumber" mapped-by="customer">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
+
+        <one-to-many field="addresses" target-entity="Address" mapped-by="customer">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
+
+    </entity>
+
+</doctrine-mapping>

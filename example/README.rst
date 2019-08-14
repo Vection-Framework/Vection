@@ -45,3 +45,12 @@ Presentation Layers
 - Presenters
 - REST
 
+How to develop an app to connect in our infrastructure
+======================================================
+
+- Before we start
+
+- User story
+
+- Scenarios
+
