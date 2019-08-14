@@ -7,14 +7,14 @@ This component is a part of the PHP Vection-Framework and can be used by compose
 
 ```json
     "require": {
-        "vection-framework/vection": "dev-master"
+        "vection-framework/di-container": "dev-master"
     }
 ```
 
 OR
 
 ```shell script
-    $ composer install vection-framework/vection
+    $ composer install vection-framework/di-container
 ```
 
 ## Setup

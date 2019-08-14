@@ -15,10 +15,11 @@
     ],
     "autoload": {
         "psr-4": {
-            "Vection\\Component\\DI": "./"
+            "Vection\\Component\\DI\\": "./"
         }
     },
     "require": {
+        "vection-framework/contracts": "dev-master",
         "php": "^7.2",
         "psr/log": "~1.0",
         "psr/container": "^1.0"
