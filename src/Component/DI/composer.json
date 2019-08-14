@@ -1,7 +1,7 @@
 {
-    "name": "vection-framework/di",
+    "name": "vection-framework/di-container",
     "type": "library",
-    "description": "The Vection Framework Dependency Injection Container Component",
+    "description": "PHP DI - Dependency Injection Container Component - Vection Framework",
     "keywords": [
         "php dependency injection", "di", "php-dic", "container", "dependency-container", "php-di", "dependency-resolver"
     ],
@@ -15,10 +15,11 @@
     ],
     "autoload": {
         "psr-4": {
-            "Vection\\Component\\DI": "./"
+            "Vection\\Component\\DI\\": "./"
         }
     },
     "require": {
+        "vection-framework/contracts": "dev-master",
         "php": "^7.2",
         "psr/log": "~1.0",
         "psr/container": "^1.0"
