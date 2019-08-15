@@ -2,7 +2,7 @@
     "name": "vection-framework/view",
     "type": "library",
     "description": "PHP View / Template Renderer - Vection Framework Component",
-    "keywords": ["framework", "template", "engine", "view"],
+    "keywords": ["framework", "template", "engine", "view", "renderer"],
     "homepage": "https://vection.appsdock.org",
     "license": "MIT",
     "authors": [
