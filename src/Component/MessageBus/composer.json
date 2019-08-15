@@ -1,7 +1,7 @@
 {
-  "name": "vection-framework/vection-message-bus",
+  "name": "vection-framework/message-bus",
   "type": "library",
-  "description": "The Vection Framework CQRS-Based MessageBus Component",
+  "description": "PHP Message Bus System for CQRS based enterprise applications - Vection Framework Component",
   "keywords": [
       "php",
       "framework",
@@ -12,7 +12,7 @@
       "message-bus",
       "php-cqrs"
   ],
-  "homepage": "https://vection.de",
+  "homepage": "https://vection.appsdock.org",
   "license": "MIT",
   "authors": [
     {
@@ -26,7 +26,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Vection\\Component\\MessageBus": "./"
+      "Vection\\Component\\MessageBus\\": "./"
     }
   },
   "minimum-stability": "dev"

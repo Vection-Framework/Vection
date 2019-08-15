@@ -1,28 +1,22 @@
 {
     "name": "vection-framework/view",
     "type": "library",
-    "description": "The Vection View Template Engine Framework Component",
-    "keywords": ["framework", "template", "engine"],
-    "homepage": "https://vection.de",
+    "description": "PHP View / Template Renderer - Vection Framework Component",
+    "keywords": ["framework", "template", "engine", "view"],
+    "homepage": "https://vection.appsdock.org",
     "license": "MIT",
     "authors": [
         {
             "name": "David Lung",
             "email": "david@appsdock.de"
-        },
-        {
-            "name": "Björn Klemm",
-            "email": "bjoern@appsdock.de"
         }
     ],
     "require": {
-        "php": "^7.2",
-        "psr/log": "~1.0",
-        "psr/container": "^1.0"
+        "php": "^7.2"
     },
     "autoload": {
         "psr-4": {
-            "View": "./"
+            "Vection\\Component\\View\\": "./"
         }
     },
     "minimum-stability": "dev"
