@@ -1,7 +1,7 @@
 {
-    "name": "vection-framework/vection-guise",
+    "name": "vection-framework/view",
     "type": "library",
-    "description": "The Vection Guise Template Engine Framework Component",
+    "description": "The Vection View Template Engine Framework Component",
     "keywords": ["framework", "template", "engine"],
     "homepage": "https://vection.de",
     "license": "MIT",
@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Vection\\Component\\Guise": "./"
+            "View": "./"
         }
     },
     "minimum-stability": "dev"

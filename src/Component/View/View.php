@@ -1,25 +1,25 @@
 <?php
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Guise;
+namespace Vection\Component\View;
 
-use Vection\Contracts\Guise\TemplateInterface;
-use Vection\Contracts\Guise\ViewDataInterface;
-use Vection\Contracts\Guise\ViewInterface;
+use Vection\Contracts\View\TemplateInterface;
+use Vection\Contracts\View\ViewDataInterface;
+use Vection\Contracts\View\ViewInterface;
 
 /**
  * Class View
  *
- * @package Vection\Component\Guise
+ * @package Vection\Component\View
  */
 class View implements ViewInterface
 {
