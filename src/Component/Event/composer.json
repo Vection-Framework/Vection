@@ -1,14 +1,14 @@
 {
     "name": "vection-framework/event-manager",
     "type": "library",
-    "description": "The Vection Event Management Framework Component",
+    "description": "PHP Event Manager - Vection Framework Component",
     "keywords": ["php", "framework", "event", "event manager"],
-    "homepage": "https://vection.de",
+    "homepage": "https://vection.appsdock.org",
     "license": "MIT",
     "authors": [
         {
             "name": "David Lung",
-            "email": "david@appsdock.de"
+            "email": "vection@davidlung.de"
         }
     ],
     "require": {
@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Vection\\Component\\Event": "./"
+            "Vection\\Component\\Event\\": "./"
         }
     },
     "minimum-stability": "dev"
