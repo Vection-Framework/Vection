@@ -1,5 +1,5 @@
 {
-    "name": "vection-framework/vection-event",
+    "name": "vection-framework/event-manager",
     "type": "library",
     "description": "The Vection Event Management Framework Component",
     "keywords": ["php", "framework", "event", "event manager"],
