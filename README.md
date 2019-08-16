@@ -38,7 +38,7 @@ __<a href="https://github.com/Vection-Framework/DI-Container">Dependency Injecti
 
 Provides a container which manage dependencies of the whole project. Support annotation, interface injection and more.
 
-__<a href="https://github.com/Vection-Framework/MesssageBus">System Message Bus</a>__
+__<a href="https://github.com/Vection-Framework/MessageBus">System Message Bus</a>__
 
 Messaging bus that managing the transport of different message types. Provides the base for handling Query, Command and Event messages.
 The middleware pattern gives the possibility to extends the buses with custom stations.
