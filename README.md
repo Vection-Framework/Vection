@@ -38,24 +38,24 @@ __<a href="https://github.com/Vection-Framework/DI-Container">Dependency Injecti
 
 Provides a container which manage dependencies of the whole project. Support annotation, interface injection and more.
 
-__<a href="https://github.com/Vection-Framework/DI-Container">System Message Bus</a>__
+__<a href="https://github.com/Vection-Framework/MesssageBus">System Message Bus</a>__
 
 Messaging bus that managing the transport of different message types. Provides the base for handling Query, Command and Event messages.
 The middleware pattern gives the possibility to extends the buses with custom stations.
 
-__<a href="https://github.com/Vection-Framework/DI-Container">Caching</a>__
+__<a href="https://github.com/Vection-Framework/Cache">Caching</a>__
 
 Type safe cache component that supports organized caching pools by cache namespaces.
 
-__<a href="https://github.com/Vection-Framework/DI-Container">Event Manager</a>__
+__<a href="https://github.com/Vection-Framework/Event">Event Manager</a>__
 
 Supports annotation mapping for events and subscriber / handler.
 
-__<a href="https://github.com/Vection-Framework/DI-Container">Validator</a>__
+__<a href="https://github.com/Vection-Framework/Validator">Validator</a>__
 
 Powerful validation component to verify one or a set of values. A chain provides the validation by using several validators for each value.
 
-__<a href="https://github.com/Vection-Framework/DI-Container">View</a>__
+__<a href="https://github.com/Vection-Framework/View">View</a>__
 
 Very slim and simple template rendering based on plain PHP variable output. Support nested views with data inheritance.
 
