@@ -3,7 +3,7 @@
         <img width="300" src="https://vection.appsdock.org/vection-framework.png">
     </a>
 </p>
-Vection is a modern and component based PHP framework focused on high flexibility and performance for enterprise applications.
+<a href="https://vection.appsdock.org">Vection</a> is a modern and component based PHP framework focused on high flexibility and performance for enterprise applications.
 
 # ATTENTION
 This framework is currently in its late development stage, api / interfaces could still change until a stable version is released!!
