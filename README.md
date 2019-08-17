@@ -8,6 +8,9 @@
 # ATTENTION
 This framework is currently in its late development stage, api / interfaces could still change until a stable version is released!!
 
+# Read World Example
+A unit of all vection components covers almost every aspect of an enterprise application. To see a real world example by using vection components you can visit the example repository of [link comming soon].
+
 # Installation
 
 Vection can be only installed as dependency by <a href="https://getcomposer.org/">composer</a>.

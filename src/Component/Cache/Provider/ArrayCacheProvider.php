@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -220,7 +220,7 @@ class ArrayCacheProvider implements CacheProviderInterface
     public function clear(string $namespace = ''): bool
     {
         foreach ( $this->cache as $key => $value ) {
-            if ( strpos($key, $namespace) === 0 ) {
+            if ( ! $namespace || strpos($key, $namespace) === 0 ) {
                 unset($this->cache[$key]);
             }
         }
