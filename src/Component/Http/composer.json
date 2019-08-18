@@ -1,7 +1,7 @@
 {
     "name": "vection-framework/http",
     "type": "library",
-    "description": "PHP HTTP request handling by middleware - Vection Framework Component",
+    "description": "PHP HTTP Kernel / Processor with middleware support - Vection Framework Component",
     "keywords": [
         "framework",
         "http",
