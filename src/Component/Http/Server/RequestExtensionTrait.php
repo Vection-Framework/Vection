@@ -10,20 +10,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Http\Factory;
-
-use Vection\Component\Http\Request;
+namespace Vection\Component\Http\Server;
 
 /**
- * Class RequestFactory
- *
- * @package Vection\Component\Http\Factory
+ * Trait RequestExtensionTrait
+ * @package Vection\Component\Http\Server
  */
-class RequestFactory
+trait RequestExtensionTrait
 {
-    public static function createFromGlobals(): Request
-    {
 
-        return new Request();
-    }
 }

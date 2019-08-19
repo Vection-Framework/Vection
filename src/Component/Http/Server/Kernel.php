@@ -10,65 +10,42 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Http;
+namespace Vection\Component\Http\Server;
 
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-use Vection\Component\Http\Factory\ResponseFactory;
-use Vection\Component\Http\Factory\ServerRequestFactory;
+use Vection\Contracts\Http\RequestHandlerInterface;
 
 /**
  * Class Kernel
  *
- * @package Vection\Component\Http
+ * @package Vection\Component\Http\Server
  */
-class Kernel implements RequestHandlerInterface
+class Kernel
 {
     /** @var ServerRequestInterface */
     protected $request;
 
-    /** @var MiddlewareInterface[] */
-    protected $middleware;
+    /** @var RequestHandlerInterface */
+    protected $requestHandler;
 
     /**
      * Kernel constructor.
      *
-     * @param ServerRequestInterface|null $request
+     * @param RequestHandlerInterface   $requestHandler
+     * @param ServerRequestInterface    $request
      */
-    public function __construct(ServerRequestInterface $request = null)
+    public function __construct(RequestHandlerInterface $requestHandler, ServerRequestInterface $request = null)
     {
-        $this->request = $request ?: ServerRequestFactory::createFromGlobals();
+        $this->requestHandler = $requestHandler;
+        $this->request = $request ?: RequestFactory::createFromGlobals();
     }
 
-    /**
-     * @param MiddlewareInterface $middleware
-     */
-    public function addMiddleware(MiddlewareInterface $middleware): void
+    public function execute(): void
     {
-        $this->middleware[] = $middleware;
-    }
 
-    /**
-     * Handles a request and produces a response.
-     *
-     * May call other collaborating code to generate the response.
-     *
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface
-     */
-    public function handle(ServerRequestInterface $request): ResponseInterface
-    {
-        if( $middleware = current($this->middleware) ){
-            next($this->middleware);
-            return $middleware->process($request, $this);
-        }
+        $response = $this->requestHandler->handle($this->request);
 
-        # None the middleware have returned a response, so there is no processed content
-        $response = ResponseFactory::createFromGlobals();
-        $response->withStatus(501);
-        return $response;
+        $responder = new Responder($response);
+        $responder->send();
     }
 }

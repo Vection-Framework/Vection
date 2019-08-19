@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Vection-Framework project.
@@ -12,11 +12,63 @@
 
 namespace Vection\Component\Http;
 
-
+use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
 
+/**
+ * Class Uri
+ *
+ * @package Vection\Component\Http
+ */
 class Uri implements UriInterface
 {
+    /** @var string */
+    protected $schema;
+
+    /** @var string */
+    protected $userInfo;
+
+    /** @var string */
+    protected $host;
+
+    /** @var int */
+    protected $port;
+
+    /** @var string */
+    protected $path;
+
+    /** @var string */
+    protected $query;
+
+    /** @var string */
+    protected $fragment;
+
+    /**
+     * Uri constructor.
+     *
+     * @param string $uri
+     */
+    public function __construct(string $uri = '')
+    {
+        if( $uri ){
+
+            if( ! $parts = parse_url($uri) ){
+                throw new InvalidArgumentException("Invalid URI '$uri'");
+            }
+
+            $this->schema = $parts[PHP_URL_SCHEME] ?? '';
+            $this->userInfo = $parts[PHP_URL_USER] ?? '';
+            $this->host = $parts[PHP_URL_HOST] ?? '';
+            $this->port = $parts[PHP_URL_PORT] ?? '';
+            $this->path = $parts[PHP_URL_PATH] ?? '';
+            $this->query = $parts[PHP_URL_QUERY] ?? '';
+            $this->fragment = $parts[PHP_URL_FRAGMENT] ?? '';
+
+            if( isset($parts[PHP_URL_PASS]) ){
+                $this->userInfo .= ':' . $parts[PHP_URL_PASS];
+            }
+        }
+    }
 
     /**
      * Retrieve the scheme component of the URI.
@@ -32,9 +84,9 @@ class Uri implements UriInterface
      * @see https://tools.ietf.org/html/rfc3986#section-3.1
      * @return string The URI scheme.
      */
-    public function getScheme()
+    public function getScheme(): string
     {
-        // TODO: Implement getScheme() method.
+        return $this->schema;
     }
 
     /**
@@ -55,9 +107,23 @@ class Uri implements UriInterface
      * @see https://tools.ietf.org/html/rfc3986#section-3.2
      * @return string The URI authority, in "[user-info@]host[:port]" format.
      */
-    public function getAuthority()
+    public function getAuthority(): string
     {
-        // TODO: Implement getAuthority() method.
+        if( ! $this->host ){
+            return '';
+        }
+
+        $authority = $this->host;
+
+        if( $this->userInfo ){
+            $authority = $this->userInfo.'@'.$authority;
+        }
+
+        if( $this->port !== null ){
+            $authority .= ':'.$this->port;
+        }
+
+        return $authority;
     }
 
     /**
@@ -75,9 +141,9 @@ class Uri implements UriInterface
      *
      * @return string The URI user information, in "username[:password]" format.
      */
-    public function getUserInfo()
+    public function getUserInfo(): string
     {
-        // TODO: Implement getUserInfo() method.
+        return $this->userInfo;
     }
 
     /**
@@ -91,9 +157,9 @@ class Uri implements UriInterface
      * @see http://tools.ietf.org/html/rfc3986#section-3.2.2
      * @return string The URI host.
      */
-    public function getHost()
+    public function getHost(): string
     {
-        // TODO: Implement getHost() method.
+        return $this->host;
     }
 
     /**
@@ -111,9 +177,9 @@ class Uri implements UriInterface
      *
      * @return null|int The URI port.
      */
-    public function getPort()
+    public function getPort(): int
     {
-        // TODO: Implement getPort() method.
+        return $this->port;
     }
 
     /**
@@ -141,9 +207,9 @@ class Uri implements UriInterface
      * @see https://tools.ietf.org/html/rfc3986#section-3.3
      * @return string The URI path.
      */
-    public function getPath()
+    public function getPath(): string
     {
-        // TODO: Implement getPath() method.
+        return $this->path;
     }
 
     /**
@@ -166,9 +232,9 @@ class Uri implements UriInterface
      * @see https://tools.ietf.org/html/rfc3986#section-3.4
      * @return string The URI query string.
      */
-    public function getQuery()
+    public function getQuery(): string
     {
-        // TODO: Implement getQuery() method.
+        return $this->query;
     }
 
     /**
@@ -187,9 +253,9 @@ class Uri implements UriInterface
      * @see https://tools.ietf.org/html/rfc3986#section-3.5
      * @return string The URI fragment.
      */
-    public function getFragment()
+    public function getFragment(): string
     {
-        // TODO: Implement getFragment() method.
+        return $this->fragment;
     }
 
     /**
@@ -206,11 +272,13 @@ class Uri implements UriInterface
      * @param string $scheme The scheme to use with the new instance.
      *
      * @return static A new instance with the specified scheme.
-     * @throws \InvalidArgumentException for invalid or unsupported schemes.
+     * @throws InvalidArgumentException for invalid or unsupported schemes.
      */
     public function withScheme($scheme)
     {
-        // TODO: Implement withScheme() method.
+        $uri = clone $this;
+        $uri->schema = $scheme;
+        return $uri;
     }
 
     /**
@@ -230,7 +298,9 @@ class Uri implements UriInterface
      */
     public function withUserInfo($user, $password = null)
     {
-        // TODO: Implement withUserInfo() method.
+        $uri = clone $this;
+        $uri->userInfo = $user . ($password ? ':'.$password : '');
+        return $uri;
     }
 
     /**
@@ -244,11 +314,13 @@ class Uri implements UriInterface
      * @param string $host The hostname to use with the new instance.
      *
      * @return static A new instance with the specified host.
-     * @throws \InvalidArgumentException for invalid hostnames.
+     * @throws InvalidArgumentException for invalid hostnames.
      */
     public function withHost($host)
     {
-        // TODO: Implement withHost() method.
+        $uri = clone $this;
+        $uri->host = $host;
+        return $uri;
     }
 
     /**
@@ -267,11 +339,17 @@ class Uri implements UriInterface
      *                       removes the port information.
      *
      * @return static A new instance with the specified port.
-     * @throws \InvalidArgumentException for invalid ports.
+     * @throws InvalidArgumentException for invalid ports.
      */
     public function withPort($port)
     {
-        // TODO: Implement withPort() method.
+        if( !is_int($port) || $port < 0 || $port > 0xffff ){
+            throw new InvalidArgumentException("Invalid port ($port). Expect integer between 0 and 65535.");
+        }
+
+        $uri = clone $this;
+        $uri->port = $port;
+        return $uri;
     }
 
     /**
@@ -295,11 +373,13 @@ class Uri implements UriInterface
      * @param string $path The path to use with the new instance.
      *
      * @return static A new instance with the specified path.
-     * @throws \InvalidArgumentException for invalid paths.
+     * @throws InvalidArgumentException for invalid paths.
      */
     public function withPath($path)
     {
-        // TODO: Implement withPath() method.
+        $uri = clone $this;
+        $uri->path = $path;
+        return $uri;
     }
 
     /**
@@ -316,11 +396,13 @@ class Uri implements UriInterface
      * @param string $query The query string to use with the new instance.
      *
      * @return static A new instance with the specified query string.
-     * @throws \InvalidArgumentException for invalid query strings.
+     * @throws InvalidArgumentException for invalid query strings.
      */
     public function withQuery($query)
     {
-        // TODO: Implement withQuery() method.
+        $uri = clone $this;
+        $uri->query = $query;
+        return $uri;
     }
 
     /**
@@ -340,7 +422,9 @@ class Uri implements UriInterface
      */
     public function withFragment($fragment)
     {
-        // TODO: Implement withFragment() method.
+        $uri = clone $this;
+        $uri->fragment = $fragment;
+        return $uri;
     }
 
     /**
@@ -366,6 +450,31 @@ class Uri implements UriInterface
      * @see http://tools.ietf.org/html/rfc3986#section-4.1
      * @return string
      */
-    public function __toString(){
- // TODO: Implement __toString() method.
-}}
+    public function __toString(): string
+    {
+        $uri = ($this->schema ? $this->schema . ':' : '');
+
+        if( $authority = $this->getAuthority() ){
+            $uri .= '//'.$authority;
+        }
+
+        if( $path = $this->path ){
+            if( $path[0] !== '/' ){
+                $path = $authority ? '/'.$path : $path;
+            }elseif( ($path[1] ?? null) === '/' ){
+                $path = $authority ? '' : '/' . ltrim($path, '/');
+            }
+            $uri .= $path;
+        }
+
+        if( $this->query ){
+            $uri .= '?' . $this->query;
+        }
+
+        if( $this->fragment ){
+            $uri .= '#' . $this->fragment;
+        }
+
+        return $uri;
+    }
+}

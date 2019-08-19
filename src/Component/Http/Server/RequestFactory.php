@@ -10,16 +10,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Http\Factory;
-
-use Vection\Component\Http\Server\Request;
+namespace Vection\Component\Http\Server;
 
 /**
  * Class ServerRequestFactory
  *
- * @package Vection\Component\Http\Factory
+ * @package Vection\Component\Http\Server
  */
-class ServerRequestFactory
+class RequestFactory
 {
     public static function createFromGlobals(): Request
     {
