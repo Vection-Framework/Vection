@@ -23,6 +23,8 @@ use Psr\Http\Message\StreamInterface;
  */
 class Response extends Message implements ResponseInterface
 {
+    use ResponseTrait;
+    
     /** @var int */
     protected $statusCode;
 
@@ -46,14 +48,8 @@ class Response extends Message implements ResponseInterface
         }
 
         $this->stream = $body;
-
-        if( $headers ){
-            foreach( $headers as $name => $header ){
-                $this->headers[$name] = is_array($header) ? $header : [$header];
-            }
-        }
-
-        $this->reasonPhrase = HTTP::getPhrase($status);
+        $this->headers = new Headers($headers);
+        $this->reasonPhrase = Status::getPhrase($status);
         $this->protocolVersion = $version;
     }
 
@@ -116,7 +112,7 @@ class Response extends Message implements ResponseInterface
         $response->statusCode = $code;
 
         if( ! $reasonPhrase ){
-            $response->reasonPhrase = HTTP::getPhrase($code);
+            $response->reasonPhrase = Status::getPhrase($code);
         }else{
             $response->reasonPhrase = $reasonPhrase;
         }

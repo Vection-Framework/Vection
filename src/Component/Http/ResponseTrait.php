@@ -10,13 +10,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Http\Server;
+namespace Vection\Component\Http;
 
 /**
- * Trait RequestExtensionTrait
- * @package Vection\Component\Http\Server
+ * Trait ResponseExtensionTrait
+ * @package Vection\Component\Http
  */
-trait RequestExtensionTrait
+trait ResponseTrait
 {
-
+    
 }

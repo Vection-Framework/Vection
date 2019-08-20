@@ -24,10 +24,10 @@ use Psr\Http\Message\StreamInterface;
 abstract class Message implements MessageInterface
 {
     /** @var string */
-    protected $protocolVersion = '1.1';
+    protected $protocolVersion = '1.0';
 
-    /** @var string[][] */
-    protected $headers = [];
+    /** @var Headers */
+    protected $headers;
 
     /** @var StreamInterface */
     protected $stream;
@@ -92,7 +92,7 @@ abstract class Message implements MessageInterface
      */
     public function getHeaders(): array
     {
-        return $this->headers;
+        return $this->headers->toArray();
     }
 
     /**
@@ -106,7 +106,7 @@ abstract class Message implements MessageInterface
      */
     public function hasHeader($name): bool
     {
-        return in_array(strtolower($name), array_map('strtolower', array_keys($this->headers)));
+        return $this->headers->has($name);
     }
 
     /**
@@ -126,13 +126,7 @@ abstract class Message implements MessageInterface
      */
     public function getHeader($name): array
     {
-        foreach( $this->headers as $key => $header ) {
-            if( strtolower($name) === strtolower($key) ){
-                return $header;
-            }
-        }
-
-        return [];
+        return $this->headers->get($name);
     }
 
     /**
@@ -157,7 +151,7 @@ abstract class Message implements MessageInterface
      */
     public function getHeaderLine($name): string
     {
-        return implode(', ', $this->getHeader($name));
+        return $this->headers->getLine($name);
     }
 
     /**
@@ -179,14 +173,7 @@ abstract class Message implements MessageInterface
     public function withHeader($name, $value)
     {
         $response = clone $this;
-
-        foreach( $response->headers as $key => &$header ) {
-            if( strtolower($name) === strtolower($key) ){
-                $header = is_array($value) ? $value : [$value];
-                break;
-            }
-        }
-
+        $response->headers->set($name, $value);
         return $response;
     }
 
@@ -210,18 +197,7 @@ abstract class Message implements MessageInterface
     public function withAddedHeader($name, $value)
     {
         $response = clone $this;
-
-        foreach( $response->headers as $key => &$header ) {
-            if( strtolower($name) === strtolower($key) ){
-                if( ! is_array($value)){
-                    $header[] = $value;
-                }else{
-                    $header = array_merge($header, $value);
-                }
-                break;
-            }
-        }
-
+        $response->headers->add($name, $value);
         return $response;
     }
 
@@ -241,14 +217,7 @@ abstract class Message implements MessageInterface
     public function withoutHeader($name)
     {
         $response = clone $this;
-
-        foreach( $response->headers as $key => $header ) {
-            if( strtolower($name) === strtolower($key) ){
-                unset($response->headers[$key]);
-                break;
-            }
-        }
-
+        $response->headers->remove($name);
         return $response;
     }
 

@@ -13,11 +13,11 @@
 namespace Vection\Component\Http;
 
 /**
- * Class HTTP
+ * Class Status
  *
  * @package Vection\Component\Http
  */
-class HTTP
+class Status
 {
     const PHRASE_100 = 'Continue';
     const PHRASE_101 = 'Switching Protocols';

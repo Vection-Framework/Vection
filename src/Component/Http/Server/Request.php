@@ -24,7 +24,7 @@ use Psr\Http\Message\UriInterface;
  */
 class Request extends \Vection\Component\Http\Request implements ServerRequestInterface
 {
-    use RequestExtensionTrait;
+    use RequestTrait;
 
     /** @var UriInterface */
     protected $uri;

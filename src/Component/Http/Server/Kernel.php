@@ -14,6 +14,7 @@ namespace Vection\Component\Http\Server;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Vection\Contracts\Http\RequestHandlerInterface;
+use Vection\Contracts\Http\Server\ResponderInterface;
 
 /**
  * Class Kernel
@@ -28,24 +29,33 @@ class Kernel
     /** @var RequestHandlerInterface */
     protected $requestHandler;
 
+    /** @var ResponderInterface */
+    protected $responder;
+
     /**
      * Kernel constructor.
      *
-     * @param RequestHandlerInterface   $requestHandler
-     * @param ServerRequestInterface    $request
+     * @param RequestHandlerInterface $requestHandler
+     * @param ServerRequestInterface  $request
+     * @param ResponderInterface|null $responder
      */
-    public function __construct(RequestHandlerInterface $requestHandler, ServerRequestInterface $request = null)
+    public function __construct(
+        RequestHandlerInterface $requestHandler,
+        ServerRequestInterface $request = null,
+        ResponderInterface $responder = null
+    )
     {
         $this->requestHandler = $requestHandler;
         $this->request = $request ?: RequestFactory::createFromGlobals();
+        $this->responder = $responder ?: new Responder();
     }
 
     public function execute(): void
     {
 
-        $response = $this->requestHandler->handle($this->request);
+        $this->responder->send(
+            $this->requestHandler->handle($this->request), $this->request
+        );
 
-        $responder = new Responder($response);
-        $responder->send();
     }
 }
