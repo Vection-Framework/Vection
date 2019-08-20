@@ -228,10 +228,12 @@ class Json implements \JsonSerializable
      * Writes data to file if a file path is given.
      *
      * @param string $path
+     *
+     * @throws JsonException
      */
     public function write(string $path): void
     {
-        \file_put_contents($path, \json_encode($this->data));
+        \file_put_contents($path, self::encode($this->data));
     }
 
     /**
