@@ -31,6 +31,27 @@ class Responder implements ResponderInterface
     protected $charset = 'utf-8';
 
     /**
+     * @var array
+     */
+    protected $headerReplacements = [];
+
+    /**
+     * @param string $charset
+     */
+    public function setDefaultCharset(string $charset): void
+    {
+        $this->charset = $charset;
+    }
+
+    /**
+     * @param array $headers
+     */
+    public function setHeaderReplacements(array $headers): void
+    {
+        $this->headerReplacements = $headers;
+    }
+
+    /**
      * @param ResponseInterface      $response
      * @param ServerRequestInterface $request
      */
@@ -38,6 +59,7 @@ class Responder implements ResponderInterface
     {
         $status = $response->getStatusCode();
 
+        # Prepare some basic response properties
         if( $request->getProtocolVersion() !== $response->getProtocolVersion() ){
             $response = $response->withProtocolVersion($request->getProtocolVersion());
         }
@@ -46,14 +68,16 @@ class Responder implements ResponderInterface
             $response->withBody(new Stream());
         }
 
+        # Prepare and send response header
         if( ! headers_sent() ){
-            foreach( $this->getHeaders($response, $request)->toArray() as $name => $values ){
+            foreach( $this->getFixedHeaders($response, $request)->toArray() as $name => $values ){
                 header($name.':'.implode(', ', $values), true, $status);
             }
 
             header("HTTP/{$response->getProtocolVersion()} {$status} {$response->getReasonPhrase()}");
         }
 
+        # Send response body as string
         echo $response->getBody()->getContents();
     }
 
@@ -63,7 +87,7 @@ class Responder implements ResponderInterface
      *
      * @return Headers
      */
-    protected function getHeaders(ResponseInterface $response, ServerRequestInterface $request): Headers
+    protected function getFixedHeaders(ResponseInterface $response, ServerRequestInterface $request): Headers
     {
         $headers = new Headers($response->getHeaders());
 
@@ -112,6 +136,9 @@ class Responder implements ResponderInterface
             $headers->remove('Content-Length');
         }
 
+        foreach( $this->headerReplacements as $name => $value ){
+            $headers->set($name, $value);
+        }
 
         return $headers;
     }
