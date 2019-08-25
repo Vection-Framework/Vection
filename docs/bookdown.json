@@ -1,0 +1,8 @@
+{
+    "title": "Vection Framework",
+    "content": [
+        {"intro":  "../README.md"}
+    ],
+    "target": "./html",
+    "template": "../vendor/appsdock/bookdown-template/templates/main.php"
+}
