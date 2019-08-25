@@ -28,7 +28,7 @@ OR
 ```
 
 # Documentation
-For the latest online documentation visit [https://vection.de/](https://vection.de/ "Latest documentation").
+For the latest online documentation visit [https://vection.appsdock.org/docs](https://vection.appsdock.org/docs "Latest documentation").
 
 Documentation is [in the doc tree](doc/), and can be compiled using [bookdown](http://bookdown.io)
 
