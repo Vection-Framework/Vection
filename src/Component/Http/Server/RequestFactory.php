@@ -12,6 +12,8 @@
 
 namespace Vection\Component\Http\Server;
 
+use Vection\Component\Http\Server\Psr\ServerRequest;
+
 /**
  * Class ServerRequestFactory
  *
@@ -19,9 +21,9 @@ namespace Vection\Component\Http\Server;
  */
 class RequestFactory
 {
-    public static function createFromGlobals(): Request
+    public static function createFromGlobals(): ServerRequest
     {
 
-        return new Request();
+        return new ServerRequest();
     }
 }

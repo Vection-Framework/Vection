@@ -15,7 +15,7 @@ namespace Vection\Component\Http\Server;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Vection\Component\Http\Headers;
-use Vection\Component\Http\Stream;
+use Vection\Component\Http\Psr\Stream;
 use Vection\Contracts\Http\Server\ResponderInterface;
 
 /**

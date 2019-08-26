@@ -10,14 +10,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Http;
+namespace Vection\Component\Http\Psr;
 
 use Psr\Http\Message\StreamInterface;
 
 /**
  * Class Stream
  *
- * @package Vection\Component\Http\Server
+ * @package Vection\Component\Http\Psr
  */
 class Stream implements StreamInterface
 {
@@ -62,11 +62,18 @@ class Stream implements StreamInterface
      */
     public function __construct(string $content = '')
     {
-        $this->stream = fopen('php://temp', 'rw+');
+        if( strpos($content, 'php://') === 0 ){
 
-        if( $content ){
-            fwrite($this->stream, $content);
-            fseek($this->stream, 0);
+            $this->stream = fopen($content, 'rw+');
+
+        }else{
+
+            $this->stream = fopen('php://temp', 'rw+');
+
+            if( $content ){
+                fwrite($this->stream, $content);
+                fseek($this->stream, 0);
+            }
         }
 
         $meta = $this->getMetadata();

@@ -10,16 +10,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Http;
+namespace Vection\Component\Http\Psr;
 
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
+use Vection\Component\Http\Headers;
 
 /**
  * Class Request
  *
- * @package Vection\Component\Http
+ * @package Vection\Component\Http\Psr
  */
 class Request extends Message implements RequestInterface
 {
@@ -31,6 +33,33 @@ class Request extends Message implements RequestInterface
 
     /** @var string */
     protected $target;
+
+    /**
+     * Request constructor.
+     *
+     * @param string               $method
+     * @param UriInterface         $uri
+     * @param Headers|null         $headers
+     * @param StreamInterface|null $body
+     * @param string               $version
+     */
+    public function __construct(
+        string $method,
+        UriInterface $uri,
+        Headers $headers = null,
+        StreamInterface $body = null,
+        string $version = '1.1'
+    )
+    {
+        parent::__construct(
+            $headers ?: new Headers(),
+            $body ?: new Stream('php://input'),
+            $version
+        );
+
+        $this->method = $method;
+        $this->uri = $uri;
+    }
 
     /**
      * Retrieves the message's request target.

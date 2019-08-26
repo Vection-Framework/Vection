@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Http;
+namespace Vection\Component\Http\Psr;
 
 use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
@@ -18,7 +18,7 @@ use Psr\Http\Message\UriInterface;
 /**
  * Class Uri
  *
- * @package Vection\Component\Http
+ * @package Vection\Component\Http\Psr
  */
 class Uri implements UriInterface
 {

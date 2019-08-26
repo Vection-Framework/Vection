@@ -10,16 +10,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Http;
+namespace Vection\Component\Http\Psr;
 
 use InvalidArgumentException;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
+use Vection\Component\Http\Headers;
 
 /**
  * Class Message
  *
- * @package Vection\Component\Http
+ * @package Vection\Component\Http\Psr
  */
 abstract class Message implements MessageInterface
 {
@@ -31,6 +32,20 @@ abstract class Message implements MessageInterface
 
     /** @var StreamInterface */
     protected $stream;
+
+    /**
+     * Message constructor.
+     *
+     * @param Headers         $headers
+     * @param StreamInterface $stream
+     * @param string          $protocolVersion
+     */
+    public function __construct(Headers $headers, StreamInterface $stream, string $protocolVersion = '1.0')
+    {
+        $this->headers = $headers;
+        $this->stream = $stream;
+        $this->protocolVersion = $protocolVersion;
+    }
 
     /**
      * Retrieves the HTTP protocol version as a string.

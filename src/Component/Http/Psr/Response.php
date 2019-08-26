@@ -10,21 +10,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Http;
+namespace Vection\Component\Http\Psr;
 
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Vection\Component\Http\Headers;
+use Vection\Component\Http\Status;
 
 /**
  * Class Response
  *
- * @package Vection\Component\Http\Server
+ * @package Vection\Component\Http\Psr
  */
 class Response extends Message implements ResponseInterface
 {
-    use ResponseTrait;
-    
     /** @var int */
     protected $statusCode;
 

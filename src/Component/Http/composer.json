@@ -3,12 +3,9 @@
     "type": "library",
     "description": "PHP HTTP Kernel / Processor with middleware support - Vection Framework Component",
     "keywords": [
-        "framework",
-        "http",
-        "http-middleware",
-        "http-stack"
+        "http", "php-http-kernel", "request", "response", "http-middleware", "http-stack"
     ],
-    "homepage": "https://vection.appsdock.org",
+    "homepage": "https://vection.appsdock.org/docs/components/http",
     "license": "MIT",
     "authors": [
         {
@@ -18,7 +15,9 @@
     ],
     "require": {
         "php": "^7.2",
-        "psr/http-message": "1.*"
+        "psr/http-message": "1.*",
+        "psr/http-server-handler": "1.*",
+        "psr/log": "1.*"
     },
     "autoload": {
         "psr-4": {
