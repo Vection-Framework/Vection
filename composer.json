@@ -21,7 +21,6 @@
         "psr/container": "^1.0",
         "psr/http-message":"1.*",
         "ext-json": "*",
-        "ext-yaml": "*",
         "ext-pdo": "*"
     },
     "require-dev": {
