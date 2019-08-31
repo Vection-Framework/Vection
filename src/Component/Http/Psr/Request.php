@@ -46,16 +46,12 @@ class Request extends Message implements RequestInterface
     public function __construct(
         string $method,
         UriInterface $uri,
-        Headers $headers = null,
+        Headers $headers,
         StreamInterface $body = null,
-        string $version = '1.1'
+        string $version = '1.0'
     )
     {
-        parent::__construct(
-            $headers ?: new Headers(),
-            $body ?: new Stream('php://input'),
-            $version
-        );
+        parent::__construct($headers, $body, $version);
 
         $this->method = $method;
         $this->uri = $uri;

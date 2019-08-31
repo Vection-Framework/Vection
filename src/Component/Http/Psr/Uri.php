@@ -59,7 +59,7 @@ class Uri implements UriInterface
             $this->schema = $parts[PHP_URL_SCHEME] ?? '';
             $this->userInfo = $parts[PHP_URL_USER] ?? '';
             $this->host = $parts[PHP_URL_HOST] ?? '';
-            $this->port = $parts[PHP_URL_PORT] ?? '';
+            $this->port = $parts[PHP_URL_PORT] ?? null;
             $this->path = $parts[PHP_URL_PATH] ?? '';
             $this->query = $parts[PHP_URL_QUERY] ?? '';
             $this->fragment = $parts[PHP_URL_FRAGMENT] ?? '';
@@ -67,6 +67,14 @@ class Uri implements UriInterface
             if( isset($parts[PHP_URL_PASS]) ){
                 $this->userInfo .= ':' . $parts[PHP_URL_PASS];
             }
+
+            if( $this->port === null && in_array($this->schema, ['http', 'https']) ){
+                $this->port = $this->schema === 'https' ? 443 : 80;
+            }
+
+        }else{
+            $this->schema = '';
+            $this->query = '';
         }
     }
 
@@ -177,7 +185,7 @@ class Uri implements UriInterface
      *
      * @return null|int The URI port.
      */
-    public function getPort(): int
+    public function getPort(): ? int
     {
         return $this->port;
     }

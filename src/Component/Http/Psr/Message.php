@@ -40,7 +40,7 @@ abstract class Message implements MessageInterface
      * @param StreamInterface $stream
      * @param string          $protocolVersion
      */
-    public function __construct(Headers $headers, StreamInterface $stream, string $protocolVersion = '1.0')
+    public function __construct(Headers $headers, StreamInterface $stream = null, string $protocolVersion = '1.0')
     {
         $this->headers = $headers;
         $this->stream = $stream;

@@ -56,7 +56,7 @@ class Kernel implements KernelInterface, LoggerAwareInterface
     )
     {
         $this->requestHandler = $requestHandler;
-        $this->request = $request ?: RequestFactory::createFromGlobals();
+        $this->request = $request ?: RequestFactory::createFromServer();
         $this->responder = $responder ?: new Responder();
     }
 

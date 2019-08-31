@@ -122,6 +122,11 @@ class Headers
      */
     public function set(string $name, $value): void
     {
+        if( strpos($value, ',') !== false ){
+            # if the value is comma separated, then make array from it to aware consistency
+            $value = array_map('trim', explode(',', $value));
+        }
+
         $lowerName = strtolower($name);
 
         if( ! isset($this->names[$lowerName]) ){

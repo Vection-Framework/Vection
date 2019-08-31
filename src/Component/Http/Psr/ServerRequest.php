@@ -14,7 +14,6 @@ namespace Vection\Component\Http\Psr;
 
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 use Vection\Component\Http\Headers;
@@ -35,26 +34,62 @@ class ServerRequest extends Request implements ServerRequestInterface
     /** @var array */
     protected $queryParams;
 
-    /** @var array */
-    protected $attributes;
-
     /** @var UploadedFileInterface[] */
     protected $uploadedFiles;
 
-    /** @var array|string|object|null */
+    /** @var array */
+    protected $attributes;
+
+    /** @var array|object|null */
     protected $parsedBody;
 
+    /**
+     * ServerRequest constructor.
+     *
+     * @param string       $method
+     * @param UriInterface $uri
+     * @param Headers      $headers
+     * @param string       $version
+     * @param array        $serverParams
+     */
     public function __construct(
         string $method,
         UriInterface $uri,
-        Headers $headers = null,
-        StreamInterface $body = null,
-        string $version = '1.1'
+        Headers $headers,
+        string $version = '1.1',
+        array $serverParams = []
     )
     {
-        parent::__construct($method, $uri, $headers, $body, $version);
+        parent::__construct($method, $uri, $headers, null, $version);
+        $this->serverParams = $serverParams;
+        $this->cookieParams = $_COOKIE;
+        $this->queryParams = $_GET;
+        $this->attributes = [];
+        $this->uploadedFiles = [];
 
+        if( $_FILES ){
+            # todo fill uploaded files
+        }
 
+        $postHeaders = ['application/x-www-form-urlencoded', 'multipart/form-data'];
+
+        if( strtolower($method) === 'post' && in_array( $headers->get('content-type'), $postHeaders) ){
+            $this->parsedBody = $_POST;
+        }
+        else{
+            $this->stream = new Stream('php://input');
+
+            if( ! empty($content = $this->stream->getContents()) ){
+
+                if( stripos($headers->getLine('content-type'), 'application/json') === 0 ){
+                    $this->parsedBody = json_decode($content, true);
+                }else{
+                    // TODO add more content type based parsing
+                    $this->parsedBody = [];
+                    parse_str($content, $this->parsedBody);
+                }
+            }
+        }
     }
 
     /**

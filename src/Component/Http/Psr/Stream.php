@@ -58,14 +58,16 @@ class Stream implements StreamInterface
     /**
      * Stream constructor.
      *
-     * @param string $content
+     * @param string|resource $content
      */
-    public function __construct(string $content = '')
+    public function __construct($content = '')
     {
-        if( strpos($content, 'php://') === 0 ){
+        if( is_string($content) && strpos($content, 'php://') === 0 ){
 
-            $this->stream = fopen($content, 'rw+');
+            $this->stream = fopen($content, $content === 'php://input' ? 'r' : 'rw+');
 
+        }elseif( is_resource($content) ){
+            $this->stream = $content;
         }else{
 
             $this->stream = fopen('php://temp', 'rw+');
