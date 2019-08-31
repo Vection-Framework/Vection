@@ -22,7 +22,7 @@ use Traversable;
  * @SuppressWarnings(PHPMD.TooManyMethods)
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-final class Vector implements \Countable, \ArrayAccess, \IteratorAggregate
+class Vector implements \Countable, \ArrayAccess, \IteratorAggregate
 {
     /** @var array|\ArrayAccess */
     private $list;

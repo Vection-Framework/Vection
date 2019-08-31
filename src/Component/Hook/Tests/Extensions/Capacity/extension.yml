@@ -1,0 +1,6 @@
+package: org.awesome.vection.capacitymodifier
+version: '1.0'
+name: Vection Shop Price Modifier Extension
+description:
+main: Vection\Component\Hook\Tests\Extensions\Capacity\CapacityModifier
+target: vection.shop.price.modificator

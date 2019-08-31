@@ -1,9 +1,9 @@
 {
-    "name": "vection-framework/vection-utility",
+    "name": "vection-framework/utility",
     "type": "library",
     "description": "The Vection Utility Framework Component",
     "keywords": ["framework", "utilities"],
-    "homepage": "https://vection.de",
+    "homepage": "https://vection.appsdock.org",
     "license": "MIT",
     "authors": [
         {
@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Vection\\Component\\Utility": "./"
+            "Vection\\Component\\Utility\\": "./"
         }
     },
     "minimum-stability": "dev"

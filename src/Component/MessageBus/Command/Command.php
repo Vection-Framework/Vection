@@ -46,7 +46,6 @@ abstract class Command extends Message implements CommandInterface
         parent::__construct($payload);
 
         $this->identifier = new Identifier($identifier);
-        $this->payload = $payload ?: new Payload();
     }
 
     /**

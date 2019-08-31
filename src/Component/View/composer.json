@@ -1,0 +1,24 @@
+{
+    "name": "vection-framework/view",
+    "type": "library",
+    "description": "PHP View / Template Renderer - Vection Framework Component",
+    "keywords": ["framework", "template", "engine", "view", "renderer"],
+    "homepage": "https://vection.appsdock.org",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Lung",
+            "email": "david@appsdock.de"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "vection-framework/contracts": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vection\\Component\\View\\": "./"
+        }
+    },
+    "minimum-stability": "dev"
+}

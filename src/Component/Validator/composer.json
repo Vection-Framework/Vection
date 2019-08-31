@@ -1,7 +1,7 @@
 {
     "name": "vection-framework/validator",
     "type": "library",
-    "description": "The Vection Framework Validator Component",
+    "description": "PHP Validator for chained data validation - Vection Framework Component",
     "keywords": ["php-validator", "validator", "validation", "framework", "assertion", "assert", "php-assert"],
     "homepage": "https://vection.de",
     "license": "MIT",
@@ -12,12 +12,13 @@
         }
     ],
     "require": {
+        "vection-framework/contracts": "dev-master",
         "php": "^7.2",
         "ext-json": "*"
     },
     "autoload": {
         "psr-4": {
-            "Vection\\Component\\Validator": "./"
+            "Vection\\Component\\Validator\\": "./"
         }
     },
     "minimum-stability": "dev"

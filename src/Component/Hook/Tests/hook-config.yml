@@ -1,0 +1,17 @@
+plugin:
+    providers:
+        vection.shop.payment:
+            name: Shop Payment API
+            description: Provides an API hook for Payment processing
+            api: Vection\Component\Hook\Tests\Shop\API\Payment\PaymentInterface
+    hooks:
+        path: ./Plugins
+
+extension:
+    providers:
+        vection.shop.price.modificator:
+            name: Shop Price Modificators
+            description: Extends price calculation based on custom definitions
+            api: Vection\Component\Hook\Tests\Shop\API\PriceModifier\PriceModifierInterface
+    hooks:
+        path: ./Extensions

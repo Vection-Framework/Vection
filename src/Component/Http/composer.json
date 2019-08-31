@@ -1,19 +1,19 @@
 {
-    "name": "vection-framework/vection-http",
+    "name": "vection-framework/http",
     "type": "library",
-    "description": "The Vection CQRS Framework Component",
+    "description": "PHP HTTP request handling by middleware - Vection Framework Component",
     "keywords": [
         "framework",
         "http",
         "http-middleware",
         "http-stack"
     ],
-    "homepage": "https://vection.de",
+    "homepage": "https://vection.appsdock.org",
     "license": "MIT",
     "authors": [
         {
             "name": "David Lung",
-            "email": "david@appsdock.de"
+            "email": "vection@davidlung.de"
         }
     ],
     "require": {
@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Vection\\Component\\Http": "./"
+            "Vection\\Component\\Http\\": "./"
         }
     },
     "minimum-stability": "dev"

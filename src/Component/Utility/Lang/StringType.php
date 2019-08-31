@@ -323,6 +323,25 @@ final class StringType
         return mb_convert_encoding($this->str, $toEncoding, $fromEncoding);
     }
 
+    /**
+     * @param int $length
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function random(int $length): string
+    {
+        $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        $token = '';
+
+        for ( $i = 0; $i < $length; $i++ ) {
+            $chars = \str_shuffle($chars);
+            $token .= $chars{\random_int(0, \strlen($chars) - 1)};
+        }
+
+        return $token;
+    }
+
     //region BOOLEANS
 
     /**
