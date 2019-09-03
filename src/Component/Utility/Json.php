@@ -1,18 +1,19 @@
 <?php
 
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the AppsDock project.
+ *  Visit project at https://www.appsdock.de
  *
- * (c) Bjoern Klemm <vection@bjoernklemm.de>
+ *  (c) AppsDock <project@appsdock.de>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ *
  */
 
-namespace Vection\Component\Utility\IO;
+namespace Vection\Component\Utility;
 
-use Vection\Component\Utility\IO\Exception\JsonException;
+use Vection\Component\Utility\Exception\JsonException;
 
 /**
  * Class Json
@@ -74,8 +75,8 @@ class Json implements \JsonSerializable
 
         $data = \json_decode($json, $assoc, $depth, $options);
 
-        if( \json_last_error() !== JSON_ERROR_NONE ) {
-            throw new JsonException($filePath, JsonException::INVALID);
+        if( ($code = \json_last_error()) !== JSON_ERROR_NONE ) {
+            throw new JsonException($filePath, $code);
         }
 
         return $data;
@@ -105,9 +106,11 @@ class Json implements \JsonSerializable
      */
     public static function encode($data, $options = 0, $depth = 512): string
     {
+        $options = $options ?: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION;
+
         $json = \json_encode($data, $options, $depth);
-        if( \json_last_error() !== JSON_ERROR_NONE ) {
-            throw new JsonException('Json Encode Error', JsonException::INVALID);
+        if( ($code = \json_last_error()) !== JSON_ERROR_NONE ) {
+            throw new JsonException(json_last_error_msg(), $code);
         }
         return $json;
     }
@@ -225,10 +228,12 @@ class Json implements \JsonSerializable
      * Writes data to file if a file path is given.
      *
      * @param string $path
+     *
+     * @throws JsonException
      */
     public function write(string $path): void
     {
-        \file_put_contents($path, \json_encode($this->data, JSON_PRETTY_PRINT));
+        \file_put_contents($path, self::encode($this->data));
     }
 
     /**

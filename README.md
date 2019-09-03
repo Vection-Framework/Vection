@@ -28,7 +28,16 @@ OR
 ```
 
 # Documentation
-In progress....
+For the latest online documentation visit [https://vection.appsdock.org/docs](https://vection.appsdock.org/docs "Latest documentation").
+
+Documentation is [in the doc tree](doc/), and can be compiled using [bookdown](http://bookdown.io)
+
+```console
+$ ./vendor/bin/bookdown doc/bookdown.json
+$ php -S 0.0.0.0:8080 -t doc/html/
+```
+
+Then browse to [http://localhost:8080/](http://localhost:8080/)
 
 # Contributing
 In progress....
