@@ -63,7 +63,7 @@ class UploadedFile implements UploadedFileInterface
      * @param int    $error
      * @param int    $size
      */
-    public function __construct(string $name, string $type, string $tmpName, int $error, int $size)
+    public function __construct(? string $name, string $tmpName, ? string $type, int $error, ? int $size)
     {
         $this->name = $name;
         $this->type = $type;
@@ -162,9 +162,9 @@ class UploadedFile implements UploadedFileInterface
      *
      * @return int|null The file size in bytes or null if unknown.
      */
-    public function getSize()
+    public function getSize(): ? int
     {
-        return $this->size;
+        return $this->size ?: null;
     }
 
     /**
@@ -181,7 +181,7 @@ class UploadedFile implements UploadedFileInterface
      * @see http://php.net/manual/en/features.file-upload.errors.php
      * @return int One of PHP's UPLOAD_ERR_XXX constants.
      */
-    public function getError()
+    public function getError(): int
     {
         return $this->error;
     }
@@ -199,9 +199,9 @@ class UploadedFile implements UploadedFileInterface
      * @return string|null The filename sent by the client or null if none
      *     was provided.
      */
-    public function getClientFilename()
+    public function getClientFilename(): ? string
     {
-        return $this->name;
+        return $this->name ?: null;
     }
 
     /**
@@ -217,8 +217,8 @@ class UploadedFile implements UploadedFileInterface
      * @return string|null The media type sent by the client or null if none
      *     was provided.
      */
-    public function getClientMediaType()
+    public function getClientMediaType(): ? string
     {
-        return $this->type;
+        return $this->type ?: null;
     }
 }

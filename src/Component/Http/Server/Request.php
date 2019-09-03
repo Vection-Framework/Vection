@@ -12,7 +12,11 @@
 
 namespace Vection\Component\Http\Server;
 
+use Psr\Http\Message\UriInterface;
+use Vection\Component\Http\Headers;
 use Vection\Component\Http\Psr\ServerRequest;
+use Vection\Component\Http\Server\Factory\ClientFactory;
+use Vection\Component\Http\Server\Factory\ProxyFactory;
 
 /**
  * class Request
@@ -26,6 +30,144 @@ class Request extends ServerRequest
     /** @var string */
     protected $contextPath = '/';
 
+    /** @var Client */
+    protected $client;
+
+    /** @var Proxy */
+    protected $proxy;
+
+    /** @var array */
+    protected $trustedProxies = [];
+
+    /**
+     * Request constructor.
+     *
+     * @param string           $method
+     * @param UriInterface     $uri
+     * @param Headers          $headers
+     * @param string           $version
+     * @param Environment|null $environment
+     */
+    public function __construct(
+        string $method, UriInterface $uri, Headers $headers, string $version = '1.1', Environment $environment = null
+    )
+    {
+        parent::__construct($method, $uri, $headers, $version, $environment);
+
+        if( $this->isFromProxy() ){
+            $this->proxy = ProxyFactory::create($environment);
+            $this->client = ClientFactory::create($environment, $this->proxy);
+        }else{
+            $this->client = ClientFactory::create($environment);
+        }
+    }
+
+    /**
+     * @param string $ip
+     */
+    public function addTrustedProxy(string $ip): void
+    {
+        if( ! filter_var($ip, FILTER_VALIDATE_IP) ){
+            throw new \InvalidArgumentException("Invalid IP address: $ip");
+        }
+
+        $this->trustedProxies[$ip] = $ip;
+    }
+
+    /**
+     * @param array $ips
+     */
+    public function setTrustedProxies(array $ips): void
+    {
+        foreach( $ips as $ip ){
+            $this->addTrustedProxy($ip);
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFromProxy(): bool
+    {
+        return count(array_intersect(array_keys($this->environment->toArray()), [
+            'HTTP_FORWARDED','HTTP_X_FORWARDED_FOR','HTTP_X_FORWARDED_HOST', 'HTTP_X_PROXYUSER_IP'
+        ])) > 0 ;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFromTrustedProxy(): bool
+    {
+        if( $this->proxy && $this->trustedProxies ){
+            foreach( $this->proxy->getProxyIPChain() as $ip ){
+                if( ! isset($this->trustedProxies[$ip]) ){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @return Proxy|null
+     */
+    public function getProxy(): ? Proxy
+    {
+        return $this->proxy;
+    }
+
+    /**
+     *
+     * @return Client
+     */
+    public function getClient(): Client
+    {
+        return $this->client;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getHost(): string
+    {
+        if( $this->proxy && $this->isFromTrustedProxy() ){
+            return $this->proxy->getOriginHost();
+        }
+
+        return $this->uri->getHost();
+    }
+
+    /**
+     *
+     * @return int
+     */
+    public function getPort(): int
+    {
+        if( $this->proxy && $this->isFromTrustedProxy() ){
+            return $this->proxy->getOriginPort();
+        }
+
+        return $this->uri->getPort();
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getScheme(): string
+    {
+        $scheme = $this->uri->getScheme();
+
+        if( $this->proxy && ($s = $this->proxy->getOriginProtocol()) ){
+            $scheme = $s;
+        }
+
+        return $scheme;
+    }
 
     /**
      * @param string $name

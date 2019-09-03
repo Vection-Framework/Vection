@@ -17,6 +17,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 use Vection\Component\Http\Headers;
+use Vection\Component\Http\Server\Environment;
 
 /**
  * Class ServerRequest
@@ -26,7 +27,7 @@ use Vection\Component\Http\Headers;
 class ServerRequest extends Request implements ServerRequestInterface
 {
     /** @var array */
-    protected $serverParams;
+    protected $environment;
 
     /** @var array */
     protected $cookieParams;
@@ -34,11 +35,11 @@ class ServerRequest extends Request implements ServerRequestInterface
     /** @var array */
     protected $queryParams;
 
-    /** @var UploadedFileInterface[] */
-    protected $uploadedFiles;
-
     /** @var array */
     protected $attributes;
+
+    /** @var UploadedFileInterface[] */
+    protected $uploadedFiles;
 
     /** @var array|object|null */
     protected $parsedBody;
@@ -50,25 +51,38 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @param UriInterface $uri
      * @param Headers      $headers
      * @param string       $version
-     * @param array        $serverParams
+     * @param Environment  $environment
      */
     public function __construct(
-        string $method,
-        UriInterface $uri,
-        Headers $headers,
-        string $version = '1.1',
-        array $serverParams = []
+        string $method, UriInterface $uri, Headers $headers, string $version = '1.1', Environment $environment = null
     )
     {
         parent::__construct($method, $uri, $headers, null, $version);
-        $this->serverParams = $serverParams;
+        $this->environment = $environment ?: new Environment();
         $this->cookieParams = $_COOKIE;
         $this->queryParams = $_GET;
         $this->attributes = [];
         $this->uploadedFiles = [];
 
         if( $_FILES ){
-            # todo fill uploaded files
+            foreach( $_FILES as $index => $info ){
+                if( is_array($info['name']) ){
+                    $this->uploadedFiles[$index] = [];
+                    for($i = 0; $i < count($info['name']); $i++){
+                        $this->uploadedFiles[$index][] = new UploadedFile(
+                            $info['name'][$i],
+                            $info['tmp_name'][$i],
+                            $info['type'][$i],
+                            $info['error'][$i],
+                            $info['size'][$i]
+                        );
+                    }
+                }else{
+                    $this->uploadedFiles[$index] = new UploadedFile(
+                        $info['name'], $info['tmp_name'], $info['type'], $info['error'], $info['size']
+                    );
+                }
+            }
         }
 
         $postHeaders = ['application/x-www-form-urlencoded', 'multipart/form-data'];
@@ -103,7 +117,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function getServerParams(): array
     {
-        return $this->serverParams;
+        return $this->environment->toArray();
     }
 
     /**

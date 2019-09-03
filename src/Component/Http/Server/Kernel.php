@@ -16,6 +16,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
+use Vection\Component\Http\Server\Factory\RequestFactory;
 use Vection\Contracts\Event\EventManagerInterface;
 use Vection\Contracts\Http\Server\KernelInterface;
 use Vection\Contracts\Http\Server\ResponderInterface;

@@ -10,16 +10,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Http\Server;
+namespace Vection\Component\Http\Server\Factory;
 
 use Vection\Component\Http\Factory\HeadersFactory;
 use Vection\Component\Http\Factory\UriFactory;
-use Vection\Component\Http\Psr\Stream;
+use Vection\Component\Http\Server\Request;
 
 /**
- * Class ServerRequestFactory
+ * Class RequestFactory
  *
- * @package Vection\Component\Http\Server
+ * @package Vection\Component\Http\Server\Factory
  */
 class RequestFactory
 {
@@ -30,13 +30,14 @@ class RequestFactory
     {
         $headers = HeadersFactory::createFromServer();
         $uri = UriFactory::createFromServer();
-        $requestBody = new Stream('php://input');
         $version = explode('/', $_SERVER['SERVER_PROTOCOL'])[1];
 
         $request = new Request(
-            $_SERVER['REQUEST_METHOD'], $uri, $headers, $requestBody, $version
+            $_SERVER['REQUEST_METHOD'], $uri, $headers, $version, $_SERVER
         );
 
+
+        return $request;
 
         #if( ! $authUser && $headers->has('Authorization') ){
         #    $authorization = $headers->getLine('Authorization');
