@@ -105,7 +105,12 @@ class Headers
             $this->names[$lowerName] = $name;
         }
 
-        $values = $this->headers[$this->names[$lowerName]];
+        $values = $this->headers[$this->names[$lowerName]] ?? [];
+
+        if( is_string($value) && strpos($value, ',') !== false ){
+            # if the value is comma separated, then make array from it to aware consistency
+            $value = array_map('trim', explode(',', $value));
+        }
 
         if( ! is_array($value) ){
             $values[] = $value;
@@ -122,7 +127,7 @@ class Headers
      */
     public function set(string $name, $value): void
     {
-        if( strpos($value, ',') !== false ){
+        if( is_string($value) && strpos($value, ',') !== false ){
             # if the value is comma separated, then make array from it to aware consistency
             $value = array_map('trim', explode(',', $value));
         }
@@ -145,6 +150,7 @@ class Headers
 
         if( isset($this->names[$lowerName]) ){
             unset($this->headers[$this->names[$lowerName]]);
+            unset($this->names[$lowerName]);
         }
     }
 
