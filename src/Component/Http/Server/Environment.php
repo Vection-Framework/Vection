@@ -29,7 +29,7 @@ class Environment
      */
     public function __construct(array $data = [])
     {
-        $this->data = $data ?: $_SERVER;
+        $this->data = array_change_key_case($data ?: $_SERVER, CASE_UPPER);
     }
 
     /**
@@ -56,7 +56,7 @@ class Environment
      * @param string $key
      * @param string $value
      */
-    public function add(string $key, string $value): void
+    public function set(string $key, string $value): void
     {
         $this->data[$key] = $value;
     }
@@ -82,7 +82,7 @@ class Environment
      */
     public function getArgV(): string
     {
-        return $this->data['argv'] ?? '';
+        return $this->data['ARGV'] ?? '';
     }
 
     /**
@@ -92,7 +92,7 @@ class Environment
      */
     public function getArgC(): string
     {
-        return $this->data['argc'] ?? '';
+        return $this->data['ARGC'] ?? '';
     }
 
     /**

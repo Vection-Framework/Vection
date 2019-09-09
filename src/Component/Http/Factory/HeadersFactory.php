@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 /**
  * This file is part of the Vection-Framework project.
@@ -9,6 +9,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Vection\Component\Http\Factory;
 
@@ -26,7 +28,7 @@ class HeadersFactory
      *
      * @return Headers
      */
-    public static function createFromServer(): Headers
+    public function createFromServer(): Headers
     {
         # Create header parameters
         $headers = new Headers();

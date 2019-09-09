@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 /**
  * This file is part of the Vection-Framework project.
@@ -9,6 +9,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Vection\Component\Http\Psr;
 
@@ -42,41 +44,6 @@ class Uri implements UriInterface
 
     /** @var string */
     protected $fragment;
-
-    /**
-     * Uri constructor.
-     *
-     * @param string $uri
-     */
-    public function __construct(string $uri = '')
-    {
-        if( $uri ){
-
-            if( ! $parts = parse_url($uri) ){
-                throw new InvalidArgumentException("Invalid URI '$uri'");
-            }
-
-            $this->schema = $parts[PHP_URL_SCHEME] ?? '';
-            $this->userInfo = $parts[PHP_URL_USER] ?? '';
-            $this->host = $parts[PHP_URL_HOST] ?? '';
-            $this->port = $parts[PHP_URL_PORT] ?? null;
-            $this->path = $parts[PHP_URL_PATH] ?? '';
-            $this->query = $parts[PHP_URL_QUERY] ?? '';
-            $this->fragment = $parts[PHP_URL_FRAGMENT] ?? '';
-
-            if( isset($parts[PHP_URL_PASS]) ){
-                $this->userInfo .= ':' . $parts[PHP_URL_PASS];
-            }
-
-            if( $this->port === null && in_array($this->schema, ['http', 'https']) ){
-                $this->port = $this->schema === 'https' ? 443 : 80;
-            }
-
-        }else{
-            $this->schema = '';
-            $this->query = '';
-        }
-    }
 
     /**
      * Retrieve the scheme component of the URI.
@@ -151,7 +118,7 @@ class Uri implements UriInterface
      */
     public function getUserInfo(): string
     {
-        return $this->userInfo;
+        return $this->userInfo ?: '';
     }
 
     /**
@@ -187,7 +154,7 @@ class Uri implements UriInterface
      */
     public function getPort(): ? int
     {
-        return $this->port;
+        return $this->port ?? null;
     }
 
     /**
@@ -217,7 +184,7 @@ class Uri implements UriInterface
      */
     public function getPath(): string
     {
-        return $this->path;
+        return $this->path ?: '';
     }
 
     /**
@@ -242,7 +209,7 @@ class Uri implements UriInterface
      */
     public function getQuery(): string
     {
-        return $this->query;
+        return $this->query ?: '';
     }
 
     /**
@@ -263,7 +230,7 @@ class Uri implements UriInterface
      */
     public function getFragment(): string
     {
-        return $this->fragment;
+        return $this->fragment ?: '';
     }
 
     /**
