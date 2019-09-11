@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 /**
  * This file is part of the Vection-Framework project.
@@ -9,6 +9,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Vection\Component\Http\Psr;
 
@@ -21,26 +23,8 @@ use Psr\Http\Message\StreamInterface;
  */
 class Stream implements StreamInterface
 {
-    /** @var resource */
-    protected $stream;
-
-    /** @var  */
-    protected $uri;
-
-    /** @var int */
-    protected $size;
-
-    /** @var bool */
-    protected $readable;
-
-    /** @var bool */
-    protected $writable;
-
-    /** @var bool */
-    protected $seekable;
-
     /** @var array */
-    protected const RESOURCE_MODES = [
+    const RESOURCE_MODES = [
         'read' => [
             'r' => true, 'w+' => true, 'r+' => true, 'x+' => true, 'c+' => true,
             'rb' => true, 'w+b' => true, 'r+b' => true, 'x+b' => true,
@@ -55,29 +39,39 @@ class Stream implements StreamInterface
         ],
     ];
 
+    /** @var resource */
+    protected $resource;
+
+    /** @var string */
+    protected $uri;
+
+    /** @var int */
+    protected $size;
+
+    /** @var bool */
+    protected $readable;
+
+    /** @var bool */
+    protected $writable;
+
+    /** @var bool */
+    protected $seekable;
+
     /**
      * Stream constructor.
      *
-     * @param string|resource $content
+     * @param resource $resource
+     *
      */
-    public function __construct($content = '')
+    public function __construct($resource)
     {
-        if( is_string($content) && strpos($content, 'php://') === 0 ){
-
-            $this->stream = fopen($content, $content === 'php://input' ? 'r' : 'rw+');
-
-        }elseif( is_resource($content) ){
-            $this->stream = $content;
-        }else{
-
-            $this->stream = fopen('php://temp', 'rw+');
-
-            if( $content ){
-                fwrite($this->stream, $content);
-                fseek($this->stream, 0);
-            }
+        if( ! is_resource($resource) ){
+            throw new \InvalidArgumentException(
+                "Expected parameter 1 to be a valid resource, got ".gettype($resource)
+            );
         }
 
+        $this->resource = $resource;
         $meta = $this->getMetadata();
 
         $this->seekable = $meta['seekable'];
@@ -101,9 +95,9 @@ class Stream implements StreamInterface
      */
     public function close()
     {
-        if( $this->stream ){
-            if( is_resource($this->stream) ){
-                fclose($this->stream);
+        if( $this->resource ){
+            if( is_resource($this->resource) ){
+                fclose($this->resource);
             }
             $this->detach();
         }
@@ -118,16 +112,16 @@ class Stream implements StreamInterface
      */
     public function detach()
     {
-        if( $this->stream ){
-            $stream = $this->stream;
-            $this->stream = null;
+        if( $this->resource ){
+            $resource = $this->resource;
+            $this->resource = null;
             $this->size = null;
             $this->uri = null;
             $this->readable = false;
             $this->writable = false;
             $this->seekable = false;
 
-            return $stream;
+            return $resource;
         }
 
         return null;
@@ -140,7 +134,7 @@ class Stream implements StreamInterface
      */
     public function getSize()
     {
-        if( ! $this->stream ){
+        if( ! $this->resource ){
             return null;
         }
 
@@ -152,7 +146,7 @@ class Stream implements StreamInterface
             clearstatcache(true, $this->uri);
         }
 
-        return $this->size = fstat($this->stream)['size'] ?? null;
+        return $this->size = fstat($this->resource)['size'] ?? null;
     }
 
     /**
@@ -163,7 +157,7 @@ class Stream implements StreamInterface
      */
     public function tell()
     {
-        $position = ftell($this->stream);
+        $position = ftell($this->resource);
 
         if( $position === false ){
             throw new \RuntimeException('Unable to determine the pointer to references steam.');
@@ -179,7 +173,7 @@ class Stream implements StreamInterface
      */
     public function eof()
     {
-        return ! $this->stream || feof($this->stream);
+        return ! $this->resource || feof($this->resource);
     }
 
     /**
@@ -212,7 +206,7 @@ class Stream implements StreamInterface
             throw new \RuntimeException("The current stream is not seekable.");
         }
 
-        $seek = fseek($this->stream, $offset, $whence);
+        $seek = fseek($this->resource, $offset, $whence);
 
         if( $seek === -1 ){
             throw new \RuntimeException(sprintf(
@@ -261,7 +255,7 @@ class Stream implements StreamInterface
             throw new \RuntimeException("Unable to write: The current stream is not writeable.");
         }
 
-        $result = fwrite($this->stream, $string);
+        $result = fwrite($this->resource, $string);
 
         if( $result === false ){
             throw new \RuntimeException("Error while writing to stream.");
@@ -299,7 +293,7 @@ class Stream implements StreamInterface
             throw new \RuntimeException("Unable to read: The current stream is not readable.");
         }
 
-        return fread($this->stream, $length);
+        return fread($this->resource, $length);
     }
 
     /**
@@ -311,11 +305,11 @@ class Stream implements StreamInterface
      */
     public function getContents()
     {
-        if( ! $this->stream ){
+        if( ! $this->resource ){
             throw new \RuntimeException("Unable to read stream. The current stream does not exists or is invalid.");
         }
 
-        $content = stream_get_contents($this->stream);
+        $content = stream_get_contents($this->resource);
 
         if( $content === false ){
             throw new \RuntimeException("Error while reading from stream.");
@@ -340,11 +334,11 @@ class Stream implements StreamInterface
      */
     public function getMetadata($key = null)
     {
-        if( ! $this->stream ){
+        if( ! $this->resource ){
             return $key ? null : [];
         }
 
-        $meta = stream_get_meta_data($this->stream);
+        $meta = stream_get_meta_data($this->resource);
 
         return $key === null ? $meta : ($meta[$key] ?? null);
     }

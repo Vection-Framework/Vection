@@ -25,19 +25,14 @@ use RuntimeException;
 class UploadedFile implements UploadedFileInterface
 {
     /**
-     * @var string
+     * @var StreamInterface
      */
-    protected $name;
+    protected $stream;
 
     /**
-     * @var string
+     * @var int
      */
-    protected $type;
-
-    /**
-     * @var string
-     */
-    protected $file;
+    protected $size;
 
     /**
      * @var int
@@ -45,9 +40,14 @@ class UploadedFile implements UploadedFileInterface
     protected $error;
 
     /**
-     * @var int
+     * @var string
      */
-    protected $size;
+    protected $clientFilename;
+
+    /**
+     * @var string
+     */
+    protected $clientMediaType;
 
     /**
      * @var bool
@@ -57,19 +57,19 @@ class UploadedFile implements UploadedFileInterface
     /**
      * UploadedFile constructor.
      *
-     * @param string $name
-     * @param string $type
-     * @param string $tmpName
-     * @param int    $error
-     * @param int    $size
+     * @param StreamInterface $stream
+     * @param int|null        $size
+     * @param int             $error
+     * @param string|null     $clientFilename
+     * @param string|null     $clientMediaType
      */
-    public function __construct(? string $name, string $tmpName, ? string $type, int $error, ? int $size)
+    public function __construct(StreamInterface $stream, int $size = null, int $error = UPLOAD_ERR_OK, string $clientFilename = null, string $clientMediaType = null)
     {
-        $this->name = $name;
-        $this->type = $type;
-        $this->file = $tmpName;
-        $this->error = $error;
+        $this->stream = $stream;
         $this->size = $size;
+        $this->error = $error;
+        $this->clientFilename = $clientFilename;
+        $this->clientMediaType = $clientMediaType;
         $this->moved = false;
     }
 
@@ -95,7 +95,7 @@ class UploadedFile implements UploadedFileInterface
             throw new RuntimeException('Cannot get file content as stream after this file was moved.');
         }
 
-        return new Stream(fopen($this->file, 'r'));
+        return $this->stream;
     }
 
     /**
@@ -146,11 +146,15 @@ class UploadedFile implements UploadedFileInterface
             throw new RuntimeException("Unable to move file - target path is not writeable ($targetPath)");
         }
 
-        if( PHP_SAPI === 'cli' ){
-            $this->moved = rename($this->file, $targetPath);
-        }else{
-            $this->moved = move_uploaded_file($this->file, $targetPath);
+        $file = $this->stream->getMetadata('uri');
+
+        $this->moved = PHP_SAPI === 'cli' ? rename($file, $targetPath) : move_uploaded_file($file, $targetPath);
+
+        if( $this->moved === false ){
+            throw new RuntimeException("Uploaded file could not be moved to {$file}");
         }
+
+        $this->stream->close() && unlink($file);
     }
 
     /**
@@ -201,7 +205,7 @@ class UploadedFile implements UploadedFileInterface
      */
     public function getClientFilename(): ? string
     {
-        return $this->name ?: null;
+        return $this->clientFilename ?: null;
     }
 
     /**
@@ -219,6 +223,6 @@ class UploadedFile implements UploadedFileInterface
      */
     public function getClientMediaType(): ? string
     {
-        return $this->type ?: null;
+        return $this->clientMediaType ?: null;
     }
 }

@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) David M. Lung <vection@davidlung.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+namespace Vection\Component\Http\Psr\Factory;
+
+use InvalidArgumentException;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\UriFactoryInterface;
+use Psr\Http\Message\UriInterface;
+use Vection\Component\Http\Headers;
+use Vection\Component\Http\Psr\Request;
+
+/**
+ * Class RequestFactory
+ *
+ * @package Vection\Component\Http\Psr\Factory
+ */
+class RequestFactory implements RequestFactoryInterface
+{
+    /** @var UriFactoryInterface */
+    protected $uriFactory;
+
+    /**
+     * RequestFactory constructor.
+     *
+     * @param UriFactoryInterface|null $uriFactory
+     */
+    public function __construct(UriFactoryInterface $uriFactory = null)
+    {
+        $this->uriFactory = $uriFactory ?: new UriFactory();
+    }
+
+    /**
+     * Create a new request.
+     *
+     * @param string              $method The HTTP method associated with the request.
+     * @param UriInterface|string $uri    The URI associated with the request. If
+     *                                    the value is a string, the factory MUST create a UriInterface
+     *                                    instance based on it.
+     *
+     * @return RequestInterface
+     */
+    public function createRequest(string $method, $uri): RequestInterface
+    {
+        if( is_string($uri) ){
+            $uri = $this->uriFactory->createUri($uri);
+        }
+
+        if( ! $uri instanceof UriInterface){
+            throw new InvalidArgumentException(
+                "Except parameter 2 to be a string or an instance of UriInterface."
+            );
+        }
+
+        return new Request($method, $uri, new Headers());
+    }
+}

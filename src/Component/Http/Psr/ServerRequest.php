@@ -63,47 +63,6 @@ class ServerRequest extends Request implements ServerRequestInterface
         $this->queryParams = $_GET;
         $this->attributes = [];
         $this->uploadedFiles = [];
-
-        if( $_FILES ){
-            foreach( $_FILES as $index => $info ){
-                if( is_array($info['name']) ){
-                    $this->uploadedFiles[$index] = [];
-                    for($i = 0; $i < count($info['name']); $i++){
-                        $this->uploadedFiles[$index][] = new UploadedFile(
-                            $info['name'][$i],
-                            $info['tmp_name'][$i],
-                            $info['type'][$i],
-                            $info['error'][$i],
-                            $info['size'][$i]
-                        );
-                    }
-                }else{
-                    $this->uploadedFiles[$index] = new UploadedFile(
-                        $info['name'], $info['tmp_name'], $info['type'], $info['error'], $info['size']
-                    );
-                }
-            }
-        }
-
-        $postHeaders = ['application/x-www-form-urlencoded', 'multipart/form-data'];
-
-        if( strtolower($method) === 'post' && in_array( $headers->get('content-type'), $postHeaders) ){
-            $this->parsedBody = $_POST;
-        }
-        else{
-            $this->stream = new Stream('php://input');
-
-            if( ! empty($content = $this->stream->getContents()) ){
-
-                if( stripos($headers->getLine('content-type'), 'application/json') === 0 ){
-                    $this->parsedBody = json_decode($content, true);
-                }else{
-                    // TODO add more content type based parsing
-                    $this->parsedBody = [];
-                    parse_str($content, $this->parsedBody);
-                }
-            }
-        }
     }
 
     /**
