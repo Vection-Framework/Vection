@@ -155,6 +155,32 @@ class Headers
     }
 
     /**
+     * Returns the value of the header Content-Type.
+     *
+     * @return string
+     */
+    public function getContentType(): string
+    {
+        if( ! $this->has('content-type') ){
+            return 'text/plain';
+        }
+
+        $contentType = explode(';', $this->getLine('content-type'))[0];
+
+        return trim($contentType);
+    }
+
+    /**
+     * Returns the value of the header Content-Type.
+     *
+     * @return int
+     */
+    public function getContentLength(): int
+    {
+        return (int) $this->getLine('content-length') ?: 0;
+    }
+
+    /**
      * @return array
      */
     public function toArray(): array

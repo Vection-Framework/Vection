@@ -17,8 +17,10 @@ namespace Vection\Component\Http\Psr\Factory;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\UriInterface;
-use Vection\Component\Http\Factory\HeadersFactory;
+use Vection\Component\Http\Headers;
 use Vection\Component\Http\Psr\ServerRequest;
 use Vection\Component\Http\Server\Environment;
 
@@ -38,10 +40,12 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
     /**
      * ServerRequestFactory constructor.
      *
-     * @param StreamFactoryInterface $streamFactory
-     * @param UploadedFileFactory    $uploadedFileFactory
+     * @param StreamFactoryInterface       $streamFactory
+     * @param UploadedFileFactoryInterface $uploadedFileFactory
      */
-    public function __construct(StreamFactoryInterface $streamFactory = null, UploadedFileFactory $uploadedFileFactory = null)
+    public function __construct(
+        StreamFactoryInterface $streamFactory = null, UploadedFileFactoryInterface $uploadedFileFactory = null
+    )
     {
         $this->streamFactory = $streamFactory ?: new StreamFactory();
         $this->uploadedFileFactory = $uploadedFileFactory ?: new UploadedFileFactory();
@@ -65,56 +69,126 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      */
     public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
+        $method = strtoupper($method);
+        $headers = $this->createHeaders();
         $environment = new Environment($serverParams);
-        $headers = (new HeadersFactory())->createFromServer();
         $version = explode('/', $environment->getServerProtocol())[1];
+        $stream = $this->streamFactory->createStreamFromFile('php://input');
+        $parsedBody = $this->parseBody($method, $stream, $headers);
+        $uploadedFiles = $this->createUploadedFiles();
 
-        $request = new ServerRequest($method, $uri, $headers, $version, $environment);
-
-        if( $_FILES ){
-            $uploadedFiles = [];
-
-            foreach( $_FILES as $index => $info ){
-
-                if( is_array($info['name']) ){
-                    $uploadedFiles[$index] = [];
-
-                    for($i = 0; $i < count($info['name']); $i++){
-                        $stream = $this->streamFactory->createStreamFromFile($info['tmp_name'][$i]);
-                        $uploadedFiles[$index][] = $this->uploadedFileFactory->createUploadedFile(
-                            $stream, $info['size'][$i], $info['error'][$i], $info['tmp_name'][$i], $info['type'][$i]
-                        );
-                    }
-                }else{
-                    $stream = $this->streamFactory->createStreamFromFile($info['tmp_name']);
-                    $uploadedFiles[$index] = $this->uploadedFileFactory->createUploadedFile(
-                        $stream, $info['size'], $info['error'], $info['tmp_name'], $info['type']
-                    );
-                }
-            }
-
-            $request = $request->withUploadedFiles($uploadedFiles);
-        }
-
-        $postHeaders = ['application/x-www-form-urlencoded', 'multipart/form-data'];
-
-        if( strtolower($method) === 'post' && in_array( $headers->get('content-type'), $postHeaders) ){
-            $request = $request->withParsedBody($_POST);
-        }else{
-            $stream = $this->streamFactory->createStreamFromFile('php://input');
-
-            if( ! empty($content = $stream->getContents()) ){
-
-                if( stripos($headers->getLine('content-type'), 'application/json') === 0 ){
-                    $parsedBody = json_decode($content, true);
-                }else{
-                    // TODO add more content type based parsing
-                    $parsedBody = [];
-                    parse_str($content, $parsedBody);
-                }
-            }
-        }
+        $request = (new ServerRequest($method, $uri, $headers, $version, $environment))
+            ->withBody($stream)
+            ->withParsedBody($parsedBody)
+            ->withUploadedFiles($uploadedFiles)
+            ->withQueryParams($_GET)
+            ->withCookieParams($_COOKIE)
+        ;
 
         return $request;
+    }
+
+    /**
+     * Creates an object from type Header that contains all headers
+     * send by the client to server.
+     *
+     * @return Headers
+     */
+    protected function createHeaders(): Headers
+    {
+        # Create header parameters
+        $headers = new Headers();
+
+        # Content info does not appear in $_SERVER as $_SERVER['HTTP_CONTENT_TYPE'].
+        # PHP removes these (per CGI/1.1 specification[1]) from the HTTP_ match group
+        $exceptionalHeaders = [
+            'CONTENT_TYPE' => 'content-type',
+            'CONTENT_LENGTH' => 'content-length',
+            'CONTENT_MD5' => 'content-md5'
+        ];
+
+        foreach( $_SERVER as $name => $value ){
+            if( stripos($name, 'HTTP_') === 0 ){
+                $name = substr(strtolower(str_replace('_', '-', $name)), 5);
+                $headers->set($name, $value);
+            }elseif(isset($exceptionalHeaders[$name])){
+                $headers->set($exceptionalHeaders[$name], $value);
+            }
+        }
+
+        if( ! $headers->has('Authorization') && isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) ){
+            $headers->set('Authorization', $_SERVER['REDIRECT_HTTP_AUTHORIZATION']);
+        }
+
+        $authUser = trim($_SERVER['PHP_AUTH_USER'] ?? '');
+        $authPw = trim($_SERVER['PHP_AUTH_PW'] ?? '');
+
+        if( $authUser ){
+            $headers->set('Authorization', 'Basic '.base64_encode($authUser.':'.$authPw));
+        }
+
+        return $headers;
+    }
+
+    /**
+     * Returns an array contains objects from type UploadedFile.
+     *
+     * @return array
+     */
+    protected function createUploadedFiles(): array
+    {
+        $uploadedFiles = [];
+
+        foreach( $_FILES ?? [] as $index => $info ){
+
+            if( is_array($info['name']) ){
+                $uploadedFiles[$index] = [];
+
+                for($i = 0; $i < count($info['name']); $i++){
+                    $stream = $this->streamFactory->createStreamFromFile($info['tmp_name'][$i]);
+                    $uploadedFiles[$index][] = $this->uploadedFileFactory->createUploadedFile(
+                        $stream, $info['size'][$i], $info['error'][$i], $info['tmp_name'][$i], $info['type'][$i]
+                    );
+                }
+            }else{
+                $stream = $this->streamFactory->createStreamFromFile($info['tmp_name']);
+                $uploadedFiles[$index] = $this->uploadedFileFactory->createUploadedFile(
+                    $stream, $info['size'], $info['error'], $info['tmp_name'], $info['type']
+                );
+            }
+        }
+
+        return $uploadedFiles;
+    }
+
+    /**
+     * @param string           $method
+     * @param StreamInterface  $stream
+     * @param Headers $headers
+     *
+     * @return array
+     */
+    protected function parseBody(string $method, StreamInterface $stream, Headers $headers): array
+    {
+        $postHeaders = ['application/x-www-form-urlencoded', 'multipart/form-data'];
+
+        if( $method === 'POST' && in_array($headers->getContentType(), $postHeaders) ){
+            return $_POST;
+        }
+
+        $content = trim($stream->getContents());
+
+        if( ! empty($content) ){
+
+            if( $headers->getContentType() === 'application/json' ){
+                $data = json_decode($content, true);
+                return json_last_error() !== JSON_ERROR_NONE ? [] : $data;
+            }
+
+            return [$content];
+
+        }
+
+        return [];
     }
 }

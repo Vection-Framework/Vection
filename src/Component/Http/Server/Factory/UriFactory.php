@@ -35,9 +35,9 @@ class UriFactory extends PsrUriFactory
      *
      * @param Environment $environment
      */
-    public function __construct(Environment $environment)
+    public function __construct(Environment $environment = null)
     {
-        $this->environment = $environment;
+        $this->environment = $environment ?: new Environment();
     }
 
     /**

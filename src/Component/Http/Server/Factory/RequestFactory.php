@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 /**
  * This file is part of the Vection-Framework project.
@@ -10,10 +10,14 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Vection\Component\Http\Server\Factory;
 
-use Vection\Component\Http\Factory\HeadersFactory;
-use Vection\Component\Http\Factory\UriFactory;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\UploadedFileFactoryInterface;
+use Vection\Component\Http\Psr\Factory\ServerRequestFactory;
+use Vection\Component\Http\Server\Environment;
 use Vection\Component\Http\Server\Request;
 
 /**
@@ -21,23 +25,52 @@ use Vection\Component\Http\Server\Request;
  *
  * @package Vection\Component\Http\Server\Factory
  */
-class RequestFactory
+class RequestFactory extends ServerRequestFactory
 {
+    /** @var UriFactory */
+    protected $uriFactory;
+
+    /**
+     * RequestFactory constructor.
+     *
+     * @param StreamFactoryInterface|null       $streamFactory
+     * @param UploadedFileFactoryInterface|null $uploadedFileFactory
+     */
+    public function __construct(
+        StreamFactoryInterface $streamFactory = null, UploadedFileFactoryInterface $uploadedFileFactory = null
+    )
+    {
+        parent::__construct($streamFactory, $uploadedFileFactory);
+        $this->uriFactory = new UriFactory();
+    }
+
     /**
      * @return Request
      */
-    public static function createFromServer(): Request
+    public function createFromGlobals(): Request
     {
-        $headers = HeadersFactory::createFromServer();
-        $uri = UriFactory::createFromServer();
-        $version = explode('/', $_SERVER['SERVER_PROTOCOL'])[1];
+        $method = strtoupper($_SERVER['REQUEST_METHOD']);
+        $uri = $this->uriFactory->createUri();
+        $headers = $this->createHeaders();
+        $environment = new Environment($_SERVER);
+        $version = explode('/', $environment->getServerProtocol())[1];
 
-        $request = new Request(
-            $_SERVER['REQUEST_METHOD'], $uri, $headers, $version, $_SERVER
-        );
+        $request = new Request($method, $uri, $headers, $version, $environment);
 
+        $stream = $this->streamFactory->createStreamFromFile('php://input');
+        $parsedBody = $this->parseBody($method, $stream, $headers);
+        $uploadedFiles = $this->createUploadedFiles();
+
+        $request = $request
+            ->withBody($stream)
+            ->withParsedBody($parsedBody)
+            ->withUploadedFiles($uploadedFiles)
+            ->withQueryParams($_GET)
+            ->withCookieParams($_COOKIE)
+        ;
 
         return $request;
+
 
         #if( ! $authUser && $headers->has('Authorization') ){
         #    $authorization = $headers->getLine('Authorization');

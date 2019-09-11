@@ -53,15 +53,6 @@ class Environment
     }
 
     /**
-     * @param string $key
-     * @param string $value
-     */
-    public function set(string $key, string $value): void
-    {
-        $this->data[$key] = $value;
-    }
-
-    /**
      * The filename of the currently executing script, relative to the document root. For instance, $_SERVER['PHP_SELF']
      * in a script at the address http://example.com/foo/bar.php would be /foo/bar.php. The __FILE__ constant contains
      * the full path and filename of the current (i.e. included) file. If PHP is running as a command-line processor

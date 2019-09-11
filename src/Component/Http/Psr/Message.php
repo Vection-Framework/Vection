@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 /**
  * This file is part of the Vection-Framework project.
@@ -9,6 +9,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Vection\Component\Http\Psr;
 
@@ -75,9 +77,9 @@ abstract class Message implements MessageInterface
      */
     public function withProtocolVersion($version)
     {
-        $response = clone $this;
-        $response->protocolVersion = $version;
-        return $response;
+        $message = clone $this;
+        $message->protocolVersion = $version;
+        return $message;
     }
 
     /**
@@ -187,9 +189,9 @@ abstract class Message implements MessageInterface
      */
     public function withHeader($name, $value)
     {
-        $response = clone $this;
-        $response->headers->set($name, $value);
-        return $response;
+        $message = clone $this;
+        $message->headers->set($name, $value);
+        return $message;
     }
 
     /**
@@ -211,9 +213,9 @@ abstract class Message implements MessageInterface
      */
     public function withAddedHeader($name, $value)
     {
-        $response = clone $this;
-        $response->headers->add($name, $value);
-        return $response;
+        $message = clone $this;
+        $message->headers->add($name, $value);
+        return $message;
     }
 
     /**
@@ -231,9 +233,9 @@ abstract class Message implements MessageInterface
      */
     public function withoutHeader($name)
     {
-        $response = clone $this;
-        $response->headers->remove($name);
-        return $response;
+        $message = clone $this;
+        $message->headers->remove($name);
+        return $message;
     }
 
     /**
@@ -244,7 +246,7 @@ abstract class Message implements MessageInterface
     public function getBody(): StreamInterface
     {
         if( ! $this->stream ){
-            $this->stream = new Stream();
+            $this->stream = new Stream(fopen('php://temp', 'rw+'));
         }
 
         return $this->stream;
@@ -266,9 +268,9 @@ abstract class Message implements MessageInterface
      */
     public function withBody(StreamInterface $body)
     {
-        $response = clone $this;
-        $response->stream = $body;
+        $message = clone $this;
+        $message->stream = $body;
 
-        return $response;
+        return $message;
     }
 }
