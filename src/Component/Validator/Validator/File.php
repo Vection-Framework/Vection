@@ -24,14 +24,6 @@ class File extends Validator
     /**
      * @inheritDoc
      */
-    public function getConstraints(): array
-    {
-        return [];
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getMessage(): string
     {
         return 'Path "{value}" is not a valid directory.';

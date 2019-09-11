@@ -75,7 +75,7 @@ class Violation implements ViolationInterface, \JsonSerializable
             $this->result = str_replace(
                 array_keys($constraints),
                 array_values($constraints),
-                $this->message ?: $this->message
+                $this->message ?: ''
             );
         }
 
@@ -87,7 +87,7 @@ class Violation implements ViolationInterface, \JsonSerializable
      */
     public function __toString(): string
     {
-        $this->getMessage();
+        return $this->getMessage();
     }
 
     /**
