@@ -46,7 +46,10 @@ abstract class Validator implements ValidatorInterface
      *
      * @return array
      */
-    abstract protected function getConstraints(): array;
+    protected function getConstraints(): array
+    {
+        return [];
+    }
 
     /**
      * Returns an message which will be display when the validation

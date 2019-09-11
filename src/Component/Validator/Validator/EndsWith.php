@@ -4,7 +4,7 @@
  * This file is part of the AppsDock project.
  *  Visit project at https://github.com/Vection-Framework/Vection
  *
- *  (c) David Lung <vection@davidlung.de>
+ *  (c) David Lung <vection@davidlung.de>, Bjoern Klemm <vection@bjoernklemm.de>
  *
  *  For the full copyright and license information, please view the LICENSE
  *  file that was distributed with this source code.
@@ -22,16 +22,16 @@ use Vection\Component\Validator\Validator;
 class EndsWith extends Validator
 {
     /** @var string */
-    protected $char;
+    protected $needle;
 
     /**
      * EndsWith constructor.
      *
-     * @param string $char
+     * @param string $needle
      */
-    public function __construct(string $char)
+    public function __construct(string $needle)
     {
-        $this->char = $char;
+        $this->needle = $needle;
     }
 
     /**
@@ -39,7 +39,7 @@ class EndsWith extends Validator
      */
     public function getConstraints(): array
     {
-        return ['char' => $this->char];
+        return ['needle' => $this->needle];
     }
 
     /**
@@ -47,7 +47,7 @@ class EndsWith extends Validator
      */
     public function getMessage(): string
     {
-        return 'Value "{value}" does not ends with {char}.';
+        return 'Value "{value}" does not ends with {needle}.';
     }
 
     /**
@@ -55,6 +55,11 @@ class EndsWith extends Validator
      */
     protected function onValidate($value): bool
     {
-        return substr($value, -1) === $this->char;
+        $length = strlen($this->needle);
+        if ($length === 0) {
+            return true;
+        }
+
+        return (substr($value, -$length) === $this->needle);
     }
 }

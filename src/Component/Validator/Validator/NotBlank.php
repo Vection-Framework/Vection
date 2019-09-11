@@ -24,14 +24,6 @@ class NotBlank extends Validator
     /**
      * @inheritDoc
      */
-    public function getConstraints(): array
-    {
-        return [];
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getMessage(): string
     {
         return 'Value "{value}" is blank, but was expected to contain a value.';

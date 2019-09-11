@@ -36,7 +36,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @method ValidatorChain numeric()
  * @method ValidatorChain directory()
  * @method ValidatorChain email()
- * @method ValidatorChain endsWith(string $char)
+ * @method ValidatorChain endsWith(string $needle)
  * @method ValidatorChain file()
  * @method ValidatorChain greaterOrEqualThan(int $limit)
  * @method ValidatorChain greaterThan(int $limit)
@@ -61,6 +61,11 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @method ValidatorChain url()
  * @method ValidatorChain uuid()
  * @method ValidatorChain phone()
+ * @method ValidatorChain digit()
+ * @method ValidatorChain integer()
+ * @method ValidatorChain isString()
+ * @method ValidatorChain iban()
+ * @method ValidatorChain hex()
  */
 class ValidatorChain implements ValidatorChainInterface
 {

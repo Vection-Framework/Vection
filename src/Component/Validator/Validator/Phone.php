@@ -24,14 +24,6 @@ class Phone extends Validator
     /**
      * @inheritDoc
      */
-    public function getConstraints(): array
-    {
-        return [];
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getMessage(): string
     {
         return 'Value "{value}" is not a valid phone number.';
