@@ -151,7 +151,7 @@ class Environment
      */
     public function getRequestMethod(): string
     {
-        return $this->data['REQUEST_METHOD'] ?? '';
+        return strtoupper($this->data['REQUEST_METHOD'] ?? '');
     }
 
     /**
