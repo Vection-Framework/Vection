@@ -12,6 +12,7 @@
 
 namespace Vection\Component\Http\Server;
 
+use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
 use Vection\Component\Http\Headers;
 use Vection\Component\Http\Psr\ServerRequest;
@@ -55,10 +56,10 @@ class Request extends ServerRequest
         parent::__construct($method, $uri, $headers, $version, $environment);
 
         if( $this->isFromProxy() ){
-            $this->proxy = ProxyFactory::create($environment);
-            $this->client = ClientFactory::create($environment, $this->proxy);
+            $this->proxy = ProxyFactory::create($this->environment);
+            $this->client = ClientFactory::create($this->environment, $this->proxy);
         }else{
-            $this->client = ClientFactory::create($environment);
+            $this->client = ClientFactory::create($this->environment);
         }
     }
 
@@ -68,7 +69,7 @@ class Request extends ServerRequest
     public function addTrustedProxy(string $ip): void
     {
         if( ! filter_var($ip, FILTER_VALIDATE_IP) ){
-            throw new \InvalidArgumentException("Invalid IP address: $ip");
+            throw new InvalidArgumentException("Invalid IP address: $ip");
         }
 
         $this->trustedProxies[$ip] = $ip;

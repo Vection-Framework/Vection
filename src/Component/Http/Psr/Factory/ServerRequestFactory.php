@@ -23,6 +23,7 @@ use Psr\Http\Message\UriInterface;
 use Vection\Component\Http\Headers;
 use Vection\Component\Http\Psr\ServerRequest;
 use Vection\Component\Http\Server\Environment;
+use Vection\Component\Http\Server\Factory\HeadersFactory;
 
 /**
  * Class ServerRequestFactory
@@ -69,9 +70,11 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      */
     public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
-        $method = strtoupper($method);
-        $headers = $this->createHeaders();
         $environment = new Environment($serverParams);
+        $headersFactory = new HeadersFactory($environment);
+
+        $method = strtoupper($method);
+        $headers = $headersFactory->createHeaders();
         $version = explode('/', $environment->getServerProtocol())[1];
         $stream = $this->streamFactory->createStreamFromFile('php://input');
         $parsedBody = $this->parseBody($method, $stream, $headers);
@@ -89,48 +92,6 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
     }
 
     /**
-     * Creates an object from type Header that contains all headers
-     * send by the client to server.
-     *
-     * @return Headers
-     */
-    protected function createHeaders(): Headers
-    {
-        # Create header parameters
-        $headers = new Headers();
-
-        # Content info does not appear in $_SERVER as $_SERVER['HTTP_CONTENT_TYPE'].
-        # PHP removes these (per CGI/1.1 specification[1]) from the HTTP_ match group
-        $exceptionalHeaders = [
-            'CONTENT_TYPE' => 'content-type',
-            'CONTENT_LENGTH' => 'content-length',
-            'CONTENT_MD5' => 'content-md5'
-        ];
-
-        foreach( $_SERVER as $name => $value ){
-            if( stripos($name, 'HTTP_') === 0 ){
-                $name = substr(strtolower(str_replace('_', '-', $name)), 5);
-                $headers->set($name, $value);
-            }elseif(isset($exceptionalHeaders[$name])){
-                $headers->set($exceptionalHeaders[$name], $value);
-            }
-        }
-
-        if( ! $headers->has('Authorization') && isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) ){
-            $headers->set('Authorization', $_SERVER['REDIRECT_HTTP_AUTHORIZATION']);
-        }
-
-        $authUser = trim($_SERVER['PHP_AUTH_USER'] ?? '');
-        $authPw = trim($_SERVER['PHP_AUTH_PW'] ?? '');
-
-        if( $authUser ){
-            $headers->set('Authorization', 'Basic '.base64_encode($authUser.':'.$authPw));
-        }
-
-        return $headers;
-    }
-
-    /**
      * Returns an array contains objects from type UploadedFile.
      *
      * @return array
@@ -144,7 +105,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
             if( is_array($info['name']) ){
                 $uploadedFiles[$index] = [];
 
-                for($i = 0; $i < count($info['name']); $i++){
+                for( $i = 0, $c = count($info['name']); $i < $c; $i++){
                     $stream = $this->streamFactory->createStreamFromFile($info['tmp_name'][$i]);
                     $uploadedFiles[$index][] = $this->uploadedFileFactory->createUploadedFile(
                         $stream, $info['size'][$i], $info['error'][$i], $info['tmp_name'][$i], $info['type'][$i]
@@ -172,7 +133,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
     {
         $postHeaders = ['application/x-www-form-urlencoded', 'multipart/form-data'];
 
-        if( $method === 'POST' && in_array($headers->getContentType(), $postHeaders) ){
+        if( $method === 'POST' && in_array($headers->getContentType(), $postHeaders, true) ){
             return $_POST;
         }
 

@@ -53,7 +53,7 @@ class UriFactory extends PsrUriFactory
 
         if( ! isset($components[PHP_URL_SCHEME]) ){
 
-            list($protocol) = explode('/', $this->environment->getServerProtocol());
+            [$protocol] = explode('/', $this->environment->getServerProtocol());
 
             if( $protocol === 'HTTP' ){
                 $scheme = $this->environment->get('REQUEST_SCHEME');
@@ -65,12 +65,12 @@ class UriFactory extends PsrUriFactory
         }
 
         $host = $this->environment->getServerName() ?? $this->environment->getServerAddr();
-        if( ! isset($components[PHP_URL_HOST]) && $host ){
+        if( $host && ! isset($components[PHP_URL_HOST]) ){
             $components[PHP_URL_HOST] = $host;
         }
 
         $serverPort = $this->environment->getServerPort();
-        if( ! isset($components[PHP_URL_PORT]) && $serverPort ){
+        if( $serverPort && ! isset($components[PHP_URL_PORT]) ){
             $components[PHP_URL_PORT] = $serverPort;
         }
 
@@ -83,7 +83,7 @@ class UriFactory extends PsrUriFactory
         }
 
         $queryString = $this->environment->getQueryString();
-        if( ! isset($components[PHP_URL_QUERY]) && $queryString ){
+        if( $queryString && ! isset($components[PHP_URL_QUERY]) ){
             $components[PHP_URL_QUERY] = $queryString;
         }
 
