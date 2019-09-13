@@ -7,7 +7,7 @@
 
 | Master |
 | ------ |
-| [Vection build](https://travis-ci.org/Vection-Framework/Vection.svg?branch=master) |
+| ![Build Status](https://travis-ci.org/Vection-Framework/Vection.svg?branch=master)](https://travis-ci.org/Vection-Framework/Vection) |
 
 # ATTENTION
 This framework is currently in its late development stage, api / interfaces could still change until a stable version is released!!
