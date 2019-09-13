@@ -25,5 +25,7 @@ class CommandBusTest extends TestCase
         $commandBus = new CommandBus();
         $commandBus->attach(new CommandTestBus());
         $commandBus->execute(new TestCommand());
+
+        $this->assertTrue(true);
     }
 }
