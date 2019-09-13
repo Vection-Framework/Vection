@@ -11,6 +11,7 @@
  */
 
 namespace Vection\Component\View\Tests;
+use PHPUnit\Framework\TestCase;
 
 class ViewTest extends TestCase
 {
