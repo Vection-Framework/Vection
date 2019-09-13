@@ -15,8 +15,9 @@ namespace Vection\Component\MessageBus\Tests\Command;
 use Vection\Component\MessageBus\Command\CommandBus;
 use Vection\Component\MessageBus\Tests\Fixtures\CommandTestBus;
 use Vection\Component\MessageBus\Tests\Fixtures\TestCommand;
+use PHPUnit\Framework\TestCase;
 
-class CommandBusTest extends \PHPUnit_Framework_TestCase
+class CommandBusTest extends TestCase
 {
 
     public function testExecute()

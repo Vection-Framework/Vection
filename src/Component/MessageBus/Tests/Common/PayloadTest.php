@@ -14,13 +14,13 @@ namespace Vection\Component\MessageBus\Tests;
 
 use Vection\Component\MessageBus\Payload;
 use Vection\Contracts\MessageBus\PayloadInterface;
-
+use PHPUnit\Framework\TestCase;
 /**
  * Class PayloadTest
  *
  * @package Vection\Component\MessageBus\Tests
  */
-class PayloadTest extends \PHPUnit_Framework_TestCase
+class PayloadTest extends TestCase
 {
 
     /**

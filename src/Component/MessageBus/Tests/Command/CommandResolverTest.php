@@ -15,13 +15,13 @@ namespace Vection\Component\MessageBus\Tests\Command;
 use Vection\Component\MessageBus\Command\CommandResolver;
 use Vection\Component\MessageBus\Tests\Fixtures\TestCommand;
 use Vection\Component\MessageBus\Tests\Fixtures\TestCommandHandler;
-
+use PHPUnit\Framework\TestCase;
 /**
  * Class CommandResolverTest
  *
  * @package Vection\Component\MessageBus\Tests\Command
  */
-class CommandResolverTest extends \PHPUnit_Framework_TestCase
+class CommandResolverTest extends TestCase
 {
 
     public function testRegister()

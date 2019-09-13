@@ -15,13 +15,14 @@ namespace Vection\Component\MessageBus\Tests\Command;
 use Vection\Component\MessageBus\Command\CommandBusSequence;
 use Vection\Component\MessageBus\Tests\Fixtures\InvokableSequenceObject;
 use Vection\Component\MessageBus\Tests\Fixtures\TestCommand;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class CommandBusSequenceTest
  *
  * @package Vection\Component\MessageBus\Tests\Command
  */
-class CommandBusSequenceTest extends \PHPUnit_Framework_TestCase
+class CommandBusSequenceTest extends TestCase
 {
     /**
      *
