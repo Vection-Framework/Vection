@@ -29,7 +29,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "7.3.5",
-        "appsdock/bookdown-template": "*"
+        "appsdock/bookdown-template": "*",
+        "phpstan/phpstan": "^0.11"
     },
     "autoload": {
         "psr-4": {
