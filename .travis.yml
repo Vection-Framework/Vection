@@ -1,0 +1,58 @@
+dist: trusty
+sudo: false
+language: php
+
+php:
+  - 7.2
+  - 7.3
+  - 7.4snapshot
+
+before_install:
+  - composer self-update
+
+install:
+  - rm composer.lock
+  - travis_retry composer update --prefer-dist
+
+jobs:
+  include:
+    - stage: Test
+      php: 7.2
+
+    - stage: Test
+      php: 7.4snapshot
+
+    - stage: Test
+      if: type = cron
+      php: 7.3
+      install:
+        - rm composer.lock
+        - composer config minimum-stability dev
+        - travis_retry composer update --prefer-dist
+
+    - stage: Test
+      script:
+        ./vendor/bin/phpunit -v -c ./phpunit.xml.dist --coverage-clover ./build/logs/clover.xml
+      after_script:
+        - wget https://scrutinizer-ci.com/ocular.phar
+        - php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml
+
+    - stage: Code Quality
+      install: travis_retry composer install --prefer-dist
+      before_script:
+        - echo "extension=memcached.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+        - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+      script: vendor/bin/phpstan analyse
+
+    - stage: Code Quality
+      install: travis_retry composer install --prefer-dist
+      php: 7.2
+      script:
+        - ./vendor/bin/phpcs
+
+  allow_failures:
+    - php: 7.4snapshot
+
+cache:
+  directories:
+    - $HOME/.composer/cache

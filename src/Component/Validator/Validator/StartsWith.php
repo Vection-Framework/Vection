@@ -55,6 +55,6 @@ class StartsWith extends Validator
      */
     protected function onValidate($value): bool
     {
-        return substr($value, $this->needle) === 0;
+        return strpos($value, $this->needle) === 0;
     }
 }
