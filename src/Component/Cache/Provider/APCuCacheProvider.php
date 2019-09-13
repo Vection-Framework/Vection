@@ -156,7 +156,9 @@ class APCuCacheProvider implements CacheProviderInterface
             return \apcu_clear_cache();
         }
 
-        foreach ( new \APCUIterator('user') as $item ) {
+        $it = null;
+        //$it = new \APCUIterator('user');
+        foreach ( $it as $item ) {
             if ( strpos($item['key'], $namespace) === 0 ) {
                 $this->delete($item['key']);
             }

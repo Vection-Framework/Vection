@@ -103,7 +103,7 @@ class ResolverTest extends TestCase
 
         $definitions[TestObject::class] = (new Definition(TestObject::class))
             ->factory(function(){
-                return new TestObject();
+                return new TestObject(null);
             });
 
         $definitions[InterfaceInjectedObjectInterface::class] = (new Definition(TestObject::class))

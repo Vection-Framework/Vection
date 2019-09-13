@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\MessageBus\Tests;
+namespace Vection\Component\MessageBus\Tests\Common;
 
 use Vection\Component\MessageBus\Payload;
 use Vection\Contracts\MessageBus\PayloadInterface;

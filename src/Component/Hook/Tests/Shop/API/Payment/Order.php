@@ -20,4 +20,12 @@ namespace Vection\Component\Hook\Tests\Shop\API\Payment;
 class Order implements OrderInterface
 {
 
+    /**
+     *
+     * @return string
+     */
+    public function getProductName(): string
+    {
+        // TODO: Implement getProductName() method.
+    }
 }

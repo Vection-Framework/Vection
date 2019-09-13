@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Hook\Tests;
+namespace Vection\Component\Hook\Tests\Shop\API\Payment;
 
 use Vection\Component\Hook\Tests\Shop\API\Payment\OrderInterface;
 use Vection\Component\Hook\Tests\Shop\API\Payment\TransactionInterface;

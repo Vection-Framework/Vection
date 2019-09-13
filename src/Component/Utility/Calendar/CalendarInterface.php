@@ -32,11 +32,11 @@ interface CalendarInterface
     public const NOVEMBER = 11;
     public const DECEMBER = 12;
 
-    public const Sunday    = 0;
-    public const Monday    = 1;
-    public const Tuesday   = 2;
-    public const Wednesday = 3;
-    public const Thursday  = 4;
-    public const Friday    = 5;
-    public const Saturday  = 6;
+    public const SUNDAY    = 0;
+    public const MONDAY   = 1;
+    public const TUESDAY   = 2;
+    public const WENDSDAY = 3;
+    public const THURSDAY  = 4;
+    public const FRIDAY    = 5;
+    public const SATURDAY  = 6;
 }

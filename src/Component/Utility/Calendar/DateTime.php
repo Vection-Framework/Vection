@@ -49,6 +49,7 @@ class DateTime extends \DateTime
     {
         $tz = new \DateTimeZone(self::UTC);
 
+        $immutable = null;
         try {
             $immutable = new \DateTimeImmutable('now', $tz);
         } catch (\Exception $ex){ /*Could never happen*/ }

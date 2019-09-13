@@ -20,9 +20,9 @@ class ReadModel implements ReadModelInterface
     }
 
     /**
-     * @return \array[]
+     * @return array
      */
-    public function __debugInfo()
+    public function __debugInfo(): array
     {
         return $this->toArray();
     }

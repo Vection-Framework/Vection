@@ -47,7 +47,7 @@ class TestObject implements InterfaceInjectedObjectInterface
      */
     public function __construct(ConstructorInjectedObject $constructorInjectedObject)
     {
-        $this->constructorInjectedObject;
+        $this->constructorInjectedObject = $constructorInjectedObject;
     }
 
     /**

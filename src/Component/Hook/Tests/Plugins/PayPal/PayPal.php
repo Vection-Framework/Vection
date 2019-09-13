@@ -12,8 +12,9 @@
 
 namespace Vection\Component\Hook\Tests\Plugins\PayPal;
 
-use Vection\Component\Hook\Tests\PaymentInterface;
+
 use Vection\Component\Hook\Tests\Shop\API\Payment\OrderInterface;
+use Vection\Component\Hook\Tests\Shop\API\Payment\PaymentInterface;
 use Vection\Component\Hook\Tests\Shop\API\Payment\TransactionInterface;
 
 /**

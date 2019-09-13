@@ -53,7 +53,7 @@ class HookLoader
         $pattern = "{$path}/*/{$scope}.{yml,yaml,json}";
 
         foreach( glob($pattern, GLOB_BRACE) as $path ){
-
+            $_path = $path;
         }
     }
 

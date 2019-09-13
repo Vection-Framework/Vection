@@ -256,15 +256,12 @@ final class StringType
 
     /**
      * @param string $needle
-     * @param int    $start
-     * @param int    $end
      *
      * @return int
      */
-    public function count(string $needle, ?int $start = null, ?int $end = null): int
+    public function count(string $needle): int
     {
-        $end = $end ?: $this->len();
-        return mb_substr_count($this->str, $needle, $start ?? 0, $end ?? 0, $this->encoding);
+        return mb_substr_count($this->str, $needle, $this->encoding);
     }
 
     /**
