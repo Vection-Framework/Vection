@@ -3,11 +3,13 @@
         <img width="300" src="https://vection.appsdock.org/vection-framework.png">
     </a>
 </p>
-<a href="https://vection.appsdock.org">Vection</a> is a modern and component based PHP framework focused on high flexibility and performance for enterprise applications.
 
 | Master |
 | ------ |
 | [![Build Status](https://travis-ci.org/Vection-Framework/Vection.svg?branch=master)](https://travis-ci.org/Vection-Framework/Vection) |
+| Coverage |
+
+<a href="https://vection.appsdock.org">Vection</a> is a modern and component based PHP framework focused on high flexibility and performance for enterprise applications.
 
 # ATTENTION
 This framework is currently in its late development stage, api / interfaces could still change until a stable version is released!!
