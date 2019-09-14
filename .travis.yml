@@ -12,6 +12,7 @@ env:
 
 before_install:
   - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug not available"
+  - sh -e ./.travis-compile.sh
   - composer self-update
 
 install:
@@ -61,3 +62,9 @@ jobs:
 cache:
   directories:
     - $HOME/.composer/cache
+
+notifications:
+  slack:
+    appsdocks:CHHxTYhIPcoKrd3pxxgvFKEv
+    on_success: never
+    on_failure: always

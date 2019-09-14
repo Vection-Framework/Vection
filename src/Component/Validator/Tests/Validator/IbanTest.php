@@ -36,7 +36,7 @@ class IbanTest extends TestCase
     {
         $actual = $this->validator->normalize($actual);
         $rearranged = $this->validator->rearrange($actual);
-        $this->assertEquals($rearranged,$expected, $expected);
+        $this->assertEquals($rearranged, $expected, $expected);
     }
 
     /**
@@ -45,7 +45,7 @@ class IbanTest extends TestCase
     public function testConvertingArrangementToInteger($actual, $expected)
     {
         $actual = $this->validator->convertToInteger($actual);
-        $this->assertEquals($actual,$expected);
+        $this->assertEquals($actual, $expected);
     }
 
     /**
@@ -70,7 +70,7 @@ class IbanTest extends TestCase
     public function provideArrangedValues()
     {
         return [
-            ['WEST12345698765432GB82',3214282912345698765432161182]
+            '3214282912345698765432161182' => ['WEST12345698765432GB82', '3214282912345698765432161182'],
         ];
     }
 
@@ -80,7 +80,7 @@ class IbanTest extends TestCase
     public function provideToArrangedValues()
     {
         return [
-            'WEST12345698765432GB82' => ['GB82 WEST 1234 5698 7654 32','WEST12345698765432GB82']
+            'WEST12345698765432GB82' => ['GB82 WEST 1234 5698 7654 32', 'WEST12345698765432GB82'],
         ];
     }
 
@@ -90,7 +90,7 @@ class IbanTest extends TestCase
     public function provideValidValues()
     {
         return [
-            'GB82 WEST 1234 5698 7654 32' => ['GB82 WEST 1234 5698 7654 32']
+            'GB82WEST12345698765432' => ['GB82 WEST 1234 5698 7654 32'],
         ];
     }
 
@@ -100,8 +100,8 @@ class IbanTest extends TestCase
     public function provideInvalidValues()
     {
         return [
-            'XC82 WEST 1234 5698 7654 32' => ['XC82 WEST 1234 5698 7654 32'],
-            'GB82 WEST 1234 5698 7654 32 889' => ['GB82 WEST 1234 5698 7654 32 889']
+            'XC82WEST12345698765432'     => ['XC82 WEST 1234 5698 7654 32'],
+            'GB82WEST12345698765432889' => ['GB82 WEST 1234 5698 7654 32 889'],
         ];
     }
 }
