@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -156,8 +156,7 @@ class APCuCacheProvider implements CacheProviderInterface
             return \apcu_clear_cache();
         }
 
-        $it = null;
-        //$it = new \APCUIterator('user');
+        $it = new \APCUIterator('user');
         foreach ( $it as $item ) {
             if ( strpos($item['key'], $namespace) === 0 ) {
                 $this->delete($item['key']);

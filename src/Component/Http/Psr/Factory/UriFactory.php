@@ -68,32 +68,32 @@ class UriFactory implements UriFactoryInterface
     {
         $uri = new Uri();
 
-        if( isset($urlComponents[PHP_URL_SCHEME]) ){
-            $uri = $uri->withScheme($urlComponents[PHP_URL_SCHEME]);
+        if( isset($urlComponents['scheme']) ){
+            $uri = $uri->withScheme($urlComponents['scheme']);
         }
 
-        if( isset($urlComponents[PHP_URL_USER]) ){
-            $uri = $uri->withUserInfo($urlComponents[PHP_URL_USER], $urlComponents[PHP_URL_PASS] ?? null);
+        if( isset($urlComponents['user']) ){
+            $uri = $uri->withUserInfo($urlComponents['user'], $urlComponents['pass'] ?? null);
         }
 
-        if( isset($urlComponents[PHP_URL_HOST]) ){
-            $uri = $uri->withHost($urlComponents[PHP_URL_HOST]);
+        if( isset($urlComponents['host']) ){
+            $uri = $uri->withHost($urlComponents['host']);
         }
 
-        if( isset($urlComponents[PHP_URL_PORT]) ){
-            $uri = $uri->withPort((int)$urlComponents[PHP_URL_PORT]);
+        if( isset($urlComponents['port']) ){
+            $uri = $uri->withPort((int)$urlComponents['port']);
         }
 
-        if( isset($urlComponents[PHP_URL_PATH]) ){
-            $uri = $uri->withPath($urlComponents[PHP_URL_PATH]);
+        if( isset($urlComponents['path']) ){
+            $uri = $uri->withPath($urlComponents['path']);
         }
 
-        if( isset($urlComponents[PHP_URL_QUERY]) ){
-            $uri = $uri->withQuery($urlComponents[PHP_URL_QUERY]);
+        if( isset($urlComponents['query']) ){
+            $uri = $uri->withQuery($urlComponents['query']);
         }
 
-        if( isset($urlComponents[PHP_URL_FRAGMENT]) ){
-            $uri = $uri->withFragment($urlComponents[PHP_URL_FRAGMENT]);
+        if( isset($urlComponents['fragment']) ){
+            $uri = $uri->withFragment($urlComponents['fragment']);
         }
 
         return $uri;

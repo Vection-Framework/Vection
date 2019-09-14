@@ -132,8 +132,9 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
     protected function parseBody(string $method, StreamInterface $stream, Headers $headers): array
     {
         $postHeaders = ['application/x-www-form-urlencoded', 'multipart/form-data'];
+        $contentType = explode(';', $headers->getLine('content-type'))[0];
 
-        if( $method === 'POST' && in_array($headers->getContentType(), $postHeaders, true) ){
+        if( $method === 'POST' && in_array($contentType, $postHeaders, true) ){
             return $_POST;
         }
 
@@ -141,7 +142,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
 
         if( ! empty($content) ){
 
-            if( $headers->getContentType() === 'application/json' ){
+            if( $contentType === 'application/json' ){
                 $data = json_decode($content, true);
                 return json_last_error() !== JSON_ERROR_NONE ? [] : $data;
             }

@@ -22,7 +22,7 @@ namespace Vection\Component\Http;
 class Port
 {
     # https://gist.github.com/mahmoud/2fe281a8daaff26cfe9c15d2c5bf5c8b
-    const DEFAULT_SCHEME_PORTS = [
+    public const DEFAULT_SCHEME_PORTS = [
         'acap' => 674, 
         'afp' => 548, 
         'dict' => 2628, 

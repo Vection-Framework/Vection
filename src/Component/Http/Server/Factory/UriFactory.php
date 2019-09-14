@@ -51,7 +51,7 @@ class UriFactory extends PsrUriFactory
             throw new InvalidArgumentException("Invalid URI '$uriString'");
         }
 
-        if( ! isset($components[PHP_URL_SCHEME]) ){
+        if( ! isset($components['scheme']) ){
 
             [$protocol] = explode('/', $this->environment->getServerProtocol());
 
@@ -61,30 +61,30 @@ class UriFactory extends PsrUriFactory
                 $protocol .= ($scheme && $scheme === 'https') || ($https && $https !== 'off') ? 's' : '';
             }
 
-            $components[PHP_URL_SCHEME] = strtolower($protocol);
+            $components['scheme'] = strtolower($protocol);
         }
 
         $host = $this->environment->getServerName() ?? $this->environment->getServerAddr();
-        if( $host && ! isset($components[PHP_URL_HOST]) ){
-            $components[PHP_URL_HOST] = $host;
+        if( $host && ! isset($components['host']) ){
+            $components['host'] = $host;
         }
 
         $serverPort = $this->environment->getServerPort();
-        if( $serverPort && ! isset($components[PHP_URL_PORT]) ){
-            $components[PHP_URL_PORT] = $serverPort;
+        if( $serverPort && ! isset($components['port']) ){
+            $components['port'] = $serverPort;
         }
 
-        if( ! isset($components[PHP_URL_PATH]) ){
+        if( ! isset($components['path']) ){
             # In case an uri string parameter is given without path but request contains one
             $reqComps = parse_url($this->environment->getRequestUri());
-            if( isset($reqComps[PHP_URL_PATH]) ){
-                $components[PHP_URL_PORT] = $reqComps[PHP_URL_PATH];
+            if( isset($reqComps['path']) ){
+                $components['path'] = $reqComps['path'];
             }
         }
 
         $queryString = $this->environment->getQueryString();
-        if( $queryString && ! isset($components[PHP_URL_QUERY]) ){
-            $components[PHP_URL_QUERY] = $queryString;
+        if( $queryString && ! isset($components['query']) ){
+            $components['query'] = $queryString;
         }
 
         $uri = $this->createFromUrlComponents($components);

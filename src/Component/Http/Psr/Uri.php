@@ -61,7 +61,7 @@ class Uri implements UriInterface
      */
     public function getScheme(): string
     {
-        return $this->schema;
+        return $this->schema ?: '';
     }
 
     /**
@@ -134,7 +134,7 @@ class Uri implements UriInterface
      */
     public function getHost(): string
     {
-        return $this->host;
+        return $this->host ?: '';
     }
 
     /**

@@ -15,8 +15,8 @@ namespace Vection\Component\Http\Server;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use RuntimeException;
+use Vection\Contracts\Http\Server\RequestHandlerInterface;
 
 /**
  * Class RequestHandler
@@ -54,7 +54,7 @@ class RequestHandler implements RequestHandlerInterface
 
         # None the middleware have returned a response, so there is no processed content
         throw new RuntimeException(
-            "HTTP-Kernel: Expects exact one middleware that returns an response, none one does."
+            'HTTP-Kernel: Expects exact one middleware that returns an response, none one does.'
         );
     }
 }
