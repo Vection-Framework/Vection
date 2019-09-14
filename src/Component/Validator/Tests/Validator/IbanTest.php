@@ -36,7 +36,7 @@ class IbanTest extends TestCase
     {
         $actual = $this->validator->normalize($actual);
         $rearranged = $this->validator->rearrange($actual);
-        $this->assertEquals($rearranged,$expected);
+        $this->assertEquals($rearranged,$expected, $expected);
     }
 
     /**

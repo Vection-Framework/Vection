@@ -18,6 +18,7 @@
          failOnRisky="true"
          failOnWarning="true"
          verbose="true"
+         testdox="true"
 >
     <php>
         <ini name="error_reporting" value="-1" />
@@ -28,7 +29,6 @@
 
     <logging>
         <log type="coverage-clover" target="./coverage.xml"/>
-        <log type="testdox-text" target="php://stdout"/>
     </logging>
 
     <testsuites>
