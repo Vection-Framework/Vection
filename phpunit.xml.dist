@@ -28,7 +28,7 @@
 
     <logging>
         <log type="coverage-clover" target="./coverage.xml"/>
-        <log type="testdox" target="php://stdout"/>
+        <log type="testdox-text" target="php://stdout"/>
     </logging>
 
     <testsuites>
