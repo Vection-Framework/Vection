@@ -26,6 +26,11 @@
         <ini name="memory_limit" value="-1" />
     </php>
 
+    <logging>
+        <log type="coverage-clover" target="./coverage.xml"/>
+        <log type="testdox" target="php://stdout"/>
+    </logging>
+
     <testsuites>
         <testsuite name="Vection Test Suite">
             <directory>./src/Component/*/Tests/</directory>
