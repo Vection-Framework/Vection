@@ -15,6 +15,13 @@
             "email": "bjoern@appsdock.de"
         }
     ],
+    "support": {
+        "chat": "https://slack.com/app_redirect?channel=CMZG4GGBU",
+        "docs": "https://vection.appsdock.org/docs.",
+        "email": "support@appsdock.de",
+        "issues": "https://github.com/Vection-Framework/Vection/issues",
+        "source": "https://github.com/Vection-Framework/Vection/"
+    },
     "require": {
         "php": "^7.2",
         "psr/log": "~1.0",
