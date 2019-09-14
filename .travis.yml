@@ -33,11 +33,12 @@ jobs:
         - travis_retry composer update --prefer-dist
 
     - stage: Test
+      env: CODECOV_TOKEN="e2bfdde9-5657-472b-bab2-8e2342933ba0"
       before_script:
           - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{.disabled,}
           - if [[ ! $(php -m | grep -si xdebug) ]]; then echo "xdebug required for coverage"; exit 1; fi
       script:
-        ./vendor/bin/phpunit -v -c ./phpunit.xml.dist --coverage-clover ./build/logs/clover.xml
+        ./vendor/bin/phpunit -v -c ./phpunit.xml.dist --coverage-clover ./clover.xml
 
     - stage: Code Quality
       install: travis_retry composer install --prefer-dist
