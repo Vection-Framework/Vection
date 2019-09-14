@@ -5,3 +5,4 @@ parameters:
     excludes_analyse:
         - %rootDir%/../../../src/Component/Http/*
         - %rootDir%/../../../src/Bridge/*
+        - %rootDir%/../../../src/Component/Cache/Provider/APCuCacheProvider.php
