@@ -20,9 +20,11 @@ install:
 jobs:
   include:
     - stage: Test
+      if: type = cron
       php: 7.2
 
     - stage: Test
+      if: type = cron
       php: 7.4snapshot
 
     - stage: Test
