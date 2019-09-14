@@ -42,19 +42,19 @@ class IbanTest extends TestCase
     /**
      * @dataProvider provideArrangedValues
      */
-//    public function testConvertingArrangementToInteger($actual, $expected)
-//    {
-//        $actual = $this->validator->convertToInteger($actual);
-//        $this->assertEquals($actual,$expected);
-//    }
+    public function testConvertingArrangementToInteger($actual, $expected)
+    {
+        $actual = $this->validator->convertToInteger($actual);
+        $this->assertEquals($actual,$expected);
+    }
 
     /**
      * @dataProvider provideValidValues
      */
-//    public function testValidValues($value)
-//    {
-//        $this->assertNull($this->validator->validate($value));
-//    }
+    public function testValidValues($value)
+    {
+        $this->assertNull($this->validator->validate($value));
+    }
 
     /**
      * @dataProvider provideInvalidValues

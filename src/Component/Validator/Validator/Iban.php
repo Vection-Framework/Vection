@@ -106,9 +106,9 @@ class Iban extends Validator
     /**
      * @param string $iban
      *
-     * @return int
+     * @return string
      */
-    public function convertToInteger(string $iban): int
+    public function convertToInteger(string $iban): string
     {
         $chars = str_split($iban);
 
@@ -119,23 +119,22 @@ class Iban extends Validator
             }
         }
 
-        return (int) implode('',$chars);
+        return implode('',$chars);
     }
 
     /**
-     * @param int $value
+     * @param string $value
      *
      * @return bool
      */
-    public function compute(int $value): bool
+    public function compute(string $value): bool
     {
-        $v = (string) $value;
         $mod = '';
         do {
-            $n = $mod . substr($v,0,5);
-            $v = substr($v, 5);
+            $n = $mod . substr($value,0,5);
+            $value = substr($value, 5);
             $mod = $n % 97;
-        } while($v !== '');
+        } while(strlen($value));
 
         return $mod === 1;
     }
