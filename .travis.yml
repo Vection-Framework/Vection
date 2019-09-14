@@ -7,6 +7,9 @@ php:
   - 7.3
   - 7.4snapshot
 
+env:
+  - CODECOV_TOKEN="e2bfdde9-5657-472b-bab2-8e2342933ba0"
+
 before_install:
   - composer self-update
 
