@@ -7,7 +7,7 @@
 | Master |
 | ------ |
 | [![Build Status](https://travis-ci.org/Vection-Framework/Vection.svg?branch=master)](https://travis-ci.org/Vection-Framework/Vection) |
-| Coverage |
+| [![codecov](https://codecov.io/gh/Vection-Framework/Vection/branch/master/graph/badge.svg)](https://codecov.io/gh/Vection-Framework/Vection) |
 
 <a href="https://vection.appsdock.org">Vection</a> is a modern and component based PHP framework focused on high flexibility and performance for enterprise applications.
 
