@@ -80,7 +80,7 @@ class IbanTest extends TestCase
     public function provideToArrangedValues()
     {
         return [
-            ['GB82 WEST 1234 5698 7654 32','WEST12345698765432GB82']
+            'WEST12345698765432GB82' => ['GB82 WEST 1234 5698 7654 32','WEST12345698765432GB82']
         ];
     }
 
@@ -90,7 +90,7 @@ class IbanTest extends TestCase
     public function provideValidValues()
     {
         return [
-            ['GB82 WEST 1234 5698 7654 32']
+            'GB82 WEST 1234 5698 7654 32' => ['GB82 WEST 1234 5698 7654 32']
         ];
     }
 
@@ -100,8 +100,8 @@ class IbanTest extends TestCase
     public function provideInvalidValues()
     {
         return [
-            ['XC82 WEST 1234 5698 7654 32'],
-            ['GB82 WEST 1234 5698 7654 32 889']
+            'XC82 WEST 1234 5698 7654 32' => ['XC82 WEST 1234 5698 7654 32'],
+            'GB82 WEST 1234 5698 7654 32 889' => ['GB82 WEST 1234 5698 7654 32 889']
         ];
     }
 }
