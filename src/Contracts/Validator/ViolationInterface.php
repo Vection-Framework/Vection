@@ -28,9 +28,9 @@ interface ViolationInterface
      * Returns the invalid value that does not match the rules
      * of the used validator.
      *
-     * @return string
+     * @return mixed
      */
-    public function getValue(): string;
+    public function getValue();
 
     /**
      * Returns an user message that contains the value and constraints
