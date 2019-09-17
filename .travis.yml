@@ -62,8 +62,8 @@ cache:
   directories:
     - $HOME/.composer/cache
 
-notifications:
-  slack:
-    appsdocks:CHHxTYhIPcoKrd3pxxgvFKEv
-    on_success: never
-    on_failure: always
+#notifications:
+#  slack:
+#    appsdocks:CHHxTYhIPcoKrd3pxxgvFKEv
+#    on_success: never
+#    on_failure: always
