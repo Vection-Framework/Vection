@@ -149,7 +149,7 @@ class Headers
         $lowerName = strtolower($name);
 
         if( isset($this->names[$lowerName]) ){
-            unset($this->names[$lowerName], $this->headers[$this->names[$lowerName]]);
+            unset($this->headers[$this->names[$lowerName]], $this->names[$lowerName]);
         }
     }
 
