@@ -11,11 +11,11 @@ use Vection\Contracts\MessageBus\Query\ReadModelInterface;
  */
 class ReadModelCollection extends ReadModel implements \IteratorAggregate
 {
-    /** @var ReadModel[] */
-    protected $listKey = 'items';
+    /** @var string */
+    protected $listKey;
 
     /** @var int */
-    protected $total = 0;
+    protected $total;
 
     /** @var ReadModelInterface[] */
     protected $items;
@@ -61,7 +61,7 @@ class ReadModelCollection extends ReadModel implements \IteratorAggregate
     }
 
     /**
-     * @return ReadModel[]
+     * @return ReadModelInterface[]
      */
     public function getItems(): array
     {
@@ -69,7 +69,7 @@ class ReadModelCollection extends ReadModel implements \IteratorAggregate
     }
 
     /**
-     * @param $key
+     * @param mixed $key
      *
      * @return null|ReadModel
      */

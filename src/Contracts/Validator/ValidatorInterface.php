@@ -29,7 +29,7 @@ interface ValidatorInterface
      * this method returns an object of ViolationInterface that contains
      * the invalid value and an user message.
      *
-     * @param $value
+     * @param mixed $value
      *
      * @return ViolationInterface|null
      */

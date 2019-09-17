@@ -34,7 +34,7 @@ interface IdentifierInterface
     public function setId($id): void;
 
     /**
-     * @return int|string
+     * @return string
      */
     public function __toString(): string;
 }

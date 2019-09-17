@@ -137,7 +137,7 @@ class View implements ViewInterface
     /**
      * Appends mixed content to the view which is template independent.
      *
-     * @param $content
+     * @param mixed $content
      */
     public function append($content): void
     {
@@ -151,7 +151,7 @@ class View implements ViewInterface
     /**
      * Prepends mixed content to the view which is template independent.
      *
-     * @param $content
+     * @param mixed $content
      */
     public function prepend($content): void
     {

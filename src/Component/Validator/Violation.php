@@ -29,7 +29,7 @@ class Violation implements ViolationInterface, \JsonSerializable
     /** @var mixed */
     protected $value;
 
-    /** @var string */
+    /** @var array */
     protected $constraints;
 
     /** @var string */
@@ -41,11 +41,11 @@ class Violation implements ViolationInterface, \JsonSerializable
     /**
      * Violation constructor.
      *
-     * @param        $value
+     * @param string $value
      * @param array  $constraints
      * @param string $message
      */
-    public function __construct($value, array $constraints, string $message)
+    public function __construct(string $value, array $constraints, string $message)
     {
         $this->value = $value;
         $this->constraints = $constraints;
@@ -55,7 +55,7 @@ class Violation implements ViolationInterface, \JsonSerializable
     /**
      * @inheritDoc
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
@@ -108,7 +108,7 @@ class Violation implements ViolationInterface, \JsonSerializable
     /**
      * Converts the given value into a string representation.
      *
-     * @param $value
+     * @param mixed $value
      *
      * @return string
      */

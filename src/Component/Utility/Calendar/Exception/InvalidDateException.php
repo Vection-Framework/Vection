@@ -20,12 +20,12 @@ namespace Vection\Component\Utility\Calendar\Exception;
 class InvalidDateException extends \InvalidArgumentException
 {
     /**
-     * @param \DateTimeInterface $date
+     * @param \DateTimeInterface|bool $date
      */
-    public static function isValid(\DateTimeInterface $date)
+    public static function isValid($date)
     {
         if (false === $date){
-            throw new self("Could not create date object from string [{$date}]");
+            throw new self("Could not create date object from string");
         }
     }
 }

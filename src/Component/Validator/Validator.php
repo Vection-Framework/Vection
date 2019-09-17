@@ -30,7 +30,7 @@ abstract class Validator implements ValidatorInterface
     protected $message;
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @return bool
      */

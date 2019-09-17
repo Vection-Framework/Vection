@@ -38,13 +38,12 @@ class Vector implements \Countable, \ArrayAccess, \IteratorAggregate
             $this->list = (array)$list;
         } else if( \is_array($list) ) {
             $this->list = $list;
-        } else {
-            throw new \InvalidArgumentException('Argument Object must be ArrayAccess or native array');
         }
+        throw new \InvalidArgumentException('Argument Object must be ArrayAccess or native array');
     }
 
     /**
-     * @param $item
+     * @param mixed $item
      */
     public function append($item): void
     {
@@ -141,8 +140,8 @@ class Vector implements \Countable, \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * @param $value
-     * @param $key
+     * @param mixed $value
+     * @param mixed $key
      */
     public function insert($key, $value): void
     {

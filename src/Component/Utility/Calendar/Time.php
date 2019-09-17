@@ -25,7 +25,7 @@ class Time
     public const SEC_PER_WEEK = 604800;
 
     /**
-     * @param $time
+     * @param int $time
      * @param string $format
      * @return string
      * @throws \Exception

@@ -60,14 +60,19 @@ class Calendar implements CalendarInterface
     /**
      * @TODO: recompute all fields
      *
-     * @param $f
-     * @param $value
+     * @param mixed $f
+     * @param mixed $value
      */
     public function set($f, $value): void
     {
         $this->fields[$f] = $value;
     }
 
+    /**
+     * @param mixed $f
+     *
+     * @return mixed
+     */
     public function get($f)
     {
         return $this->fields[$f];
@@ -76,29 +81,27 @@ class Calendar implements CalendarInterface
     /**
      * @TODO: recompute all fields
      *
-     * @param $f
-     * @param $delta
+     * @param mixed $f
+     * @param mixed $delta
      */
     public function add($f, $delta)
     {
         $this->set($f, $this->get($f) + $delta);
     }
 
-
+    /**
+     *
+     */
     public function computeFields()
     {
 
     }
 
+    /**
+     * @return string
+     */
     public function __toString(): string
     {
-        return $this->dateTime->format(
-            $this->dateTime::W3C,
-            mktime(0, 0, 0,
-                $this->get(self::MONTH_OF_YEAR),
-                $this->get(self::DAY_OF_MONTH),
-                $this->get(self::YEAR)
-            )
-        );
+        return $this->dateTime->format($this->dateTime::W3C);
     }
 }

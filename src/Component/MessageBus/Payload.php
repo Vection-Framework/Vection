@@ -58,10 +58,10 @@ class Payload implements PayloadInterface
     /**
      * @inheritdoc
      */
-    public function getPayload($key): ?PayloadInterface
+    public function getPayload($key): ? PayloadInterface
     {
         if ( $value = $this->get($key) ) {
-            return new Payload(\is_array($value) ? $value : [ $value ]);
+            return new Payload([ $value ]);
         }
 
         return null;

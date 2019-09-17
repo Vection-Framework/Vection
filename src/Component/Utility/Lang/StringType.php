@@ -78,7 +78,7 @@ final class StringType
     }
 
     /**
-     * @return string
+     * @return StringType
      */
     public function title(): StringType
     {
@@ -88,12 +88,12 @@ final class StringType
     }
 
     /**
-     * @param $needle
-     * @param $replace
+     * @param string $needle
+     * @param string $replace
      *
-     * @return string
+     * @return StringType
      */
-    public function replace($needle, $replace): StringType
+    public function replace(string $needle, string $replace): StringType
     {
         $this->str = str_replace($needle, $replace, $this->str);
 
@@ -103,7 +103,7 @@ final class StringType
     /**
      * @param int $multiplier
      *
-     * @return string
+     * @return StringType
      */
     public function repeat(int $multiplier): StringType
     {
@@ -157,7 +157,7 @@ final class StringType
     /**
      * @param array $array
      *
-     * @return string
+     * @return StringType
      */
     public function join(array $array): StringType
     {
@@ -171,7 +171,7 @@ final class StringType
      * @param int      $start
      * @param int|null $end
      *
-     * @return string
+     * @return StringType
      */
     public function limit(int $start, ?int $end = null): StringType
     {

@@ -58,9 +58,7 @@ class Iban extends Validator
     ];
 
     /**
-     * @param $value
-     *
-     * @return bool
+     * @inheritDoc
      */
     protected function onValidate($value): bool
     {

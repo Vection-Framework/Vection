@@ -30,7 +30,7 @@ interface ViolationInterface
      *
      * @return string
      */
-    public function getValue();
+    public function getValue(): string;
 
     /**
      * Returns an user message that contains the value and constraints

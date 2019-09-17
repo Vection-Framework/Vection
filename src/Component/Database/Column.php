@@ -193,9 +193,9 @@ class Column implements ColumnInterface
      */
     public function fromArray(array $definition): ColumnInterface
     {
-        isset($definition['nullable']) AND $definition['nullable'] && $this->setNullable(true);
-        isset($definition['collate'])  AND $this->setCollate($definition['collate']);
-        isset($definition['extra'])    AND $this->setExtra($definition['extra']);
+        isset($definition['nullable']) && $definition['nullable'] && $this->setNullable(true);
+        isset($definition['collate'])  && $this->setCollate($definition['collate']);
+        isset($definition['extra'])    && $this->setExtra($definition['extra']);
 
         if( \array_key_exists('default', $definition) ){
             $this->setDefault(

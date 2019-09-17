@@ -46,14 +46,14 @@ interface ViewInterface
     /**
      * Appends mixed content to the view which is template independent.
      *
-     * @param $content
+     * @param mixed $content
      */
     public function append($content): void;
 
     /**
      * Prepends mixed content to the view which is template independent.
      *
-     * @param $content
+     * @param mixed $content
      */
     public function prepend($content): void;
 

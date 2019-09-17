@@ -28,66 +28,66 @@ class Hour
     public const PRECISION = 2;
 
     /**
-     * @param $hours
+     * @param int $hours
      *
      * @return float|int
      */
-    public static function toSeconds($hours)
+    public static function toSeconds(int $hours)
     {
         return $hours * self::SECOUND_UNIT;
     }
 
     /**
-     * @param $hours
+     * @param int $hours
      *
      * @return float|int
      */
-    public static function toMinutes($hours)
+    public static function toMinutes(int $hours)
     {
         return $hours * self::MINUTE_UNIT;
     }
 
     /**
-     * @param        $hours
+     * @param string $hours
      * @param string $term
      *
      * @return float|int
      */
-    public static function toIndustryHours($hours,$term = ',')
+    public static function toIndustryHours(string $hours,$term = ',')
     {
         [$hour,$minute] = explode($term,$hours);
-        return $hour + $minute / self::MINUTE_UNIT;
+        return (int) $hour + (int) $minute / self::MINUTE_UNIT;
     }
 
     /**
-     * @param        $hours
+     * @param string $hours
      * @param string $term
      *
      * @return float|int
      */
-    public static function toIndustryMinutes($hours, $term = ',')
+    public static function toIndustryMinutes(string $hours, $term = ',')
     {
         return self::toIndustryHours($hours, $term) * self::INDUSTRY_UNIT;
     }
 
     /**
-     * @param        $hours
+     * @param string $hours
      * @param string $term
      *
      * @return float|int
      */
-    public static function toIndustrySeconds($hours, $term = ',')
+    public static function toIndustrySeconds(string $hours, $term = ',')
     {
         return self::toIndustryMinutes($hours, $term) * self::INDUSTRY_UNIT;
     }
 
     /**
-     * @param        $hours
+     * @param string $hours
      * @param string $term
      *
-     * @return int
+     * @return string
      */
-    public static function getMinuteSegement($hours, $term = ','): int
+    public static function getMinuteSegement(string $hours, $term = ','): string
     {
         $seg = explode($term,$hours);
         $val = $seg[1] ?? 0;
@@ -95,11 +95,11 @@ class Hour
     }
 
     /**
-     * @param $minute
+     * @param string $minute
      *
      * @return string
      */
-    public static function minuteToHour($minute)
+    public static function minuteToHour(string $minute): string
     {
         return '0,'.$minute;
     }

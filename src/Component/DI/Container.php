@@ -185,11 +185,11 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
     }
 
     /**
-     * @param $id
+     * @param string $id
      *
      * @return bool
      */
-    private function evaluate($id): bool
+    private function evaluate(string $id): bool
     {
         # Check if there is an defined entry for the given id
         if( ! $this->has($id) ) {

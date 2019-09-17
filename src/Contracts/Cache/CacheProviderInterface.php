@@ -154,7 +154,7 @@ interface CacheProviderInterface
      * Sets the given value into the cache.
      *
      * @param string $key
-     * @param $value
+     * @param mixed $value
      * @param int $ttl
      *
      * @return bool

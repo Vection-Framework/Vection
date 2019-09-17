@@ -34,7 +34,7 @@ class Table implements TableInterface
     /** @var array */
     protected $indexes;
 
-    /** @var Column[] */
+    /** @var ColumnInterface[] */
     protected $columns;
 
     /** @var string */
@@ -174,7 +174,7 @@ class Table implements TableInterface
     }
 
     /**
-     * @return Column[]
+     * @return ColumnInterface[]
      */
     public function getColumns(): array
     {

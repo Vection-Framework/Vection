@@ -53,7 +53,7 @@ class Definition
     }
 
     /**
-     * @param array $params
+     * @param array<int, mixed> $params
      *
      * @return Definition
      */

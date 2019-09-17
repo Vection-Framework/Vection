@@ -32,7 +32,7 @@ class ViewData implements ViewDataInterface
      * from which all data will be extended while
      * converting to array.
      *
-     * @var ViewData
+     * @var ViewDataInterface
      */
     protected $parent;
 
@@ -51,7 +51,7 @@ class ViewData implements ViewDataInterface
      * Adds new key value pair.
      *
      * @param string $key
-     * @param        $value
+     * @param mixed  $value
      */
     public function add(string $key, $value): void
     {

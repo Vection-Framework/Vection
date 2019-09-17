@@ -88,7 +88,7 @@ class Database implements DatabaseInterface
 
     /**
      *
-     * @return string[][]
+     * @return string[]
      */
     public function getSQLFails(): array
     {

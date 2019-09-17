@@ -27,8 +27,7 @@ class Contains extends Validator
     /**
      * Contains constructor.
      *
-     * @param $needle
-     *
+     * @param mixed $needle
      */
     public function __construct($needle)
     {
@@ -56,6 +55,6 @@ class Contains extends Validator
      */
     protected function onValidate($value): bool
     {
-        return in_array($this->needle, $value);
+        return in_array($this->needle, $value, true);
     }
 }

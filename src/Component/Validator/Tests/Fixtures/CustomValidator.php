@@ -23,28 +23,11 @@ class CustomValidator extends Validator
 {
 
     /**
-     * @param $value
-     *
-     * @return bool
+     * @inheritDoc
      */
     protected function onValidate($value): bool
     {
         return strpos($value, 'xxx') !== false;
-    }
-
-    /**
-     * Returns an array of the validator implementation specific constraints
-     * which are used to validate the given value. This returned array
-     * should using the constraint names as key.
-     *
-     * E.g. constraints: min and max:
-     * ['min' => $min, 'max' => $max]
-     *
-     * @return array
-     */
-    protected function getConstraints(): array
-    {
-        return [];
     }
 
     /**

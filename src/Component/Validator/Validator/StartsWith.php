@@ -27,7 +27,7 @@ class StartsWith extends Validator
     /**
      * StartsWith constructor.
      *
-     * @param string $char
+     * @param string $needle
      */
     public function __construct(string $needle)
     {
