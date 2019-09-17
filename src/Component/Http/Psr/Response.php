@@ -14,7 +14,6 @@ namespace Vection\Component\Http\Psr;
 
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
 use Vection\Component\Http\Headers;
 use Vection\Component\Http\Status;
 
@@ -34,23 +33,19 @@ class Response extends Message implements ResponseInterface
     /**
      * Response constructor.
      *
-     * @param int    $status
-     * @param null   $body
-     * @param array  $headers
-     * @param string $version
+     * @param int          $status
+     * @param Headers|null $headers
+     * @param null         $body
+     * @param string       $version
+     * @param string       $reasonPhrase
      */
-    public function __construct(int $status = 200, $body = null, array $headers = [], string $version = '1.1')
+    public function __construct(
+        int $status = 200, Headers $headers = null, ? $body = null, string $version = '1.1', string $reasonPhrase = ''
+    )
     {
+        parent::__construct($headers ?: new Headers(), $body, $version);
         $this->statusCode = $status;
-
-        if( ! $body instanceof  StreamInterface ){
-            $body = new Stream($body ? (string) $body : '');
-        }
-
-        $this->stream = $body;
-        $this->headers = new Headers($headers);
-        $this->reasonPhrase = Status::getPhrase($status);
-        $this->protocolVersion = $version;
+        $this->reasonPhrase = $reasonPhrase ?: Status::getPhrase($status);
     }
 
     /**

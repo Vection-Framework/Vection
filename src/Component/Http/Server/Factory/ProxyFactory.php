@@ -76,7 +76,7 @@ class ProxyFactory
         $directives = [];
 
         foreach(explode(';', $forwarded) as $directive){
-            list($name, $value) = explode('=', $directive);
+            [$name, $value] = explode('=', $directive);
             $name = strtolower($name);
 
             if( $value[0] === '"' ){
@@ -92,12 +92,10 @@ class ProxyFactory
             # to append to them. E.g. Forwarded: for=192.0.2.43, for=198.51.100.17
             if( ! isset($directives[$name]) ){
                 $directives[$name] = $value;
+            }else if( is_array($directives[$name]) ){
+                $directives[$name][] = $value;
             }else{
-                if( is_array($directives[$name]) ){
-                    $directives[$name][] = $value;
-                }else{
-                    $directives[$name] .= ', ' . $value;
-                }
+                $directives[$name] .= ', ' . $value;
             }
         }
 

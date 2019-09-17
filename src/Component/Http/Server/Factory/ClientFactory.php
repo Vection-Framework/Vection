@@ -37,10 +37,10 @@ class ClientFactory
 
         if( ! $requestedPort ){
 
-            list($protocol) = explode('/', $environment->getServerProtocol());
+            [$protocol] = explode('/', $environment->getServerProtocol());
 
             if( $protocol === 'HTTP' ){
-                $requestedPort = (($_SERVER['REQUEST_SCHEME'] ?? false) && $_SERVER['REQUEST_SCHEME'] === 'https')
+                $requestedPort = $environment->get('REQUEST_SCHEME') === 'https'
                 || ($environment->has('HTTPS') && $environment->getHttps() !== 'off') ? 443 : 80;
             }
         }

@@ -39,7 +39,7 @@ class StreamFactory implements StreamFactoryInterface
      */
     public function createStream(string $content = ''): StreamInterface
     {
-        $resource = fopen('php://temp', 'rw+');
+        $resource = fopen('php://temp', 'rw+b');
 
         if( $content ){
             fwrite($resource, $content);
@@ -64,7 +64,7 @@ class StreamFactory implements StreamFactoryInterface
      * @throws RuntimeException If the file cannot be opened.
      * @throws InvalidArgumentException If the mode is invalid.
      */
-    public function createStreamFromFile(string $filename, string $mode = 'r'): StreamInterface
+    public function createStreamFromFile(string $filename, string $mode = 'rb'): StreamInterface
     {
         if( stripos($filename, 'php://') !== 0 && ! file_exists($filename) ){
             throw new RuntimeException("Unable to create stream from file: File not found ($filename).");

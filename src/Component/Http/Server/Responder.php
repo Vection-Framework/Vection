@@ -15,7 +15,6 @@ namespace Vection\Component\Http\Server;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Vection\Component\Http\Headers;
-use Vection\Component\Http\Psr\Stream;
 use Vection\Contracts\Http\Server\ResponderInterface;
 
 /**
@@ -64,10 +63,6 @@ class Responder implements ResponderInterface
             $response = $response->withProtocolVersion($request->getProtocolVersion());
         }
 
-        if( $request->getMethod() === 'HEAD' || $status < 200 || in_array($status, [204, 304]) ){
-            $response->withBody(new Stream());
-        }
-
         # Prepare and send response header
         if( ! headers_sent() ){
             foreach( $this->getFixedHeaders($response, $request)->toArray() as $name => $values ){
@@ -77,8 +72,10 @@ class Responder implements ResponderInterface
             header("HTTP/{$response->getProtocolVersion()} {$status} {$response->getReasonPhrase()}");
         }
 
-        # Send response body as string
-        echo $response->getBody()->getContents();
+        if( $status > 200 && $request->getMethod() !== 'HEAD' && ! in_array($status, [204, 304], true) ){
+            # Send response body as string
+            echo $response->getBody()->getContents();
+        }
     }
 
     /**
@@ -109,7 +106,7 @@ class Responder implements ResponderInterface
         }
 
         # Status code
-        if( $response->getStatusCode() < 200 || in_array($response->getStatusCode(), [204, 304])){
+        if( $response->getStatusCode() < 200 || in_array($response->getStatusCode(), [204, 304], true) ){
             $headers->remove('Content-Type');
             $headers->remove('Content-Length');
         }
@@ -117,7 +114,7 @@ class Responder implements ResponderInterface
         # Caching
         if( $response->getProtocolVersion() === '1.0' && $headers->hasValue('Cache-Control', 'no-cache') ){
             $headers->set('pragma', 'no-cache');
-            $headers->set('expires', "-1");
+            $headers->set('expires', '-1');
         }
 
         # Other RFC adaption

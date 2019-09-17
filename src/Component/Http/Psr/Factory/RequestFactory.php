@@ -60,7 +60,7 @@ class RequestFactory implements RequestFactoryInterface
 
         if( ! $uri instanceof UriInterface){
             throw new InvalidArgumentException(
-                "Except parameter 2 to be a string or an instance of UriInterface."
+                'Except parameter 2 to be a string or an instance of UriInterface.'
             );
         }
 

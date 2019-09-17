@@ -42,7 +42,7 @@ abstract class Message implements MessageInterface
      * @param StreamInterface $stream
      * @param string          $protocolVersion
      */
-    public function __construct(Headers $headers, StreamInterface $stream = null, string $protocolVersion = '1.0')
+    public function __construct(Headers $headers, ? StreamInterface $stream = null, string $protocolVersion = '1.0')
     {
         $this->headers = $headers;
         $this->stream = $stream;
@@ -246,7 +246,7 @@ abstract class Message implements MessageInterface
     public function getBody(): StreamInterface
     {
         if( ! $this->stream ){
-            $this->stream = new Stream(fopen('php://temp', 'rw+'));
+            $this->stream = new Stream(fopen('php://temp', 'rw+b'));
         }
 
         return $this->stream;

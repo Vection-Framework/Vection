@@ -178,9 +178,9 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @return array An array tree of UploadedFileInterface instances; an empty
      *     array MUST be returned if no data is present.
      */
-    public function getUploadedFiles()
+    public function getUploadedFiles(): array
     {
-        return $this->uploadedFiles;
+        return $this->uploadedFiles ?: [];
     }
 
     /**
@@ -200,8 +200,8 @@ class ServerRequest extends Request implements ServerRequestInterface
         foreach( $uploadedFiles as $uploadedFile ){
             if( ! $uploadedFile instanceof UploadedFileInterface){
                 throw new InvalidArgumentException(
-                    "The first parameter of withUploadedFiles expect an array 
-                    contains only items of type UploadedFileInterface."
+                    'The first parameter of withUploadedFiles expect an array' .
+                    ' contains only items of type UploadedFileInterface.'
                 );
             }
         }
@@ -263,7 +263,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     public function withParsedBody($data)
     {
         if( ! is_object($data) && ! is_array($data) && $data !== null ){
-            throw new InvalidArgumentException("Given data to withParsedBody MUST be array, object or null.");
+            throw new InvalidArgumentException('Given data to withParsedBody MUST be array, object or null.');
         }
 
         $request = clone $this;
@@ -282,9 +282,9 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return array Attributes derived from the request.
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
-        return $this->attributes;
+        return $this->attributes ?: [];
     }
 
     /**

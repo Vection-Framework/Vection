@@ -52,7 +52,7 @@ class UploadedFileFactory implements UploadedFileFactoryInterface
     public function createUploadedFile(StreamInterface $stream, int $size = null, int $error = UPLOAD_ERR_OK, string $clientFilename = null, string $clientMediaType = null): UploadedFileInterface
     {
         if( ! $stream->isReadable() ){
-            throw new InvalidArgumentException("Unable to create uploaded file: Stream is not readable.");
+            throw new InvalidArgumentException('Unable to create uploaded file: Stream is not readable.');
         }
 
         return new UploadedFile($stream, $size ?: $stream->getSize(), $error, $clientFilename, $clientMediaType);
