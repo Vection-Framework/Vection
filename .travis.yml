@@ -11,7 +11,7 @@ env:
   - CODECOV_TOKEN="e2bfdde9-5657-472b-bab2-8e2342933ba0"
 
 after_success:
-  - codecov
+  - bash <(curl -s https://codecov.io/bash)
 
 before_install:
   - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug not available"
