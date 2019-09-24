@@ -45,15 +45,15 @@ class EmailTest extends TestCase
     {
         return [
             // Max length of the local part is 64 chars
-            'abcdefghijklmnopqrstuvwxyz-0123456789_abcdefghijklmnopqrstuvwxyz@vection.de',
+            ['abcdefghijklmnopqrstuvwxyz-0123456789_abcdefghijklmnopqrstuvwxyz@vection.de'],
             // Max length of a single domain label is 63 chars
-            'John.Doe@abcdefghijklmnopqrstuvwxyz-0123456789_abcdefghijklmnopqrstuvwxy.vection.de',
+            ['John.Doe@abcdefghijklmnopqrstuvwxyz-0123456789_abcdefghijklmnopqrstuvwxy.vection.de'],
             // Max length of the whole domain, including dots, is 253 chars
-            'John.Doe@abcdefghijklmnopqrstuvwxyz-0123456789_abcdefghijklmnopqrstuvwxy.abcdefghijklmnopqrstuvwxyz-0123456789_abcdefghijklmnopqrstuvwxy.abcdefghijklmnopqrstuvwxyz-0123456789_abcdefghijklmnopqrstuvwxy.abcdefghijklmnopqrstuvwxyz-0123456789_abc.vection.de',
+            ['John.Doe@abcdefghijklmnopqrstuvwxyz-0123456789_abcdefghijklmnopqrstuvwxy.abcdefghijklmnopqrstuvwxyz-0123456789_abcdefghijklmnopqrstuvwxy.abcdefghijklmnopqrstuvwxyz-0123456789_abcdefghijklmnopqrstuvwxy.abcdefghijklmnopqrstuvwxyz-0123456789_abc.vection.de'],
             // Printable ASCII chars
-            '!#$%&\'*+-/=?^_`{|}~@vection.de',
+            ['!#$%&\'*+-/=?^_`{|}~@vection.de'],
             // Quoted dots as first, last or consecutively chars
-            '".John..Doe."@vection.de',
+            ['".John..Doe."@vection.de'],
         ];
     }
 
@@ -64,11 +64,11 @@ class EmailTest extends TestCase
     {
         return [
             // Dot as first char
-            '.John.Doe@vection.de',
+            ['.John.Doe@vection.de'],
             // Dot as last char
-            'John.Doe.@vection.de',
+            ['John.Doe.@vection.de'],
             // Consecutively dots
-            'John..Doe@vection.de'
+            ['John..Doe@vection.de']
         ];
     }
 }
