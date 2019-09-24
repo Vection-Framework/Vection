@@ -27,7 +27,7 @@ class EmailTest extends TestCase
      */
     public function testValidValues($value): void
     {
-        $this->assertTrue((new Email())->validate($value));
+        $this->assertNull((new Email())->validate($value));
     }
 
     /**
@@ -35,7 +35,7 @@ class EmailTest extends TestCase
      */
     public function testInvalidValues($value): void
     {
-        $this->assertFalse((new Email())->validate($value));
+        $this->assertNotNull((new Email())->validate($value));
     }
 
     /**
