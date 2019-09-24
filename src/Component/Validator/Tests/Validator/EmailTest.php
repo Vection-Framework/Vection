@@ -45,8 +45,8 @@ class EmailTest extends TestCase
     {
         return [
             ['abcdefghijklmnopqrstuvwxyz-0123456789_abcdefghijklmnopqrstuvwxyz@vection.de'],
-            ['John.Doe@abcdefghijklmnopqrstuvwxyz-0123456789_abcdefghijklmnopqrstuvwxy.vection.de'],
-            ['John.Doe@abcdefghijklmnopqrstuvwxyz-0123456789_abcdefghijklmnopqrstuvwxy.abcdefghijklmnopqrstuvwxyz-0123456789_abcdefghijklmnopqrstuvwxy.abcdefghijklmnopqrstuvwxyz-0123456789_abcdefghijklmnopqrstuvwxy.abcdefghijklmnopqrstuvwxyz-0123456789_abc.vection.de'],
+            ['John.Doe@abcdefghijklmnopqrstuvwxyz-0123456789-abcdefghijklmnopqrstuvwxy.vection.de'],
+            ['John.Doe@abcdefghijklmnopqrstuvwxyz-0123456789-abcdefghijklmnopqrstuvwxy.abcdefghijklmnopqrstuvwxyz-0123456789-abcdefghijklmnopqrstuvwxy.abcdefghijklmnopqrstuvwxyz-0123456789-abcdefghijklmnopqrstuvwxy.abcdefghijklmnopqrstuvwxyz-0123456789-abc.vection.de'],
             ['!#$%&\'*+-/=?^_`{|}~@vection.de'],
             ['".John..Doe."@vection.de']
         ];
