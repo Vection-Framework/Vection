@@ -34,6 +34,6 @@ class Email extends Validator
      */
     protected function onValidate($value): bool
     {
-        return filter_var($value, FILTER_VALIDATE_EMAIL);
+        return (bool) filter_var($value, FILTER_VALIDATE_EMAIL);
     }
 }
