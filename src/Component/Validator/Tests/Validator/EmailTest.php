@@ -11,6 +11,7 @@
 
 namespace Vection\Component\Validator\Tests\Validator;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Vection\Component\Validator\Validator\Email;
 
@@ -40,27 +41,50 @@ class EmailTest extends TestCase
 
     /**
      * @return array
+     * @throws Exception
      */
     public function provideValidValues(): array
     {
+        $domain = 'vection.de';
+
+        // Local mail part allows max 64 chars
+        $local = bin2hex(random_bytes(32));
+
+        $subDomain = implode('.', array_fill(0, 93, 'a')) . '.com';
+
         return [
-            ['abcdefghijklmnopqrstuvwxyz-0123456789_abcdefghijklmnopqrstuvwxyz@vection.de'],
-            ['John.Doe@abcdefghijklmnopqrstuvwxyz-0123456789-abcdefghijklmnopqrstuvwxy.vection.de'],
-            ['John.Doe@abcdefghijklmnopqrstuvwxyz-0123456789-abcdefghijklmnopqrstuvwxy.abcdefghijklmnopqrstuvwxyz-0123456789-abcdefghijklmnopqrstuvwxy.abcdefghijklmnopqrstuvwxyz-0123456789-abcdefghijklmnopqrstuvwxy.abcdefghijklmnopqrstuvwxyz-0123456789-abc.vection.de'],
-            ['!#$%&\'*+-/=?^_`{|}~@vection.de'],
-            ['".John..Doe."@vection.de']
+            [$local . '@' . $domain],
+            ['John.Doe@' . $subDomain],
+            ['!#$%&\'*+-/=?^_`{|}~@' . $domain],
+            ['".John..Doe."@' . $domain],
+            ['"@"@' . $domain],
+            ['"John"."Doe"@' . $domain]
         ];
     }
 
     /**
      * @return array
+     * @throws Exception
      */
     public function provideInvalidValues(): array
     {
+        $domain = 'vection.de';
+
+        // Local mail part allows max 64 chars
+        $local = bin2hex(random_bytes(32));
+
         return [
-            ['.John.Doe@vection.de'],
-            ['John.Doe.@vection.de'],
-            ['John..Doe@vection.de']
+            ['John.Doe-' . $domain],
+            ['.John.Doe.' . $domain],
+            ['.John.Doe@' . $domain],
+            ['John.Doe.@' . $domain],
+            ['John..Doe@' . $domain],
+            ['John@Doe@' . $domain],
+            ['a"b(c)d,e:f;g<h>i[j\k]l@' . $domain],
+            ['John"not"Doe@' . $domain],
+            ['John"not\Doe@' . $domain],
+            ['John\ still\"not\\Doe@' . $domain],
+            [$local . 'a@' . $domain]
         ];
     }
 }
