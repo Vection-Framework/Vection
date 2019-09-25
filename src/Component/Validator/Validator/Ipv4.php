@@ -34,6 +34,6 @@ class Ipv4 extends Validator
      */
     protected function onValidate($value): bool
     {
-        return filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+        return (bool) filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
     }
 }

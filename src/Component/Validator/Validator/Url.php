@@ -34,6 +34,6 @@ class Url extends Validator
      */
     protected function onValidate($value): bool
     {
-        return filter_var($value, FILTER_VALIDATE_URL);
+        return (bool) filter_var($value, FILTER_VALIDATE_URL);
     }
 }
