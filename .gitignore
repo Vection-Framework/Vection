@@ -1,5 +1,7 @@
 .idea
 .phpcs-cache
+.phpunit.result.cache
+infection.log
 docs/html/*
 phpunit.xml
 vendor/
