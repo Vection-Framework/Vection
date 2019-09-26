@@ -26,17 +26,17 @@ class ContainsTest extends TestCase
     /**
      * @dataProvider provideValidValues
      */
-    public function testValidValues($value): void
+    public function testValidValues($needle, $value): void
     {
-        $this->assertNull((new Contains('Needle'))->validate($value));
+        $this->assertNull((new Contains($needle))->validate($value));
     }
 
     /**
      * @dataProvider provideInvalidValues
      */
-    public function testInvalidValues($value): void
+    public function testInvalidValues($needle, $value): void
     {
-        $this->assertNotNull((new Contains('Needle'))->validate($value));
+        $this->assertNotNull((new Contains($needle))->validate($value));
     }
 
     /**
@@ -45,20 +45,25 @@ class ContainsTest extends TestCase
     public function provideValidValues(): array
     {
         return [
+            ['Needle', ['abc', 0, null, true, 'nope', new stdClass(), 'Needle']],
+            ['Test', [1, false, null, 'string', -100, 'Test']],
             [
-                ['abc', 0, null, true, 'nope', new stdClass(), 'Needle']
-            ], [
-                [1, false, null, 'string', -100, 'Needle']
-            ], [
-                [
+                'Goal', [
                     'key1' => 1,
                     null,
                     'Lorem ipsum',
                     'key3' => 1.337,
                     'key2' => true,
-                    'Needle'
+                    'Goal',
+                    [],
+                    new stdClass()
                 ]
-            ]
+            ],
+            [false, [null, 0, [], false]],
+            [null, [0, false, '', 0.0, [], null]],
+            [[], [0, false, '', 0.0, null, []]],
+            [-10, [0, false, '', 0.0, null, [], -10]],
+            [-0.5, [0, false, '', 0.0, null, [], -1, 20, -0.5]],
         ];
     }
 
@@ -68,9 +73,11 @@ class ContainsTest extends TestCase
     public function provideInvalidValues(): array
     {
         return [
-            [
-                ['lorem ipsum', 'Needl', 'eedle', 'needle']
-            ]
+            ['Not found', ['lorem ipsum', 'Needl', 'eedle', 'needle']],
+            [false, [null, 0, []]],
+            [null, [0, false, '', 0.0, []]],
+            [-10, [0, false, '', 0.0, null, [], -9]],
+            [-0.5, [0, false, '', 0.0, null, [], -1, 20, -0.8]],
         ];
     }
 }
