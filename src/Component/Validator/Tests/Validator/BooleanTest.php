@@ -45,8 +45,8 @@ class BooleanTest extends TestCase
     public function provideValidValues(): array
     {
         return [
-            ['Bool true' => true],
-            ['Bool false' => false]
+            'true'  => [true],
+            'false' => [false]
         ];
     }
 
@@ -56,19 +56,19 @@ class BooleanTest extends TestCase
     public function provideInvalidValues(): array
     {
         return [
-            ['NULL' => null],
-            ['Int 0' => 0],
-            ['int 1' => 1],
-            ['Int -1' => -1],
-            ['Float 0.123' => 0.123],
-            ['Float -0.123' => -0.123],
-            ['String abc' => 'abc'],
-            ['String 0' => '0'],
-            ['String 1' => '1'],
-            ['String -1' => '-1'],
-            ['Array [true]' => [true]],
-            ['Array [false]' => [false]],
-            ['Object stdClass' => new stdClass()]
+            'NULL'      => [null],
+            '0'         => [0],
+            '1'         => [1],
+            '-1'        => [-1],
+            '0.123'     => [0.123],
+            '-0.123'    => [-0.123],
+            'abc'       => ['abc'],
+            '"0"'       => ['0'],
+            '"1"'       => ['1'],
+            '"-1"'      => ['-1'],
+            '[true]'    => [[true]],
+            '[false]'   => [[false]],
+            'stdClass'  => [new stdClass()]
         ];
     }
 }
