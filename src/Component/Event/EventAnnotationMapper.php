@@ -12,10 +12,19 @@
 
 namespace Vection\Component\Event;
 
+use ReflectionClass;
+use ReflectionException;
 use Vection\Component\Event\Exception\InvalidAnnotationException;
 use Vection\Contracts\Cache\CacheAwareInterface;
 use Vection\Contracts\Cache\CacheInterface;
 use Vection\Contracts\Event\EventHandlerMethodInterface;
+use function class_exists;
+use function file_get_contents;
+use function glob;
+use function preg_match;
+use function preg_match_all;
+use function rtrim;
+use function trim;
 
 /**
  * Class EventAnnotationMapper
@@ -47,14 +56,6 @@ class EventAnnotationMapper implements CacheAwareInterface
     /**
      * @inheritdoc
      */
-    public function getCache(): ?CacheInterface
-    {
-        return $this->cache;
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function setCache(CacheInterface $cache): void
     {
         $this->cache = $cache;
@@ -77,32 +78,32 @@ class EventAnnotationMapper implements CacheAwareInterface
 
         if ( ! $mapping ) {
             foreach( $paths as $path ){
-                foreach ( \glob(\rtrim($pathPrefix.$path, '/') . '/*.php') as $classFile ) {
-                    $classContent = \file_get_contents($classFile);
+                foreach ( glob(rtrim($pathPrefix.$path, '/') . '/*.php') as $classFile ) {
+                    $classContent = file_get_contents($classFile);
 
-                    if ( ! \preg_match('/[\s]?namespace[\s]+([^;{]+)/', $classContent, $matches) ) {
+                    if ( ! preg_match('/[\s]?namespace[\s]+([^;{]+)/', $classContent, $matches) ) {
                         # Ignore php classes without namespace
                         continue;
                     }
-                    $namespace = \trim($matches[1]);
+                    $namespace = trim($matches[1]);
 
-                    if ( ! \preg_match('/\s?class\s+([^{* ]+)[^{*]+{/', $classContent, $matches) ) {
+                    if ( ! preg_match('/\s?class\s+([^{* ]+)[^{*]+{/', $classContent, $matches) ) {
                         # Ignore php files which not contains class
                         continue;
                     }
-                    $className = \trim($matches[1]);
+                    $className = trim($matches[1]);
 
                     $className = $namespace . '\\' . $className;
 
-                    if ( \class_exists($className) ) {
+                    if ( class_exists($className) ) {
                         try {
-                            $classDoc = ( new \ReflectionClass($className) )->getDocComment();
-                            \preg_match('/@EventName\("?([a-zA-Z\\\\_0-9.:\\/-]+)"?\)/', $classDoc, $matches);
+                            $classDoc = ( new ReflectionClass($className) )->getDocComment();
+                            preg_match('/@EventName\("?([a-zA-Z\\\\_0-9.:/-]+)"?\)/', $classDoc, $matches);
                             if ( $definition = ( $matches[1] ?? null ) ) {
                                 # Mapping e.g. My\Event\EventClass => 'my.event.identifier'
                                 $mapping[$className] = $matches[1];
                             }
-                        } catch ( \ReflectionException $e ) {
+                        } catch ( ReflectionException $e ) {
                             # Never get in, because of class_exists condition
                         }
                     }
@@ -132,35 +133,35 @@ class EventAnnotationMapper implements CacheAwareInterface
 
         if ( ! $mapping ) {
             foreach( $paths as $path ){
-                foreach ( \glob(\rtrim($pathPrefix.$path, '/') . '/*.php') as $classFile ) {
-                    $classContent = \file_get_contents($classFile);
+                foreach ( glob(rtrim($pathPrefix.$path, '/') . '/*.php') as $classFile ) {
+                    $classContent = file_get_contents($classFile);
 
-                    \preg_match('/[\s]?namespace[\s]+([^;{]+)/', $classContent, $matches);
-                    $namespace = \trim($matches[1]);
+                    preg_match('/[\s]?namespace[\s]+([^;{]+)/', $classContent, $matches);
+                    $namespace = trim($matches[1]);
 
-                    \preg_match('/\s?class\s+([^{* ]+)[^{*]+{/', $classContent, $matches);
-                    $className = \trim($matches[1]);
+                    preg_match('/\s?class\s+([^{* ]+)[^{*]+{/', $classContent, $matches);
+                    $className = trim($matches[1]);
 
                     $className = $namespace . '\\' . $className;
 
                     try {
                         # required for autoloading or not?
                         class_exists($className);
-                        $reflection = new \ReflectionClass($className);
+                        $reflection = new ReflectionClass($className);
                     }
-                    catch( \ReflectionException $e ) {
+                    catch( ReflectionException $e ) {
                         continue;
                     }
 
                     $classDoc = $reflection->getDocComment();
 
-                    preg_match('/@Subscribe\((["= ,a-zA-Z\\\\_0-9.:\\/-]+)\)/', $classDoc, $matches);
+                    preg_match('/@Subscribe\((["= ,a-zA-Z\\\\_0-9.:/-]+)\)/', $classDoc, $matches);
 
                     if ( ! $definition = ( $matches[1] ?? null ) ) {
                         continue;
                     }
 
-                    \preg_match_all(
+                    preg_match_all(
                         '/((event|method|priority)="([^"]+))+"?/',
                         $matches[1], $m, PREG_SET_ORDER
                     );
