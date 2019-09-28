@@ -37,6 +37,8 @@ class Headers
         foreach( $headers as $name => $value ){
             $this->names[strtolower($name)] = $name;
         }
+
+        # TODO normilize the given array to psr standard
     }
 
     /**

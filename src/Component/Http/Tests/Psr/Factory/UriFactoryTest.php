@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace Vection\Component\Http\Tests\Psr\Factory;
 
 use PHPUnit\Framework\TestCase;
-use Vection\Component\Http\Psr\Factory\UriFactory;
+use Vection\Component\Http\Psr\Message\Factory\UriFactory;
 
 /**
  * Class UriFactoryTest

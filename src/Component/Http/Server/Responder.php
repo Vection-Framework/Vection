@@ -65,14 +65,14 @@ class Responder implements ResponderInterface
 
         # Prepare and send response header
         if( ! headers_sent() ){
-            foreach( $this->getFixedHeaders($response, $request)->toArray() as $name => $values ){
-                header($name.':'.implode(', ', $values), true, $status);
+            foreach( $this->getFixedHeaders($response)->toArray() as $name => $values ){
+                header($name.': '.implode(', ', $values), true, $status);
             }
 
             header("HTTP/{$response->getProtocolVersion()} {$status} {$response->getReasonPhrase()}");
         }
 
-        if( $status > 200 && $request->getMethod() !== 'HEAD' && ! in_array($status, [204, 304], true) ){
+        if( $status >= 200 && $request->getMethod() !== 'HEAD' && ! in_array($status, [204, 304], true) ){
             # Send response body as string
             echo $response->getBody()->getContents();
         }
@@ -80,11 +80,10 @@ class Responder implements ResponderInterface
 
     /**
      * @param ResponseInterface      $response
-     * @param ServerRequestInterface $request
      *
      * @return Headers
      */
-    protected function getFixedHeaders(ResponseInterface $response, ServerRequestInterface $request): Headers
+    protected function getFixedHeaders(ResponseInterface $response): Headers
     {
         $headers = new Headers($response->getHeaders());
 

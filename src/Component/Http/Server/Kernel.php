@@ -16,7 +16,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
-use Vection\Component\Http\Server\Factory\RequestFactory;
+use Vection\Component\Http\Psr\Message\Factory\ServerRequestFactory;
+use Vection\Component\Http\Server\Decorator\Factory\ServerRequestFactoryDecorator;
 use Vection\Contracts\Event\EventManagerInterface;
 use Vection\Contracts\Http\Server\KernelInterface;
 use Vection\Contracts\Http\Server\ResponderInterface;
@@ -46,9 +47,9 @@ class Kernel implements KernelInterface, LoggerAwareInterface
     /**
      * Kernel constructor.
      *
-     * @param RequestHandlerInterface $requestHandler
-     * @param ServerRequestInterface  $request
-     * @param ResponderInterface|null $responder
+     * @param RequestHandlerInterface            $requestHandler
+     * @param ServerRequestInterface             $request
+     * @param ResponderInterface|null            $responder
      */
     public function __construct(
         RequestHandlerInterface $requestHandler,
@@ -57,8 +58,23 @@ class Kernel implements KernelInterface, LoggerAwareInterface
     )
     {
         $this->requestHandler = $requestHandler;
-        $this->request = $request ?: (new RequestFactory())->createFromGlobals();
+        $this->request = $request;
         $this->responder = $responder ?: new Responder();
+
+        if( ! $this->request ){
+            $serverRequestFactory = new ServerRequestFactoryDecorator(new ServerRequestFactory());
+            $this->request = $serverRequestFactory->createFromGlobals();
+        }
+    }
+
+    /**
+     * Returns the responder that is used to send a response to the client.
+     *
+     * @return ResponderInterface
+     */
+    public function getResponder(): ResponderInterface
+    {
+        return $this->responder;
     }
 
     /**

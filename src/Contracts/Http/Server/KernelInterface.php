@@ -22,11 +22,24 @@ use Vection\Contracts\Event\EventManagerInterface;
 interface KernelInterface
 {
     /**
+     * Returns the responder that is used to send a response to the client.
+     *
+     * @return ResponderInterface
+     */
+    public function getResponder(): ResponderInterface;
+
+    /**
+     * Sets an event manager which fires events on several execution steps.
+     *
      * @param EventManagerInterface $eventManager
      */
     public function setEventManager(EventManagerInterface $eventManager): void;
 
     /**
+     * Executes the kernel.
+     *
+     * Set true to terminate the current process after send the response to client.
+     *
      * @param bool $terminate
      */
     public function execute(bool $terminate = true): void;

@@ -29,7 +29,7 @@ class ClientFactory
      *
      * @return Client
      */
-    public static function create(Environment $environment, Proxy $proxy = null): Client
+    public static function create(Environment $environment, ? Proxy $proxy = null): Client
     {
         $clientIp = $environment->getRemoteAddr();
         $requestedHost = $environment->getRemoteAddr();
