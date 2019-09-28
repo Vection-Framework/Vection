@@ -10,23 +10,35 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Http\Server;
+namespace Vection\Component\Http\Psr\Server;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use RuntimeException;
-use Vection\Contracts\Http\Server\RequestHandlerInterface;
 
 /**
  * Class RequestHandler
  *
- * @package Vection\Component\Http\Server
+ * @package Vection\Component\Http\Psr\Server
  */
 class RequestHandler implements RequestHandlerInterface
 {
     /** @var MiddlewareInterface[] */
     protected $middleware;
+
+    /**
+     * RequestHandler constructor.
+     *
+     * @param array $middleware
+     */
+    public function __construct(array $middleware = [])
+    {
+        foreach( $middleware as $handler ){
+            $this->addMiddleware($handler);
+        }
+    }
 
     /**
      * @param MiddlewareInterface $middleware

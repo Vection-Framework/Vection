@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace Vection\Component\Http\Psr\Factory;
+namespace Vection\Component\Http\Psr\Message\Factory;
 
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,7 +21,7 @@ use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\UriInterface;
 use Vection\Component\Http\Headers;
-use Vection\Component\Http\Psr\ServerRequest;
+use Vection\Component\Http\Psr\Message\ServerRequest;
 use Vection\Component\Http\Server\Environment;
 use Vection\Component\Http\Server\Factory\HeadersFactory;
 

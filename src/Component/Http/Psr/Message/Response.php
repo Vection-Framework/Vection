@@ -10,10 +10,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Http\Psr;
+namespace Vection\Component\Http\Psr\Message;
 
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use Vection\Component\Http\Headers;
 use Vection\Component\Http\Status;
 
@@ -33,14 +34,14 @@ class Response extends Message implements ResponseInterface
     /**
      * Response constructor.
      *
-     * @param int          $status
-     * @param Headers|null $headers
-     * @param null         $body
-     * @param string       $version
-     * @param string       $reasonPhrase
+     * @param int                  $status
+     * @param Headers|null         $headers
+     * @param StreamInterface|null $body
+     * @param string               $version
+     * @param string               $reasonPhrase
      */
     public function __construct(
-        int $status = 200, Headers $headers = null, ? $body = null, string $version = '1.1', string $reasonPhrase = ''
+        int $status = 200, Headers $headers = null, ? StreamInterface $body = null, string $version = '1.1', string $reasonPhrase = ''
     )
     {
         parent::__construct($headers ?: new Headers(), $body, $version);

@@ -12,13 +12,13 @@
 
 declare(strict_types=1);
 
-namespace Vection\Component\Http\Psr\Factory;
+namespace Vection\Component\Http\Psr\Message\Factory;
 
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\UploadedFileInterface;
-use Vection\Component\Http\Psr\UploadedFile;
+use Vection\Component\Http\Psr\Message\UploadedFile;
 use const UPLOAD_ERR_OK;
 
 /**
