@@ -98,7 +98,7 @@ class EventAnnotationMapper implements CacheAwareInterface
                     if ( class_exists($className) ) {
                         try {
                             $classDoc = ( new ReflectionClass($className) )->getDocComment();
-                            preg_match('/@EventName\("?([a-zA-Z\\\\_0-9.:/-]+)"?\)/', $classDoc, $matches);
+                            preg_match('/@EventName\("?([-a-zA-Z\\\\_0-9.:/]+)"?\)/', $classDoc, $matches);
                             if ( $definition = ( $matches[1] ?? null ) ) {
                                 # Mapping e.g. My\Event\EventClass => 'my.event.identifier'
                                 $mapping[$className] = $matches[1];
@@ -155,7 +155,7 @@ class EventAnnotationMapper implements CacheAwareInterface
 
                     $classDoc = $reflection->getDocComment();
 
-                    preg_match('/@Subscribe\((["= ,a-zA-Z\\\\_0-9.:/-]+)\)/', $classDoc, $matches);
+                    preg_match('/@Subscribe\(([-"= ,a-zA-Z\\\\_0-9.:/]+)\)/', $classDoc, $matches);
 
                     if ( ! $definition = ( $matches[1] ?? null ) ) {
                         continue;
