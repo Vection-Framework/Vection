@@ -65,7 +65,7 @@ class Injector
     {
         $id = get_class($object);
 
-        if( $this->dependencies[$id]['setter'] ){
+        if( $this->dependencies[$id]['setter'] ?? null ){
 
             foreach( $this->dependencies[$id]['setter'] as $setter => $dependency ){
                 $dependencyObject = $this->container->get($dependency);
@@ -82,7 +82,7 @@ class Injector
     {
         $id = get_class($object);
 
-        if( $this->dependencies[$id]['annotation'] ){
+        if( $this->dependencies[$id]['annotation'] ?? null ){
 
             $dependencies = [];
 
@@ -101,7 +101,7 @@ class Injector
     {
         $id = get_class($object);
 
-        if( $this->dependencies[$id]['explicit'] ){
+        if( $this->dependencies[$id]['explicit'] ?? null ){
 
             $dependencies = [];
 
