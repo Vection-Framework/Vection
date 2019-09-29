@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace Vection\Component\Http\Psr;
+namespace Vection\Component\Http\Psr\Message;
 
 use InvalidArgumentException;
 use Psr\Http\Message\MessageInterface;

@@ -12,13 +12,13 @@
 
 declare(strict_types=1);
 
-namespace Vection\Component\Http\Psr\Factory;
+namespace Vection\Component\Http\Psr\Message\Factory;
 
 use InvalidArgumentException;
 use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\UriInterface;
 use Vection\Component\Http\Port;
-use Vection\Component\Http\Psr\Uri;
+use Vection\Component\Http\Psr\Message\Uri;
 
 /**
  * Class UriFactory

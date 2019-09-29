@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Http\Psr;
+namespace Vection\Component\Http\Psr\Message;
 
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;

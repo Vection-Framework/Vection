@@ -10,12 +10,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Http\Psr\Factory;
+namespace Vection\Component\Http\Psr\Message\Factory;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Vection\Component\Http\Headers;
-use Vection\Component\Http\Psr\Response;
+use Vection\Component\Http\Psr\Message\Response;
 use Vection\Component\Http\Status;
 
 /**

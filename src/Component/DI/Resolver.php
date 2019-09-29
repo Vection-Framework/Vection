@@ -83,42 +83,45 @@ class Resolver implements CacheAwareInterface
             }else{
                 $this->dependencies->exchangeArray($cache->getArray('dependencies'));
             }
+        }elseif( $this->dependencies->count() > 0 ){
+            # Apply dependencies to cache which have been resolved before set the cache
+            $cache->setArray('dependencies', $this->dependencies->getArrayCopy());
         }
     }
 
     /**
      * Resolves all dependencies of the given class.
      *
-     * @param string $id FQCN
+     * @param string $className FQCN
      *
      * @return array An array that contains dependency information.
      */
-    public function resolveDependencies(string $id): array
+    public function resolveDependencies(string $className): array
     {
-        if( ! isset($this->dependencies[$id]) ){
+        if( ! isset($this->dependencies[$className]) ){
             try {
-                if( isset($this->definitions[$id]) ){
-                    $this->dependencies[$id] = $this->definitions[$id]->getDependencies();
+                if( isset($this->definitions[$className]) ){
+                    $this->dependencies[$className] = $this->definitions[$className]->getDependencies();
                 }
 
-                if( ! isset($this->dependencies[$id]['construct']) ){
-                    $this->dependencies[$id]['construct'] = $this->resolveConstructorDependencies($id);
+                if( ! isset($this->dependencies[$className]['construct']) ){
+                    $this->dependencies[$className]['construct'] = $this->resolveConstructorDependencies($className);
                 }
 
-                $setter = $this->resolveInterfaceDependencies($id);
+                $setter = $this->resolveInterfaceDependencies($className);
 
-                if( isset($this->dependencies[$id]['setter']) ){
-                    $setter = array_merge($this->dependencies[$id]['setter'], $setter);
+                if( isset($this->dependencies[$className]['setter']) ){
+                    $setter = array_merge($this->dependencies[$className]['setter'], $setter);
                 }
 
                 # This dependencies will be passed by setter defined by interfaces
-                $this->dependencies[$id]['setter'] = $setter;
+                $this->dependencies[$className]['setter'] = $setter;
 
                 # This will used the __annotationInjection method from AnnotationInjection trait
-                $this->dependencies[$id]['annotation'] = $this->resolveAnnotatedDependencies($id);
+                $this->dependencies[$className]['annotation'] = $this->resolveAnnotatedDependencies($className);
 
                 # This is for the explicit inject by __inject method
-                $this->dependencies[$id]['explicit'] = $this->resolveExplicitDependencies($id);
+                $this->dependencies[$className]['explicit'] = $this->resolveExplicitDependencies($className);
 
                 if( $this->cache ){
                     $this->cache->setArray('dependencies', $this->dependencies->getArrayCopy());
@@ -126,13 +129,13 @@ class Resolver implements CacheAwareInterface
             }
             catch( ReflectionException $e ) {
                 throw new ContainerException(
-                    "Reflection Error while resolving dependencies of class '$id'",
+                    "Reflection Error while resolving dependencies of class '$className'",
                     $e
                 );
             }
         }
 
-        return $this->dependencies[$id];
+        return $this->dependencies[$className];
     }
 
     /**
@@ -156,7 +159,9 @@ class Resolver implements CacheAwareInterface
             foreach( $constructParams as $param ) {
                 if( $param->hasType() && $param->getType() !== null && ! $param->getType()->isBuiltin() ) {
                     $dependencies[] = $param->getClass()->name;
-                    $this->resolveDependencies($param->getClass()->name);
+                    if( $param->getClass()->isInstantiable() ){
+                        $this->resolveDependencies($param->getClass()->name);
+                    }
                 } else {
                     return [];
                 }
@@ -205,7 +210,9 @@ class Resolver implements CacheAwareInterface
         if( $parents = class_parents($className, true) ) {
             foreach( $parents as $parent ) {
                 if( $parentInterfaceDependencies = $this->resolveInterfaceDependencies($parent) ) {
-                    $dependencies = array_merge($dependencies, $parentInterfaceDependencies);
+                    foreach($parentInterfaceDependencies as $parentInterfaceDependency){
+                        $dependencies[] = $parentInterfaceDependency;
+                    }
                 }
             }
         }
@@ -229,17 +236,21 @@ class Resolver implements CacheAwareInterface
     {
         $reflection = new ReflectionClass($className);
         $dependencies = [];
+        $useInjectionTrait = $reflection->getTraits()[AnnotationInjection::class] ?? false;
 
         # Add annotation injection by parent classes
         if( $parents = class_parents($className, true) ) {
             foreach( $parents as $parent ) {
+                if( isset((new ReflectionClass($parent))->getTraits()[AnnotationInjection::class]) ){
+                    $useInjectionTrait = true;
+                }
                 if( $parentAnnotationDependencies = $this->resolveAnnotatedDependencies($parent) ) {
                     $dependencies = $parentAnnotationDependencies;
                 }
             }
         }
 
-        if( $reflection->getTraits()[AnnotationInjection::class] ?? null || $dependencies ) {
+        if( $useInjectionTrait || $dependencies ) {
 
             foreach ( $reflection->getProperties() as $property ) {
                 if ( ! ($doc = $property->getDocComment()) ) {

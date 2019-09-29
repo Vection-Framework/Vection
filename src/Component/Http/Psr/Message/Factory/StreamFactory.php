@@ -12,13 +12,13 @@
 
 declare(strict_types=1);
 
-namespace Vection\Component\Http\Psr\Factory;
+namespace Vection\Component\Http\Psr\Message\Factory;
 
 use InvalidArgumentException;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
-use Vection\Component\Http\Psr\Stream;
+use Vection\Component\Http\Psr\Message\Stream;
 
 /**
  * Class StreamFactory

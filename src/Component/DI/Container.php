@@ -227,16 +227,8 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      */
     private function initializeObject(object $object): void
     {
-        if( method_exists($object, '__init') ) {
-            try {
-                $method = new ReflectionMethod(get_class($object), '__init');
-                $method->isPublic() AND $object->__init();
-            }
-            catch( ReflectionException $e ) {
-                if( strpos($e->getMessage(), '__init') === false ){
-                    throw new $e;
-                }
-            }
+        if( method_exists($object, '__init') && is_callable($object->__init()) ) {
+             $object->__init();
         }
     }
 

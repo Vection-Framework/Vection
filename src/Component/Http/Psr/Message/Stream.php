@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace Vection\Component\Http\Psr;
+namespace Vection\Component\Http\Psr\Message;
 
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
@@ -312,6 +312,8 @@ class Stream implements StreamInterface
             throw new RuntimeException('Unable to read stream. The current stream does not exists or is invalid.');
         }
 
+        $this->seekable && $this->seek(0);
+
         $content = stream_get_contents($this->resource);
 
         if( $content === false ){
@@ -363,7 +365,6 @@ class Stream implements StreamInterface
     public function __toString(): string
     {
         try{
-            $this->seekable && $this->seek(0);
             return $this->getContents();
         }catch( RuntimeException $e){
             return '';
