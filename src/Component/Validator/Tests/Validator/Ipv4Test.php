@@ -14,6 +14,11 @@ namespace Vection\Component\Validator\Tests\Validator;
 use PHPUnit\Framework\TestCase;
 use Vection\Component\Validator\Validator\Ipv4;
 
+/**
+ * Class Ipv4Test
+ *
+ * @package Vection\Component\Validator\Tests\Validator
+ */
 class Ipv4Test extends TestCase
 {
 
