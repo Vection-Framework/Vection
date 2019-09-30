@@ -210,8 +210,8 @@ class Resolver implements CacheAwareInterface
         if( $parents = class_parents($className, true) ) {
             foreach( $parents as $parent ) {
                 if( $parentInterfaceDependencies = $this->resolveInterfaceDependencies($parent) ) {
-                    foreach($parentInterfaceDependencies as $parentInterfaceDependency){
-                        $dependencies[] = $parentInterfaceDependency;
+                    foreach($parentInterfaceDependencies as $method => $parentInterfaceDependency){
+                        $dependencies[$method] = $parentInterfaceDependency;
                     }
                 }
             }
@@ -257,7 +257,7 @@ class Resolver implements CacheAwareInterface
                     continue;
                 }
 
-                $regex = '/@Inject\("([a-zA-Z\\\\_0-9]+)"\)/';
+                $regex = '/@Inject\(["\']+([a-zA-Z\\\\_0-9]+)["\']+\)/';
 
                 if ( preg_match_all($regex, $doc, $match, PREG_SET_ORDER) ) {
                     foreach ( $match as $m ) {

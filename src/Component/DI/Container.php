@@ -17,8 +17,6 @@ use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
-use ReflectionException;
-use ReflectionMethod;
 use Vection\Component\DI\Exception\InvalidArgumentException;
 use Vection\Component\DI\Exception\NotFoundException;
 use Vection\Component\DI\Exception\RuntimeException;
@@ -165,12 +163,14 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      */
     private function createObject(string $className, array $constructParams = []): object
     {
-        if( $constructParams ){
+        $factory = $this->definitions[$className]->getFactory();
+
+        if( $constructParams && ! $factory ){
             return new $className(...$constructParams);
         }
 
-        if( $factory = $this->definitions[$className]->getFactory() ){
-            return $factory($this);
+        if( $factory ){
+            return $factory($this, ...$constructParams);
         }
 
         if( $constructParams = $this->dependencies[$className]['construct'] ){

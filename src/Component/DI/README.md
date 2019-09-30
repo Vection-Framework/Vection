@@ -17,7 +17,183 @@ OR
     $ composer install vection-framework/di-container
 ```
 
+### How to use - Showcase
+
+Lets take a look how the DI can be used before start explaining the setup and possibilities of this PHP dependency injection component.
+First you have to know all supported ways how to inject an dependency into an class. The container support the automated injection by:
+
+- constructor parameter injection
+- annotation injection
+- interface aware injection (setter)
+- interface injection in general
+- explicit injection
+
+Note that we have to setup the container to use the following examples, but now we will first look at the implementation.
+
+#### Constructor injection
+This will automatically inject the dependency via constructor.
+
+```php
+    class Awesome 
+    {
+        public function __construct(FooBar $fooBar)
+        {
+            .....
+        }
+       
+        .....
+    }
+```
+
+#### Annotation injection
+This will automatically inject dependency via annotated properties.
+
+```php
+    class Awesome
+    {
+        use AnnotationInjection;
+        
+        /**
+         * @Inject("My\Awesome\FooBar")  // important: use full qualified class name
+         * @var FooBar
+         */   
+        protected $fooBar;
+        
+        
+    
+        /** @Inject */
+        protected FooBar $fooBar;  // supported since php >= 7.4 
+
+        ......
+    }
+```
+
+#### Interface aware injection
+This will automatically inject the defined PSR Logger object dependency.
+
+```php
+    class Awesome implements LoggerAwareInterface
+    {
+        use LoggerAwareTrait;
+        
+        .......
+    }
+```
+
+#### Interface injection
+This will automatically inject the dependency by its interface.
+
+```php
+    class Awesome
+    {
+        use AnnotationInjection;
+                
+        /**
+         * @Inject("My\Awesome\FooBarInterface")  // important: use full qualified class name
+         * @var FooBarInterface
+         */   
+        protected $fooBar;
+    
+        /** @Inject */
+        protected FooBarInterface $fooBar;  // supported since php >= 7.4 
+        
+        
+        public function __construct(FooBarInterface $fooBar)
+        {
+            .....
+        }
+    
+        ......
+    }
+```
+
+#### Interface injection
+This will automatically inject the dependency by the explicit injection method.
+
+```php
+    class Awesome
+    {
+        protected $fooBar;
+
+        public function __inject(FooBar $fooBar)
+        {
+            $this->fooBar = $fooBar;
+        }
+    
+        ......
+    }
+```
+
 ## Setup
+
+First we have a look at a cutout of a real world configuration.
+
+File: container.php
+```php
+return [
+    ......
+
+    #----------------------------------------------------------------
+    # Interface injection
+    #----------------------------------------------------------------
+
+    set(LoggerInterface::class)
+        ->factory(static function(Container $container){
+            return (new LoggerFactory($container))->create(); 
+        })
+    ,
+
+    #----------------------------------------------------------------
+    # Interface aware injection
+    #----------------------------------------------------------------
+
+    set(LoggerAwareInterface::class)
+        ->inject(LoggerInterface::class, 'Logger')
+    ,
+
+    #----------------------------------------------------------------
+    # General injection
+    #----------------------------------------------------------------
+
+    set(Foobar::class)
+        ->factory(static function(){
+            return new FooBar();
+        })
+    ,
+
+    ......
+];
+``` 
+
+### Basic setup
+
+```php
+
+    $container = new Container();
+
+    $container->load('path/to/config/container.php');
+    $container->load('path/other/*/config/container.php');
+
+    $container->registerNamespace(['MyApplication']); // Recommended to restrict to applications root namespace
+    
+    // Create now your class where to start dependency injection
+    $myApplication = $container->create(MyApplication::class, [$optional, $params], $optionalSharedOrNot);
+
+    $myApplication->execute(); 
+```
+
+### Optional setup
+
+```php
+    // alternativ is to allow all namespace (NOT RECOMMENDED)
+    $container->registerNamespace(['*']);
+
+    // optional (RECOMMENDED) use cache
+    $cache = .... from Vection CacheInterface    
+    $container->setCache($cache);
+```
+
+### Detailed setup
 
 The container can inject only registered objects by default. Classes can be registered by the Container::set method or by a optional php configuration file.
 
