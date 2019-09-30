@@ -27,9 +27,9 @@ class Equals extends Validator
     /**
      * Equals constructor.
      *
-     * @param string $equalValue
+     * @param mixed $equalValue
      */
-    public function __construct(string $equalValue)
+    public function __construct($equalValue)
     {
         $this->equalValue = $equalValue;
     }

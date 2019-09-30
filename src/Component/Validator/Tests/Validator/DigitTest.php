@@ -12,15 +12,14 @@
 namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
-use stdClass;
-use Vection\Component\Validator\Validator\Boolean;
+use Vection\Component\Validator\Validator\Digit;
 
 /**
- * Class BooleanTest
+ * Class DigitTest
  *
  * @package Vection\Component\Validator\Tests\Validator
  */
-class BooleanTest extends TestCase
+class DigitTest extends TestCase
 {
 
     /**
@@ -28,7 +27,7 @@ class BooleanTest extends TestCase
      */
     public function testValidValues($value): void
     {
-        $this->assertNull((new Boolean())->validate($value));
+        $this->assertNull((new Digit())->validate($value));
     }
 
     /**
@@ -36,7 +35,7 @@ class BooleanTest extends TestCase
      */
     public function testInvalidValues($value): void
     {
-        $this->assertNotNull((new Boolean())->validate($value));
+        $this->assertNotNull((new Digit())->validate($value));
     }
 
     /**
@@ -45,8 +44,9 @@ class BooleanTest extends TestCase
     public function provideValidValues(): array
     {
         return [
-            'true'  => [true],
-            'false' => [false]
+            '0'         => ['0'],
+            '1337'      => ['1337'],
+            '00101100'  => ['00101100']
         ];
     }
 
@@ -56,19 +56,12 @@ class BooleanTest extends TestCase
     public function provideInvalidValues(): array
     {
         return [
-            'NULL'      => [null],
-            '0'         => [0],
-            '1'         => [1],
-            '-1'        => [-1],
-            '0.123'     => [0.123],
-            '-0.123'    => [-0.123],
-            'abc'       => ['abc'],
-            '"0"'       => ['0'],
-            '"1"'       => ['1'],
-            '"-1"'      => ['-1'],
-            '[true]'    => [[true]],
-            '[false]'   => [[false]],
-            'stdClass'  => [new stdClass()]
+            '100'       => [100],
+            '123.456'   => [123.456],
+            '1.337'     => ['1.337'],
+            '-1'        => ['-1'],
+            '1111æ1111' => ['1111æ1111'],
+            '01010010010100100101001001010010 ' => ['01010010010100100101001001010010 ']
         ];
     }
 }
