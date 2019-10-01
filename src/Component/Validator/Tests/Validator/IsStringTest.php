@@ -12,6 +12,7 @@
 namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Vection\Component\Validator\Validator\IsString;
 
 /**
@@ -44,7 +45,10 @@ class IsStringTest extends TestCase
     public function provideValidValues(): array
     {
         return [
-            'Test' => ['Test'],
+            'Test'      => ['Test'],
+            '123 . ""'  => [123 . ''],
+            '"" . bool' => ['' . true],
+            'bool . "" . null' => [false . '' . null]
         ];
     }
 
@@ -54,7 +58,10 @@ class IsStringTest extends TestCase
     public function provideInvalidValues(): array
     {
         return [
-            'null' => [null],
+            'null'      => [null],
+            'bool'      => [false],
+            'int'       => [123],
+            'object'    => [new stdClass()]
         ];
     }
 }
