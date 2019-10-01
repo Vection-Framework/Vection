@@ -44,7 +44,10 @@ class GreaterThanTest extends TestCase
     public function provideValidValues(): array
     {
         return [
-            '1 > 0' => [0, 1]
+            '1 > 0'                 => [0, 1],
+            '0 > -1'                => [-1, 0],
+            'true > false'          => [false, true],
+            '0.0000000001 > 0.0'    => [0.0, 0.0000000001]
         ];
     }
 
@@ -54,7 +57,10 @@ class GreaterThanTest extends TestCase
     public function provideInvalidValues(): array
     {
         return [
-            '0 > 1' => [1, 0],
+            '0 > 1'                 => [1, 0],
+            '-1 > 0'                => [0, -1],
+            'false > true'          => [true, false],
+            '0.0 > 0.0000000001'    => [0.0000000001, 0.0]
         ];
     }
 }
