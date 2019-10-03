@@ -13,14 +13,14 @@ namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
 use stdClass;
-use Vection\Component\Validator\Validator\Boolean;
+use Vection\Component\Validator\Validator\IsString;
 
 /**
- * Class BooleanTest
+ * Class IsStringTest
  *
  * @package Vection\Component\Validator\Tests\Validator
  */
-class BooleanTest extends TestCase
+class IsStringTest extends TestCase
 {
 
     /**
@@ -28,7 +28,7 @@ class BooleanTest extends TestCase
      */
     public function testValidValues($value): void
     {
-        $this->assertNull((new Boolean())->validate($value));
+        $this->assertNull((new IsString())->validate($value));
     }
 
     /**
@@ -36,7 +36,7 @@ class BooleanTest extends TestCase
      */
     public function testInvalidValues($value): void
     {
-        $this->assertNotNull((new Boolean())->validate($value));
+        $this->assertNotNull((new IsString())->validate($value));
     }
 
     /**
@@ -45,8 +45,10 @@ class BooleanTest extends TestCase
     public function provideValidValues(): array
     {
         return [
-            'true'  => [true],
-            'false' => [false]
+            'Test'      => ['Test'],
+            '123 . ""'  => [123 . ''],
+            '"" . bool' => ['' . true],
+            'bool . "" . null' => [false . '' . null]
         ];
     }
 
@@ -56,19 +58,10 @@ class BooleanTest extends TestCase
     public function provideInvalidValues(): array
     {
         return [
-            'NULL'      => [null],
-            '0'         => [0],
-            '1'         => [1],
-            '-1'        => [-1],
-            '0.123'     => [0.123],
-            '-0.123'    => [-0.123],
-            'abc'       => ['abc'],
-            '"0"'       => ['0'],
-            '"1"'       => ['1'],
-            '"-1"'      => ['-1'],
-            '[true]'    => [[true]],
-            '[false]'   => [[false]],
-            'stdClass'  => [new stdClass()]
+            'null'      => [null],
+            'bool'      => [false],
+            'int'       => [123],
+            'object'    => [new stdClass()]
         ];
     }
 }

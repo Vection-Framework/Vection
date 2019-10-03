@@ -12,15 +12,14 @@
 namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
-use stdClass;
-use Vection\Component\Validator\Validator\Boolean;
+use Vection\Component\Validator\Validator\Ipv4;
 
 /**
- * Class BooleanTest
+ * Class Ipv4Test
  *
  * @package Vection\Component\Validator\Tests\Validator
  */
-class BooleanTest extends TestCase
+class Ipv4Test extends TestCase
 {
 
     /**
@@ -28,7 +27,7 @@ class BooleanTest extends TestCase
      */
     public function testValidValues($value): void
     {
-        $this->assertNull((new Boolean())->validate($value));
+        $this->assertNull((new Ipv4())->validate($value));
     }
 
     /**
@@ -36,7 +35,7 @@ class BooleanTest extends TestCase
      */
     public function testInvalidValues($value): void
     {
-        $this->assertNotNull((new Boolean())->validate($value));
+        $this->assertNotNull((new Ipv4())->validate($value));
     }
 
     /**
@@ -45,8 +44,10 @@ class BooleanTest extends TestCase
     public function provideValidValues(): array
     {
         return [
-            'true'  => [true],
-            'false' => [false]
+            '127.0.0.1' => ['127.0.0.1'],
+            '0.0.0.0' => ['0.0.0.0'],
+            '255.255.255.255' => ['255.255.255.255'],
+            '192.168.10.10' => ['192.168.10.10'],
         ];
     }
 
@@ -56,19 +57,16 @@ class BooleanTest extends TestCase
     public function provideInvalidValues(): array
     {
         return [
-            'NULL'      => [null],
-            '0'         => [0],
-            '1'         => [1],
-            '-1'        => [-1],
-            '0.123'     => [0.123],
-            '-0.123'    => [-0.123],
-            'abc'       => ['abc'],
-            '"0"'       => ['0'],
-            '"1"'       => ['1'],
-            '"-1"'      => ['-1'],
-            '[true]'    => [[true]],
-            '[false]'   => [[false]],
-            'stdClass'  => [new stdClass()]
+            '127.0.256.1' => ['127.0.256.1'],
+            '127.0.0.' => ['127.0.0.'],
+            '.1.1.1' => ['.1.1.1'],
+            '192.168.10.0/8' => ['192.168.10.0/8'],
+            'IP172.100.100.0' => ['IP172.100.100.0'],
+            '127:0:0:1' => ['127:0:0:1'],
+            '127-0-0-1' => ['127-0-0-1'],
+            '127000000001' => [127000000001],
+            '192 .168. 10.255' => ['192 .168. 10.255'],
+            '127.000.000.001' => ['127.000.000.001'],
         ];
     }
 }
