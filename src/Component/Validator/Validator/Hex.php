@@ -11,7 +11,6 @@
 
 namespace Vection\Component\Validator\Validator;
 
-
 use Vection\Component\Validator\Validator;
 
 /**
@@ -43,6 +42,6 @@ class Hex extends Validator
      */
     protected function getMessage(): string
     {
-        return 'Value "{value}" is not integer.';
+        return 'Value "{value}" is not a hexadecimal digit.';
     }
 }
