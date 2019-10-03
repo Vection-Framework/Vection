@@ -16,10 +16,8 @@ namespace Vection\Contracts\MessageBus\Event;
  * Interface EventHandlerInterface
  *
  * @package Vection\Contracts\MessageBus\Event\Contracts
- *
- * @method void __invoke(EventInterface $message);
  */
-interface EventHandlerInterface
+interface EventListenerInterface
 {
 
 }
