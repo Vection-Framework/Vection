@@ -61,6 +61,8 @@ class IsStringTest extends TestCase
             'null'      => [null],
             'bool'      => [false],
             'int'       => [123],
+            'float'     => [987.654],
+            'array'     => [[' ']],
             'object'    => [new stdClass()]
         ];
     }
