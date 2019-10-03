@@ -130,7 +130,7 @@ class Resolver implements CacheAwareInterface
             catch( ReflectionException $e ) {
                 throw new ContainerException(
                     "Reflection Error while resolving dependencies of class '$className'",
-                    $e
+                    0, $e
                 );
             }
         }
