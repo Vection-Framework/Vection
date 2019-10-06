@@ -34,6 +34,6 @@ class PhoneE164 extends Validator
      */
     protected function onValidate($value): bool
     {
-        return (bool) preg_match('/^\+?[1-9]\d{1,14}$/', $value);
+        return (bool) preg_match('/^\+(?:[0-9] ?){6,14}[0-9]$/', $value);
     }
 }
