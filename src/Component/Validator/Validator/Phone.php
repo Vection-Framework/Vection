@@ -34,6 +34,9 @@ class Phone extends Validator
      */
     protected function onValidate($value): bool
     {
-        return (bool) preg_match('/^\+?[1-9]\d{1,14}$/', $value);
+        // Clean phone number from visual separators
+        $phone = str_replace(['-', '/', '(', ')', ' '], '', $value);
+
+        return (bool) preg_match('/([0-9\s\-]{7,})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/', $phone);
     }
 }
