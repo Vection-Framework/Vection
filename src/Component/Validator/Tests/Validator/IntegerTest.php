@@ -45,9 +45,13 @@ class IntegerTest extends TestCase
     public function provideValidValues(): array
     {
         return [
-            '0'            => [0],
-            '1337'         => [-123],
-            '999999999999' => [999999999999]
+            '0'             => [0],
+            '-123'          => [-123],
+            '999999999999'  => [999999999999],
+            '1337'          => [1337],
+            '0x539'         => [0x539],
+            '02471'         => [02471],
+            '0b10100111001' => [0b10100111001]
         ];
     }
 
@@ -63,7 +67,7 @@ class IntegerTest extends TestCase
             'abc123' => ['abc123'],
             'false'  => [false],
             '[123]'  => [[123]],
-            'Object' => [new stdClass()],
+            'Object' => [new stdClass()]
         ];
     }
 }
