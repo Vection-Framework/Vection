@@ -50,14 +50,21 @@ class Resolver implements CacheAwareInterface
     protected $cache;
 
     /**
+     * Resolver constructor.
+     */
+    public function __construct()
+    {
+        $this->methodOperations = [
+            'GET' => 'get', 'POST' => 'create', 'PUT' => 'update', 'DELETE' => 'delete'
+        ];
+    }
+
+    /**
      * @param RestResource $resource
      */
     public function add(RestResource $resource): void
     {
         $this->resources[] = $resource;
-        $this->methodOperations = [
-            'GET' => 'get', 'POST' => 'create', 'PUT' => 'update', 'DELETE' => 'delete'
-        ];
     }
 
     /**
@@ -167,15 +174,19 @@ class Resolver implements CacheAwareInterface
             }
 
             if( $resource instanceof Collection){
+
                 $resourceId = array_shift($segments);
+
+                if( $operation ){
+                    $methodOperations['POST'] = lcfirst($operation);
+                }elseif($resourceId === null){
+                    $methodOperations['GET'] = 'list';
+                }
+
                 if( $resourceId === null ){
-                    if( $operation ){
-                        $methodOperations['POST'] = lcfirst($operation);
-                    }else{
-                        $methodOperations['GET'] = 'list';
-                    }
                     break;
                 }
+
                 $resourceIds[] = $resourceId;
             }
             elseif($operation){
