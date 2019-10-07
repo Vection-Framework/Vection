@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 /**
  * This file is part of the Vection-Framework project.
@@ -10,11 +10,12 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Vection\Component\Http\Server;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Vection\Component\Http\Psr\Message\Factory\ServerRequestFactory;
 use Vection\Component\Http\Server\Decorator\Factory\ServerRequestFactoryDecorator;
@@ -27,7 +28,7 @@ use Vection\Contracts\Http\Server\ResponderInterface;
  *
  * @package Vection\Component\Http\Server
  */
-class Kernel implements KernelInterface, LoggerAwareInterface
+class Kernel implements KernelInterface
 {
     /** @var ServerRequestInterface */
     protected $request;
@@ -53,8 +54,8 @@ class Kernel implements KernelInterface, LoggerAwareInterface
      */
     public function __construct(
         RequestHandlerInterface $requestHandler,
-        ServerRequestInterface $request = null,
-        ResponderInterface $responder = null
+        ? ServerRequestInterface $request = null,
+        ? ResponderInterface $responder = null
     )
     {
         $this->requestHandler = $requestHandler;
