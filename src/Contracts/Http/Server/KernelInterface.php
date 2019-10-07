@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 /**
  * This file is part of the Vection-Framework project.
@@ -10,8 +10,11 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Vection\Contracts\Http\Server;
 
+use Psr\Log\LoggerAwareInterface;
 use Vection\Contracts\Event\EventManagerInterface;
 
 /**
@@ -19,7 +22,7 @@ use Vection\Contracts\Event\EventManagerInterface;
  *
  * @package Vection\Contracts\Http\Server
  */
-interface KernelInterface
+interface KernelInterface extends LoggerAwareInterface
 {
     /**
      * Returns the responder that is used to send a response to the client.

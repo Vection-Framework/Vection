@@ -1,10 +1,10 @@
 <?php
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -26,7 +26,7 @@ interface PayloadInterface
      * @param string $key
      * @return null|string
      */
-    public function get($key): ? string;
+    public function get(string $key): ? string;
 
     /**
      * Sets a value by the given key.
@@ -34,7 +34,7 @@ interface PayloadInterface
      * @param string $key
      * @param int|string $value
      */
-    public function set($key, $value): void;
+    public function set(string $key, $value): void;
 
     /**
      * Returns the given key as a new instance of

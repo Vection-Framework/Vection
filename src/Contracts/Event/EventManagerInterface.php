@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -19,6 +19,28 @@ namespace Vection\Contracts\Event;
  */
 interface EventManagerInterface
 {
+    /**
+     * This method is an alternative way to register event classes
+     * instead using the EventManager::addEventListener method.
+     * Adds an array that contains all event names mapped by event FQCNs.
+     *
+     * E.g. [.., FQCN => eventName, ..]
+     *
+     * @param array $mapping
+     */
+    public function setEventClassMap(array $mapping): void;
+
+    /**
+     * This method is an alternative way to register event listeners
+     * instead using the EventManager::addEventListener method.
+     * Add an array that contains all listener data mapped by event names.
+     *
+     * E.g. [.., eventName => [.., [handler<callable>, priority<int>], ..]
+     *
+     * @param array $mapping
+     */
+    public function setEventListenerMap(array $mapping): void;
+
     /**
      * Sets a callback for listener instantiation.
      *
