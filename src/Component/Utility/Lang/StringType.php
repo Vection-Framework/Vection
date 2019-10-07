@@ -333,7 +333,7 @@ final class StringType
 
         for ( $i = 0; $i < $length; $i++ ) {
             $chars = \str_shuffle($chars);
-            $token .= $chars{\random_int(0, \strlen($chars) - 1)};
+            $token .= $chars[\random_int(0, \strlen($chars) - 1)];
         }
 
         return $token;

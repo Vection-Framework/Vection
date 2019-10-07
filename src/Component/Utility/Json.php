@@ -83,6 +83,38 @@ class Json implements \JsonSerializable
     }
 
     /**
+     * Decodes a json string or file.
+     *
+     * @param string $json
+     * @param int    $depth
+     * @param int    $options
+     *
+     * @throws JsonException
+     *
+     * @return array
+     */
+    public static function decodeToArray(string $json, int $depth = 512, int $options = 0): array
+    {
+        return self::decode($json, true, $depth, $options);
+    }
+
+    /**
+     * Decodes a json string or file.
+     *
+     * @param string $json
+     * @param int    $depth
+     * @param int    $options
+     *
+     * @throws JsonException
+     *
+     * @return array
+     */
+    public static function decodeToObject(string $json, int $depth = 512, int $options = 0): array
+    {
+        return self::decode($json, false, $depth, $options);
+    }
+
+    /**
      * @param string $filePath
      *
      * @return Json
