@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,9 +12,19 @@
 
 namespace Vection\Component\Event;
 
+use Exception;
+use InvalidArgumentException;
+use RuntimeException;
 use Vection\Contracts\Event\EventHandlerMethodInterface;
 use Vection\Contracts\Event\EventInterface;
 use Vection\Contracts\Event\EventManagerInterface;
+use function class_exists;
+use function constant;
+use function count;
+use function defined;
+use function get_class;
+use function is_array;
+use function is_string;
 
 /**
  * Class EventManager
@@ -107,7 +117,7 @@ class EventManager implements EventManagerInterface
     public function setWildcardSeparator(string $separator): void
     {
         if( ! in_array($separator, ['.', ':', '-', '/']) ){
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'The event name wildcard separator support only ".:-/" characters.'
             );
         }
@@ -121,12 +131,12 @@ class EventManager implements EventManagerInterface
     {
         if ( $event instanceof EventInterface ) {
             # We have already the event object, now we need the event name
-            $eventClass = \get_class($event);
+            $eventClass = get_class($event);
 
             # Try to get the event name by registered event by class name
             if ( ! $eventName = ( $this->events[$eventClass] ?? null ) ) {
                 # There is no event registered by class name, so use a NAME const if exists or takes the class name
-                $eventName = \defined("{$eventClass}::NAME") ? \constant("{$eventClass}::NAME") : $eventClass;
+                $eventName = defined("{$eventClass}::NAME") ? constant("{$eventClass}::NAME") : $eventClass;
             }
         } else {
             $eventName = (string) $event;
@@ -177,11 +187,11 @@ class EventManager implements EventManagerInterface
 
             # If the first element of the callable array is a string
             # then first create the listener object on which we will call the method
-            if ( \is_array($handler) && \is_string($handler[0]) ) {
+            if ( is_array($handler) && is_string($handler[0]) ) {
                 $listenerClassName = $handler[0];
 
-                if ( ! \class_exists($listenerClassName) ) {
-                    throw new \InvalidArgumentException(
+                if ( ! class_exists($listenerClassName) ) {
+                    throw new InvalidArgumentException(
                         'Vection.EventManager: The creation of the listener object expect an existing FQCN, got "' . $listenerClassName . '"'
                     );
                 }
@@ -191,8 +201,8 @@ class EventManager implements EventManagerInterface
                 } else {
                     try {
                         $handler[0] = new $listenerClassName();
-                    } catch ( \Exception $e ) {
-                        throw new \RuntimeException('Error when try to create event listener.', 0, $e);
+                    } catch ( Exception $e ) {
+                        throw new RuntimeException('Error when try to create event listener.', 0, $e);
                     }
                 }
 
@@ -202,7 +212,7 @@ class EventManager implements EventManagerInterface
             $listeners[$definition[1] ?? 0][] = $handler;
         }
 
-        for ( $i = \count($listeners) - 1; $i >= 0; $i-- ) {
+        for ( $i = count($listeners) - 1; $i >= 0; $i-- ) {
             foreach ( $listeners[$i] as $listener ) {
                 if ( $event->isPropagationStopped() ) {
                     return;
@@ -214,7 +224,7 @@ class EventManager implements EventManagerInterface
                     $listener[1] = $listener[0]->getHandlerMethodName();
                 }
 
-                call_user_func($listener, $event, $this);
+                $listener($event, $this);
             }
         }
     }

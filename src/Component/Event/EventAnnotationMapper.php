@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 /**
  * This file is part of the Vection-Framework project.
@@ -10,6 +10,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Vection\Component\Event;
 
 use ReflectionClass;
@@ -18,13 +20,7 @@ use Vection\Component\Event\Exception\InvalidAnnotationException;
 use Vection\Contracts\Cache\CacheAwareInterface;
 use Vection\Contracts\Cache\CacheInterface;
 use Vection\Contracts\Event\EventHandlerMethodInterface;
-use function class_exists;
-use function file_get_contents;
-use function glob;
-use function preg_match;
-use function preg_match_all;
-use function rtrim;
-use function trim;
+use Vection\Contracts\Event\EventManagerInterface;
 
 /**
  * Class EventAnnotationMapper
@@ -34,7 +30,7 @@ use function trim;
 class EventAnnotationMapper implements CacheAwareInterface
 {
     /**
-     * @var EventManager
+     * @var EventManagerInterface
      */
     protected $eventDispatcher;
 
@@ -46,9 +42,9 @@ class EventAnnotationMapper implements CacheAwareInterface
     /**
      * EventAnnotationMapper constructor.
      *
-     * @param EventManager $eventManager
+     * @param EventManagerInterface $eventManager
      */
-    public function __construct(EventManager $eventManager)
+    public function __construct(EventManagerInterface $eventManager)
     {
         $this->eventDispatcher = $eventManager;
     }
