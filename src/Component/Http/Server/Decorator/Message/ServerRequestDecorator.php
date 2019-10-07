@@ -209,11 +209,23 @@ class ServerRequestDecorator implements ServerRequestInterface
     /**
      * @param string $name
      *
-     * @return string|array|null
+     * @return string|null
      */
-    public function getQueryParam(string $name)
+    public function getQueryParam(string $name): ? string
     {
-        return $this->queryParams[$name] ?? null;
+        $value = $this->getQueryParams()[$name] ?? null;
+        return is_string($value) ? $value : null;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return array|null
+     */
+    public function getQueryArray(string $name): ? array
+    {
+        $value = $this->getQueryParams()[$name] ?? null;
+        return is_array($value) ? $value : null;
     }
 
     /**
