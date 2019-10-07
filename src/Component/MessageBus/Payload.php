@@ -1,14 +1,16 @@
 <?php
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Vection\Component\MessageBus;
 
@@ -42,15 +44,16 @@ class Payload implements PayloadInterface
     /**
      * @inheritdoc
      */
-    public function get($key): ? string
+    public function get(string $key): ? string
     {
-        return $this->data[$key] ?? null;
+        $value = $this->data[$key] ?? null;
+        return $value === null ? $value : (string) $value;
     }
 
     /**
      * @inheritdoc
      */
-    public function set($key, $value): void
+    public function set(string $key, $value): void
     {
         $this->data[$key] = $value;
     }

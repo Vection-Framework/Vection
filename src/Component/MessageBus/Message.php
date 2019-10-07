@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,6 +12,8 @@
 
 namespace Vection\Component\MessageBus;
 
+use DateTime;
+use Exception;
 use Vection\Contracts\MessageBus\MessageInterface;
 use Vection\Contracts\MessageBus\PayloadInterface;
 
@@ -36,7 +38,7 @@ abstract class Message implements MessageInterface
      * which is created at the begin of the lifecycle of
      * this message object.
      *
-     * @var \DateTime
+     * @var DateTime
      */
     protected $msgCreatedTime;
 
@@ -56,16 +58,16 @@ abstract class Message implements MessageInterface
     public function __construct(? PayloadInterface $payload = null)
     {
         try {
-            $this->msgID = \bin2hex(\random_bytes(16));
-        } catch( \Exception $e ) {
-            $this->msgID = \md5(\uniqid( (string) \time(),true));
+            $this->msgID = bin2hex(random_bytes(16));
+        } catch( Exception $e ) {
+            $this->msgID = md5(uniqid( (string) time(),true));
         }
 
         $this->payload = $payload ?: new Payload();
 
         try {
-            $this->msgCreatedTime = new \DateTime();
-        } catch( \Exception $e ) {
+            $this->msgCreatedTime = new DateTime();
+        } catch( Exception $e ) {
             # Never happens without construct param.
         }
     }
@@ -81,7 +83,7 @@ abstract class Message implements MessageInterface
     /**
      * @inheritdoc
      */
-    public function msgCreatedTime(): \DateTime
+    public function msgCreatedTime(): DateTime
     {
         return $this->msgCreatedTime;
     }
