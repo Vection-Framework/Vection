@@ -12,30 +12,30 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Component\Validator\Schema\Json\Type;
+namespace Vection\Component\Validator\Schema\Json\Property;
 
 use Vection\Component\Validator\Schema\Json\Exception\IllegalPropertyException;
 use Vection\Component\Validator\Schema\Json\Exception\IllegalPropertyTypeException;
 use Vection\Component\Validator\Schema\Json\Exception\MissingPropertyException;
-use Vection\Component\Validator\Schema\Json\JsonType;
+use Vection\Component\Validator\Schema\Json\JsonProperty;
 use Vection\Contracts\Validator\Schema\Json\JsonPropertyExceptionInterface;
 
 /**
  * Class JsonObject
  *
- * @package Vection\Component\Validator\Schema\Json\Type
+ * @package Vection\Component\Validator\Schema\Json\Property
  *
  * @author David Lung <vection@davidlung.de>
  */
-class JsonObject extends JsonType
+class JsonObject extends JsonProperty
 {
     /**
-     * @var JsonType[]
+     * @var JsonProperty[]
      */
     protected $values = [];
 
     /**
-     * @var JsonType
+     * @var JsonProperty
      */
     protected $member;
 
@@ -44,19 +44,19 @@ class JsonObject extends JsonType
      */
     protected function onEvaluate(array $schema): void
     {
-        foreach( $schema['@values'] ?? [] as $name => $value ){
+        foreach( $schema['@properties'] ?? [] as $name => $value ){
             $value = is_string($value) ? ['@type' => $value] : $value;
             $type = $this->createType($value['@type'], $name);
             $type->evaluate($value);
             $this->values[$name] = $type;
         }
 
-        if( isset($schema['@member']) ){
-            if( is_string($schema['@member']) ){
-                $schema['@member'] = ['@type' => $schema['@member']];
+        if( isset($schema['@property']) ){
+            if( is_string($schema['@property']) ){
+                $schema['@property'] = ['@type' => $schema['@property']];
             }
-            $type = $this->createType($schema['@member']['@type']);
-            $type->evaluate($schema['@member']);
+            $type = $this->createType($schema['@property']['@type']);
+            $type->evaluate($schema['@property']);
             $this->member = $type;
         }
     }

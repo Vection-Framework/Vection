@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
@@ -13,6 +14,7 @@ namespace Vection\Component\Validator\Tests\Schema;
 
 use PHPUnit\Framework\TestCase;
 use Vection\Component\Validator\Schema\Json\Schema;
+use Vection\Contracts\Validator\Schema\Json\JsonSchemaExceptionInterface;
 
 /**
  * Class SchemaTest
@@ -23,9 +25,9 @@ class SchemaTest extends TestCase
 {
 
     /**
-     *
+     * @throws JsonSchemaExceptionInterface
      */
-    public function testEvaluate()
+    public function testEvaluate(): void
     {
         $schema = new Schema(__DIR__.'/schema.json');
         $schema->evaluate();

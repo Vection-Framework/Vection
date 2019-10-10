@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
@@ -14,6 +15,8 @@ namespace Vection\Component\Validator\Tests\Schema;
 use PHPUnit\Framework\TestCase;
 use Vection\Component\Validator\Schema\Json\JsonSchemaValidator;
 use Vection\Component\Validator\Schema\Json\Schema;
+use Vection\Contracts\Validator\Schema\Json\JsonPropertyExceptionInterface;
+use Vection\Contracts\Validator\Schema\Json\JsonSchemaExceptionInterface;
 
 /**
  * Class JsonSchemaValidatorTest
@@ -22,10 +25,16 @@ use Vection\Component\Validator\Schema\Json\Schema;
  */
 class JsonSchemaValidatorTest extends TestCase
 {
-    public function testValidateArray()
+    /**
+     * @throws JsonPropertyExceptionInterface
+     * @throws JsonSchemaExceptionInterface
+     */
+    public function testValidateArray(): void
     {
-        $schema = new Schema(__DIR__.'/schema.json');
-        $validator = new JsonSchemaValidator($schema);
+        $validator = new JsonSchemaValidator(
+            new Schema(__DIR__.'/schema.json')
+        );
+
         $validator->validateArray(
             json_decode(file_get_contents(__DIR__.'/test.json'), true)
         );

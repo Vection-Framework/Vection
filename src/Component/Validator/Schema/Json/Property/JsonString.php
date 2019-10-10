@@ -12,21 +12,21 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Component\Validator\Schema\Json\Type;
+namespace Vection\Component\Validator\Schema\Json\Property;
 
 use Vection\Component\Validator\Schema\Json\Exception\IllegalPropertyTypeException;
 use Vection\Component\Validator\Schema\Json\Exception\IllegalPropertyValueException;
 use Vection\Component\Validator\Schema\Json\Exception\MissingPropertyException;
-use Vection\Component\Validator\Schema\Json\JsonType;
+use Vection\Component\Validator\Schema\Json\JsonProperty;
 
 /**
  * Class JsonString
  *
- * @package Vection\Component\Validator\Schema\Json\Type
+ * @package Vection\Component\Validator\Schema\Json\Property
  *
- * @author David Lung <vection@davidlung.de>
+ * @author  David Lung <vection@davidlung.de>
  */
-class JsonString extends JsonType
+class JsonString extends JsonProperty
 {
     /**
      * @var array

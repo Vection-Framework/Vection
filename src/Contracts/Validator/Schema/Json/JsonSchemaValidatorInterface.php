@@ -31,7 +31,7 @@ interface JsonSchemaValidatorInterface
      * @throws JsonPropertyExceptionInterface
      * @throws JsonSchemaExceptionInterface
      */
-    public function validateFile(string $path): array;
+    public function validate(string $path): array;
 
     /**
      * @param string $json
@@ -46,10 +46,8 @@ interface JsonSchemaValidatorInterface
     /**
      * @param array $data
      *
-     * @return array
-     *
      * @throws JsonPropertyExceptionInterface
      * @throws JsonSchemaExceptionInterface
      */
-    public function validateArray(array $data): array;
+    public function validateArray(array $data): void;
 }

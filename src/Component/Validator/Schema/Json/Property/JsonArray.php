@@ -12,33 +12,39 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Component\Validator\Schema\Json\Type;
+namespace Vection\Component\Validator\Schema\Json\Property;
 
+use Vection\Component\Validator\Schema\Json\Exception\IllegalPropertyTypeException;
 use Vection\Component\Validator\Schema\Json\Exception\MissingPropertyException;
-use Vection\Component\Validator\Schema\Json\JsonType;
+use Vection\Component\Validator\Schema\Json\JsonProperty;
 use Vection\Contracts\Validator\Schema\Json\JsonPropertyExceptionInterface;
 
 /**
  * Class JsonArray
  *
- * @package Vection\Component\Validator\Schema\Json\Type
+ * @package Vection\Component\Validator\Schema\Json\Property
  *
  * @author David Lung <vection@davidlung.de>
  */
-class JsonArray extends JsonType
+class JsonArray extends JsonProperty
 {
     /**
-     * @var JsonType
+     * @var JsonProperty
      */
-    protected $element;
+    protected $property;
 
     /**
      * @inheritDoc
      */
     protected function onEvaluate(array $schema): void
     {
-        $this->element = $this->createType($schema['@element']['@type']);
-        $this->element->evaluate($schema['@element']);
+        if( isset($schema['@property']['@template']) ){
+            $schema['@property'] = $this->getTemplate($schema['@property']['@template']);
+            unset($schema['@property']['@template']);
+        }
+
+        $this->property = $this->createType($schema['@property']['@type']);
+        $this->property->evaluate($schema['@property']);
     }
 
     /**
@@ -48,16 +54,20 @@ class JsonArray extends JsonType
      */
     public function validate($values): void
     {
+        if( ! is_array($values) ){
+            throw new IllegalPropertyTypeException($this->name, 'array');
+        }
+
         if( $this->isRequired() && count($values) === 0 ){
             throw new MissingPropertyException($this->name.'.0');
         }
 
         foreach( $values as $name => $value ){
 
-            $this->element->setName((string)$name);
+            $this->property->setName((string) $name);
 
             try{
-                $this->element->validate($value);
+                $this->property->validate($value);
             }
             catch(JsonPropertyExceptionInterface $e){
                 $e->withProperty($this->name);

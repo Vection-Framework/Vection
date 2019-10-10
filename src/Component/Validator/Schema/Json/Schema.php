@@ -15,8 +15,8 @@ declare(strict_types = 1);
 namespace Vection\Component\Validator\Schema\Json;
 
 use RuntimeException;
-use Vection\Component\Validator\Schema\Json\Type\JsonObject;
-use Vection\Contracts\Validator\Schema\Json\JsonTypeInterface;
+use Vection\Component\Validator\Schema\Json\Property\JsonObject;
+use Vection\Contracts\Validator\Schema\Json\JsonPropertyInterface;
 use Vection\Contracts\Validator\Schema\Json\SchemaInterface;
 
 /**
@@ -32,6 +32,11 @@ class Schema implements SchemaInterface
      * @var array
      */
     protected $schema;
+
+    /**
+     * @var array
+     */
+    protected $templates = [];
 
     /**
      * Schema constructor.
@@ -50,7 +55,14 @@ class Schema implements SchemaInterface
             throw new RuntimeException("Unable to load schema from file {$path}");
         }
 
-        $this->schema = json_decode($schema, true);
+        $schema = json_decode($schema, true);
+
+        if( isset($schema['@templates']) ){
+            $this->templates = $schema['@templates'];
+            unset($schema['@templates']);
+        }
+
+        $this->schema = $schema;
 
         if( json_last_error() !== JSON_ERROR_NONE ){
             throw new RuntimeException('Invalid json schema file: '.json_last_error_msg());
@@ -60,9 +72,17 @@ class Schema implements SchemaInterface
     /**
      * @inheritDoc
      */
-    public function evaluate(): JsonTypeInterface
+    public function addTemplate(string $name, array $schema): void
     {
-        $root = new JsonObject('$');
+        $this->templates[$name] = $schema;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function evaluate(): JsonPropertyInterface
+    {
+        $root = new JsonObject('$', $this->templates);
         $root->evaluate($this->schema);
 
         return $root;

@@ -1,7 +1,7 @@
 {
     "bar": "foo",
     "need": "dfgfd",
-    "foobar": 23,
+    "foobar": 23.3,
     "dyn": {
         "random": "skillet",
         "summer": "boat",

@@ -15,16 +15,18 @@ declare(strict_types = 1);
 namespace Vection\Component\Validator\Schema\Json;
 
 use RuntimeException;
-use Vection\Contracts\Validator\Schema\Json\JsonTypeInterface;
+use Vection\Component\Validator\Schema\Json\Exception\JsonSchemaException;
+use Vection\Contracts\Validator\Schema\Json\JsonPropertyInterface;
+use Vection\Contracts\Validator\Schema\Json\JsonSchemaExceptionInterface;
 
 /**
- * Class Definition
+ * Class JsonProperty
  *
  * @package Vection\Component\Validator\Schema\Json
  *
  * @author David Lung <vection@davidlung.de>
  */
-abstract class JsonType implements JsonTypeInterface
+abstract class JsonProperty implements JsonPropertyInterface
 {
     /**
      * @var string
@@ -42,13 +44,20 @@ abstract class JsonType implements JsonTypeInterface
     protected $required;
 
     /**
-     * JsonType constructor.
+     * @var array
+     */
+    private $templates;
+
+    /**
+     * JsonProperty constructor.
      *
      * @param string $name
+     * @param array  $templates
      */
-    public function __construct(? string $name = null)
+    public function __construct(? string $name = null, array $templates = [])
     {
         $this->name = $name;
+        $this->templates = $templates;
     }
 
     /**
@@ -60,7 +69,7 @@ abstract class JsonType implements JsonTypeInterface
     }
 
     /**
-     * @param string $name
+     * @inheritDoc
      */
     public function setName(string $name): void
     {
@@ -88,6 +97,11 @@ abstract class JsonType implements JsonTypeInterface
      */
     public function evaluate(array $schema): void
     {
+        if( isset($schema['@template']) ){
+            $schema = $this->getTemplate($schema['@template']);
+            unset($schema['@template']);
+        }
+
         $this->required = $schema['@required'] ?? false;
         $this->type = $schema['@type'];
         $this->onEvaluate($schema);
@@ -95,6 +109,8 @@ abstract class JsonType implements JsonTypeInterface
 
     /**
      * @param array $schema
+     *
+     * @throws JsonSchemaExceptionInterface
      */
     abstract protected function onEvaluate(array $schema): void;
 
@@ -103,16 +119,32 @@ abstract class JsonType implements JsonTypeInterface
      *
      * @param string|null $name
      *
-     * @return JsonType
+     * @return JsonProperty
      */
-    protected function createType(string $type, ? string $name = null): JsonType
+    protected function createType(string $type, ? string $name = null): JsonProperty
     {
-        $className = __NAMESPACE__.'\\Type\\Json'.ucfirst($type);
+        $className = __NAMESPACE__.'\\Property\\Json'.ucfirst($type);
 
         if( ! class_exists($className) ){
-            throw new RuntimeException('Cannot instantiate unknown json type: '.$type);
+            throw new RuntimeException('Cannot instantiate unknown json property type: '.$type);
         }
 
-        return new $className($name);
+        return new $className($name, $this->templates);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return array
+     *
+     * @throws JsonSchemaExceptionInterface
+     */
+    protected function getTemplate(string $name): array
+    {
+        if( ! isset($this->templates[$name]) ){
+            throw new JsonSchemaException("Cannot use property template ({$name}) because it does not exists.");
+        }
+
+        return $this->templates[$name];
     }
 }

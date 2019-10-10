@@ -24,9 +24,15 @@ namespace Vection\Contracts\Validator\Schema\Json;
 interface SchemaInterface
 {
     /**
-     * @return JsonTypeInterface
+     * @param string $name
+     * @param array  $schema
+     */
+    public function addTemplate(string $name, array $schema): void;
+
+    /**
+     * @return JsonPropertyInterface
      *
      * @throws JsonSchemaExceptionInterface
      */
-    public function evaluate(): JsonTypeInterface;
+    public function evaluate(): JsonPropertyInterface;
 }

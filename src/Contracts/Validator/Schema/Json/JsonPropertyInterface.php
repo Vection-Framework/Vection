@@ -21,12 +21,17 @@ namespace Vection\Contracts\Validator\Schema\Json;
  *
  * @author David Lung <vection@davidlung.de>
  */
-interface JsonTypeInterface
+interface JsonPropertyInterface
 {
     /**
      * @return string|null
      */
     public function getName(): ? string;
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void;
 
     /**
      * @return string
@@ -40,11 +45,13 @@ interface JsonTypeInterface
 
     /**
      * @param array $schema
+     *
+     * @throws JsonSchemaExceptionInterface
      */
     public function evaluate(array $schema): void;
 
     /**
-     * @param $value
+     * @param string|int|float|array $value
      *
      * @throws JsonPropertyExceptionInterface
      */

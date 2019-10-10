@@ -16,6 +16,7 @@ namespace Vection\Component\Validator\Schema\Json;
 
 use RuntimeException;
 use Vection\Contracts\Validator\Schema\Json\JsonSchemaValidatorInterface;
+use Vection\Contracts\Validator\Schema\Json\SchemaInterface;
 
 /**
  * Class JsonSchemaValidator
@@ -27,16 +28,16 @@ use Vection\Contracts\Validator\Schema\Json\JsonSchemaValidatorInterface;
 class JsonSchemaValidator implements JsonSchemaValidatorInterface
 {
     /**
-     * @var Schema
+     * @var SchemaInterface
      */
     protected $schema;
 
     /**
      * JsonSchemaValidator constructor.
      *
-     * @param Schema $schema
+     * @param SchemaInterface $schema
      */
-    public function __construct(Schema $schema)
+    public function __construct(SchemaInterface $schema)
     {
         $this->schema = $schema;
     }
@@ -44,15 +45,14 @@ class JsonSchemaValidator implements JsonSchemaValidatorInterface
     /**
      * @inheritDoc
      */
-    public function validateFile(string $path): array
+    public function validate(string $path): array
     {
         if( ! file_exists($path) ){
             throw new RuntimeException('File not exists: '.$path);
         }
 
         $json = file_get_contents($path);
-
-        return $this->validateString($json);
+        $this->validateString($json);
     }
 
     /**
@@ -66,18 +66,16 @@ class JsonSchemaValidator implements JsonSchemaValidatorInterface
             throw new RuntimeException(json_last_error_msg());
         }
 
-        return $this->validateArray($data);
+        $this->validateArray($data);
+
+        return $data;
     }
 
     /**
      * @inheritDoc
      */
-    public function validateArray(array $data): array
+    public function validateArray(array $data): void
     {
-        $jsonObject = $this->schema->evaluate();
-
-        $jsonObject->validate($data);
-
-        return $data;
+        $this->schema->evaluate()->validate($data);
     }
 }
