@@ -1,0 +1,26 @@
+{
+    "bar": "foo",
+    "need": "dfgfd",
+    "foobar": 23.3,
+    "dyn": {
+        "random": "skillet",
+        "summer": "boat",
+        "sea": "goat",
+        "broken": "43"
+    },
+    "baz": {
+        "alice": "tschallo",
+        "books": [
+            {
+                "signature": "323",
+                "author": "hans",
+                "pages": 32
+            },
+            {
+                "signature": "sdssds",
+                "author": "hans",
+                "pages": 32
+            }
+        ]
+    }
+}

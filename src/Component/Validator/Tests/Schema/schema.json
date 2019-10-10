@@ -1,0 +1,55 @@
+{
+    "@type": "object",
+    "@properties": {
+        "foo": {
+            "@type": "string"
+        },
+        "bar": {
+            "@type": "string",
+            "@required": true,
+            "@allowed": "foo|bar"
+        },
+        "foobar": {
+            "@type": "float",
+            "@range": "0..100"
+        },
+        "need": {
+            "@type": "string",
+            "@required": true
+        },
+        "dyn": {
+            "@type": "object",
+            "@property": {
+                "@type": "string"
+            }
+        },
+        "baz": {
+            "@type": "object",
+            "@required": true,
+            "@properties": {
+                "alice": {
+                    "@type": "string"
+                },
+                "books": {
+                    "@type": "array",
+                    "@property": {
+                        "@template": "book"
+                    }
+                }
+            }
+        }
+    },
+    "@templates": {
+        "book": {
+            "@type": "object",
+            "@properties": {
+                "signature": "string",
+                "author": {
+                    "@type": "string",
+                    "@required": true
+                },
+                "pages": "integer"
+            }
+        }
+    }
+}
