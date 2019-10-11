@@ -50,8 +50,8 @@
                     "@validator": {
                         "@name": "BetweenLength",
                         "@constraints": {
-                            "min": 32,
-                            "max": 45
+                            "min": 3,
+                            "max": 8
                         }
                     }
                 },
