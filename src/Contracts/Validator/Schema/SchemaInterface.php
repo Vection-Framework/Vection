@@ -12,17 +12,22 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Contracts\Validator\Schema\Json;
+namespace Vection\Contracts\Validator\Schema;
 
 /**
  * Interface SchemaInterface
  *
- * @package Vection\Contracts\Validator\Schema\Json
+ * @package Vection\Contracts\Validator\Schema
  *
  * @author David Lung <vection@davidlung.de>
  */
 interface SchemaInterface
 {
+    /**
+     * @param array $schema
+     */
+    public function setSchema(array $schema): void;
+
     /**
      * @param string $name
      * @param array  $schema
@@ -30,9 +35,14 @@ interface SchemaInterface
     public function addTemplate(string $name, array $schema): void;
 
     /**
-     * @return JsonPropertyInterface
-     *
-     * @throws JsonSchemaExceptionInterface
+     * @param array $templates
      */
-    public function evaluate(): JsonPropertyInterface;
+    public function setTemplates(array $templates): void;
+
+    /**
+     * @return PropertyInterface
+     *
+     * @throws SchemaExceptionInterface
+     */
+    public function evaluate(): PropertyInterface;
 }

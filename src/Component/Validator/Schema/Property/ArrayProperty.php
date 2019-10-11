@@ -12,24 +12,24 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Component\Validator\Schema\Json\Property;
+namespace Vection\Component\Validator\Schema\Property;
 
-use Vection\Component\Validator\Schema\Json\Exception\IllegalPropertyTypeException;
-use Vection\Component\Validator\Schema\Json\Exception\MissingPropertyException;
-use Vection\Component\Validator\Schema\Json\JsonProperty;
-use Vection\Contracts\Validator\Schema\Json\JsonPropertyExceptionInterface;
+use Vection\Component\Validator\Schema\Exception\IllegalPropertyTypeException;
+use Vection\Component\Validator\Schema\Exception\MissingPropertyException;
+use Vection\Component\Validator\Schema\Property;
+use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
 
 /**
- * Class JsonArray
+ * Class ArrayProperty
  *
- * @package Vection\Component\Validator\Schema\Json\Property
+ * @package Vection\Component\Validator\Schema\Property
  *
  * @author David Lung <vection@davidlung.de>
  */
-class JsonArray extends JsonProperty
+class ArrayProperty extends Property
 {
     /**
-     * @var JsonProperty
+     * @var Property
      */
     protected $property;
 
@@ -43,7 +43,7 @@ class JsonArray extends JsonProperty
             unset($schema['@property']['@template']);
         }
 
-        $this->property = $this->createType($schema['@property']['@type']);
+        $this->property = $this->createProperty($schema['@property']['@type']);
         $this->property->evaluate($schema['@property']);
     }
 
@@ -52,7 +52,7 @@ class JsonArray extends JsonProperty
      *
      * @throws MissingPropertyException
      */
-    public function validate($values): void
+    public function onValidate($values): void
     {
         if( ! is_array($values) ){
             throw new IllegalPropertyTypeException($this->name, 'array');
@@ -69,7 +69,7 @@ class JsonArray extends JsonProperty
             try{
                 $this->property->validate($value);
             }
-            catch(JsonPropertyExceptionInterface $e){
+            catch(PropertyExceptionInterface $e){
                 $e->withProperty($this->name);
             }
 

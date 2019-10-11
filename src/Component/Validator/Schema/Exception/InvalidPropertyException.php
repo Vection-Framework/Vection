@@ -12,16 +12,16 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Component\Validator\Schema\Json\Exception;
+namespace Vection\Component\Validator\Schema\Exception;
 
 /**
  * Class IllegalPropertyException
  *
- * @package Vection\Component\Validator\Schema\Json\Exception
+ * @package Vection\Component\Validator\Schema\Exception
  *
  * @author David Lung <vection@davidlung.de>
  */
-class IllegalPropertyException extends JsonPropertyException
+class InvalidPropertyException extends PropertyException
 {
     /**
      * @var string
@@ -38,17 +38,13 @@ class IllegalPropertyException extends JsonPropertyException
      *
      * @param string      $property
      * @param string      $message
-     * @param string|null $details
      */
-    public function __construct(string $property, string $message, string $details = null)
+    public function __construct(string $property, string $message)
     {
-        parent::__construct(
-            $details === null ? sprintf($message, $property) : sprintf($message, $property, $details)
-        );
+        parent::__construct(sprintf($message, $property));
 
         $this->rawMessage = $message;
         $this->property = $property;
-        $this->details = $details;
     }
 
     /**
@@ -56,6 +52,6 @@ class IllegalPropertyException extends JsonPropertyException
      */
     public function withProperty(string $property): void
     {
-        throw new static($property.'.'.$this->property, $this->rawMessage, $this->details);
+        throw new static($property.'.'.$this->property, $this->rawMessage);
     }
 }

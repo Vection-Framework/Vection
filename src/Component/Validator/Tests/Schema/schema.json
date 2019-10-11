@@ -46,7 +46,14 @@
                 "signature": "string",
                 "author": {
                     "@type": "string",
-                    "@required": true
+                    "@required": true,
+                    "@validator": {
+                        "@name": "BetweenLength",
+                        "@constraints": {
+                            "min": 32,
+                            "max": 45
+                        }
+                    }
                 },
                 "pages": "integer"
             }

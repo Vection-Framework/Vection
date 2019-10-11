@@ -12,26 +12,26 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Component\Validator\Schema\Json\Exception;
+namespace Vection\Component\Validator\Schema\Exception;
 
 /**
- * Class MissingPropertyException
+ * Class IllegalPropertyTypeException
  *
- * @package Vection\Component\Validator\Schema\Json\Exception
+ * @package Vection\Component\Validator\Schema\Exception
  *
  * @author David Lung <vection@davidlung.de>
  */
-class MissingPropertyException extends JsonPropertyException
+class IllegalPropertyTypeException extends IllegalPropertyException
 {
     /**
-     * IllegalTypeException constructor.
+     * IllegalPropertyTypeException constructor.
      *
      * @param string $property
+     * @param string $expected
      */
-    public function __construct(string $property)
+    public function __construct(string $property, string $expected)
     {
-        parent::__construct(sprintf('Missing property "%s".', $property));
-        $this->property = $property;
+        parent::__construct($property, 'The property "%s" expects a value of type %s.', $expected);
     }
 
     /**
@@ -39,6 +39,6 @@ class MissingPropertyException extends JsonPropertyException
      */
     public function withProperty(string $property): void
     {
-        throw new static($property.'.'.$this->property);
+        throw new static($property.'.'.$this->property, $this->details);
     }
 }

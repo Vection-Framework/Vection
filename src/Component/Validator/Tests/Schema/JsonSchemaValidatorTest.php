@@ -13,10 +13,10 @@
 namespace Vection\Component\Validator\Tests\Schema;
 
 use PHPUnit\Framework\TestCase;
-use Vection\Component\Validator\Schema\Json\JsonSchemaValidator;
-use Vection\Component\Validator\Schema\Json\Schema;
-use Vection\Contracts\Validator\Schema\Json\JsonPropertyExceptionInterface;
-use Vection\Contracts\Validator\Schema\Json\JsonSchemaExceptionInterface;
+use Vection\Component\Validator\Schema\Schema;
+use Vection\Component\Validator\Schema\SchemaValidator;
+use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
+use Vection\Contracts\Validator\Schema\SchemaExceptionInterface;
 
 /**
  * Class JsonSchemaValidatorTest
@@ -26,12 +26,12 @@ use Vection\Contracts\Validator\Schema\Json\JsonSchemaExceptionInterface;
 class JsonSchemaValidatorTest extends TestCase
 {
     /**
-     * @throws JsonPropertyExceptionInterface
-     * @throws JsonSchemaExceptionInterface
+     * @throws PropertyExceptionInterface
+     * @throws SchemaExceptionInterface
      */
     public function testValidateArray(): void
     {
-        $validator = new JsonSchemaValidator(
+        $validator = new SchemaValidator(
             new Schema(__DIR__.'/schema.json')
         );
 

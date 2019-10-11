@@ -12,16 +12,16 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Contracts\Validator\Schema\Json;
+namespace Vection\Contracts\Validator\Schema;
 
 /**
  * Interface JsonTypeInterface
  *
- * @package Vection\Contracts\Validator\Schema\Json
+ * @package Vection\Contracts\Validator\Schema
  *
  * @author David Lung <vection@davidlung.de>
  */
-interface JsonPropertyInterface
+interface PropertyInterface
 {
     /**
      * @return string|null
@@ -46,14 +46,14 @@ interface JsonPropertyInterface
     /**
      * @param array $schema
      *
-     * @throws JsonSchemaExceptionInterface
+     * @throws SchemaExceptionInterface
      */
     public function evaluate(array $schema): void;
 
     /**
      * @param string|int|float|array $value
      *
-     * @throws JsonPropertyExceptionInterface
+     * @throws PropertyExceptionInterface
      */
     public function validate($value): void;
 }

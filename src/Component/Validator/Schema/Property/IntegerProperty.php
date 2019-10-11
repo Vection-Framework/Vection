@@ -12,20 +12,20 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Component\Validator\Schema\Json\Property;
+namespace Vection\Component\Validator\Schema\Property;
 
-use Vection\Component\Validator\Schema\Json\Exception\IllegalPropertyTypeException;
-use Vection\Component\Validator\Schema\Json\Exception\IllegalPropertyValueException;
-use Vection\Component\Validator\Schema\Json\JsonProperty;
+use Vection\Component\Validator\Schema\Exception\IllegalPropertyTypeException;
+use Vection\Component\Validator\Schema\Exception\IllegalPropertyValueException;
+use Vection\Component\Validator\Schema\Property;
 
 /**
- * Class JsonInteger
+ * Class IntegerProperty
  *
- * @package Vection\Component\Validator\Schema\Json\Property
+ * @package Vection\Component\Validator\Schema\Property
  *
  * @author David Lung <vection@davidlung.de>
  */
-class JsonInteger extends JsonProperty
+class IntegerProperty extends Property
 {
     /**
      * @var array
@@ -48,7 +48,7 @@ class JsonInteger extends JsonProperty
      * @throws IllegalPropertyTypeException
      * @throws IllegalPropertyValueException
      */
-    public function validate($value): void
+    public function onValidate($value): void
     {
         if( ! is_int($value) ){
             throw new IllegalPropertyTypeException($this->name, 'integer');

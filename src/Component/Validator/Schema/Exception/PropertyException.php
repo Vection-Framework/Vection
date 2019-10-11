@@ -12,19 +12,22 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Component\Validator\Schema\Json\Exception;
+namespace Vection\Component\Validator\Schema\Exception;
 
 use Exception;
-use Vection\Contracts\Validator\Schema\Json\JsonSchemaExceptionInterface;
+use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
 
 /**
- * Class JsonSchemaException
+ * Class PropertyException
  *
- * @package Vection\Component\Validator\Schema\Json\Exception
+ * @package Vection\Component\Validator\Schema\Exception
  *
  * @author David Lung <vection@davidlung.de>
  */
-class JsonSchemaException extends Exception implements JsonSchemaExceptionInterface
+abstract class PropertyException extends Exception implements PropertyExceptionInterface
 {
-
+    /**
+     * @var string
+     */
+    protected $property;
 }
