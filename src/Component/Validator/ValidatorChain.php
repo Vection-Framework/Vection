@@ -122,7 +122,7 @@ class ValidatorChain implements ValidatorChainInterface
      */
     public function __invoke(string $name): ValidatorChain
     {
-        $this->chain[$name] = null;
+        $this->chain[$name] = [];
         end($this->chain);
         return $this;
     }

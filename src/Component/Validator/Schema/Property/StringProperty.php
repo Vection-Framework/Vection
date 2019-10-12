@@ -16,7 +16,6 @@ namespace Vection\Component\Validator\Schema\Property;
 
 use Vection\Component\Validator\Schema\Exception\IllegalPropertyTypeException;
 use Vection\Component\Validator\Schema\Exception\IllegalPropertyValueException;
-use Vection\Component\Validator\Schema\Exception\MissingPropertyException;
 use Vection\Component\Validator\Schema\Property;
 
 /**
@@ -53,16 +52,11 @@ class StringProperty extends Property
     /**
      * @inheritDoc
      *
-     * @throws MissingPropertyException
      * @throws IllegalPropertyTypeException
      * @throws IllegalPropertyValueException
      */
     public function onValidate($value): void
     {
-        if( $value === null && $this->required === true ){
-            throw new MissingPropertyException($this->name);
-        }
-
         if( ! is_string($value) ){
             throw new IllegalPropertyTypeException($this->name, 'string');
         }

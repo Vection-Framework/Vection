@@ -1,10 +1,10 @@
 <?php
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -58,7 +58,7 @@ class ValidatorChainTest extends TestCase
     /**
      *
      */
-    public function testVerifyFail()
+    public function testVerifyFail(): void
     {
         $chain = new ValidatorChain();
 
@@ -82,14 +82,22 @@ class ValidatorChainTest extends TestCase
         $violationA = (new BetweenLength(0, 7))->validate('abc12345');
         $violationB = (new AlphaNumeric())->validate('1abc23');
 
-        $this->assertEquals($violationA->getMessage(), $violations['a']->getMessage());
-        $this->assertEquals($violationB->getMessage(), $violations['b']->getMessage());
+        $this->assertNotNull($violationA);
+        $this->assertNotNull($violationB);
+
+        if( $violationA !== null ){
+            $this->assertEquals($violationA->getMessage(), $violations['a']->getMessage());
+        }
+
+        if( $violationB !== null ){
+            $this->assertEquals($violationB->getMessage(), $violations['b']->getMessage());
+        }
     }
 
     /**
      *
      */
-    public function testCustomValidator()
+    public function testCustomValidator(): void
     {
         $chain = new ValidatorChain();
 
@@ -112,7 +120,7 @@ class ValidatorChainTest extends TestCase
 
         $violations = $chain->getViolations();
 
-        $this->assertTrue(count($violations) === 1);
+        $this->assertSame(count($violations), 1);
     }
 
 }
