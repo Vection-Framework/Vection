@@ -4,11 +4,10 @@
     </a>
 </p>
 
-| Master |
-| ------ |
-| [![Build Status](https://travis-ci.org/Vection-Framework/Vection.svg?branch=master)](https://travis-ci.org/Vection-Framework/Vection) |
-| [![codecov](https://codecov.io/gh/Vection-Framework/Vection/branch/master/graph/badge.svg)](https://codecov.io/gh/Vection-Framework/Vection) |
-| [![phpstan](https://img.shields.io/badge/PHPStan-level%203-brightgreen.svg?style=flat)](https://img.shields.io/badge/PHPStan-level%203-brightgreen.svg?style=flat)
+[![Build Status](https://travis-ci.org/Vection-Framework/Vection.svg?branch=master)](https://travis-ci.org/Vection-Framework/Vection)
+[![codecov](https://codecov.io/gh/Vection-Framework/Vection/branch/master/graph/badge.svg)](https://codecov.io/gh/Vection-Framework/Vection)
+[![phpstan](https://img.shields.io/badge/PHPStan-level%203-brightgreen.svg?style=flat)](https://img.shields.io/badge/PHPStan-level%203-brightgreen.svg?style=flat)
+[![release](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases)](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases)
 
 <a href="https://vection.appsdock.org">Vection</a> is a modern and component based PHP framework focused on high flexibility and performance for enterprise applications.
 
@@ -20,18 +19,10 @@ A unit of all vection components covers almost every aspect of an enterprise app
 
 # Installation
 
-Vection can be only installed as dependency by <a href="https://getcomposer.org/">composer</a>.
+Vection Components supports only installation via [composer](https://getcomposer.org). So first ensure your composer is installed, configured and ready to use.
 
-```json
-    "require": {
-        "vection-framework/vection": "dev-master"
-    }
-```
-
-OR
-
-```shell script
-    $ composer install vection-framework/vection
+```bash
+$ composer require vection-framework/vection
 ```
 
 # Documentation

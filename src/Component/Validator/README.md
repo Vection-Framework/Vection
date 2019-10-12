@@ -1,6 +1,8 @@
 # Vection Component - PHP Validator
 [![Build Status](https://travis-ci.org/Vection-Framework/Vection.svg?branch=master)](https://travis-ci.org/Vection-Framework/Vection)
 [![phpstan](https://img.shields.io/badge/PHPStan-level%207-brightgreen.svg?style=flat)](https://img.shields.io/badge/PHPStan-level%207-brightgreen.svg?style=flat)
+[![release](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases)](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases)
+
 
 ## PHP Validator for data and schema validation
 
