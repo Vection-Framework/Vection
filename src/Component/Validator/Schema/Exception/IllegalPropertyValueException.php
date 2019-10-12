@@ -12,26 +12,26 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Component\Validator\Schema\Json\Exception;
+namespace Vection\Component\Validator\Schema\Exception;
 
 /**
- * Class IllegalPropertyTypeException
+ * Class IllegalPropertyValueException
  *
- * @package Vection\Component\Validator\Schema\Json\Exception
+ * @package Vection\Component\Validator\Schema\Exception
  *
  * @author David Lung <vection@davidlung.de>
  */
-class IllegalPropertyTypeException extends IllegalPropertyException
+class IllegalPropertyValueException extends IllegalPropertyException
 {
     /**
-     * IllegalPropertyTypeException constructor.
+     * IllegalPropertyValueException constructor.
      *
      * @param string $property
      * @param string $expected
      */
     public function __construct(string $property, string $expected)
     {
-        parent::__construct($property, 'The property "%s" expects a value of type %s.', $expected);
+        parent::__construct($property, 'The property "%s" must match the following values: %s.', $expected);
     }
 
     /**

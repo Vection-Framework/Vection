@@ -12,30 +12,30 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Component\Validator\Schema\Json\Property;
+namespace Vection\Component\Validator\Schema\Property;
 
-use Vection\Component\Validator\Schema\Json\Exception\IllegalPropertyException;
-use Vection\Component\Validator\Schema\Json\Exception\IllegalPropertyTypeException;
-use Vection\Component\Validator\Schema\Json\Exception\MissingPropertyException;
-use Vection\Component\Validator\Schema\Json\JsonProperty;
-use Vection\Contracts\Validator\Schema\Json\JsonPropertyExceptionInterface;
+use Vection\Component\Validator\Schema\Exception\IllegalPropertyException;
+use Vection\Component\Validator\Schema\Exception\IllegalPropertyTypeException;
+use Vection\Component\Validator\Schema\Exception\MissingPropertyException;
+use Vection\Component\Validator\Schema\Property;
+use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
 
 /**
- * Class JsonObject
+ * Class ObjectProperty
  *
- * @package Vection\Component\Validator\Schema\Json\Property
+ * @package Vection\Component\Validator\Schema\Property
  *
  * @author David Lung <vection@davidlung.de>
  */
-class JsonObject extends JsonProperty
+class ObjectProperty extends Property
 {
     /**
-     * @var JsonProperty[]
+     * @var Property[]
      */
     protected $values = [];
 
     /**
-     * @var JsonProperty
+     * @var Property
      */
     protected $member;
 
@@ -46,7 +46,7 @@ class JsonObject extends JsonProperty
     {
         foreach( $schema['@properties'] ?? [] as $name => $value ){
             $value = is_string($value) ? ['@type' => $value] : $value;
-            $type = $this->createType($value['@type'], $name);
+            $type = $this->createProperty($value['@type'], $name);
             $type->evaluate($value);
             $this->values[$name] = $type;
         }
@@ -55,7 +55,7 @@ class JsonObject extends JsonProperty
             if( is_string($schema['@property']) ){
                 $schema['@property'] = ['@type' => $schema['@property']];
             }
-            $type = $this->createType($schema['@property']['@type']);
+            $type = $this->createProperty($schema['@property']['@type']);
             $type->evaluate($schema['@property']);
             $this->member = $type;
         }
@@ -64,7 +64,7 @@ class JsonObject extends JsonProperty
     /**
      * @inheritDoc
      */
-    public function validate($values): void
+    public function onValidate($values): void
     {
         if( $this->required === true && count($values) === 0 ){
             throw new MissingPropertyException($this->name.'.*');
@@ -86,7 +86,7 @@ class JsonObject extends JsonProperty
             try{
                 $type->validate($values[$type->getName()]);
             }
-            catch(JsonPropertyExceptionInterface $e){
+            catch(PropertyExceptionInterface $e){
                 $e->withProperty($this->name);
             }
         }
@@ -105,7 +105,7 @@ class JsonObject extends JsonProperty
                 try{
                     $this->member->validate($value);
                 }
-                catch(JsonPropertyExceptionInterface $e){
+                catch(PropertyExceptionInterface $e){
                     $e->withProperty($this->name);
                 }
             }

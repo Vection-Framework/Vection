@@ -12,21 +12,21 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Component\Validator\Schema\Json\Property;
+namespace Vection\Component\Validator\Schema\Property;
 
-use Vection\Component\Validator\Schema\Json\Exception\IllegalPropertyTypeException;
-use Vection\Component\Validator\Schema\Json\Exception\IllegalPropertyValueException;
-use Vection\Component\Validator\Schema\Json\Exception\MissingPropertyException;
-use Vection\Component\Validator\Schema\Json\JsonProperty;
+use Vection\Component\Validator\Schema\Exception\IllegalPropertyTypeException;
+use Vection\Component\Validator\Schema\Exception\IllegalPropertyValueException;
+use Vection\Component\Validator\Schema\Exception\MissingPropertyException;
+use Vection\Component\Validator\Schema\Property;
 
 /**
- * Class JsonString
+ * Class StringProperty
  *
- * @package Vection\Component\Validator\Schema\Json\Property
+ * @package Vection\Component\Validator\Schema\Property
  *
  * @author  David Lung <vection@davidlung.de>
  */
-class JsonString extends JsonProperty
+class StringProperty extends Property
 {
     /**
      * @var array
@@ -57,7 +57,7 @@ class JsonString extends JsonProperty
      * @throws IllegalPropertyTypeException
      * @throws IllegalPropertyValueException
      */
-    public function validate($value): void
+    public function onValidate($value): void
     {
         if( $value === null && $this->required === true ){
             throw new MissingPropertyException($this->name);

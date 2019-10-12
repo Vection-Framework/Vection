@@ -13,8 +13,8 @@
 namespace Vection\Component\Validator\Tests\Schema;
 
 use PHPUnit\Framework\TestCase;
-use Vection\Component\Validator\Schema\Json\Schema;
-use Vection\Contracts\Validator\Schema\Json\JsonSchemaExceptionInterface;
+use Vection\Component\Validator\Schema\Schema;
+use Vection\Contracts\Validator\Schema\SchemaExceptionInterface;
 
 /**
  * Class SchemaTest
@@ -25,7 +25,7 @@ class SchemaTest extends TestCase
 {
 
     /**
-     * @throws JsonSchemaExceptionInterface
+     * @throws SchemaExceptionInterface
      */
     public function testEvaluate(): void
     {

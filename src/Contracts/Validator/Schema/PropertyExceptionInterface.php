@@ -12,18 +12,23 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Contracts\Validator\Schema\Json;
+namespace Vection\Contracts\Validator\Schema;
 
 use Throwable;
 
 /**
- * Interface JsonSchemaExceptionInterface
+ * Interface PropertyExceptionInterface
  *
- * @package Vection\Contracts\Validator\Schema\Json
+ * @package Vection\Contracts\Validator\Schema
  *
  * @author David Lung <vection@davidlung.de>
  */
-interface JsonSchemaExceptionInterface extends Throwable
+interface PropertyExceptionInterface extends Throwable
 {
-
+    /**
+     * @param string $property
+     *
+     * @throws static
+     */
+    public function withProperty(string $property): void;
 }

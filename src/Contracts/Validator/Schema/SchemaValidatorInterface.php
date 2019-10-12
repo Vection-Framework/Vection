@@ -12,24 +12,24 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Contracts\Validator\Schema\Json;
+namespace Vection\Contracts\Validator\Schema;
 
 /**
  * Interface JsonSchemaValidator
  *
- * @package Vection\Contracts\Validator\Schema\Json
+ * @package Vection\Contracts\Validator\Schema
  *
  * @author David Lung <vection@davidlung.de>
  */
-interface JsonSchemaValidatorInterface
+interface SchemaValidatorInterface
 {
     /**
      * @param string $path
      *
      * @return array
      *
-     * @throws JsonPropertyExceptionInterface
-     * @throws JsonSchemaExceptionInterface
+     * @throws PropertyExceptionInterface
+     * @throws SchemaExceptionInterface
      */
     public function validate(string $path): array;
 
@@ -38,16 +38,26 @@ interface JsonSchemaValidatorInterface
      *
      * @return array
      *
-     * @throws JsonPropertyExceptionInterface
-     * @throws JsonSchemaExceptionInterface
+     * @throws PropertyExceptionInterface
+     * @throws SchemaExceptionInterface
      */
-    public function validateString(string $json): array;
+    public function validateJsonString(string $json): array;
+
+    /**
+     * @param string $json
+     *
+     * @return array
+     *
+     * @throws PropertyExceptionInterface
+     * @throws SchemaExceptionInterface
+     */
+    public function validateYamlString(string $json): array;
 
     /**
      * @param array $data
      *
-     * @throws JsonPropertyExceptionInterface
-     * @throws JsonSchemaExceptionInterface
+     * @throws PropertyExceptionInterface
+     * @throws SchemaExceptionInterface
      */
     public function validateArray(array $data): void;
 }

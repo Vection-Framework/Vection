@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,8 +13,8 @@
 namespace Vection\Component\Validator;
 
 use Vection\Contracts\Validator\ValidatorChainInterface;
+use Vection\Contracts\Validator\ValidatorInterface;
 use Vection\Contracts\Validator\ViolationInterface;
-use function array_key_exists;
 
 /**
  * Class ValidationChain
@@ -62,6 +62,7 @@ use function array_key_exists;
  * @method ValidatorChain url()
  * @method ValidatorChain uuid()
  * @method ValidatorChain phone()
+ * @method ValidatorChain phoneE164()
  * @method ValidatorChain digit()
  * @method ValidatorChain integer()
  * @method ValidatorChain isString()
@@ -70,6 +71,13 @@ use function array_key_exists;
  */
 class ValidatorChain implements ValidatorChainInterface
 {
+    /**
+     * The factory which creating validator objects by its names.
+     *
+     * @var ValidatorFactory
+     */
+    protected $validatorFactory;
+
     /**
      * This property contains assertion definition.
      * Each entry can have multiple assertion with
@@ -95,6 +103,14 @@ class ValidatorChain implements ValidatorChainInterface
      * @var int[]
      */
     protected $nullable = [];
+
+    /**
+     * ValidatorChain constructor.
+     */
+    public function __construct()
+    {
+        $this->validatorFactory = new ValidatorFactory();
+    }
 
     /**
      * Adds a key for which all following
@@ -129,18 +145,19 @@ class ValidatorChain implements ValidatorChainInterface
         }
 
         # Create the validator object and save for current subject
-        $validatorClassName = __NAMESPACE__ .'\\Validator\\'. ucfirst($name);
-        return $this->use(new $validatorClassName(...$constraints));
+        $validator = $this->validatorFactory->create($name, $constraints);
+
+        return $this->use($validator);
     }
 
     /**
      * Registers a custom validator with its constraints.
      *
-     * @param Validator $validator
+     * @param ValidatorInterface $validator
      *
      * @return ValidatorChain
      */
-    public function use(Validator $validator): ValidatorChain
+    public function use(ValidatorInterface $validator): ValidatorChain
     {
         $this->chain[key($this->chain)][] = $validator;
 
@@ -165,7 +182,7 @@ class ValidatorChain implements ValidatorChainInterface
         foreach( $this->chain as $subject => $validators ){
 
             # First we have to know the current value
-            $value = array_key_exists($subject, $data) ? $data[$subject] : null;
+            $value = $data[$subject] ?? null;
 
             # Skip if value is null and validate against nullable
             if( ($value === null || ! $validators) && isset($this->nullable[$subject]) ){

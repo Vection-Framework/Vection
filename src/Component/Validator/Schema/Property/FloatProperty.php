@@ -12,19 +12,19 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Component\Validator\Schema\Json\Property;
+namespace Vection\Component\Validator\Schema\Property;
 
-use Vection\Component\Validator\Schema\Json\Exception\IllegalPropertyTypeException;
-use Vection\Component\Validator\Schema\Json\Exception\IllegalPropertyValueException;
+use Vection\Component\Validator\Schema\Exception\IllegalPropertyTypeException;
+use Vection\Component\Validator\Schema\Exception\IllegalPropertyValueException;
 
 /**
- * Class JsonFloat
+ * Class FloatProperty
  *
- * @package Vection\Component\Validator\Schema\Json\Property
+ * @package Vection\Component\Validator\Schema\Property
  *
  * @author David Lung <vection@davidlung.de>
  */
-class JsonFloat extends JsonInteger
+class FloatProperty extends IntegerProperty
 {
     /**
      * @inheritDoc
@@ -32,7 +32,7 @@ class JsonFloat extends JsonInteger
      * @throws IllegalPropertyTypeException
      * @throws IllegalPropertyValueException
      */
-    public function validate($value): void
+    public function onValidate($value): void
     {
         if( ! is_float($value) ){
             throw new IllegalPropertyTypeException($this->name, 'float');
