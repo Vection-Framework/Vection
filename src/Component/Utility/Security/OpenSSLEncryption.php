@@ -43,7 +43,7 @@ class OpenSSLEncryption
      */
     public function __construct(string $method = 'aes-256-gcm', string $hashAlgorithm = 'sha256')
     {
-        if( ! extension_loaded('ext-openssl') ){
+        if( ! extension_loaded('openssl') ){
             throw new RuntimeException('OpenSSLEncryption requires the ext-openssl extension.');
         }
 
