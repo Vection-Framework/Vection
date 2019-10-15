@@ -24,7 +24,7 @@ namespace Vection\Component\Validator\Schema\Exception;
 class IllegalPropertyException extends PropertyException
 {
     /**
-     * @var string
+     * @var string|null
      */
     protected $details;
 
@@ -40,7 +40,7 @@ class IllegalPropertyException extends PropertyException
      * @param string      $message
      * @param string|null $details
      */
-    public function __construct(string $property, string $message, string $details = null)
+    public function __construct(string $property, string $message, ? string $details = null)
     {
         parent::__construct(
             $details === null ? sprintf($message, $property) : sprintf($message, $property, $details)
