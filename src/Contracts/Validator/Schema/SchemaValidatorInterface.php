@@ -36,6 +36,8 @@ interface SchemaValidatorInterface
     public function validate(string $path): array;
 
     /**
+     * Validates a json or yaml string.
+     *
      * @param string $json
      *
      * @return array
