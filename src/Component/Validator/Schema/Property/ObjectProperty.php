@@ -66,7 +66,7 @@ class ObjectProperty extends Property
      */
     public function onValidate($values): void
     {
-        if( $this->required === true && count($values) === 0 ){
+        if( $this->required === true && is_array($values) && count($values) === 0 ){
             throw new MissingPropertyException($this->name.'.*');
         }
 
