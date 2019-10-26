@@ -24,6 +24,8 @@ namespace Vection\Contracts\Validator\Schema;
 interface SchemaValidatorInterface
 {
     /**
+     * Validates a json or yaml file content.
+     *
      * @param string $path
      *
      * @return array
