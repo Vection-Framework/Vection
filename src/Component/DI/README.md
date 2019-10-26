@@ -1,291 +1,225 @@
-## Vection Framework - PHP DI Component (Dependency Injection Container)
+# Vection Component - PHP DI Container
+[![Build Status](https://travis-ci.org/Vection-Framework/Vection.svg?branch=master)](https://travis-ci.org/Vection-Framework/Vection)
+[![phpstan](https://img.shields.io/badge/PHPStan-level%205-brightgreen.svg?style=flat)](https://img.shields.io/badge/PHPStan-level%205-brightgreen.svg?style=flat)
+[![release](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases)](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases)
 
-The php DI component provides a powerful and easy library for dependency injection with different injection types.
+## Dependency Injection Container for PHP
+This vection component provides a powerful dependency injection container for PHP. It supports several ways of automatic injection like annotations and injection by interfaces. A optional configuration allows the mapping of interfaces and concrete implementation. What are the benefits of using this PHP-DI ?
 
-## Installation
-This component is a part of the PHP Vection-Framework and can be used by composer install only.
+### Supported injection types
 
-```json
-    "require": {
-        "vection-framework/di-container": "dev-master"
-    }
+**Constructor injection**<br>
+Constructor params will automatically resolved and injected by container.
+
+**Annotation injection**<br>
+Class property injection by using `@Inject` annotation.
+
+**Interface injection**<br>
+Mapping of interfaces and implementations that can be inject via construct, methods and property.
+
+**Interface aware injection**<br>
+Mapping of interfaces and implementations that will inject by setters defined in the interfaces.
+
+**Explicit injection**<br>
+Injects the dependency via property definition by using `__inject` method.
+
+### Installation
+Vection Components supports only installation via [composer](https://getcomposer.org). So first ensure your composer is installed, configured and ready to use.
+
+```bash script
+$ composer require vection-framework/di-container
 ```
 
-OR
-
-```shell script
-    $ composer install vection-framework/di-container
-```
-
-### How to use - Showcase
-
-Lets take a look how the DI can be used before start explaining the setup and possibilities of this PHP dependency injection component.
-First you have to know all supported ways how to inject an dependency into an class. The container support the automated injection by:
-
-- constructor parameter injection
-- annotation injection
-- interface aware injection (setter)
-- interface injection in general
-- explicit injection
-
-Note that we have to setup the container to use the following examples, but now we will first look at the implementation.
+### How to use
+First we take a look how to use the DI container before start explaining the setup.
 
 #### Constructor injection
-This will automatically inject the dependency via constructor.
+This DI container supports the automatically injection of construct properties insofar as the properties are objects with type hints, means no primitive types! The following example would injection the object of type FooBar at creation.
 
 ```php
-    class Awesome 
-    {
-        public function __construct(FooBar $fooBar)
-        {
-            .....
-        }
-       
-        .....
-    }
+public function __construct(FooBar $fooBar)
 ```
 
 #### Annotation injection
-This will automatically inject dependency via annotated properties.
+The annotation injection provides a powerful possibility to injection dependencies into protected object properties by using the `@Inject` annotation on properties. The usage of annotation injection requires the use of the `AnnotationInjection` trait. Annotations also requires the fully qualified class names (< PHP 7.4)
 
 ```php
-    class Awesome
-    {
-        use AnnotationInjection;
-        
-        /**
-         * @Inject("My\Awesome\FooBar")  // important: use full qualified class name
-         * @var FooBar
-         */   
-        protected $fooBar;
-        
-        
-    
-        /** @Inject */
-        protected FooBar $fooBar;  // supported since php >= 7.4 
+<?php
 
-        ......
-    }
+class Awesome
+{
+    use AnnotationInjection;
+    
+    /**
+     * @Inject("My\Awesome\FooBar")  // important: use full qualified class name
+     * @var FooBar
+     */   
+    protected $fooBar;
+
+    /** @Inject */
+    protected FooBar $fooBar;  // supported since php >= 7.4 
+
+    ......
+}
+```
+
+#### Interface injection
+The interface injection is a great way to decouple the concrete implementation with its interfaces.
+It provides the injection by using the interfaces instead of concrete implementations.
+
+```php
+<?php
+
+class Awesome
+{
+    use AnnotationInjection;
+            
+    /**
+     * @Inject("My\Awesome\FooBarInterface") 
+     * @var FooBarInterface
+     */   
+    protected $fooBar;
+
+    /** @Inject */
+    protected FooBarInterface $fooBar;  // supported since php >= 7.4 
+    
+    public function __construct(FooBarInterface $fooBar)
+    {...}
+}
+```
+This kind of injection requires the following entry in the configuration file. (Detailed documentation of the configuration file you can read in the Setup -> Configuration section)
+```php
+set(FooBarInterface::class)
+   ->factory(static function(Container $container){
+       return new FooBar();
+   })
+,
 ```
 
 #### Interface aware injection
-This will automatically inject the defined PSR Logger object dependency.
+This injection type provides the injection of dependencies by its aware interfaces. This injection requires an configuration entry to map the interface with the concrete implementation.
 
 ```php
-    class Awesome implements LoggerAwareInterface
-    {
-        use LoggerAwareTrait;
-        
-        .......
-    }
+<?php
+
+class Awesome implements LoggerAwareInterface
+{
+    /**
+     * @inheritDoc
+     */
+    public function setLogger(LoggerInterface $logger)
+    {...}
+}
 ```
 
-#### Interface injection
-This will automatically inject the dependency by its interface.
+This kind of injection requires the following entries in the configuration file.
 
 ```php
-    class Awesome
-    {
-        use AnnotationInjection;
-                
-        /**
-         * @Inject("My\Awesome\FooBarInterface")  // important: use full qualified class name
-         * @var FooBarInterface
-         */   
-        protected $fooBar;
-    
-        /** @Inject */
-        protected FooBarInterface $fooBar;  // supported since php >= 7.4 
-        
-        
-        public function __construct(FooBarInterface $fooBar)
-        {
-            .....
-        }
-    
-        ......
-    }
+# First map the interface to the implementation
+set(LoggerInterface::class)
+    ->factory(static function(Container $container){
+        return new Logger();
+    })
+,
+# Now we can map the aware interface with the LoggerInterface by using the inject() method
+set(LoggerAwareInterface::class)
+        ->inject(LoggerInterface::class, 'Logger')
+    ,
 ```
 
-#### Interface injection
-This will automatically inject the dependency by the explicit injection method.
+The second parameter (Logger) defined the name of the setter method after "set" (setXXXXX, XXXXX = Logger)
+
+#### Explicit injection
+This kind of injection provides an alternative way of injection if the constructor of all other injection types does not fit any use case.
 
 ```php
-    class Awesome
-    {
-        protected $fooBar;
+<?php
 
-        public function __inject(FooBar $fooBar)
-        {
-            $this->fooBar = $fooBar;
-        }
-    
-        ......
+class Awesome
+{
+    public function __inject(FooBar $fooBar)
+    {
+        $this->fooBar = $fooBar;
     }
+}
 ```
 
 ## Setup
 
-First we have a look at a cutout of a real world configuration.
+The setup of the container is simple and takes only a few lines of code. Optional related of the use case and injection type you have to define a container configuration.
 
-File: container.php
+### Create the container
+The following snipped shows the fastest way of creating a working container.
+
 ```php
+<?php
+
+$container = new Container();
+
+// Create now your class where to start dependency injection
+$myApplication = $container->get(MyApplication::class); 
+```
+If the class have some parameters which you have to pass manually, you can use the `create` method on the container.
+The second parameter is an array that will pass to the constructor of the class, the third parameter can be used to set this object as shared object or not. Shared objects will be reused by the container, non shared object will be create every time it is requested.
+```php
+$myApplication = $container->create(MyApplication::class, [$optional, $params], $optionalSharedOrNot);
+```
+
+### Configuration
+The fasted way of setup does not fit the best way of usage, so lets take a look at some optional setup steps.
+The use of interface injection or some special object creations requires a configuration. This can be done by a configuration file (e.g. container.php). The benefit of a php config is the autocompletion and use of functions. The configuration file just returns an array with some definitions.
+```php
+<?php use function Vection\Component\DI\set;
 return [
-    ......
+    // configuration here
+];
+```
+To load this configuration file you have to add it to the container. You can also add multiple config files in the case of modular development.
+```php
+$container = new Container();
 
-    #----------------------------------------------------------------
-    # Interface injection
-    #----------------------------------------------------------------
+$container->load('path/to/config/container.php');
+$container->load('path/other/*/config/container.php');
+```
 
-    set(LoggerInterface::class)
+The configuration use the `set` function defined by the DI. This method takes the class as injection subject and returns an definition object on which you can define the injection. In common way it would look like the following snipped:
+
+```php
+// Not recommended writing type
+$definition = set(My\Awesome\MegaClass::class);
+$definition->factory(....);
+```
+
+The right way would look like this:
+
+```php
+<?php use function Vection\Component\DI\set;
+return [
+
+    set(My\Awesome\MegaClass::class)
         ->factory(static function(Container $container){
-            return (new LoggerFactory($container))->create(); 
+            return new My\Awesome\MegaClass('example'); 
         })
     ,
 
-    #----------------------------------------------------------------
-    # Interface aware injection
-    #----------------------------------------------------------------
-
-    set(LoggerAwareInterface::class)
-        ->inject(LoggerInterface::class, 'Logger')
-    ,
-
-    #----------------------------------------------------------------
-    # General injection
-    #----------------------------------------------------------------
-
-    set(Foobar::class)
-        ->factory(static function(){
-            return new FooBar();
-        })
-    ,
-
-    ......
 ];
 ``` 
 
-### Basic setup
+[MORE CONFIGURATION DOC COMMING SOON...]
 
+### Third party library injection
+The DI container creates an internal tree of dependencies. This can end up in the resolving of third party library classes with unresolvable parameters (e.g. in case of primitive construct parameters of unknown library class) and exits with an error. To avoid this, it is recommended to restrict the di container to the own applications namespace.
 ```php
-
-    $container = new Container();
-
-    $container->load('path/to/config/container.php');
-    $container->load('path/other/*/config/container.php');
-
-    $container->registerNamespace(['MyApplication']); // Recommended to restrict to applications root namespace
-    
-    // Create now your class where to start dependency injection
-    $myApplication = $container->create(MyApplication::class, [$optional, $params], $optionalSharedOrNot);
-
-    $myApplication->execute(); 
+$container->registerNamespace(['MyApplication', 'optionalOtherNamespaces']);
 ```
-
-### Optional setup
-
+But if you want to use a third party library by injection, YOU CAN. In this case you should manually create the third party library object and just add this object to the container, now you this class can be used for injection.
 ```php
-    // alternativ is to allow all namespace (NOT RECOMMENDED)
-    $container->registerNamespace(['*']);
-
-    // optional (RECOMMENDED) use cache
-    $cache = .... from Vection CacheInterface    
-    $container->setCache($cache);
+$thirdPartyObject = new ThirdPartyObject(5, 'primitive');
+$container->add($thirdPartyClass);
 ```
+This will register the object by its class name and provide it as injectable object.
 
-### Detailed setup
-
-The container can inject only registered objects by default. Classes can be registered by the Container::set method or by a optional php configuration file.
-
-__Registration by Container itself__ 
-
-```php
-    $container = new Container();
-
-    # Very basic and fastest way to register an class by the container
-    $container->set(My\custom\awesome::class);
-
-    # You can also pass optional an Definition object for custom injection and creation information
-    $definition = new Definition(My\Custom\Awesome::class);
-    $definition->.....; #(explained at next section)
-    
-    $container->set(My\Custom\Awesome::class, $definition);
-```
-
-## Dependency Definition object
-
-The definition object registers a class for injection, defines the dependencies and how they have 
-to be injected. This definition objects can be registered by the Container::set or a optional configuration file.
-
-```php
-    $definition = new Definition(My\Custom\Awesome::class);
-   
-    # This defines which dependencies should be used as construction parameter when creating object
-    $definition->construct(
-        My\Custom\Dependency::class, My\Other\Dependency::class, ...
-    );
-    
-    # This closure will be used on the fly to create the Awesome object
-    $definition->factory(function($container){
-        $object = new My\Custom\Awesome();
-        $object->doSomeStuff('example');
-        return $object;
-    });
-
-    # This defines the dependencies which will be injected by 
-    #setter (set<DependencyShortClassName> based almost on interfaces)
-    $definition->inject(
-        My\Custom\Dependency::class, My\Other\Dependency::class, ...
-    );
-
-    # This sets the class as not shareable to recreate on each injection
-    $definition->shared(false);
-    
-    # Register the class with its definition
-    $container->set(My\Custom\Awesome::class, $definition);
-```
-
-## Container Configuration file (optional, best practise)
-
-The configuration file is recommended to keep the definition out of the main application code
-for better handling and maintenance. The configuration file is just a php file that returns an array
-of Definition objects, created by the Vection\Component\DI\set function.
-
-```php
-    use function Vection\Component\DI\set;
-    
-    return [
-    
-        set(My\Custom\Awesome::class)
-            ->factory(function(){
-                return new My\Custom\Awesome();
-            })
-        ,
-    
-        # Each class that implements this interface will get an 
-        #instance of Awesome class by setters defined in the interface
-        set(My\Custom\AwesomeAwareInterface::class)
-            ->inject(My\Custom\Awesome::class)
-        ,
-    
-        .....
-        # And so on, see definition at section previouse section
-    ];
-```
-
-This configuration file have to be loaded by the container in following way.
-```php
-    $container = new Container();
-    $container->load('the/path/to/container-config.php');
-
-    # optional you can use the glob pattern for multiple config files
-    # This will load all config files of each component
-    $container->load('my/components/*/config/container-config.php');
-```
-
-
-## Using cache
-
+### Caching
 It is recommended to use the cache to avoid performance issues on large applications.
 The DI component uses the Cache contracts of the Vection Contracts. So you can use an own
 cache implementation by implementing the CacheInterface from Vection\Contracts\Cache or use 
@@ -299,5 +233,3 @@ Symfony Bridge (Vection\Bridge\Symfony\Cache\SymfonyCacheProviderBridge).
     $container = new Container();
     $container->setCache($cache);    
 ```
-
-# _MORE DOCUMENTATION IN PROGRESS....._
