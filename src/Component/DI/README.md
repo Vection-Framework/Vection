@@ -8,20 +8,23 @@ This vection component provides a powerful dependency injection container for PH
 
 ### Supported injection types
 
-**Constructor injection**<br>
+- **Constructor injection**<br>
 Constructor params will automatically resolved and injected by container.
 
-**Annotation injection**<br>
+- **Annotation injection**<br>
 Class property injection by using `@Inject` annotation.
 
-**Interface injection**<br>
+- **Interface injection**<br>
 Mapping of interfaces and implementations that can be inject via construct, methods and property.
 
-**Interface aware injection**<br>
+- **Interface aware injection**<br>
 Mapping of interfaces and implementations that will inject by setters defined in the interfaces.
 
-**Explicit injection**<br>
+- **Explicit injection**<br>
 Injects the dependency via property definition by using `__inject` method.
+
+- **Injection by parent inheritance**<br>
+Child classes get automatically injection by parents dependencies defined in parent classes.
 
 ### Installation
 Vection Components supports only installation via [composer](https://getcomposer.org). So first ensure your composer is installed, configured and ready to use.
@@ -58,8 +61,6 @@ class Awesome
 
     /** @Inject */
     protected FooBar $fooBar;  // supported since php >= 7.4 
-
-    ......
 }
 ```
 
@@ -121,10 +122,11 @@ set(LoggerInterface::class)
         return new Logger();
     })
 ,
+
 # Now we can map the aware interface with the LoggerInterface by using the inject() method
 set(LoggerAwareInterface::class)
-        ->inject(LoggerInterface::class, 'Logger')
-    ,
+    ->inject(LoggerInterface::class, 'Logger')
+,
 ```
 
 The second parameter (Logger) defined the name of the setter method after "set" (setXXXXX, XXXXX = Logger)
@@ -140,6 +142,38 @@ class Awesome
     public function __inject(FooBar $fooBar)
     {
         $this->fooBar = $fooBar;
+    }
+}
+```
+
+#### Injection by parent inheritance
+This feature allows subclasses to get automatically dependency injection by parent classes, if the parent class uses any injection type. 
+
+```php
+<?php
+
+class AwesomeParent
+{
+    use AnnotationInjection;
+                
+    /**
+     * @Inject("My\Awesome\FooBarInterface") 
+     * @var FooBarInterface
+     */   
+    protected $fooBar;
+
+    /** @Inject */
+    protected FooBarInterface $fooBar;  // supported since php >= 7.4 
+    
+    public function __construct(FooBarInterface $fooBar)
+    {...}
+}
+
+class Awesome extends AwesomeParent
+{
+    public function getFooBar()
+    {
+        return $this->fooBar;
     }
 }
 ```
