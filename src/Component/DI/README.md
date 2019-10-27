@@ -63,6 +63,35 @@ class Awesome
     protected FooBar $fooBar;  // supported since php >= 7.4 
 }
 ```
+> **Important notice**<br>
+> Injected properties cannot be accessed from constructor. If you need to access an injected property from the constructor you can use the alternative construction method `__init()` in your class. This method will be called immediately after the object is created with its dependencies.
+
+```php
+<?php
+
+class Awesome
+{
+    use AnnotationInjection;
+    
+    /**
+     * @Inject("My\Awesome\FooBar")  // important: use full qualified class name
+     * @var FooBar
+     */   
+    protected $fooBar;
+
+    public function __construct()   
+    {
+        // Cannot access $this->fooBar yet
+    }
+    
+    // Alternative construction method, called immediately after the object is created with its dependencies
+    public function __init()
+    {
+        // Here you can access
+        $this->fooBar;
+    }
+}
+```
 
 #### Interface injection
 The interface injection is a great way to decouple the concrete implementation with its interfaces.
