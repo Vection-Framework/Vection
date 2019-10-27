@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -56,7 +67,7 @@ class APCuCacheProvider implements CacheProviderInterface
      */
     public function getString(string $key): ?string
     {
-        return $this->contains($key) ? (string)$this->get($key) : null;
+        return $this->contains($key) ? (string) $this->get($key) : null;
     }
 
     /**
@@ -64,7 +75,7 @@ class APCuCacheProvider implements CacheProviderInterface
      */
     public function getObject(string $key): ?object
     {
-        return $this->contains($key) ? (object)$this->get($key) : null;
+        return $this->contains($key) ? (object) $this->get($key) : null;
     }
 
     /**
@@ -72,7 +83,7 @@ class APCuCacheProvider implements CacheProviderInterface
      */
     public function getArray(string $key): ?array
     {
-        return $this->contains($key) ? (array)$this->get($key) : null;
+        return $this->contains($key) ? (array) $this->get($key) : null;
     }
 
     /**
@@ -80,7 +91,7 @@ class APCuCacheProvider implements CacheProviderInterface
      */
     public function getInt(string $key): ?int
     {
-        return $this->contains($key) ? (int)$this->get($key) : null;
+        return $this->contains($key) ? (int) $this->get($key) : null;
     }
 
     /**
@@ -88,7 +99,7 @@ class APCuCacheProvider implements CacheProviderInterface
      */
     public function getFloat(string $key): ?float
     {
-        return $this->contains($key) ? (float)$this->get($key) : null;
+        return $this->contains($key) ? (float) $this->get($key) : null;
     }
 
     /**

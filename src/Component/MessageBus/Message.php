@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -24,6 +35,7 @@ use Vection\Contracts\MessageBus\PayloadInterface;
  */
 abstract class Message implements MessageInterface
 {
+
     /**
      * This property contains a string that is unique
      * over all created messages and which identifies
@@ -59,15 +71,15 @@ abstract class Message implements MessageInterface
     {
         try {
             $this->msgID = bin2hex(random_bytes(16));
-        } catch( Exception $e ) {
-            $this->msgID = md5(uniqid( (string) time(),true));
+        } catch ( Exception $e ) {
+            $this->msgID = md5(uniqid((string) time(),true));
         }
 
         $this->payload = $payload ?: new Payload();
 
         try {
             $this->msgCreatedTime = new DateTime();
-        } catch( Exception $e ) {
+        } catch ( Exception $e ) {
             # Never happens without construct param.
         }
     }

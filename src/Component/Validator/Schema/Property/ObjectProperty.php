@@ -29,6 +29,7 @@ use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
  */
 class ObjectProperty extends Property
 {
+
     /**
      * @var Property[]
      */
@@ -44,15 +45,15 @@ class ObjectProperty extends Property
      */
     protected function onEvaluate(array $schema): void
     {
-        foreach( $schema['@properties'] ?? [] as $name => $value ){
-            $value = is_string($value) ? ['@type' => $value] : $value;
+        foreach ( ($schema['@properties'] ?? []) as $name => $value ) {
+            $value    = is_string($value) ? ['@type' => $value] : $value;
             $property = $this->createProperty($value['@type'], $name);
             $property->evaluate($value);
             $this->properties[$name] = $property;
         }
 
-        if( isset($schema['@property']) ){
-            if( is_string($schema['@property']) ){
+        if ( isset($schema['@property']) ) {
+            if ( is_string($schema['@property']) ) {
                 $schema['@property'] = ['@type' => $schema['@property']];
             }
             $property = $this->createProperty($schema['@property']['@type']);
@@ -66,46 +67,44 @@ class ObjectProperty extends Property
      */
     public function onValidate($values): void
     {
-        if( $this->required === true && is_array($values) && count($values) === 0 ){
+        if ( $this->required === true && is_array($values) && count($values) === 0 ) {
             throw new MissingPropertyException($this->name.'.*');
         }
 
-        if( ! is_array($values) ){
+        if ( ! is_array($values) ) {
             throw new IllegalPropertyTypeException($this->name, 'object');
         }
 
-        foreach( $this->properties as $property ){
+        foreach ( $this->properties as $property ) {
 
-            if( ! isset($values[$property->getName()]) ){
-                if( ! $property->isRequired() ){
+            if ( ! isset($values[$property->getName()]) ) {
+                if ( ! $property->isRequired() ) {
                     continue;
                 }
                 throw new MissingPropertyException($property->getName());
             }
 
-            try{
+            try {
                 $property->validate($values[$property->getName()]);
-            }
-            catch(PropertyExceptionInterface $e){
+            } catch (PropertyExceptionInterface $e) {
                 $e->withProperty($this->name);
             }
         }
 
-        if( count($this->properties) > 0 ){
-            foreach( $values as $name => $value ){
-                if( ! isset($this->properties[$name]) ){
+        if ( count($this->properties) > 0 ) {
+            foreach ( $values as $name => $value ) {
+                if ( ! isset($this->properties[$name]) ) {
                     throw new IllegalPropertyException($this->name.'.'.$name, 'The property %s is not allowed.');
                 }
             }
         }
 
-        if( $this->property !== null ){
-            foreach( $values as $name => $value ) {
+        if ( $this->property !== null ) {
+            foreach ( $values as $name => $value ) {
                 $this->property->setName($name);
-                try{
+                try {
                     $this->property->validate($value);
-                }
-                catch(PropertyExceptionInterface $e){
+                } catch (PropertyExceptionInterface $e) {
                     $e->withProperty($this->name);
                 }
             }

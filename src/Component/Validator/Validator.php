@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the AppsDock project.
  *  Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -26,6 +37,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  */
 abstract class Validator implements ValidatorInterface
 {
+
     /** @var string */
     protected $message;
 
@@ -80,7 +92,7 @@ abstract class Validator implements ValidatorInterface
      */
     public function validate($value): ? ViolationInterface
     {
-        if( $a = $this->onValidate($value) ){
+        if ( $a = $this->onValidate($value) ) {
             return null;
         }
 

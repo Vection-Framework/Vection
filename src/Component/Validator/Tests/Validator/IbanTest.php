@@ -3,7 +3,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Bjoern Klemm <vection@bjoernklemm.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -21,6 +21,7 @@ use Vection\Component\Validator\Validator\Iban;
  */
 class IbanTest extends TestCase
 {
+
     /** @var Iban */
     protected $validator;
 
@@ -34,7 +35,7 @@ class IbanTest extends TestCase
      */
     public function testReArrange($actual, $expected)
     {
-        $actual = $this->validator->normalize($actual);
+        $actual     = $this->validator->normalize($actual);
         $rearranged = $this->validator->rearrange($actual);
         $this->assertEquals($rearranged, $expected, $expected);
     }

@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -25,6 +36,7 @@ use Vection\Component\Http\Headers;
  */
 class Request extends Message implements RequestInterface
 {
+
     /** @var UriInterface */
     protected $uri;
 
@@ -54,7 +66,7 @@ class Request extends Message implements RequestInterface
         parent::__construct($headers, $body, $version);
 
         $this->method = $method;
-        $this->uri = $uri;
+        $this->uri    = $uri;
     }
 
     /**
@@ -75,10 +87,10 @@ class Request extends Message implements RequestInterface
      */
     public function getRequestTarget(): string
     {
-        if( ! $this->target ){
+        if ( ! $this->target ) {
             $path = $this->uri->getPath();
 
-            if( $query = $this->uri->getQuery() ){
+            if ( $query = $this->uri->getQuery() ) {
                 $path .= '?'.$query;
             }
 
@@ -109,7 +121,7 @@ class Request extends Message implements RequestInterface
      */
     public function withRequestTarget($requestTarget): Request
     {
-        $request = clone $this;
+        $request         = clone $this;
         $request->target = $requestTarget;
         return $request;
     }
@@ -142,7 +154,7 @@ class Request extends Message implements RequestInterface
      */
     public function withMethod($method)
     {
-        $request = clone $this;
+        $request         = clone $this;
         $request->method = $method;
         return $request;
     }
@@ -195,29 +207,29 @@ class Request extends Message implements RequestInterface
      */
     public function withUri(UriInterface $uri, $preserveHost = false)
     {
-        $request = clone $this;
+        $request      = clone $this;
         $request->uri = $uri;
 
-        if( ! $preserveHost || ! $this->hasHeader('host') ){
+        if ( ! $preserveHost || ! $this->hasHeader('host') ) {
 
-            if( ! $host = $request->uri->getHost() ){
+            if ( ! $host = $request->uri->getHost() ) {
                 return $request;
             }
 
-            if( $port = $request->uri->getPort() ){
+            if ( $port = $request->uri->getPort() ) {
                 $host .= ':'.$port;
             }
 
-            foreach( $request->headers as $key => $header ){
-                if( strtolower($key) === 'host' ){
+            foreach ( $request->headers as $key => $header ) {
+                if ( strtolower($key) === 'host' ) {
                     unset($request->headers[$key]);
-                    $request->headers = [$key => [$host]] + $request->headers;
+                    $request->headers = ([$key => [$host]] + $request->headers);
                     break;
                 }
             }
 
-            if( ! $request->hasHeader('host') ){
-                $request->headers = ['Host' => [$host]] + $request->headers;
+            if ( ! $request->hasHeader('host') ) {
+                $request->headers = (['Host' => [$host]] + $request->headers);
             }
         }
 

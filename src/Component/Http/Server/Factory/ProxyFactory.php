@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -29,37 +40,37 @@ class ProxyFactory
      */
     public static function create(Environment $environment): Proxy
     {
-        $for = [];
+        $for  = [];
         $host = $proto = '';
         $port = '';
 
-        if( $environment->has(Proxy::HEADER_FORWARDED) ){
+        if ( $environment->has(Proxy::HEADER_FORWARDED) ) {
             $directives = self::parseForwardedRFC7239($environment->get(Proxy::HEADER_FORWARDED));
 
-            $for = $directives['for'] ?? [];
-            $host = $directives['host'] ?? '';
-            $proto = $directives['proto'] ?? '';
+            $for   = ($directives['for'] ?? []);
+            $host  = ($directives['host'] ?? '');
+            $proto = ($directives['proto'] ?? '');
         }
 
-        if( ! $for && $environment->has(Proxy::HEADER_X_FORWARDED_FOR) ){
+        if ( ! $for && $environment->has(Proxy::HEADER_X_FORWARDED_FOR) ) {
             # Set the originating IP address of a client
             $for = self::parseForwardedFor($environment->get(Proxy::HEADER_X_FORWARDED_FOR));
         }
 
-        if( ! $for && $environment->has(Proxy::HEADER_X_PROXYUSER_IP) ){
+        if ( ! $for && $environment->has(Proxy::HEADER_X_PROXYUSER_IP) ) {
             # Used for some Google services
             $for = self::parseForwardedFor($environment->get(Proxy::HEADER_X_PROXYUSER_IP));
         }
 
-        if( ! $host && $environment->has(Proxy::HEADER_X_FORWARDED_HOST) ){
+        if ( ! $host && $environment->has(Proxy::HEADER_X_FORWARDED_HOST) ) {
             $host = $environment->get(Proxy::HEADER_X_FORWARDED_HOST);
         }
 
-        if( ! $proto && $environment->has(Proxy::HEADER_X_FORWARDED_PROTO) ){
+        if ( ! $proto && $environment->has(Proxy::HEADER_X_FORWARDED_PROTO) ) {
             $proto = $environment->get(Proxy::HEADER_X_FORWARDED_PROTO);
         }
 
-        if( $environment->has(Proxy::HEADER_X_FORWARDED_PORT) ){
+        if ( $environment->has(Proxy::HEADER_X_FORWARDED_PORT) ) {
             $port = $environment->get(Proxy::HEADER_X_FORWARDED_PORT);
         }
 
@@ -75,26 +86,26 @@ class ProxyFactory
     {
         $directives = [];
 
-        foreach(explode(';', $forwarded) as $directive){
+        foreach (explode(';', $forwarded) as $directive) {
             [$name, $value] = explode('=', $directive);
-            $name = strtolower($name);
+            $name           = strtolower($name);
 
-            if( $value[0] === '"' ){
+            if ( $value[0] === '"' ) {
                 # remove quotes for e.g. "[2001:db8:cafe::17]:4711"
                 $value = substr($value, 1, -1);
             }
 
-            if( $name === 'for' ){
+            if ( $name === 'for' ) {
                 $value = self::parseForwardedFor($value);
             }
 
             # multiple values can be appended using a comma, so check if this directive already exists
             # to append to them. E.g. Forwarded: for=192.0.2.43, for=198.51.100.17
-            if( ! isset($directives[$name]) ){
+            if ( ! isset($directives[$name]) ) {
                 $directives[$name] = $value;
-            }else if( is_array($directives[$name]) ){
+            } else if ( is_array($directives[$name]) ) {
                 $directives[$name][] = $value;
-            }else{
+            } else {
                 $directives[$name] .= ', ' . $value;
             }
         }

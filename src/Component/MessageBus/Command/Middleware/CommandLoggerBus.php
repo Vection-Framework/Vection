@@ -1,10 +1,10 @@
 <?php
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -24,6 +24,7 @@ use Vection\Contracts\MessageBus\Command\CommandInterface;
  */
 class CommandLoggerBus implements CommandBusMiddlewareInterface
 {
+
     /**
      * This property contains a PSR supported logger.
      *
@@ -49,13 +50,13 @@ class CommandLoggerBus implements CommandBusMiddlewareInterface
      */
     public function __invoke(CommandInterface $command, CommandBusSequenceInterface $sequence)
     {
-        try{
-            if( $sequence->hasNext() ){
+        try {
+            if ( $sequence->hasNext() ) {
                 $this->logBefore($command);
                 $sequence->invokeNext($command);
                 $this->logAfter($command);
             }
-        }catch(\Exception $ex){
+        } catch (\Exception $ex) {
             $this->logException($ex);
             throw $ex;
         }
@@ -83,7 +84,8 @@ class CommandLoggerBus implements CommandBusMiddlewareInterface
     public function logException(\Exception $ex): void
     {
         $this->logger->critical(
-            sprintf("Exception@CommandBus: %s \n%s in line %s\nTrace:\n %s",
+            sprintf(
+                "Exception@CommandBus: %s \n%s in line %s\nTrace:\n %s",
                 $ex->getMessage(),
                 $ex->getFile(),
                 $ex->getLine(),

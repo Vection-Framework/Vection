@@ -3,9 +3,9 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Bjoern Klemm <vection@bjoernklemm.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
- * For the full copyright and license information',' please view the LICENSE
+ * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
@@ -62,14 +62,14 @@ class Iban extends Validator
      */
     protected function onValidate($value): bool
     {
-        $iban = $this->normalize($value);
+        $iban    = $this->normalize($value);
         $isoCode = substr($value,0, 2);
 
-        if ( ! array_key_exists($isoCode, self::ISO_CODES) ){
+        if ( ! array_key_exists($isoCode, self::ISO_CODES) ) {
             return false;
         }
 
-        if (strlen($iban) !== self::ISO_CODES[$isoCode]){
+        if (strlen($iban) !== self::ISO_CODES[$isoCode]) {
             return false;
         }
 
@@ -110,9 +110,9 @@ class Iban extends Validator
     {
         $chars = str_split($iban);
 
-        foreach ($chars as $idx => $value){
+        foreach ($chars as $idx => $value) {
             $char = $chars[$idx];
-            if ( ! is_numeric($char) ){
+            if ( ! is_numeric($char) ) {
                 $chars[$idx] = self::LETTERS[$char];
             }
         }
@@ -129,10 +129,10 @@ class Iban extends Validator
     {
         $mod = '';
         do {
-            $n = $mod . substr($value,0,5);
+            $n     = $mod . substr($value,0,5);
             $value = substr($value, 5);
-            $mod = $n % 97;
-        } while(strlen($value));
+            $mod   = ($n % 97);
+        } while (strlen($value));
 
         return $mod === 1;
     }

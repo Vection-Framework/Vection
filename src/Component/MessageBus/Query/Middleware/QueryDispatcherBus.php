@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection project.
  * Visit project at https://www.vection.de
  *
@@ -27,6 +38,7 @@ use Vection\Contracts\MessageBus\Query\ReadModelInterface;
  */
 class QueryDispatcherBus implements QueryBusMiddlewareInterface
 {
+
     /** @var QueryResolverInterface */
     protected $resolver;
 
@@ -42,7 +54,7 @@ class QueryDispatcherBus implements QueryBusMiddlewareInterface
     public function __construct(QueryResolverInterface $resolver, CacheInterface $cache = null)
     {
         $this->resolver = $resolver;
-        $this->cache = $cache;
+        $this->cache    = $cache;
     }
 
     /**
@@ -53,18 +65,18 @@ class QueryDispatcherBus implements QueryBusMiddlewareInterface
      */
     public function __invoke(QueryInterface $message, QueryBusSequenceInterface $sequence)
     {
-        /** @var callable $handler */
+        // @var callable $handler
         $handler = $this->resolver->resolve($message);
 
         # Check if this Middleware uses cache for query models and handler supports caching
-        if( $this->cache && $handler instanceof QueryCacheHandlerInterface && $handler->isCacheVolitional()){
+        if ( $this->cache && $handler instanceof QueryCacheHandlerInterface && $handler->isCacheVolitional()) {
 
             # Each handler have an own cache pools for all payload variants
-            $pool = $this->cache->getPool(get_class($handler));
+            $pool     = $this->cache->getPool(get_class($handler));
             $cacheKey = $message->payload()->getFingerprint();
 
-            if( $pool->contains($cacheKey) ){
-                /** @var ReadModelInterface $readModel */
+            if ( $pool->contains($cacheKey) ) {
+                // @var ReadModelInterface $readModel
                 $readModel = $pool->getObject($cacheKey);
                 return $readModel;
             }

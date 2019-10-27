@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -28,6 +28,7 @@ use Vection\Component\Http\Server\Environment;
  */
 class ServerRequestFactoryDecorator implements ServerRequestFactoryInterface
 {
+
     /**
      * @var ServerRequestFactoryInterface
      */
@@ -50,7 +51,7 @@ class ServerRequestFactoryDecorator implements ServerRequestFactoryInterface
      */
     public function createFromGlobals(Environment $environment = null): ServerRequestInterface
     {
-        if( ! $environment ){
+        if ( ! $environment ) {
             $environment = new Environment();
         }
 

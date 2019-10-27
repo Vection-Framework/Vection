@@ -1,14 +1,13 @@
 <?php
 
 /**
- * This file is part of the AppsDock project.
- *  Visit project at https://www.appsdock.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- *  (c) AppsDock <project@appsdock.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
- *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Vection\Component\Utility;
@@ -22,6 +21,7 @@ use Vection\Component\Utility\Exception\JsonException;
  */
 class Json implements \JsonSerializable
 {
+
     /** @var array */
     protected $data;
 
@@ -63,19 +63,19 @@ class Json implements \JsonSerializable
     {
         $filePath = '';
 
-        if( $json[0] !== '{' ) {
+        if ( $json[0] !== '{' ) {
 
-            if( !\file_exists($json) ) {
+            if ( !\file_exists($json) ) {
                 throw new JsonException('Invalid path or file does not exists: ' . $json, JsonException::NOT_FOUND);
             }
 
             $filePath = $json;
-            $json = \file_get_contents($json);
+            $json     = \file_get_contents($json);
         }
 
         $data = \json_decode($json, $assoc, $depth, $options);
 
-        if( ($code = \json_last_error()) !== JSON_ERROR_NONE ) {
+        if ( ($code = \json_last_error()) !== JSON_ERROR_NONE ) {
             throw new JsonException($filePath, $code);
         }
 
@@ -138,10 +138,10 @@ class Json implements \JsonSerializable
      */
     public static function encode($data, $options = 0, $depth = 512): string
     {
-        $options = $options ?: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION;
+        $options = $options ?: (JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION);
 
         $json = \json_encode($data, $options, $depth);
-        if( ($code = \json_last_error()) !== JSON_ERROR_NONE ) {
+        if ( ($code = \json_last_error()) !== JSON_ERROR_NONE ) {
             throw new JsonException(json_last_error_msg(), $code);
         }
         return $json;
@@ -155,15 +155,15 @@ class Json implements \JsonSerializable
     public function getKeyByIndex(...$indexes)
     {
         $index = array_shift($indexes);
-        $key = array_keys($this->data)[$index] ?? null;
-        $data = null;
+        $key   = (array_keys($this->data)[$index] ?? null);
+        $data  = null;
 
-        if( $key && isset($this->data[$key]) ) {
+        if ( $key && isset($this->data[$key]) ) {
             $data = $this->data[$key];
-            if( \count($indexes) ) {
-                foreach( $indexes as $i ) {
-                    $key = array_keys($data)[$i] ?? null;
-                    if( !isset($data[$key]) || !\is_array($data) ) {
+            if ( \count($indexes) ) {
+                foreach ( $indexes as $i ) {
+                    $key = (array_keys($data)[$i] ?? null);
+                    if ( !isset($data[$key]) || !\is_array($data) ) {
                         return null;
                     }
                     $data = $data[$key];
@@ -182,15 +182,15 @@ class Json implements \JsonSerializable
     public function getByIndex(...$indexes)
     {
         $index = array_shift($indexes);
-        $key = array_keys($this->data)[$index] ?? null;
-        $data = null;
+        $key   = (array_keys($this->data)[$index] ?? null);
+        $data  = null;
 
-        if( $key && isset($this->data[$key]) ) {
+        if ( $key && isset($this->data[$key]) ) {
             $data = $this->data[$key];
-            if( \count($indexes) ) {
-                foreach( $indexes as $index ) {
-                    $key = array_keys($data)[$index] ?? null;
-                    if( !isset($data[$key]) || !\is_array($data) ) {
+            if ( \count($indexes) ) {
+                foreach ( $indexes as $index ) {
+                    $key = (array_keys($data)[$index] ?? null);
+                    if ( !isset($data[$key]) || !\is_array($data) ) {
                         return null;
                     }
                     $data = $data[$key];
@@ -211,8 +211,8 @@ class Json implements \JsonSerializable
         $keys = explode('.', $keyPath);
         $data = $this->data;
 
-        while( $key = array_shift($keys) ) {
-            if( !array_key_exists($key, $data) ) {
+        while ( $key = array_shift($keys) ) {
+            if ( !array_key_exists($key, $data) ) {
                 return false;
             }
             $data = $data[$key];
@@ -229,14 +229,14 @@ class Json implements \JsonSerializable
     public function get(string $keyPath)
     {
         $keys = explode('.', $keyPath);
-        $key = array_shift($keys);
+        $key  = array_shift($keys);
         $data = null;
 
-        if( isset($this->data[$key]) ) {
+        if ( isset($this->data[$key]) ) {
             $data = $this->data[$key];
-            if( \count($keys) ) {
-                foreach( $keys as $key ) {
-                    if( !isset($data[$key]) || !\is_array($data) ) {
+            if ( \count($keys) ) {
+                foreach ( $keys as $key ) {
+                    if ( !isset($data[$key]) || !\is_array($data) ) {
                         return null;
                     }
                     $data = $data[$key];

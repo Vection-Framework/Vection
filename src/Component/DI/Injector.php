@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -21,6 +32,7 @@ use ArrayObject;
  */
 class Injector
 {
+
     /** @var Container */
     protected $container;
 
@@ -37,7 +49,7 @@ class Injector
      */
     public function __construct(Container $container, ArrayObject $dependencies)
     {
-        $this->container = $container;
+        $this->container    = $container;
         $this->dependencies = $dependencies;
     }
 
@@ -53,7 +65,7 @@ class Injector
         $this->injectByExplicit($object);
 
         # If object uses ContainerAwareTrait, inject the container itself
-        if( method_exists($object, '__setContainer') ) {
+        if ( method_exists($object, '__setContainer') ) {
             $object->__setContainer($this->container);
         }
     }
@@ -65,9 +77,9 @@ class Injector
     {
         $id = get_class($object);
 
-        if( $this->dependencies[$id]['setter'] ?? null ){
+        if ( ($this->dependencies[$id]['setter'] ?? null) ) {
 
-            foreach( $this->dependencies[$id]['setter'] as $setter => $dependency ){
+            foreach ( $this->dependencies[$id]['setter'] as $setter => $dependency ) {
                 $dependencyObject = $this->container->get($dependency);
                 $object->$setter($dependencyObject);
             }
@@ -82,11 +94,11 @@ class Injector
     {
         $id = get_class($object);
 
-        if( $this->dependencies[$id]['annotation'] ?? null ){
+        if ( ($this->dependencies[$id]['annotation'] ?? null) ) {
 
             $dependencies = [];
 
-            foreach( $this->dependencies[$id]['annotation'] as $property => $dependency ){
+            foreach ( $this->dependencies[$id]['annotation'] as $property => $dependency ) {
                 $dependencies[$property] = $this->container->get($dependency);
             }
 
@@ -101,11 +113,11 @@ class Injector
     {
         $id = get_class($object);
 
-        if( $this->dependencies[$id]['explicit'] ?? null ){
+        if ( ($this->dependencies[$id]['explicit'] ?? null) ) {
 
             $dependencies = [];
 
-            foreach( $this->dependencies[$id]['explicit'] as $dependency ){
+            foreach ( $this->dependencies[$id]['explicit'] as $dependency ) {
                 $dependencies[] = $this->container->get($dependency);
             }
 

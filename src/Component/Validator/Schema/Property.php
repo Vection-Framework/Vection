@@ -32,6 +32,7 @@ use Vection\Contracts\Validator\ValidatorInterface;
  */
 abstract class Property implements PropertyInterface
 {
+
     /**
      * @var string
      */
@@ -43,7 +44,7 @@ abstract class Property implements PropertyInterface
     protected $name;
 
     /**
-     * @var bool
+     * @var boolean
      */
     protected $required;
 
@@ -65,8 +66,8 @@ abstract class Property implements PropertyInterface
      */
     public function __construct(? string $name = null, array $templates = [])
     {
-        $this->name = $name;
-        $this->templates = $templates;
+        $this->name       = $name;
+        $this->templates  = $templates;
         $this->validators = [];
     }
 
@@ -107,14 +108,14 @@ abstract class Property implements PropertyInterface
      */
     public function evaluate(array $schema): void
     {
-        if( isset($schema['@template']) ){
+        if ( isset($schema['@template']) ) {
             $schema = $this->getTemplate($schema['@template']);
             unset($schema['@template']);
         }
 
-        if( isset($schema['@validator']) ){
+        if ( isset($schema['@validator']) ) {
 
-            if( is_string($schema['@validator']) ){
+            if ( is_string($schema['@validator']) ) {
                 $schema['@validator'] = [
                     '@name' => $schema['@validator']
                 ];
@@ -124,20 +125,20 @@ abstract class Property implements PropertyInterface
             unset($schema['@validator']);
         }
 
-        if( isset($schema['@validators']) ){
+        if ( isset($schema['@validators']) ) {
 
-            foreach( $schema['@validators'] as $validator ){
+            foreach ( $schema['@validators'] as $validator ) {
                 $this->validators[] = (new ValidatorFactory())->create(
                     $validator['@name'],
-                    array_values($validator['@constraints'] ?? [])
+                    array_values(($validator['@constraints'] ?? []))
                 );
             }
 
             unset($schema['@validators']);
         }
 
-        $this->required = $schema['@required'] ?? false;
-        $this->type = $schema['@type'];
+        $this->required = ($schema['@required'] ?? false);
+        $this->type     = $schema['@type'];
         $this->onEvaluate($schema);
     }
 
@@ -146,11 +147,11 @@ abstract class Property implements PropertyInterface
      */
     public function validate($value): void
     {
-        if( count($this->validators) > 0 ){
-            foreach( $this->validators as $validator ){
+        if ( count($this->validators) > 0 ) {
+            foreach ( $this->validators as $validator ) {
                 $violation = $validator->validate($value);
 
-                if( $violation !== null ){
+                if ( $violation !== null ) {
                     $message = 'Property %s is invalid: '. $violation->getMessage();
                     throw new InvalidPropertyException($this->name, $message);
                 }
@@ -185,7 +186,7 @@ abstract class Property implements PropertyInterface
     {
         $className = __NAMESPACE__.'\\Property\\'.ucfirst($type).'Property';
 
-        if( ! class_exists($className) ){
+        if ( ! class_exists($className) ) {
             throw new RuntimeException('Cannot instantiate unknown property type: '.$type);
         }
 
@@ -201,7 +202,7 @@ abstract class Property implements PropertyInterface
      */
     protected function getTemplate(string $name): array
     {
-        if( ! isset($this->templates[$name]) ){
+        if ( ! isset($this->templates[$name]) ) {
             throw new SchemaException("Cannot use property template ({$name}) because it does not exists.");
         }
 

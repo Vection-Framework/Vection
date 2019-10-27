@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -33,6 +44,7 @@ use function is_string;
  */
 class EventManager implements EventManagerInterface
 {
+
     /**
      * This property contains a callable that
      * creates a new listener object.
@@ -116,7 +128,7 @@ class EventManager implements EventManagerInterface
      */
     public function setWildcardSeparator(string $separator): void
     {
-        if( ! in_array($separator, ['.', ':', '-', '/']) ){
+        if ( ! in_array($separator, ['.', ':', '-', '/']) ) {
             throw new InvalidArgumentException(
                 'The event name wildcard separator support only ".:-/" characters.'
             );
@@ -140,37 +152,37 @@ class EventManager implements EventManagerInterface
             }
         } else {
             $eventName = (string) $event;
-            $event = new DefaultEvent($eventName);
+            $event     = new DefaultEvent($eventName);
         }
 
         # Matched listeners that will be notified
-        $listeners = [];
+        $listeners           = [];
         $registeredListeners = [];
 
-        if( ! $this->eventWildcardSeparator ){
-            $registeredListeners = $this->listeners[$eventName] ?? [];
-        }else{
+        if ( ! $this->eventWildcardSeparator ) {
+            $registeredListeners = ($this->listeners[$eventName] ?? []);
+        } else {
             # We have to compare the event parts by wildcard separator
             $eventNameParts = explode($this->eventWildcardSeparator, $eventName);
 
             # Filter all listeners which matching the fired event by comparing the event parts
-            foreach( $this->listeners as $keyEventName => $eventListeners ){
+            foreach ( $this->listeners as $keyEventName => $eventListeners ) {
                 $keyEventNameParts = explode($this->eventWildcardSeparator, $keyEventName);
 
                 # The section count from fired event must be at least
                 # equals or higher then the one of listeners registered event name sections
-                if( count($keyEventNameParts) > count($eventNameParts) ){
+                if ( count($keyEventNameParts) > count($eventNameParts) ) {
                     continue;
                 }
 
                 # This listener wil only be notified if all section matching against the fired event
-                foreach($keyEventNameParts as $i => $part){
-                    if( $part !== $eventNameParts[$i] ){
+                foreach ($keyEventNameParts as $i => $part) {
+                    if ( $part !== $eventNameParts[$i] ) {
                         continue 2;
                     }
                 }
 
-                foreach( $eventListeners as $eventListener ){
+                foreach ( $eventListeners as $eventListener ) {
                     $registeredListeners[] = $eventListener;
                 }
             }
@@ -209,16 +221,16 @@ class EventManager implements EventManagerInterface
             }
 
             # Saves the callable array by considering the priority
-            $listeners[$definition[1] ?? 0][] = $handler;
+            $listeners[($definition[1] ?? 0)][] = $handler;
         }
 
-        for ( $i = count($listeners) - 1; $i >= 0; $i-- ) {
+        for ( $i = (count($listeners) - 1); $i >= 0; $i-- ) {
             foreach ( $listeners[$i] as $listener ) {
                 if ( $event->isPropagationStopped() ) {
                     return;
                 }
 
-                if( $listener[0] instanceof EventHandlerMethodInterface ){
+                if ( $listener[0] instanceof EventHandlerMethodInterface ) {
                     # This listener provides a method to determine the handler method
                     # instead of using the method section of the annotation
                     $listener[1] = $listener[0]->getHandlerMethodName();

@@ -1,6 +1,17 @@
-<?php declare(strict_types = 1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types = 1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -25,6 +36,7 @@ namespace Vection\Component\Utility\Lang;
  */
 final class StringType
 {
+
     /** @var string */
     private $str;
 
@@ -39,8 +51,8 @@ final class StringType
      */
     public function __construct(?string $str = null, ?string $encoding = null)
     {
-        $this->str = $str ?? '';
-        $this->encoding = $encoding ?? 'UTF-8';
+        $this->str      = ($str ?? '');
+        $this->encoding = ($encoding ?? 'UTF-8');
     }
 
     /**
@@ -140,7 +152,7 @@ final class StringType
      */
     public function contains(string $needle, ?int $offset = null): bool
     {
-        return mb_strpos($this->str, $needle, $offset ?? 0, $this->encoding) !== false;
+        return mb_strpos($this->str, $needle, ($offset ?? 0), $this->encoding) !== false;
     }
 
     /**
@@ -151,7 +163,7 @@ final class StringType
      */
     public function notContains(string $needle, ?int $offset = null): bool
     {
-        return !$this->contains($needle, $offset ?? 0);
+        return !$this->contains($needle, ($offset ?? 0));
     }
 
     /**
@@ -161,7 +173,7 @@ final class StringType
      */
     public function join(array $array): StringType
     {
-        foreach( $array as $key ) {
+        foreach ( $array as $key ) {
             $this->append($key);
         }
         return $this;
@@ -190,7 +202,7 @@ final class StringType
      */
     public function pos(string $needle, ?int $offset = null): int
     {
-        return mb_strpos($this->str, $needle, $offset ?? 0, $this->encoding);
+        return mb_strpos($this->str, $needle, ($offset ?? 0), $this->encoding);
     }
 
     /**
@@ -204,7 +216,7 @@ final class StringType
     public function rpos(string $needle, ?int $offset = null): int
     {
         $this->str = $this->reversed();
-        return $this->pos($needle, $offset ?? 0);
+        return $this->pos($needle, ($offset ?? 0));
     }
 
     /**
@@ -214,7 +226,7 @@ final class StringType
     {
         $len = mb_strlen($this->str, $this->encoding);
         $tmp = '';
-        while( $len-- > 0 ) {
+        while ( $len-- > 0 ) {
             $tmp .= mb_substr($this->str, $len, 1, $this->encoding);
         }
         return $tmp;
@@ -243,7 +255,7 @@ final class StringType
      */
     public function split(?string $separator = null): array
     {
-        return explode($separator ?? ' ', $this->str);
+        return explode(($separator ?? ' '), $this->str);
     }
 
     /**
@@ -332,14 +344,14 @@ final class StringType
         $token = '';
 
         for ( $i = 0; $i < $length; $i++ ) {
-            $chars = \str_shuffle($chars);
-            $token .= $chars[\random_int(0, \strlen($chars) - 1)];
+            $chars  = \str_shuffle($chars);
+            $token .= $chars[\random_int(0, (\strlen($chars) - 1))];
         }
 
         return $token;
     }
 
-    //region BOOLEANS
+    // region BOOLEANS
 
     /**
      * @return bool
@@ -388,13 +400,13 @@ final class StringType
     {
         return ctype_alnum($this->str);
     }
-    //endregion
+    // endregion
 
     /**
      * @return string
      */
     public function __toString(): string
     {
-        return (string)$this->str;
+        return (string) $this->str;
     }
 }

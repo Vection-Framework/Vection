@@ -25,6 +25,7 @@ use RuntimeException;
  */
 class OpenSSLEncryption
 {
+
     /**
      * @var string
      */
@@ -43,14 +44,14 @@ class OpenSSLEncryption
      */
     public function __construct(string $method = 'aes-256-gcm', string $hashAlgorithm = 'sha256')
     {
-        if( ! extension_loaded('openssl') ){
+        if ( ! extension_loaded('openssl') ) {
             throw new RuntimeException('OpenSSLEncryption requires the ext-openssl extension.');
         }
 
-        $this->method = $method;
+        $this->method        = $method;
         $this->hashAlgorithm = $hashAlgorithm;
 
-        if( ! in_array($method, openssl_get_cipher_methods(), true) ){
+        if ( ! in_array($method, openssl_get_cipher_methods(), true) ) {
             throw new RuntimeException("OpenSSL: Invalid cipher method '{$method}'.");
         }
     }
@@ -66,7 +67,7 @@ class OpenSSLEncryption
     {
         $ivLen = openssl_cipher_iv_length($this->method);
 
-        if( $ivLen === false ){
+        if ( $ivLen === false ) {
             throw new RuntimeException('Unable to get the cipher iv length via openSSL.');
         }
 
@@ -76,8 +77,8 @@ class OpenSSLEncryption
             throw new RuntimeException('Unable to create the cipher iv via openSSL (not secure random bytes).');
         }
 
-        $encrypted = openssl_encrypt($content, $this->method, $key, 0, $iv, $tag, '', 4);
-        $hash = hash_hmac($this->hashAlgorithm, $encrypted, $secret);
+        $encrypted  = openssl_encrypt($content, $this->method, $key, 0, $iv, $tag, '', 4);
+        $hash       = hash_hmac($this->hashAlgorithm, $encrypted, $secret);
         $hashLength = strlen($hash);
 
         return str_rot13(base64_encode($hashLength.'||'.$iv.$hash.$tag.$encrypted));
@@ -94,21 +95,21 @@ class OpenSSLEncryption
     {
         $ivLen = openssl_cipher_iv_length($this->method);
 
-        if( $ivLen === false ){
+        if ( $ivLen === false ) {
             throw new RuntimeException('Unable to get the cipher iv length via openSSL.');
         }
 
         $info = base64_decode(str_rot13($content));
         [$hashLength, $info] = explode('||', $info);
-        $hashLength = (int) $hashLength;
-        $iv = substr($info,0, $ivLen);
-        $hash = substr($info, $ivLen, $hashLength);
-        $tag = substr($info, $ivLen + $hashLength, 4);
-        $encrypted = substr($info, $ivLen + $hashLength + 4);
+        $hashLength          = (int) $hashLength;
+        $iv        = substr($info,0, $ivLen);
+        $hash      = substr($info, $ivLen, $hashLength);
+        $tag       = substr($info, ($ivLen + $hashLength), 4);
+        $encrypted = substr($info, ($ivLen + $hashLength + 4));
 
         $decrypted = openssl_decrypt($encrypted, $this->method, $key, 0, $iv, $tag);
 
-        if( $decrypted === false ){
+        if ( $decrypted === false ) {
             throw new RuntimeException(
                 'Error while using openSSL decryption. My caused by inconsistent parameters.'
             );

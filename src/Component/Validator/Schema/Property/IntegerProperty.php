@@ -27,6 +27,7 @@ use Vection\Component\Validator\Schema\Property;
  */
 class IntegerProperty extends Property
 {
+
     /**
      * @var array
      */
@@ -37,7 +38,7 @@ class IntegerProperty extends Property
      */
     protected function onEvaluate(array $schema): void
     {
-        if( isset($schema['@range']) ){
+        if ( isset($schema['@range']) ) {
             $this->range = explode('..', $schema['@range']);
         }
     }
@@ -50,11 +51,11 @@ class IntegerProperty extends Property
      */
     public function onValidate($value): void
     {
-        if( ! is_int($value) ){
+        if ( ! is_int($value) ) {
             throw new IllegalPropertyTypeException($this->name, 'integer');
         }
 
-        if( count($this->range) > 0 && ($value < $this->range[0] || $value > $this->range[1]) ){
+        if ( count($this->range) > 0 && ($value < $this->range[0] || $value > $this->range[1]) ) {
             throw new IllegalPropertyValueException($this->name, implode('-', $this->range));
         }
     }

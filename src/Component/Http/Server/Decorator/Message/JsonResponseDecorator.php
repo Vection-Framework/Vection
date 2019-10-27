@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -24,6 +24,7 @@ use Psr\Http\Message\StreamInterface;
  */
 class JsonResponseDecorator implements ResponseInterface
 {
+
     /**
      * @var ResponseInterface
      */
@@ -42,7 +43,7 @@ class JsonResponseDecorator implements ResponseInterface
     public function __construct(ResponseInterface $response)
     {
         $this->response = $response->withHeader('Content-Type', ['application/json; charset=utf-8']);
-        $this->data = [];
+        $this->data     = [];
     }
 
     /**
@@ -117,8 +118,8 @@ class JsonResponseDecorator implements ResponseInterface
     {
         $body = $this->response->getBody();
 
-        if( $body->getSize() === 0 ){
-            $body->write( json_encode($this->data) );
+        if ( $body->getSize() === 0 ) {
+            $body->write(json_encode($this->data));
         }
 
         return $body;

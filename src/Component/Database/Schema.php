@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the AppsDock project.
  *  Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -22,6 +33,7 @@ use Vection\Contracts\Database\TableInterface;
  */
 class Schema implements SchemaInterface
 {
+
     /** @var string */
     protected $name;
 
@@ -45,11 +57,11 @@ class Schema implements SchemaInterface
      */
     public function __construct(string $name)
     {
-        $this->name = $name;
+        $this->name    = $name;
         $this->charSet = 'utf8';
         $this->collate = 'utf8_unicode_ci';
-        $this->tables = [];
-        $this->insert = [];
+        $this->tables  = [];
+        $this->insert  = [];
     }
 
     /**
@@ -142,7 +154,7 @@ class Schema implements SchemaInterface
      */
     public function addDataInsertFile(string $filePath): SchemaInterface
     {
-        foreach( \glob($filePath) as $file ){
+        foreach ( \glob($filePath) as $file ) {
             $this->addInsertStatement(\file_get_contents($file));
         }
 
@@ -169,21 +181,21 @@ class Schema implements SchemaInterface
      */
     public function loadTableFromFile(string $filePath): SchemaInterface
     {
-        foreach( \glob($filePath) as $file ){
+        foreach ( \glob($filePath) as $file ) {
 
             $definition = [];
 
-            if( \in_array(\pathinfo($file, PATHINFO_EXTENSION), ['yml', 'yaml']) ){
+            if ( \in_array(\pathinfo($file, PATHINFO_EXTENSION), ['yml', 'yaml']) ) {
                 $definition = \yaml_parse_file($file);
 
-                if( ! $definition ){
+                if ( ! $definition ) {
                     throw new \RuntimeException(
                         "Vection.Database.Schema: YAML ERROR - malformed file ({$file})"
                     );
                 }
             }
 
-            if( ! $definition ){
+            if ( ! $definition ) {
                 throw new \RuntimeException(
                     "Vection.Database.Schema: Unsupported file type ({$file})"
                 );
@@ -206,7 +218,7 @@ class Schema implements SchemaInterface
     {
         $SQL = [];
 
-        $withDrop AND ($SQL[] = "DROP DATABASE IF EXISTS `{$this->name}`;");
+        $withDrop and ($SQL[] = "DROP DATABASE IF EXISTS `{$this->name}`;");
 
         $SQL[] = "CREATE DATABASE `{$this->name}` CHARACTER SET {$this->charSet} COLLATE {$this->collate};";
 

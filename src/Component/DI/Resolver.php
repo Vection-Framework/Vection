@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -31,6 +42,7 @@ use Vection\Contracts\Cache\CacheInterface;
  */
 class Resolver implements CacheAwareInterface
 {
+
     /**
      * The cache saves all resolved dependency tree information
      * to avoid resolving on each request. Each new resolved information
@@ -64,7 +76,7 @@ class Resolver implements CacheAwareInterface
      */
     public function __construct(ArrayObject $definitions, ArrayObject $dependencies)
     {
-        $this->definitions = $definitions;
+        $this->definitions  = $definitions;
         $this->dependencies = $dependencies;
     }
 
@@ -75,15 +87,15 @@ class Resolver implements CacheAwareInterface
     {
         $this->cache = $cache;
 
-        if( $cache->contains('dependencies') ){
-            if( $existing = $this->dependencies->getArrayCopy() ){
+        if ( $cache->contains('dependencies') ) {
+            if ( $existing = $this->dependencies->getArrayCopy() ) {
                 $cachedDependencies = $cache->getArray('dependencies');
-                $dependencies = array_merge($existing, $cachedDependencies);
+                $dependencies       = array_merge($existing, $cachedDependencies);
                 $this->dependencies->exchangeArray($dependencies);
-            }else{
+            } else {
                 $this->dependencies->exchangeArray($cache->getArray('dependencies'));
             }
-        }elseif( $this->dependencies->count() > 0 ){
+        } else if ( $this->dependencies->count() > 0 ) {
             # Apply dependencies to cache which have been resolved before set the cache
             $cache->setArray('dependencies', $this->dependencies->getArrayCopy());
         }
@@ -98,19 +110,19 @@ class Resolver implements CacheAwareInterface
      */
     public function resolveDependencies(string $className): array
     {
-        if( ! isset($this->dependencies[$className]) ){
+        if ( ! isset($this->dependencies[$className]) ) {
             try {
-                if( isset($this->definitions[$className]) ){
+                if ( isset($this->definitions[$className]) ) {
                     $this->dependencies[$className] = $this->definitions[$className]->getDependencies();
                 }
 
-                if( ! isset($this->dependencies[$className]['construct']) ){
+                if ( ! isset($this->dependencies[$className]['construct']) ) {
                     $this->dependencies[$className]['construct'] = $this->resolveConstructorDependencies($className);
                 }
 
                 $setter = $this->resolveInterfaceDependencies($className);
 
-                if( isset($this->dependencies[$className]['setter']) ){
+                if ( isset($this->dependencies[$className]['setter']) ) {
                     $setter = array_merge($this->dependencies[$className]['setter'], $setter);
                 }
 
@@ -123,14 +135,14 @@ class Resolver implements CacheAwareInterface
                 # This is for the explicit inject by __inject method
                 $this->dependencies[$className]['explicit'] = $this->resolveExplicitDependencies($className);
 
-                if( $this->cache ){
+                if ( $this->cache ) {
                     $this->cache->setArray('dependencies', $this->dependencies->getArrayCopy());
                 }
-            }
-            catch( ReflectionException $e ) {
+            } catch ( ReflectionException $e ) {
                 throw new ContainerException(
                     "Reflection Error while resolving dependencies of class '$className'",
-                    0, $e
+                    0,
+                    $e
                 );
             }
         }
@@ -153,13 +165,13 @@ class Resolver implements CacheAwareInterface
     public function resolveConstructorDependencies(string $className): array
     {
         $dependencies = [];
-        $constructor = (new ReflectionClass($className))->getConstructor();
+        $constructor  = (new ReflectionClass($className))->getConstructor();
 
-        if( $constructor && ($constructParams = $constructor->getParameters()) ) {
-            foreach( $constructParams as $param ) {
-                if( $param->hasType() && $param->getType() !== null && ! $param->getType()->isBuiltin() ) {
+        if ( $constructor && ($constructParams = $constructor->getParameters()) ) {
+            foreach ( $constructParams as $param ) {
+                if ( $param->hasType() && $param->getType() !== null && ! $param->getType()->isBuiltin() ) {
                     $dependencies[] = $param->getClass()->name;
-                    if( $param->getClass()->isInstantiable() ){
+                    if ( $param->getClass()->isInstantiable() ) {
                         $this->resolveDependencies($param->getClass()->name);
                     }
                 } else {
@@ -168,10 +180,10 @@ class Resolver implements CacheAwareInterface
             }
         }
 
-        if( ! $dependencies && ($parent = get_parent_class($className)) ) {
+        if ( ! $dependencies && ($parent = get_parent_class($className)) ) {
             do {
                 $dependencies = $this->resolveConstructorDependencies($parent);
-            } while( ! $dependencies && ($parent = get_parent_class($parent)) );
+            } while ( ! $dependencies && ($parent = get_parent_class($parent)) );
         }
 
         return $dependencies;
@@ -194,11 +206,11 @@ class Resolver implements CacheAwareInterface
         $dependencies = [];
 
         # Add setter injections by interfaces
-        if( $interfaces = class_implements($className, true) ) {
-            foreach( $interfaces as $interface ) {
-                if( isset($this->definitions[$interface]) ) {
-                    $deps = $this->definitions[$interface]->getDependencies()['setter'] ?? [];
-                    foreach( $deps as $method => $dependency ){
+        if ( $interfaces = class_implements($className, true) ) {
+            foreach ( $interfaces as $interface ) {
+                if ( isset($this->definitions[$interface]) ) {
+                    $deps = ($this->definitions[$interface]->getDependencies()['setter'] ?? []);
+                    foreach ( $deps as $method => $dependency ) {
                         $this->resolveDependencies($dependency);
                         $dependencies[$method] = $dependency;
                     }
@@ -207,10 +219,10 @@ class Resolver implements CacheAwareInterface
         }
 
         # Add setter injection by parent classes
-        if( $parents = class_parents($className, true) ) {
-            foreach( $parents as $parent ) {
-                if( $parentInterfaceDependencies = $this->resolveInterfaceDependencies($parent) ) {
-                    foreach($parentInterfaceDependencies as $method => $parentInterfaceDependency){
+        if ( $parents = class_parents($className, true) ) {
+            foreach ( $parents as $parent ) {
+                if ( $parentInterfaceDependencies = $this->resolveInterfaceDependencies($parent) ) {
+                    foreach ($parentInterfaceDependencies as $method => $parentInterfaceDependency) {
                         $dependencies[$method] = $parentInterfaceDependency;
                     }
                 }
@@ -234,23 +246,23 @@ class Resolver implements CacheAwareInterface
      */
     public function resolveAnnotatedDependencies(string $className): array
     {
-        $reflection = new ReflectionClass($className);
-        $dependencies = [];
-        $useInjectionTrait = $reflection->getTraits()[AnnotationInjection::class] ?? false;
+        $reflection        = new ReflectionClass($className);
+        $dependencies      = [];
+        $useInjectionTrait = ($reflection->getTraits()[AnnotationInjection::class] ?? false);
 
         # Add annotation injection by parent classes
-        if( $parents = class_parents($className, true) ) {
-            foreach( $parents as $parent ) {
-                if( isset((new ReflectionClass($parent))->getTraits()[AnnotationInjection::class]) ){
+        if ( $parents = class_parents($className, true) ) {
+            foreach ( $parents as $parent ) {
+                if ( isset((new ReflectionClass($parent))->getTraits()[AnnotationInjection::class]) ) {
                     $useInjectionTrait = true;
                 }
-                if( $parentAnnotationDependencies = $this->resolveAnnotatedDependencies($parent) ) {
+                if ( $parentAnnotationDependencies = $this->resolveAnnotatedDependencies($parent) ) {
                     $dependencies = $parentAnnotationDependencies;
                 }
             }
         }
 
-        if( $useInjectionTrait || $dependencies ) {
+        if ( $useInjectionTrait || $dependencies ) {
 
             foreach ( $reflection->getProperties() as $property ) {
                 if ( ! ($doc = $property->getDocComment()) ) {
@@ -286,12 +298,12 @@ class Resolver implements CacheAwareInterface
     public function resolveExplicitDependencies(string $className): array
     {
         $dependencies = [];
-        $reflection = new ReflectionClass($className);
+        $reflection   = new ReflectionClass($className);
 
-        if( $reflection->hasMethod('__inject') ){
+        if ( $reflection->hasMethod('__inject') ) {
             $method = $reflection->getMethod('__inject');
 
-            foreach ( $method->getParameters() ?? [] as $param ) {
+            foreach ( ($method->getParameters() ?? []) as $param ) {
                 if ( $param->hasType() && $param->getType() !== null && ! $param->getType()->isBuiltin() ) {
                     $dependencies[] = $param->getClass()->name;
                 } else {

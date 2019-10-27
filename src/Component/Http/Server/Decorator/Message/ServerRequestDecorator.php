@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -31,6 +31,7 @@ use Vection\Component\Http\Server\Proxy;
  */
 class ServerRequestDecorator implements ServerRequestInterface
 {
+
     /**
      * @var ServerRequestInterface
      */
@@ -79,9 +80,9 @@ class ServerRequestDecorator implements ServerRequestInterface
     public function __construct(ServerRequestInterface $request)
     {
         $this->request = $request;
-        $environment = new Environment($request->getServerParams());
+        $environment   = new Environment($request->getServerParams());
 
-        if( $this->isFromProxy() ){
+        if ( $this->isFromProxy() ) {
             $this->proxy = ProxyFactory::create($environment);
         }
 
@@ -93,7 +94,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function addTrustedProxy(string $ip): void
     {
-        if( ! filter_var($ip, FILTER_VALIDATE_IP) ){
+        if ( ! filter_var($ip, FILTER_VALIDATE_IP) ) {
             throw new InvalidArgumentException("Invalid IP address: $ip");
         }
 
@@ -105,7 +106,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function setTrustedProxies(array $ips): void
     {
-        foreach( $ips as $ip ){
+        foreach ( $ips as $ip ) {
             $this->addTrustedProxy($ip);
         }
     }
@@ -118,7 +119,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function setTrustedProxyHeaders(array $headerNames): void
     {
-        foreach( $headerNames as $name ){
+        foreach ( $headerNames as $name ) {
             $this->trustedProxyHeaders[] = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
         }
     }
@@ -136,9 +137,9 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function isFromTrustedProxy(): bool
     {
-        if( $this->proxy && $this->trustedProxies ){
-            foreach( $this->proxy->getProxyIPChain() as $ip ){
-                if( ! isset($this->trustedProxies[$ip]) ){
+        if ( $this->proxy && $this->trustedProxies ) {
+            foreach ( $this->proxy->getProxyIPChain() as $ip ) {
+                if ( ! isset($this->trustedProxies[$ip]) ) {
                     return false;
                 }
             }
@@ -171,7 +172,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function getHost(): string
     {
-        if( $this->proxy && $this->isFromTrustedProxy() ){
+        if ( $this->proxy && $this->isFromTrustedProxy() ) {
             return $this->proxy->getOriginHost();
         }
 
@@ -184,7 +185,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function getPort(): int
     {
-        if( $this->proxy && $this->isFromTrustedProxy() ){
+        if ( $this->proxy && $this->isFromTrustedProxy() ) {
             return $this->proxy->getOriginPort();
         }
 
@@ -199,7 +200,7 @@ class ServerRequestDecorator implements ServerRequestInterface
     {
         $scheme = $this->request->getUri()->getScheme();
 
-        if( $this->proxy && ($s = $this->proxy->getOriginProtocol()) ){
+        if ( $this->proxy && ($s = $this->proxy->getOriginProtocol()) ) {
             $scheme = $s;
         }
 
@@ -213,7 +214,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function getQueryParam(string $name): ? string
     {
-        $value = $this->getQueryParams()[$name] ?? null;
+        $value = ($this->getQueryParams()[$name] ?? null);
         return is_string($value) ? $value : null;
     }
 
@@ -224,7 +225,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function getQueryArray(string $name): ? array
     {
-        $value = $this->getQueryParams()[$name] ?? null;
+        $value = ($this->getQueryParams()[$name] ?? null);
         return is_array($value) ? $value : null;
     }
 
@@ -237,12 +238,12 @@ class ServerRequestDecorator implements ServerRequestInterface
     {
         $body = $this->getParsedBody();
 
-        if( is_array($body) ){
-            return $body[$name] ?? null;
+        if ( is_array($body) ) {
+            return ($body[$name] ?? null);
         }
 
-        if( is_object($body) ){
-            return $body->$name ?? null;
+        if ( is_object($body) ) {
+            return ($body->$name ?? null);
         }
 
         return null;
@@ -255,7 +256,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function getPathSegment(int $index): ? string
     {
-        return $this->getPathSegments()[$index] ?? null;
+        return ($this->getPathSegments()[$index] ?? null);
     }
 
     /**
@@ -263,7 +264,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function getPathSegments(): array
     {
-        if( ! $this->pathParts ){
+        if ( ! $this->pathParts ) {
             $this->pathParts = array_values(array_filter(explode('/', $this->getPath())));
         }
 
@@ -277,7 +278,7 @@ class ServerRequestDecorator implements ServerRequestInterface
     {
         $path = $this->request->getUri()->getPath();
 
-        if( strpos($path, $this->contextPath) === 0 ){
+        if ( strpos($path, $this->contextPath) === 0 ) {
             $path = substr($path, strlen($this->contextPath));
         }
 
@@ -290,7 +291,7 @@ class ServerRequestDecorator implements ServerRequestInterface
     public function setContextPath(string $contextPath): void
     {
         $this->contextPath = '/' . strtolower(trim($contextPath, '/'));
-        $this->pathParts = [];
+        $this->pathParts   = [];
     }
 
     /**
@@ -302,7 +303,7 @@ class ServerRequestDecorator implements ServerRequestInterface
     {
         $slash = $this->contextPath === '/' ? '' : '/';
         $this->contextPath .= $slash . trim($contextPath, '/');
-        $this->pathParts = [];
+        $this->pathParts    = [];
     }
 
     /**

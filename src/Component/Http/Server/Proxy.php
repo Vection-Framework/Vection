@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -19,12 +30,12 @@ namespace Vection\Component\Http\Server;
  */
 class Proxy
 {
-    public const HEADER_FORWARDED = 'HTTP_FORWARDED';
-    public const HEADER_X_FORWARDED_FOR = 'HTTP_X_FORWARDED_FOR';
-    public const HEADER_X_FORWARDED_HOST = 'HTTP_X_FORWARDED_HOST';
+    public const HEADER_FORWARDED         = 'HTTP_FORWARDED';
+    public const HEADER_X_FORWARDED_FOR   = 'HTTP_X_FORWARDED_FOR';
+    public const HEADER_X_FORWARDED_HOST  = 'HTTP_X_FORWARDED_HOST';
     public const HEADER_X_FORWARDED_PROTO = 'HTTP_X_FORWARDED_PROTO';
-    public const HEADER_X_FORWARDED_PORT = 'HTTP_X_FORWARDED_PORT';
-    public const HEADER_X_PROXYUSER_IP = 'HTTP_X_PROXYUSER_IP';
+    public const HEADER_X_FORWARDED_PORT  = 'HTTP_X_FORWARDED_PORT';
+    public const HEADER_X_PROXYUSER_IP    = 'HTTP_X_PROXYUSER_IP';
 
     /** @var string */
     protected $ips;
@@ -48,9 +59,9 @@ class Proxy
      */
     public function __construct(array $ips, ? string $originHost, ? int $originPort, ? string $originProto)
     {
-        $this->ips = $ips;
-        $this->originHost = $originHost;
-        $this->originPort = $originPort;
+        $this->ips         = $ips;
+        $this->originHost  = $originHost;
+        $this->originPort  = $originPort;
         $this->originProto = $originProto;
 
         # TODO normalize ip into ip and port

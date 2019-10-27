@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -32,6 +32,7 @@ use Vection\Component\Http\Server\Factory\HeadersFactory;
  */
 class ServerRequestFactory implements ServerRequestFactoryInterface
 {
+
     /** @var StreamFactoryInterface */
     protected $streamFactory;
 
@@ -48,7 +49,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
         StreamFactoryInterface $streamFactory = null, UploadedFileFactoryInterface $uploadedFileFactory = null
     )
     {
-        $this->streamFactory = $streamFactory ?: new StreamFactory();
+        $this->streamFactory       = $streamFactory ?: new StreamFactory();
         $this->uploadedFileFactory = $uploadedFileFactory ?: new UploadedFileFactory();
     }
 
@@ -70,14 +71,14 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      */
     public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
-        $environment = new Environment($serverParams);
+        $environment    = new Environment($serverParams);
         $headersFactory = new HeadersFactory($environment);
 
-        $method = strtoupper($method);
-        $headers = $headersFactory->createHeaders();
-        $version = explode('/', $environment->getServerProtocol())[1];
-        $stream = $this->streamFactory->createStreamFromFile('php://input');
-        $parsedBody = $this->parseBody($method, $stream, $headers);
+        $method        = strtoupper($method);
+        $headers       = $headersFactory->createHeaders();
+        $version       = explode('/', $environment->getServerProtocol())[1];
+        $stream        = $this->streamFactory->createStreamFromFile('php://input');
+        $parsedBody    = $this->parseBody($method, $stream, $headers);
         $uploadedFiles = $this->createUploadedFiles();
 
         $request = (new ServerRequest($method, $uri, $headers, $version, $environment))
@@ -85,8 +86,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
             ->withParsedBody($parsedBody)
             ->withUploadedFiles($uploadedFiles)
             ->withQueryParams($_GET)
-            ->withCookieParams($_COOKIE)
-        ;
+            ->withCookieParams($_COOKIE);
 
         return $request;
     }
@@ -100,21 +100,29 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
     {
         $uploadedFiles = [];
 
-        foreach( $_FILES ?? [] as $index => $info ){
+        foreach ( ($_FILES ?? []) as $index => $info ) {
 
-            if( is_array($info['name']) ){
+            if ( is_array($info['name']) ) {
                 $uploadedFiles[$index] = [];
 
-                for( $i = 0, $c = count($info['name']); $i < $c; $i++){
+                for ( $i = 0, $c = count($info['name']); $i < $c; $i++) {
                     $stream = $this->streamFactory->createStreamFromFile($info['tmp_name'][$i]);
                     $uploadedFiles[$index][] = $this->uploadedFileFactory->createUploadedFile(
-                        $stream, $info['size'][$i], $info['error'][$i], $info['tmp_name'][$i], $info['type'][$i]
+                        $stream,
+                        $info['size'][$i],
+                        $info['error'][$i],
+                        $info['tmp_name'][$i],
+                        $info['type'][$i]
                     );
                 }
-            }else{
+            } else {
                 $stream = $this->streamFactory->createStreamFromFile($info['tmp_name']);
                 $uploadedFiles[$index] = $this->uploadedFileFactory->createUploadedFile(
-                    $stream, $info['size'], $info['error'], $info['tmp_name'], $info['type']
+                    $stream,
+                    $info['size'],
+                    $info['error'],
+                    $info['tmp_name'],
+                    $info['type']
                 );
             }
         }
@@ -134,15 +142,15 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
         $postHeaders = ['application/x-www-form-urlencoded', 'multipart/form-data'];
         $contentType = explode(';', $headers->getLine('content-type'))[0];
 
-        if( $method === 'POST' && in_array($contentType, $postHeaders, true) ){
+        if ( $method === 'POST' && in_array($contentType, $postHeaders, true) ) {
             return $_POST;
         }
 
         $content = trim($stream->getContents());
 
-        if( ! empty($content) ){
+        if ( ! empty($content) ) {
 
-            if( $contentType === 'application/json' ){
+            if ( $contentType === 'application/json' ) {
                 $data = json_decode($content, true);
                 return json_last_error() !== JSON_ERROR_NONE ? [] : $data;
             }

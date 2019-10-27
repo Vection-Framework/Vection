@@ -23,6 +23,7 @@ namespace Vection\Component\Validator\Schema\Exception;
  */
 class InvalidPropertyException extends PropertyException
 {
+
     /**
      * @var string
      */
@@ -44,7 +45,7 @@ class InvalidPropertyException extends PropertyException
         parent::__construct(sprintf($message, $property));
 
         $this->rawMessage = $message;
-        $this->property = $property;
+        $this->property   = $property;
     }
 
     /**

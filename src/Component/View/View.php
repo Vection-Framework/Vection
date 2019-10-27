@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -88,8 +88,8 @@ class View implements ViewInterface
      */
     public function __construct(? TemplateInterface $template = null)
     {
-        $this->data = new ViewData();
-        $this->content = [
+        $this->data     = new ViewData();
+        $this->content  = [
             self::PREPEND => [],
             self::APPEND  => [],
         ];
@@ -220,7 +220,7 @@ class View implements ViewInterface
 
             \ob_start();
 
-            /** @noinspection PhpIncludeInspection */
+            // @noinspection PhpIncludeInspection
             include $this->template->getFilePath();
 
             $renderedContent .= ob_get_clean();
@@ -237,4 +237,3 @@ class View implements ViewInterface
         return $renderedContent;
     }
 }
-

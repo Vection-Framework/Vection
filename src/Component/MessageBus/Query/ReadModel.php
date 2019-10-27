@@ -1,4 +1,13 @@
 <?php
+/**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Vection\Component\MessageBus\Query;
 
@@ -41,7 +50,7 @@ class ReadModel implements ReadModelInterface
     public function toJson(): string
     {
         $json = \json_encode($this);
-        if( \json_last_error() !== JSON_ERROR_NONE ) {
+        if ( \json_last_error() !== JSON_ERROR_NONE ) {
             throw new \InvalidArgumentException('Json Encode Error: ' .\json_last_error_msg());
         }
         return $json;
@@ -69,17 +78,17 @@ class ReadModel implements ReadModelInterface
         if ( $this instanceof ReadModelCollection ) {
             $listKey = $data['listKey'];
 
-            if( $data['listKey'] !== 'items' ){
+            if ( $data['listKey'] !== 'items' ) {
                 $data[$listKey] = $data['items'];
                 unset($data['items']);
             }
 
-            /** @var ReadModel $item */
+            // @var ReadModel $item
             foreach ( $data[$listKey] as $key => $item ) {
                 unset($data[$listKey][$key]);
-                if( $item instanceof self){
+                if ( $item instanceof self) {
                     $data[$listKey][$key] = $item->toArray();
-                }else{
+                } else {
                     $data[$listKey][$key] = (array) $item;
                 }
             }

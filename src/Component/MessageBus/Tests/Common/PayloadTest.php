@@ -1,10 +1,10 @@
 <?php
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,9 +12,10 @@
 
 namespace Vection\Component\MessageBus\Tests\Common;
 
+use PHPUnit\Framework\TestCase;
 use Vection\Component\MessageBus\Payload;
 use Vection\Contracts\MessageBus\PayloadInterface;
-use PHPUnit\Framework\TestCase;
+
 /**
  * Class PayloadTest
  *
@@ -29,10 +30,10 @@ class PayloadTest extends TestCase
     public function testPop($data)
     {
         $payload = new Payload($data);
-        $value = $payload->get('A');
+        $value   = $payload->get('A');
 
         $this->assertEquals('D', $value);
-        //$this->assertNull($payload->get('A'), 'An entry with key "A" should not exists after pop it.');
+        // $this->assertNull($payload->get('A'), 'An entry with key "A" should not exists after pop it.');
     }
 
     /**
@@ -40,7 +41,7 @@ class PayloadTest extends TestCase
      */
     public function testGetPayload($data)
     {
-        $payload = new Payload($data);
+        $payload    = new Payload($data);
         $newPayload = $payload->getPayload('A');
 
         $this->assertTrue($newPayload instanceof PayloadInterface);

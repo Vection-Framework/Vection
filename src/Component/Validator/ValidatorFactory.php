@@ -36,7 +36,7 @@ class ValidatorFactory
     {
         $validatorClassName = __NAMESPACE__ .'\\Validator\\'. ucfirst($name);
 
-        if( ! class_exists($validatorClassName) ){
+        if ( ! class_exists($validatorClassName) ) {
             throw new RuntimeException('Validator does not exists - '.$validatorClassName);
         }
 

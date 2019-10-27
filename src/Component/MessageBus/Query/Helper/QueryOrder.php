@@ -1,9 +1,9 @@
 <?php
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -26,7 +26,7 @@ class QueryOrder implements QueryOrderInterface
     /** @var string */
     private $field;
 
-    /** @var int */
+    /** @var integer */
     private $direction;
 
     /**
@@ -37,7 +37,7 @@ class QueryOrder implements QueryOrderInterface
      */
     public function __construct(string $field, int $direction = 0)
     {
-        $this->field = $field;
+        $this->field     = $field;
         $this->direction = $direction;
     }
 

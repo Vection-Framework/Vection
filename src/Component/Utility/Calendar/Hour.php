@@ -3,7 +3,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Bjoern Klemm <vection@bjoernklemm.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -34,7 +34,7 @@ class Hour
      */
     public static function toSeconds(int $hours)
     {
-        return $hours * self::SECOUND_UNIT;
+        return ($hours * self::SECOUND_UNIT);
     }
 
     /**
@@ -44,7 +44,7 @@ class Hour
      */
     public static function toMinutes(int $hours)
     {
-        return $hours * self::MINUTE_UNIT;
+        return ($hours * self::MINUTE_UNIT);
     }
 
     /**
@@ -56,7 +56,7 @@ class Hour
     public static function toIndustryHours(string $hours,$term = ',')
     {
         [$hour,$minute] = explode($term,$hours);
-        return (int) $hour + (int) $minute / self::MINUTE_UNIT;
+        return ((int) $hour + (int) $minute / self::MINUTE_UNIT);
     }
 
     /**
@@ -67,7 +67,7 @@ class Hour
      */
     public static function toIndustryMinutes(string $hours, $term = ',')
     {
-        return self::toIndustryHours($hours, $term) * self::INDUSTRY_UNIT;
+        return (self::toIndustryHours($hours, $term) * self::INDUSTRY_UNIT);
     }
 
     /**
@@ -78,7 +78,7 @@ class Hour
      */
     public static function toIndustrySeconds(string $hours, $term = ',')
     {
-        return self::toIndustryMinutes($hours, $term) * self::INDUSTRY_UNIT;
+        return (self::toIndustryMinutes($hours, $term) * self::INDUSTRY_UNIT);
     }
 
     /**
@@ -90,7 +90,7 @@ class Hour
     public static function getMinuteSegement(string $hours, $term = ','): string
     {
         $seg = explode($term,$hours);
-        $val = $seg[1] ?? 0;
+        $val = ($seg[1] ?? 0);
         return str_pad($val,self::PRECISION,'0');
     }
 

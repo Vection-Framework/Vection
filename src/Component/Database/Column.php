@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the AppsDock project.
  *  Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -21,13 +32,14 @@ use Vection\Contracts\Database\ColumnInterface;
  */
 class Column implements ColumnInterface
 {
+
     /** @var string */
     protected $name;
 
     /** @var string */
     protected $type;
 
-    /** @var bool */
+    /** @var boolean */
     protected $nullable;
 
     /** @var string */
@@ -47,10 +59,10 @@ class Column implements ColumnInterface
      */
     public function __construct(string $name, string $type)
     {
-        $this->name = trim($name);
-        $this->type = trim($type);
+        $this->name     = trim($name);
+        $this->type     = trim($type);
         $this->nullable = false;
-        $this->extra = '';
+        $this->extra    = '';
     }
 
     # region Getter / Setter
@@ -76,7 +88,7 @@ class Column implements ColumnInterface
      */
     public function getTypeName(): string
     {
-        if( \strpos($this->type, '(') === false ){
+        if ( \strpos($this->type, '(') === false ) {
             return $this->type;
         }
 
@@ -88,13 +100,13 @@ class Column implements ColumnInterface
      */
     public function getTypeSpecification(): array
     {
-        if( \strpos($this->type, '(') === false ){
+        if ( \strpos($this->type, '(') === false ) {
             return [];
         }
 
-        $spec = \substr($this->type, \strpos($this->type, '(')+1, -1);
+        $spec = \substr($this->type, (\strpos($this->type, '(') + 1), -1);
 
-        if( \strpos($spec, ',') === false ){
+        if ( \strpos($spec, ',') === false ) {
             return [$spec];
         }
 
@@ -197,7 +209,7 @@ class Column implements ColumnInterface
         isset($definition['collate'])  && $this->setCollate($definition['collate']);
         isset($definition['extra'])    && $this->setExtra($definition['extra']);
 
-        if( \array_key_exists('default', $definition) ){
+        if ( \array_key_exists('default', $definition) ) {
             $this->setDefault(
                 \is_numeric($definition['default']) ? (string) $definition['default'] : $definition['default']
             );
@@ -224,8 +236,7 @@ class Column implements ColumnInterface
             && !\array_diff(
                 $this->getTypeSpecification(),
                 $column->getTypeSpecification()
-            )
-        ;
+            );
     }
 
     /**
@@ -239,18 +250,17 @@ class Column implements ColumnInterface
 
         $def[] = $this->type;
 
-        if( $this->collate ){
+        if ( $this->collate ) {
             $def[] = 'COLLATE '.$this->collate;
         }
 
         $def[] = $this->nullable ? 'NULL' : 'NOT NULL';
 
-        if( ($this->nullable && $this->default === null) || ($this->default || is_string($this->default)) ){
-            $def[] = 'DEFAULT '.($this->default === null ? 'NULL'
-                : (\in_array($this->default, ['CURRENT_TIMESTAMP']) ? $this->default : "'{$this->default}'"));
+        if ( ($this->nullable && $this->default === null) || ($this->default || is_string($this->default)) ) {
+            $def[] = 'DEFAULT '.($this->default === null ? 'NULL' : (\in_array($this->default, ['CURRENT_TIMESTAMP']) ? $this->default : "'{$this->default}'"));
         }
 
-        if( $this->extra ){
+        if ( $this->extra ) {
             $def[] = \strtoupper($this->extra);
         }
 

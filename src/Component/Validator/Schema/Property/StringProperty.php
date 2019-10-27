@@ -27,6 +27,7 @@ use Vection\Component\Validator\Schema\Property;
  */
 class StringProperty extends Property
 {
+
     /**
      * @var array
      */
@@ -42,11 +43,11 @@ class StringProperty extends Property
      */
     protected function onEvaluate(array $schema): void
     {
-        if( isset($schema['@allowed']) ){
+        if ( isset($schema['@allowed']) ) {
             $this->allowed = explode('|', $schema['@allowed']);
         }
 
-        $this->regex = $schema['@regex'] ?? null;
+        $this->regex = ($schema['@regex'] ?? null);
     }
 
     /**
@@ -57,15 +58,15 @@ class StringProperty extends Property
      */
     public function onValidate($value): void
     {
-        if( ! is_string($value) ){
+        if ( ! is_string($value) ) {
             throw new IllegalPropertyTypeException($this->name, 'string');
         }
 
-        if( $this->regex !== null && ! preg_match($this->regex, $value) ){
+        if ( $this->regex !== null && ! preg_match($this->regex, $value) ) {
             throw new IllegalPropertyValueException($this->name, $this->regex);
         }
 
-        if( count($this->allowed) > 0 && ! in_array($value, $this->allowed, true) ){
+        if ( count($this->allowed) > 0 && ! in_array($value, $this->allowed, true) ) {
             throw new IllegalPropertyValueException($this->name, implode('|', $this->allowed));
         }
     }

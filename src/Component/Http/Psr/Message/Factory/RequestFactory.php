@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -29,6 +29,7 @@ use Vection\Component\Http\Psr\Message\Request;
  */
 class RequestFactory implements RequestFactoryInterface
 {
+
     /** @var UriFactoryInterface */
     protected $uriFactory;
 
@@ -54,11 +55,11 @@ class RequestFactory implements RequestFactoryInterface
      */
     public function createRequest(string $method, $uri): RequestInterface
     {
-        if( is_string($uri) ){
+        if ( is_string($uri) ) {
             $uri = $this->uriFactory->createUri($uri);
         }
 
-        if( ! $uri instanceof UriInterface){
+        if ( ! $uri instanceof UriInterface) {
             throw new InvalidArgumentException(
                 'Except parameter 2 to be a string or an instance of UriInterface.'
             );

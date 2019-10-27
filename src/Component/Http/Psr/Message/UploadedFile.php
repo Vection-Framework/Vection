@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -24,18 +35,19 @@ use RuntimeException;
  */
 class UploadedFile implements UploadedFileInterface
 {
+
     /**
      * @var StreamInterface
      */
     protected $stream;
 
     /**
-     * @var int
+     * @var integer
      */
     protected $size;
 
     /**
-     * @var int
+     * @var integer
      */
     protected $error;
 
@@ -50,7 +62,7 @@ class UploadedFile implements UploadedFileInterface
     protected $clientMediaType;
 
     /**
-     * @var bool
+     * @var boolean
      */
     protected $moved;
 
@@ -65,12 +77,12 @@ class UploadedFile implements UploadedFileInterface
      */
     public function __construct(StreamInterface $stream, int $size = null, int $error = UPLOAD_ERR_OK, string $clientFilename = null, string $clientMediaType = null)
     {
-        $this->stream = $stream;
-        $this->size = $size;
-        $this->error = $error;
-        $this->clientFilename = $clientFilename;
+        $this->stream          = $stream;
+        $this->size            = $size;
+        $this->error           = $error;
+        $this->clientFilename  = $clientFilename;
         $this->clientMediaType = $clientMediaType;
-        $this->moved = false;
+        $this->moved           = false;
     }
 
     /**
@@ -91,7 +103,7 @@ class UploadedFile implements UploadedFileInterface
      */
     public function getStream(): StreamInterface
     {
-        if( $this->moved ){
+        if ( $this->moved ) {
             throw new RuntimeException('Cannot get file content as stream after this file was moved.');
         }
 
@@ -134,15 +146,15 @@ class UploadedFile implements UploadedFileInterface
      */
     public function moveTo($targetPath): void
     {
-        if( $this->error !== UPLOAD_ERR_OK ){
+        if ( $this->error !== UPLOAD_ERR_OK ) {
             throw new RuntimeException('Cannot move file with upload errors.');
         }
 
-        if( ! is_string($targetPath) || ! $targetPath ){
+        if ( ! is_string($targetPath) || ! $targetPath ) {
             throw new InvalidArgumentException('Cannot move file, the path must be an non empty string.');
         }
 
-        if( strpos($targetPath, '/') === 0 && ! is_writable($targetPath) ){
+        if ( strpos($targetPath, '/') === 0 && ! is_writable($targetPath) ) {
             throw new RuntimeException("Unable to move file - target path is not writeable ($targetPath)");
         }
 
@@ -150,7 +162,7 @@ class UploadedFile implements UploadedFileInterface
 
         $this->moved = PHP_SAPI === 'cli' ? rename($file, $targetPath) : move_uploaded_file($file, $targetPath);
 
-        if( $this->moved === false ){
+        if ( $this->moved === false ) {
             throw new RuntimeException("Uploaded file could not be moved to {$file}");
         }
 

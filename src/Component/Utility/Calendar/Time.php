@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Bjoern Klemm <vection@bjoernklemm.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -32,7 +32,7 @@ class Time
      */
     public function relativize(int $time, string $format = 'Y-m-d'): string
     {
-        $diff = \time() - $time;
+        $diff = (\time() - $time);
 
         if ( $diff >= 0 ) {
             # Calculate the past
@@ -43,7 +43,7 @@ class Time
                     return \sprintf(\_('%s min ago'), \floor($diff / 60));
                 case $diff < 86400:
                     return \sprintf(\_('%s hour ago'), \floor($diff / 3600));
-                case $diff < 604800 * 2:
+                case $diff < (604800 * 2):
                     return \_('yesterday, ') . \date('h:i', $time);
             }
         }

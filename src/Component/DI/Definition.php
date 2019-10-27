@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -19,13 +30,14 @@ namespace Vection\Component\DI;
  */
 class Definition
 {
+
     /** @var string */
     protected $id;
 
     /** @var callable */
     protected $factory;
 
-    /** @var bool */
+    /** @var boolean */
     protected $shared = true;
 
     /** @var array */
@@ -73,13 +85,13 @@ class Definition
     {
         $setter = $propertyName ?: $className;
 
-        if( strpos($setter, "\\") !== false ){
+        if ( strpos($setter, "\\") !== false ) {
             $setter = substr(strrchr($setter, "\\"), 1);
         }
 
         $setter = 'set' . ucfirst($setter);
 
-        if( ! isset($this->dependencies['setter']) ){
+        if ( ! isset($this->dependencies['setter']) ) {
             $this->dependencies['setter'] = [];
         }
 

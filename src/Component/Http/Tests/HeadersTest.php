@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -27,12 +38,14 @@ class HeadersTest extends TestCase
      */
     private function getHeaders(): Headers
     {
-        return new Headers([
-            'Content-Type' => ['text/html; charset=UTF-8'],
-            'content-length' => ['3232'],
-            'Date' => ['Wed, 04 Sep 2019 19:31:25 GMT'],
-            'Accept-Language' => ['de-DE', 'de;q=0.9', 'en-US;q=0.8']
-        ]);
+        return new Headers(
+            [
+                'Content-Type' => ['text/html; charset=UTF-8'],
+                'content-length' => ['3232'],
+                'Date' => ['Wed, 04 Sep 2019 19:31:25 GMT'],
+                'Accept-Language' => ['de-DE', 'de;q=0.9', 'en-US;q=0.8']
+            ]
+        );
     }
 
     public function testGet()
@@ -60,7 +73,6 @@ class HeadersTest extends TestCase
             $this->getHeaders()->getLine('Accept-Language')
         );
 
-
         $this->assertEquals(
             'Wed, 04 Sep 2019 19:31:25 GMT',
             $this->getHeaders()->getLine('date')
@@ -75,11 +87,13 @@ class HeadersTest extends TestCase
         $headers->add('Accept-Language', ['en;q=0.7', 'hu;q=0.6']);
 
         $this->assertEquals(
-            ['text/html; charset=UTF-8', 'application/json'], $headers->get('Content-Type')
+            ['text/html; charset=UTF-8', 'application/json'],
+            $headers->get('Content-Type')
         );
 
         $this->assertEquals(
-            ['de-DE', 'de;q=0.9', 'en-US;q=0.8', 'en;q=0.7', 'hu;q=0.6'], $headers->get('Accept-Language')
+            ['de-DE', 'de;q=0.9', 'en-US;q=0.8', 'en;q=0.7', 'hu;q=0.6'],
+            $headers->get('Accept-Language')
         );
     }
 

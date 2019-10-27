@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -34,7 +45,7 @@ class Headers
     {
         $this->headers = $headers;
 
-        foreach( $headers as $name => $value ){
+        foreach ( $headers as $name => $value ) {
             $this->names[strtolower($name)] = $name;
         }
 
@@ -72,7 +83,7 @@ class Headers
     {
         $lowerName = strtolower($name);
 
-        if( ! isset($this->names[$lowerName]) ){
+        if ( ! isset($this->names[$lowerName]) ) {
             return [];
         }
 
@@ -88,7 +99,7 @@ class Headers
     {
         $lowerName = strtolower($name);
 
-        if( ! isset($this->names[$lowerName]) ){
+        if ( ! isset($this->names[$lowerName]) ) {
             return '';
         }
 
@@ -103,20 +114,20 @@ class Headers
     {
         $lowerName = strtolower($name);
 
-        if( ! isset($this->names[$lowerName]) ){
+        if ( ! isset($this->names[$lowerName]) ) {
             $this->names[$lowerName] = $name;
         }
 
-        $values = $this->headers[$this->names[$lowerName]] ?? [];
+        $values = ($this->headers[$this->names[$lowerName]] ?? []);
 
-        if( is_string($value) && strpos($value, ',') !== false ){
+        if ( is_string($value) && strpos($value, ',') !== false ) {
             # if the value is comma separated, then make array from it to aware consistency
             $value = array_map('trim', explode(',', $value));
         }
 
-        if( ! is_array($value) ){
+        if ( ! is_array($value) ) {
             $values[] = $value;
-        }else{
+        } else {
             $values = array_merge($values, $value);
         }
 
@@ -129,14 +140,14 @@ class Headers
      */
     public function set(string $name, $value): void
     {
-        if( is_string($value) && strpos($value, ',') !== false ){
+        if ( is_string($value) && strpos($value, ',') !== false ) {
             # if the value is comma separated, then make array from it to aware consistency
             $value = array_map('trim', explode(',', $value));
         }
 
         $lowerName = strtolower($name);
 
-        if( ! isset($this->names[$lowerName]) ){
+        if ( ! isset($this->names[$lowerName]) ) {
             $this->names[$lowerName] = $name;
         }
 
@@ -150,7 +161,7 @@ class Headers
     {
         $lowerName = strtolower($name);
 
-        if( isset($this->names[$lowerName]) ){
+        if ( isset($this->names[$lowerName]) ) {
             unset($this->headers[$this->names[$lowerName]], $this->names[$lowerName]);
         }
     }
@@ -713,7 +724,7 @@ class Headers
     }
 
     /**
-     *Correlates HTTP requests between a client and server.
+     * Correlates HTTP requests between a client and server.
      *
      * @return string
      */

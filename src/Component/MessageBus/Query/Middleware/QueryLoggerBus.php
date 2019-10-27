@@ -1,10 +1,10 @@
 <?php
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -24,6 +24,7 @@ use Vection\Contracts\MessageBus\Query\QueryInterface;
  */
 class QueryLoggerBus implements QueryBusMiddlewareInterface
 {
+
     /**
      * This property contains a PSR supported logger.
      *
@@ -86,7 +87,8 @@ class QueryLoggerBus implements QueryBusMiddlewareInterface
     public function logException(\Exception $ex): void
     {
         $this->logger->critical(
-            sprintf("Exception@QueryBus: %s \n%s in line %s\nTrace:\n %s",
+            sprintf(
+                "Exception@QueryBus: %s \n%s in line %s\nTrace:\n %s",
                 $ex->getMessage(),
                 $ex->getFile(),
                 $ex->getLine(),

@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the AppsDock project.
  *  Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -22,6 +33,7 @@ use Vection\Contracts\Database\TableInterface;
  */
 class Table implements TableInterface
 {
+
     /** @var string */
     protected $name;
 
@@ -53,13 +65,13 @@ class Table implements TableInterface
      */
     public function __construct(string $name)
     {
-        $this->name = $name;
-        $this->keys = [];
+        $this->name    = $name;
+        $this->keys    = [];
         $this->indexes = [];
         $this->columns = [];
         $this->charSet = 'utf8';
         $this->collate = 'utf8_unicode_ci';
-        $this->engine = 'InnoDB';
+        $this->engine  = 'InnoDB';
     }
 
     # region Getter / Setter
@@ -188,7 +200,7 @@ class Table implements TableInterface
      */
     public function getColumn(string $name): ? ColumnInterface
     {
-        return $this->columns[$name] ?? null;
+        return ($this->columns[$name] ?? null);
     }
 
     /**
@@ -263,13 +275,13 @@ class Table implements TableInterface
     {
         $definition = $definition['table'];
 
-        isset($definition['comment']) AND $this->setComment($definition['comment']);
-        isset($definition['keys'])    AND $this->setKeys($definition['keys']);
-        isset($definition['engine'])  AND $this->setEngine($definition['engine']);
-        isset($definition['charset']) AND $this->setCharSet($definition['charset']);
-        isset($definition['collate']) AND $this->setCollate($definition['collate']);
+        isset($definition['comment']) and $this->setComment($definition['comment']);
+        isset($definition['keys'])    and $this->setKeys($definition['keys']);
+        isset($definition['engine'])  and $this->setEngine($definition['engine']);
+        isset($definition['charset']) and $this->setCharSet($definition['charset']);
+        isset($definition['collate']) and $this->setCollate($definition['collate']);
 
-        foreach( $definition['columns'] as $name => $colDef ){
+        foreach ( $definition['columns'] as $name => $colDef ) {
             $column = new Column($name, $colDef['type']);
             $column->fromArray($colDef);
             $this->addColumn($column);
@@ -295,19 +307,19 @@ class Table implements TableInterface
 
         $colDef[] = \implode(",\n", $this->columns);
 
-        if( isset($this->keys['primary']) ){
+        if ( isset($this->keys['primary']) ) {
             $pkContent = $this->keys['primary'];
 
-            if( \is_array($pkContent) ){
+            if ( \is_array($pkContent) ) {
                 $pkContent = \implode('`,`', $this->keys['primary']);
             }
 
             $colDef[] = "PRIMARY KEY (`{$pkContent}`)";
         }
 
-        foreach( $this->keys['unique'] ?? [] as $key ){
-            $parts = \explode(' ', $key);
-            $colDef[] = "UNIQUE KEY `{$parts[0]}`".(isset($parts[1]) ? " (`{$parts[1]}`)":'');
+        foreach ( ($this->keys['unique'] ?? []) as $key ) {
+            $parts    = \explode(' ', $key);
+            $colDef[] = "UNIQUE KEY `{$parts[0]}`".(isset($parts[1]) ? " (`{$parts[1]}`)" : '');
         }
 
         # TODO handle index

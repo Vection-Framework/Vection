@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -41,7 +41,7 @@ class StreamFactory implements StreamFactoryInterface
     {
         $resource = fopen('php://temp', 'rw+b');
 
-        if( $content ){
+        if ( $content ) {
             fwrite($resource, $content);
             fseek($resource, 0);
         }
@@ -66,17 +66,17 @@ class StreamFactory implements StreamFactoryInterface
      */
     public function createStreamFromFile(string $filename, string $mode = 'rb'): StreamInterface
     {
-        if( stripos($filename, 'php://') !== 0 && ! file_exists($filename) ){
+        if ( stripos($filename, 'php://') !== 0 && ! file_exists($filename) ) {
             throw new RuntimeException("Unable to create stream from file: File not found ($filename).");
         }
 
-        if( ! isset(Stream::RESOURCE_MODES['read'][$mode]) && ! isset(Stream::RESOURCE_MODES['write'][$mode]) ){
+        if ( ! isset(Stream::RESOURCE_MODES['read'][$mode]) && ! isset(Stream::RESOURCE_MODES['write'][$mode]) ) {
             throw new InvalidArgumentException("Unable to open stream: Invalid mode '$mode'.");
         }
 
         $resource = fopen($filename, $mode);
 
-        if( $resource === false ){
+        if ( $resource === false ) {
             throw new RuntimeException("Unable to open stream with file ($filename).");
         }
 

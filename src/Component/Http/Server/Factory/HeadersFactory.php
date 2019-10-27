@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -58,23 +58,23 @@ class HeadersFactory
             'CONTENT_MD5' => 'content-md5'
         ];
 
-        foreach( $this->environment->toArray() as $name => $value ){
-            if( stripos($name, 'HTTP_') === 0 ){
+        foreach ( $this->environment->toArray() as $name => $value ) {
+            if ( stripos($name, 'HTTP_') === 0 ) {
                 $name = strtolower(substr(str_replace('_', '-', $name), 5));
                 $headers->set($name, $value);
-            }elseif(isset($exceptionalHeaders[$name])){
+            } else if (isset($exceptionalHeaders[$name])) {
                 $headers->set($exceptionalHeaders[$name], $value);
             }
         }
 
-        if( $this->environment->has('REDIRECT_HTTP_AUTHORIZATION') && ! $headers->has('Authorization') ){
+        if ( $this->environment->has('REDIRECT_HTTP_AUTHORIZATION') && ! $headers->has('Authorization') ) {
             $headers->set('Authorization', $this->environment->get('REDIRECT_HTTP_AUTHORIZATION'));
         }
 
         $authUser = trim($this->environment->getPHPAuthUser());
-        $authPw = trim($this->environment->getPHPAuthPW());
+        $authPw   = trim($this->environment->getPHPAuthPW());
 
-        if( $authUser ){
+        if ( $authUser ) {
             $headers->set('Authorization', 'Basic '.base64_encode($authUser.':'.$authPw));
         }
 

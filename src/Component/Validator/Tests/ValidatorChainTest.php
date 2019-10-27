@@ -46,11 +46,13 @@ class ValidatorChainTest extends TestCase
             ->alphaNumeric()
             ->betweenLength(0, 7);
 
-        $chain->verify([
-            'a' => 'abc123',
-            'b' => 'abc123',
-            'c' => null,
-        ]);
+        $chain->verify(
+            [
+                'a' => 'abc123',
+                'b' => 'abc123',
+                'c' => null,
+            ]
+        );
 
         $this->assertEmpty($chain->getViolations());
     }
@@ -70,10 +72,12 @@ class ValidatorChainTest extends TestCase
             ->alphaNumeric()
             ->betweenLength(0, 7);
 
-        $chain->verify([
-            'a' => 'abc12345',
-            'b' => '1abc23',
-        ]);
+        $chain->verify(
+            [
+                'a' => 'abc12345',
+                'b' => '1abc23',
+            ]
+        );
 
         $violations = $chain->getViolations();
 
@@ -85,11 +89,11 @@ class ValidatorChainTest extends TestCase
         $this->assertNotNull($violationA);
         $this->assertNotNull($violationB);
 
-        if( $violationA !== null ){
+        if ( $violationA !== null ) {
             $this->assertEquals($violationA->getMessage(), $violations['a']->getMessage());
         }
 
-        if( $violationB !== null ){
+        if ( $violationB !== null ) {
             $this->assertEquals($violationB->getMessage(), $violations['b']->getMessage());
         }
     }
@@ -104,19 +108,19 @@ class ValidatorChainTest extends TestCase
         $chain('a')
             ->notNull()
             ->use(new CustomValidator())
-            ->alphaNumeric()
-        ;
+            ->alphaNumeric();
 
         $chain('b')
         ->notNull()
         ->use(new CustomValidator())
-        ->alphaNumeric()
-    ;
+        ->alphaNumeric();
 
-        $chain->verify([
-            'a' => 'abcxxxdef',
-            'b' => 'abcdef'
-        ]);
+        $chain->verify(
+            [
+                'a' => 'abcxxxdef',
+                'b' => 'abcdef'
+            ]
+        );
 
         $violations = $chain->getViolations();
 

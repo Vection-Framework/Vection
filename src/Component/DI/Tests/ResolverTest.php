@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -34,10 +34,12 @@ class ResolverTest extends TestCase
      */
     public function testResolveConstructorDependencies() {
 
-        $definitions = new ArrayObject([
-            TestObject::class => (new Definition(TestObject::class))
+        $definitions = new ArrayObject(
+            [
+                TestObject::class => (new Definition(TestObject::class))
                 ->construct(ConstructorInjectedObject::class)
-        ]);
+            ]
+        );
 
         $resolver = new Resolver($definitions, new ArrayObject());
 
@@ -51,18 +53,23 @@ class ResolverTest extends TestCase
      */
     public function testResolveInterfaceDependencies() {
 
-        $definitions = new ArrayObject([
-            InterfaceInjectedObjectInterface::class => (new Definition(InterfaceInjectedObjectInterface::class))
+        $definitions = new ArrayObject(
+            [
+                InterfaceInjectedObjectInterface::class => (new Definition(InterfaceInjectedObjectInterface::class))
                 ->inject(InterfaceInjectedObject::class)
-        ]);
+            ]
+        );
 
         $resolver = new Resolver($definitions, new ArrayObject());
 
         $dependencies = $resolver->resolveInterfaceDependencies(TestObject::class);
 
-        $this->assertEquals([
-            'setInterfaceInjectedObject' => 'Vection\Component\DI\Tests\Fixtures\InterfaceInjectedObject'
-        ], $dependencies);
+        $this->assertEquals(
+            [
+                'setInterfaceInjectedObject' => 'Vection\Component\DI\Tests\Fixtures\InterfaceInjectedObject'
+            ],
+            $dependencies
+        );
     }
 
     /**
@@ -74,9 +81,12 @@ class ResolverTest extends TestCase
 
         $dependencies = $resolver->resolveAnnotatedDependencies(TestObject::class);
 
-        $this->assertEquals([
-            'annotationInjectedObject' => 'Vection\Component\DI\Tests\Fixtures\AnnotationInjectedObject'
-        ], $dependencies);
+        $this->assertEquals(
+            [
+                'annotationInjectedObject' => 'Vection\Component\DI\Tests\Fixtures\AnnotationInjectedObject'
+            ],
+            $dependencies
+        );
     }
 
     /**
@@ -88,9 +98,12 @@ class ResolverTest extends TestCase
 
         $dependencies = $resolver->resolveExplicitDependencies(TestObject::class);
 
-        $this->assertEquals([
-            'Vection\Component\DI\Tests\Fixtures\ExplicitInjectedObject'
-        ], $dependencies);
+        $this->assertEquals(
+            [
+                'Vection\Component\DI\Tests\Fixtures\ExplicitInjectedObject'
+            ],
+            $dependencies
+        );
     }
 
     /**
@@ -98,17 +111,18 @@ class ResolverTest extends TestCase
      */
     public function testResolveDependencies()
     {
-        $definitions = new ArrayObject();
+        $definitions  = new ArrayObject();
         $dependencies = new ArrayObject();
 
         $definitions[TestObject::class] = (new Definition(TestObject::class))
-            ->factory(function(){
+            ->factory(
+                function(){
                 return new TestObject(null);
-            });
+                }
+            );
 
         $definitions[InterfaceInjectedObjectInterface::class] = (new Definition(TestObject::class))
             ->inject(InterfaceInjectedObject::class);
-
 
         $resolver = new Resolver($definitions, $dependencies);
         $resolver->resolveDependencies(TestObject::class);

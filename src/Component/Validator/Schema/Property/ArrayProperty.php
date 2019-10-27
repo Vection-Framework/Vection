@@ -28,6 +28,7 @@ use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
  */
 class ArrayProperty extends Property
 {
+
     /**
      * @var Property
      */
@@ -38,7 +39,7 @@ class ArrayProperty extends Property
      */
     protected function onEvaluate(array $schema): void
     {
-        if( isset($schema['@property']['@template']) ){
+        if ( isset($schema['@property']['@template']) ) {
             $schema['@property'] = $this->getTemplate($schema['@property']['@template']);
             unset($schema['@property']['@template']);
         }
@@ -54,22 +55,21 @@ class ArrayProperty extends Property
      */
     public function onValidate($values): void
     {
-        if( ! is_array($values) ){
+        if ( ! is_array($values) ) {
             throw new IllegalPropertyTypeException($this->name, 'array');
         }
 
-        if( $this->isRequired() && count($values) === 0 ){
+        if ( $this->isRequired() && count($values) === 0 ) {
             throw new MissingPropertyException($this->name.'.0');
         }
 
-        foreach( $values as $name => $value ){
+        foreach ( $values as $name => $value ) {
 
             $this->property->setName((string) $name);
 
-            try{
+            try {
                 $this->property->validate($value);
-            }
-            catch(PropertyExceptionInterface $e){
+            } catch (PropertyExceptionInterface $e) {
                 $e->withProperty($this->name);
             }
 

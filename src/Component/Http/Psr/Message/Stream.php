@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -47,16 +47,16 @@ class Stream implements StreamInterface
     /** @var string */
     protected $uri;
 
-    /** @var int */
+    /** @var integer */
     protected $size;
 
-    /** @var bool */
+    /** @var boolean */
     protected $readable;
 
-    /** @var bool */
+    /** @var boolean */
     protected $writable;
 
-    /** @var bool */
+    /** @var boolean */
     protected $seekable;
 
     /**
@@ -67,19 +67,19 @@ class Stream implements StreamInterface
      */
     public function __construct($resource)
     {
-        if( ! is_resource($resource) ){
+        if ( ! is_resource($resource) ) {
             throw new InvalidArgumentException(
                 'Expected parameter 1 to be a valid resource, got '.gettype($resource)
             );
         }
 
         $this->resource = $resource;
-        $meta = $this->getMetadata();
+        $meta           = $this->getMetadata();
 
         $this->seekable = $meta['seekable'];
         $this->readable = isset(self::RESOURCE_MODES['read'][$meta['mode']]);
         $this->writable = isset(self::RESOURCE_MODES['write'][$meta['mode']]);
-        $this->uri = $meta['uri'];
+        $this->uri      = $meta['uri'];
     }
 
     /**
@@ -97,8 +97,8 @@ class Stream implements StreamInterface
      */
     public function close(): void
     {
-        if( $this->resource ){
-            if( is_resource($this->resource) ){
+        if ( $this->resource ) {
+            if ( is_resource($this->resource) ) {
                 fclose($this->resource);
             }
             $this->detach();
@@ -114,11 +114,11 @@ class Stream implements StreamInterface
      */
     public function detach()
     {
-        if( $this->resource ){
-            $resource = $this->resource;
+        if ( $this->resource ) {
+            $resource       = $this->resource;
             $this->resource = null;
-            $this->size = null;
-            $this->uri = null;
+            $this->size     = null;
+            $this->uri      = null;
             $this->readable = false;
             $this->writable = false;
             $this->seekable = false;
@@ -136,19 +136,19 @@ class Stream implements StreamInterface
      */
     public function getSize(): ? int
     {
-        if( ! $this->resource ){
+        if ( ! $this->resource ) {
             return null;
         }
 
-        if( $this->size !== null ){
+        if ( $this->size !== null ) {
             return $this->size;
         }
 
-        if( $this->uri ){
+        if ( $this->uri ) {
             clearstatcache(true, $this->uri);
         }
 
-        return $this->size = fstat($this->resource)['size'] ?? null;
+        return ($this->size = fstat($this->resource)['size'] ?? null);
     }
 
     /**
@@ -161,7 +161,7 @@ class Stream implements StreamInterface
     {
         $position = ftell($this->resource);
 
-        if( $position === false ){
+        if ( $position === false ) {
             throw new RuntimeException('Unable to determine the pointer to references steam.');
         }
 
@@ -204,17 +204,20 @@ class Stream implements StreamInterface
      */
     public function seek($offset, $whence = SEEK_SET): void
     {
-        if( ! $this->seekable ){
+        if ( ! $this->seekable ) {
             throw new RuntimeException('The current stream is not seekable.');
         }
 
         $seek = fseek($this->resource, $offset, $whence);
 
-        if( $seek === -1 ){
-            throw new RuntimeException(sprintf(
-                'Failure while seeking stream to position "%s" with whence value "%s"',
-                $offset, $whence
-            ));
+        if ( $seek === -1 ) {
+            throw new RuntimeException(
+                sprintf(
+                    'Failure while seeking stream to position "%s" with whence value "%s"',
+                    $offset,
+                    $whence
+                )
+            );
         }
     }
 
@@ -253,13 +256,13 @@ class Stream implements StreamInterface
      */
     public function write($string): int
     {
-        if( ! $this->writable ){
+        if ( ! $this->writable ) {
             throw new RuntimeException('Unable to write: The current stream is not writeable.');
         }
 
         $result = fwrite($this->resource, $string);
 
-        if( $result === false ){
+        if ( $result === false ) {
             throw new RuntimeException('Error while writing to stream.');
         }
 
@@ -291,7 +294,7 @@ class Stream implements StreamInterface
      */
     public function read($length): string
     {
-        if( ! $this->readable ){
+        if ( ! $this->readable ) {
             throw new RuntimeException('Unable to read: The current stream is not readable.');
         }
 
@@ -308,7 +311,7 @@ class Stream implements StreamInterface
      */
     public function getContents(): string
     {
-        if( ! $this->resource ){
+        if ( ! $this->resource ) {
             throw new RuntimeException('Unable to read stream. The current stream does not exists or is invalid.');
         }
 
@@ -316,7 +319,7 @@ class Stream implements StreamInterface
 
         $content = stream_get_contents($this->resource);
 
-        if( $content === false ){
+        if ( $content === false ) {
             throw new RuntimeException('Error while reading from stream.');
         }
 
@@ -339,7 +342,7 @@ class Stream implements StreamInterface
      */
     public function getMetadata($key = null)
     {
-        if( ! $this->resource ){
+        if ( ! $this->resource ) {
             return $key ? null : [];
         }
 
@@ -364,9 +367,9 @@ class Stream implements StreamInterface
      */
     public function __toString(): string
     {
-        try{
+        try {
             return $this->getContents();
-        }catch( RuntimeException $e){
+        } catch ( RuntimeException $e) {
             return '';
         }
     }

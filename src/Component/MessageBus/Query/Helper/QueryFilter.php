@@ -1,9 +1,9 @@
 <?php
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -21,6 +21,7 @@ use Vection\Contracts\MessageBus\Query\Helper\QueryFilterInterface;
  */
 class QueryFilter implements QueryFilterInterface
 {
+
     /**
      * Mapping from public to internal field names.
      *
@@ -65,7 +66,7 @@ class QueryFilter implements QueryFilterInterface
         # e.g.: ?filter=name="peter" AND (gender="female" OR age="33") OR color IS NULL
         $pattern = '/\(?([\w-]+.{0,1})\s?(=|<=|>=|<|>|(IS\s+(NOT\s+)?(NULL)?)|(NOT\s+)?LIKE)\s?"([\w\s-]*)"\)?\s?(AND|OR)?/iU';
 
-        if( ! \preg_match_all($pattern, $filter, $matches) ){
+        if ( ! \preg_match_all($pattern, $filter, $matches) ) {
             throw new InvalidArgumentException('Filter syntax error');
         }
 
@@ -77,10 +78,14 @@ class QueryFilter implements QueryFilterInterface
 
         # Replace all public fields with internal fields
         $pattern = '/([\w-]+.{0,1})\s?(=|<=|>=|<|>|(IS\s+(NOT\s+)?(NULL)?)|(NOT\s+)?LIKE)\s?/iU';
-        /** @var string $filter */
-        $filter = \preg_replace_callback($pattern, function($match){
+        // @var string $filter
+        $filter = \preg_replace_callback(
+            $pattern,
+            function($match){
             return ($this->fieldMapping[$match[1]] ?? $match[1]) . ' ' . $match[2];
-        }, $filter);
+            },
+            $filter
+        );
 
         $this->filter = $filter;
     }
@@ -94,7 +99,7 @@ class QueryFilter implements QueryFilterInterface
      */
     public function getValue(string $name): ?string
     {
-        return $this->values[$name] ?? null;
+        return ($this->values[$name] ?? null);
     }
 
     /**

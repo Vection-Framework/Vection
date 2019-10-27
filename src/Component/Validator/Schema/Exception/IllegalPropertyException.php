@@ -23,6 +23,7 @@ namespace Vection\Component\Validator\Schema\Exception;
  */
 class IllegalPropertyException extends PropertyException
 {
+
     /**
      * @var string|null
      */
@@ -47,8 +48,8 @@ class IllegalPropertyException extends PropertyException
         );
 
         $this->rawMessage = $message;
-        $this->property = $property;
-        $this->details = $details;
+        $this->property   = $property;
+        $this->details    = $details;
     }
 
     /**

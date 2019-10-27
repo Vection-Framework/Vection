@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -26,6 +26,7 @@ use Vection\Component\Http\Server\Environment;
  */
 class UriFactoryDecorator implements UriFactoryInterface
 {
+
     /**
      * @var UriFactoryInterface
      */
@@ -62,66 +63,66 @@ class UriFactoryDecorator implements UriFactoryInterface
      */
     public function createFromGlobals(Environment $environment = null): UriInterface
     {
-        if( ! $environment ){
+        if ( ! $environment ) {
             $environment = new Environment();
         }
 
         $components = parse_url($environment->getRequestUri());
 
-        if( ! isset($components['scheme']) ){
+        if ( ! isset($components['scheme']) ) {
 
             [$protocol] = explode('/', $environment->getServerProtocol());
 
-            if( $protocol === 'HTTP' ){
-                $scheme = $environment->get('REQUEST_SCHEME');
-                $https = $environment->getHttps();
+            if ( $protocol === 'HTTP' ) {
+                $scheme    = $environment->get('REQUEST_SCHEME');
+                $https     = $environment->getHttps();
                 $protocol .= ($scheme && $scheme === 'https') || ($https && $https !== 'off') ? 's' : '';
             }
 
             $components['scheme'] = strtolower($protocol);
         }
 
-        $host = $environment->getServerName() ?? $environment->getServerAddr();
-        if( $host && ! isset($components['host']) ){
+        $host = ($environment->getServerName() ?? $environment->getServerAddr());
+        if ( $host && ! isset($components['host']) ) {
             $components['host'] = $host;
         }
 
         $serverPort = $environment->getServerPort();
-        if( $serverPort && ! isset($components['port']) ){
+        if ( $serverPort && ! isset($components['port']) ) {
             $components['port'] = $serverPort;
         }
 
-        if( ! isset($components['path']) ){
+        if ( ! isset($components['path']) ) {
             # In case an uri string parameter is given without path but request contains one
             $reqComps = parse_url($environment->getRequestUri());
-            if( isset($reqComps['path']) ){
+            if ( isset($reqComps['path']) ) {
                 $components['path'] = $reqComps['path'];
             }
         }
 
         $queryString = $environment->getQueryString();
-        if( $queryString && ! isset($components['query']) ){
+        if ( $queryString && ! isset($components['query']) ) {
             $components['query'] = $queryString;
         }
 
         $uri = '';
 
-        if( isset($components['scheme']) ){
+        if ( isset($components['scheme']) ) {
             $uri .= $components['scheme'] .'://';
         }
 
-        if( isset($components['host']) ){
+        if ( isset($components['host']) ) {
             $uri .= $components['host'];
         }
-        if( isset($components['port']) ){
+        if ( isset($components['port']) ) {
             $uri .= ':' . $components['port'];
         }
 
-        if( isset($components['path']) ){
+        if ( isset($components['path']) ) {
             $uri .= '/' . trim($components['path'], '/');
         }
 
-        if( isset($components['query']) ){
+        if ( isset($components['query']) ) {
             $uri .= '?' . $components['query'];
         }
 

@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -19,6 +30,7 @@ namespace Vection\Component\Http\Server;
  */
 class Environment
 {
+
     /** @var array */
     protected $data;
 
@@ -49,7 +61,7 @@ class Environment
      */
     public function get(string $key): ? string
     {
-        return $this->data[$key] ?? null;
+        return ($this->data[$key] ?? null);
     }
 
     /**
@@ -62,7 +74,7 @@ class Environment
      */
     public function getSelf(): string
     {
-        return $this->data['PHP_SELF'] ?? '';
+        return ($this->data['PHP_SELF'] ?? '');
     }
 
     /**
@@ -73,7 +85,7 @@ class Environment
      */
     public function getArgV(): string
     {
-        return $this->data['ARGV'] ?? '';
+        return ($this->data['ARGV'] ?? '');
     }
 
     /**
@@ -83,7 +95,7 @@ class Environment
      */
     public function getArgC(): string
     {
-        return $this->data['ARGC'] ?? '';
+        return ($this->data['ARGC'] ?? '');
     }
 
     /**
@@ -93,7 +105,7 @@ class Environment
      */
     public function getGatewayInterface(): string
     {
-        return $this->data['GATEWAY_INTERFACE'] ?? '';
+        return ($this->data['GATEWAY_INTERFACE'] ?? '');
     }
 
     /**
@@ -103,7 +115,7 @@ class Environment
      */
     public function getServerAddr(): string
     {
-        return $this->data['SERVER_ADDR'] ?? '';
+        return ($this->data['SERVER_ADDR'] ?? '');
     }
 
     /**
@@ -118,7 +130,7 @@ class Environment
      */
     public function getServerName(): string
     {
-        return $this->data['SERVER_NAME'] ?? '';
+        return ($this->data['SERVER_NAME'] ?? '');
     }
 
     /**
@@ -128,7 +140,7 @@ class Environment
      */
     public function getServerSoftware(): string
     {
-        return $this->data['SERVER_SOFTWARE'] ?? '';
+        return ($this->data['SERVER_SOFTWARE'] ?? '');
     }
 
     /**
@@ -138,7 +150,7 @@ class Environment
      */
     public function getServerProtocol(): string
     {
-        return $this->data['SERVER_PROTOCOL'] ?? '';
+        return ($this->data['SERVER_PROTOCOL'] ?? '');
     }
 
     /**
@@ -151,7 +163,7 @@ class Environment
      */
     public function getRequestMethod(): string
     {
-        return strtoupper($this->data['REQUEST_METHOD'] ?? '');
+        return strtoupper(($this->data['REQUEST_METHOD'] ?? ''));
     }
 
     /**
@@ -161,7 +173,7 @@ class Environment
      */
     public function getRequestTime(): string
     {
-        return $this->data['REQUEST_TIME'] ?? '';
+        return ($this->data['REQUEST_TIME'] ?? '');
     }
 
     /**
@@ -171,7 +183,7 @@ class Environment
      */
     public function getRequestTimeFloat(): string
     {
-        return $this->data['REQUEST_TIME_FLOAT'] ?? '';
+        return ($this->data['REQUEST_TIME_FLOAT'] ?? '');
     }
 
     /**
@@ -181,7 +193,7 @@ class Environment
      */
     public function getQueryString(): string
     {
-        return $this->data['QUERY_STRING'] ?? '';
+        return ($this->data['QUERY_STRING'] ?? '');
     }
 
     /**
@@ -192,7 +204,7 @@ class Environment
      */
     public function getDocumentRoot(): string
     {
-        return $this->data['DOCUMENT_ROOT'] ?? '';
+        return ($this->data['DOCUMENT_ROOT'] ?? '');
     }
 
     /**
@@ -202,7 +214,7 @@ class Environment
      */
     public function getHttpAccept(): string
     {
-        return $this->data['HTTP_ACCEPT'] ?? '';
+        return ($this->data['HTTP_ACCEPT'] ?? '');
     }
 
     /**
@@ -212,7 +224,7 @@ class Environment
      */
     public function getHttpAcceptCharset(): string
     {
-        return $this->data['HTTP_ACCEPT_CHARSET'] ?? '';
+        return ($this->data['HTTP_ACCEPT_CHARSET'] ?? '');
     }
 
     /**
@@ -222,7 +234,7 @@ class Environment
      */
     public function getHttpAcceptEncoding(): string
     {
-        return $this->data['HTTP_ACCEPT_ENCODING'] ?? '';
+        return ($this->data['HTTP_ACCEPT_ENCODING'] ?? '');
     }
 
     /**
@@ -232,7 +244,7 @@ class Environment
      */
     public function getHttpAcceptLanguage(): string
     {
-        return $this->data['HTTP_ACCEPT_LANGUAGE'] ?? '';
+        return ($this->data['HTTP_ACCEPT_LANGUAGE'] ?? '');
     }
 
     /**
@@ -242,7 +254,7 @@ class Environment
      */
     public function getHttpConnection(): string
     {
-        return $this->data['HTTP_CONNECTION'] ?? '';
+        return ($this->data['HTTP_CONNECTION'] ?? '');
     }
 
     /**
@@ -252,7 +264,7 @@ class Environment
      */
     public function getHttpHost(): string
     {
-        return $this->data['HTTP_HOST'] ?? '';
+        return ($this->data['HTTP_HOST'] ?? '');
     }
 
     /**
@@ -264,7 +276,7 @@ class Environment
      */
     public function getHttpReferer(): string
     {
-        return $this->data['HTTP_REFERER'] ?? '';
+        return ($this->data['HTTP_REFERER'] ?? '');
     }
 
     /**
@@ -277,7 +289,7 @@ class Environment
      */
     public function getHttpUserAgent(): string
     {
-        return $this->data['HTTP_USER_AGENT'] ?? '';
+        return ($this->data['HTTP_USER_AGENT'] ?? '');
     }
 
     /**
@@ -287,7 +299,7 @@ class Environment
      */
     public function getHttps(): string
     {
-        return $this->data['HTTPS'] ?? '';
+        return ($this->data['HTTPS'] ?? '');
     }
 
     /**
@@ -297,7 +309,7 @@ class Environment
      */
     public function getRemoteAddr(): string
     {
-        return $this->data['REMOTE_ADDR'] ?? '';
+        return ($this->data['REMOTE_ADDR'] ?? '');
     }
 
     /**
@@ -311,7 +323,7 @@ class Environment
      */
     public function getRemoteHost(): string
     {
-        return $this->data['REMOTE_HOST'] ?? '';
+        return ($this->data['REMOTE_HOST'] ?? '');
     }
 
     /**
@@ -321,7 +333,7 @@ class Environment
      */
     public function getRemotePort(): string
     {
-        return $this->data['REMOTE_PORT'] ?? '';
+        return ($this->data['REMOTE_PORT'] ?? '');
     }
 
     /**
@@ -331,7 +343,7 @@ class Environment
      */
     public function getRemoteUser(): string
     {
-        return $this->data['REMOTE_USER'] ?? '';
+        return ($this->data['REMOTE_USER'] ?? '');
     }
 
     /**
@@ -341,7 +353,7 @@ class Environment
      */
     public function getRedirectRemoteUser(): string
     {
-        return $this->data['REDIRECT_REMOTE_USER'] ?? '';
+        return ($this->data['REDIRECT_REMOTE_USER'] ?? '');
     }
 
     /**
@@ -354,7 +366,7 @@ class Environment
      */
     public function getScriptFilename(): string
     {
-        return $this->data['SCRIPT_FILENAME'] ?? '';
+        return ($this->data['SCRIPT_FILENAME'] ?? '');
     }
 
     /**
@@ -365,7 +377,7 @@ class Environment
      */
     public function getServerAdmin(): string
     {
-        return $this->data['SERVER_ADMIN'] ?? '';
+        return ($this->data['SERVER_ADMIN'] ?? '');
     }
 
     /**
@@ -380,7 +392,7 @@ class Environment
      */
     public function getServerPort(): string
     {
-        return $this->data['SERVER_PORT'] ?? '';
+        return ($this->data['SERVER_PORT'] ?? '');
     }
 
     /**
@@ -390,7 +402,7 @@ class Environment
      */
     public function getServerSignature(): string
     {
-        return $this->data['SERVER_SIGNATURE'] ?? '';
+        return ($this->data['SERVER_SIGNATURE'] ?? '');
     }
 
     /**
@@ -406,7 +418,7 @@ class Environment
      */
     public function getPathTranslated(): string
     {
-        return $this->data['PATH_TRANSLATED'] ?? '';
+        return ($this->data['PATH_TRANSLATED'] ?? '');
     }
 
     /**
@@ -417,7 +429,7 @@ class Environment
      */
     public function getScriptName(): string
     {
-        return $this->data['SCRIPT_NAME'] ?? '';
+        return ($this->data['SCRIPT_NAME'] ?? '');
     }
 
     /**
@@ -427,7 +439,7 @@ class Environment
      */
     public function getRequestUri(): string
     {
-        return $this->data['REQUEST_URI'] ?? '';
+        return ($this->data['REQUEST_URI'] ?? '');
     }
 
     /**
@@ -438,7 +450,7 @@ class Environment
      */
     public function getPHPAuthDigest(): string
     {
-        return $this->data['PHP_AUTH_DIGEST'] ?? '';
+        return ($this->data['PHP_AUTH_DIGEST'] ?? '');
     }
 
     /**
@@ -448,7 +460,7 @@ class Environment
      */
     public function getPHPAuthUser(): string
     {
-        return $this->data['PHP_AUTH_USER'] ?? '';
+        return ($this->data['PHP_AUTH_USER'] ?? '');
     }
 
     /**
@@ -458,7 +470,7 @@ class Environment
      */
     public function getPHPAuthPW(): string
     {
-        return $this->data['PHP_AUTH_PW'] ?? '';
+        return ($this->data['PHP_AUTH_PW'] ?? '');
     }
 
     /**
@@ -468,7 +480,7 @@ class Environment
      */
     public function getAuthType(): string
     {
-        return $this->data['AUTH_TYPE'] ?? '';
+        return ($this->data['AUTH_TYPE'] ?? '');
     }
 
     /**
@@ -481,7 +493,7 @@ class Environment
      */
     public function getPathInfo(): string
     {
-        return $this->data['PATH_INFO'] ?? '';
+        return ($this->data['PATH_INFO'] ?? '');
     }
 
     /**
@@ -491,7 +503,7 @@ class Environment
      */
     public function getOrigPathInfo(): string
     {
-        return $this->data['ORIG_PATH_INFO'] ?? '';
+        return ($this->data['ORIG_PATH_INFO'] ?? '');
     }
 
     /**

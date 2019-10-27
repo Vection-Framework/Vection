@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -26,6 +37,7 @@ use Vection\Component\Http\Server\Environment;
  */
 class ServerRequest extends Request implements ServerRequestInterface
 {
+
     /** @var array */
     protected $environment;
 
@@ -58,10 +70,10 @@ class ServerRequest extends Request implements ServerRequestInterface
     )
     {
         parent::__construct($method, $uri, $headers, null, $version);
-        $this->environment = $environment ?: new Environment();
-        $this->cookieParams = $_COOKIE;
-        $this->queryParams = $_GET;
-        $this->attributes = [];
+        $this->environment   = $environment ?: new Environment();
+        $this->cookieParams  = $_COOKIE;
+        $this->queryParams   = $_GET;
+        $this->attributes    = [];
         $this->uploadedFiles = [];
     }
 
@@ -197,8 +209,8 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withUploadedFiles(array $uploadedFiles)
     {
-        foreach( $uploadedFiles as $uploadedFile ){
-            if( ! $uploadedFile instanceof UploadedFileInterface){
+        foreach ( $uploadedFiles as $uploadedFile ) {
+            if ( ! $uploadedFile instanceof UploadedFileInterface) {
                 throw new InvalidArgumentException(
                     'The first parameter of withUploadedFiles expect an array' .
                     ' contains only items of type UploadedFileInterface.'
@@ -262,7 +274,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withParsedBody($data)
     {
-        if( ! is_object($data) && ! is_array($data) && $data !== null ){
+        if ( ! is_object($data) && ! is_array($data) && $data !== null ) {
             throw new InvalidArgumentException('Given data to withParsedBody MUST be array, object or null.');
         }
 
@@ -305,7 +317,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function getAttribute($name, $default = null)
     {
-        if( ! array_key_exists($name, $this->attributes) ){
+        if ( ! array_key_exists($name, $this->attributes) ) {
             return $default;
         }
 
@@ -353,7 +365,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     public function withoutAttribute($name){
         $request = clone $this;
 
-        if( array_key_exists($name, $request->attributes) ){
+        if ( array_key_exists($name, $request->attributes) ) {
             unset($request->attributes[$name]);
         }
 

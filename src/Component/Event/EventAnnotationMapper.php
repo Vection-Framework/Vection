@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -29,6 +29,7 @@ use Vection\Contracts\Event\EventManagerInterface;
  */
 class EventAnnotationMapper implements CacheAwareInterface
 {
+
     /**
      * @var EventManagerInterface
      */
@@ -73,7 +74,7 @@ class EventAnnotationMapper implements CacheAwareInterface
         }
 
         if ( ! $mapping ) {
-            foreach( $paths as $path ){
+            foreach ( $paths as $path ) {
                 foreach ( glob(rtrim($pathPrefix.$path, '/') . '/*.php') as $classFile ) {
                     $classContent = file_get_contents($classFile);
 
@@ -128,7 +129,7 @@ class EventAnnotationMapper implements CacheAwareInterface
         }
 
         if ( ! $mapping ) {
-            foreach( $paths as $path ){
+            foreach ( $paths as $path ) {
                 foreach ( glob(rtrim($pathPrefix.$path, '/') . '/*.php') as $classFile ) {
                     $classContent = file_get_contents($classFile);
 
@@ -144,8 +145,7 @@ class EventAnnotationMapper implements CacheAwareInterface
                         # required for autoloading or not?
                         class_exists($className);
                         $reflection = new ReflectionClass($className);
-                    }
-                    catch( ReflectionException $e ) {
+                    } catch ( ReflectionException $e ) {
                         continue;
                     }
 
@@ -159,31 +159,39 @@ class EventAnnotationMapper implements CacheAwareInterface
 
                     preg_match_all(
                         '/((event|method|priority)="([^"]+))+"?/',
-                        $matches[1], $m, PREG_SET_ORDER
+                        $matches[1],
+                        $m,
+                        PREG_SET_ORDER
                     );
 
                     $subscription = array_column($m, 3, 2);
 
-                    if( ! isset($subscription['event']) ){
-                        throw new InvalidAnnotationException(sprintf(
-                            'Missing event name for subscription in %s.', $className
-                        ));
+                    if ( ! isset($subscription['event']) ) {
+                        throw new InvalidAnnotationException(
+                            sprintf(
+                                'Missing event name for subscription in %s.',
+                                $className
+                            )
+                        );
                     }
 
-                    if( ! isset($subscription['method']) ){
-                        if( $reflection->implementsInterface(EventHandlerMethodInterface::class) ){
+                    if ( ! isset($subscription['method']) ) {
+                        if ( $reflection->implementsInterface(EventHandlerMethodInterface::class) ) {
                             $subscription['method'] = '';
-                        }else{
-                            throw new InvalidAnnotationException(sprintf(
-                                'Missing handler method definition or implementation of %s in class %s.',
-                                EventHandlerMethodInterface::class, $className
-                            ));
+                        } else {
+                            throw new InvalidAnnotationException(
+                                sprintf(
+                                    'Missing handler method definition or implementation of %s in class %s.',
+                                    EventHandlerMethodInterface::class,
+                                    $className
+                                )
+                            );
                         }
                     }
 
                     $mapping[$subscription['event']][] = [
                         [ $className, $subscription['method'] ],
-                        $subscription['priority'] ?? 0
+                        ($subscription['priority'] ?? 0)
                     ];
 
                 }

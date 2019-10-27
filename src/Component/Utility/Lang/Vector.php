@@ -3,7 +3,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Bjoern Klemm <vection@bjoernklemm.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -24,6 +24,7 @@ use Traversable;
  */
 class Vector implements \Countable, \ArrayAccess, \IteratorAggregate
 {
+
     /** @var array|\ArrayAccess */
     private $list;
 
@@ -34,9 +35,9 @@ class Vector implements \Countable, \ArrayAccess, \IteratorAggregate
      */
     public function __construct($list)
     {
-        if( $list instanceof \ArrayAccess ) {
-            $this->list = (array)$list;
-        } else if( \is_array($list) ) {
+        if ( $list instanceof \ArrayAccess ) {
+            $this->list = (array) $list;
+        } else if ( \is_array($list) ) {
             $this->list = $list;
         }
         throw new \InvalidArgumentException('Argument Object must be ArrayAccess or native array');
@@ -55,7 +56,7 @@ class Vector implements \Countable, \ArrayAccess, \IteratorAggregate
      */
     public function extend(iterable $items): void
     {
-        foreach( $items as $item ) {
+        foreach ( $items as $item ) {
             $this->append($item);
         }
     }
@@ -97,8 +98,8 @@ class Vector implements \Countable, \ArrayAccess, \IteratorAggregate
 
         $list = $list ?: $this->list;
 
-        foreach( $list as $key => $item ) {
-            if( \is_array($item) ) {
+        foreach ( $list as $key => $item ) {
+            if ( \is_array($item) ) {
                 $result[$key] = $this->map($function, $item);
             } else {
                 $result[$key] = $function($item);
@@ -116,7 +117,7 @@ class Vector implements \Countable, \ArrayAccess, \IteratorAggregate
     {
         $result = [];
 
-        foreach( $this->list as $key => $item ) {
+        foreach ( $this->list as $key => $item ) {
             $result[$prefix . $key] = $item;
         }
 
@@ -157,7 +158,7 @@ class Vector implements \Countable, \ArrayAccess, \IteratorAggregate
     }
 
 
-    //region BOOLEANS
+    // region BOOLEANS
 
     /**
      * @return bool
@@ -186,7 +187,7 @@ class Vector implements \Countable, \ArrayAccess, \IteratorAggregate
     }
 
 
-    //endregion
+    // endregion
 
     /**
      * Retrieve an external iterator

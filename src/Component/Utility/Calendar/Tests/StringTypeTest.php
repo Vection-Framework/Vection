@@ -3,7 +3,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Bjoern Klemm <vection@bjoernklemm.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,36 +20,36 @@ class StringTypeTest extends TestCase
 
     public function testTitle()
     {
-        $s = new StringType( 'äpfel siNd wiE Birnen! richtig?' );
-        $this->assertEquals( 'Äpfel Sind Wie Birnen! Richtig?', $s->title() );
+        $s = new StringType('äpfel siNd wiE Birnen! richtig?');
+        $this->assertEquals('Äpfel Sind Wie Birnen! Richtig?', $s->title());
     }
 
     public function testStartsWith()
     {
-        $s = new StringType( 'äpfel siNd wiE Birnen! richtig?' );
-        $this->assertTrue( $s->startsWith( 'äpfel siN ' ) );
+        $s = new StringType('äpfel siNd wiE Birnen! richtig?');
+        $this->assertTrue($s->startsWith('äpfel siN '));
     }
 
     public function testIsLower()
     {
-        $s = new StringType( 'äpfel 11' );
-        $this->assertTrue( $s->isLower() );
-        $s = new StringType( 'Äpfel 11' );
-        $this->assertFalse( $s->isLower() );
+        $s = new StringType('äpfel 11');
+        $this->assertTrue($s->isLower());
+        $s = new StringType('Äpfel 11');
+        $this->assertFalse($s->isLower());
     }
 
     public function testIsNumeric()
     {
-        $s = new StringType( '111' );
-        $this->assertTrue( $s->isNumeric() );
-        $s->append( ' A' );
-        $this->assertFalse( $s->isNumeric() );
+        $s = new StringType('111');
+        $this->assertTrue($s->isNumeric());
+        $s->append(' A');
+        $this->assertFalse($s->isNumeric());
     }
 
     public function testUpper()
     {
-        $s = new StringType( 'ÄPFEL' );
-        $this->assertFalse( $s->isLower() );
+        $s = new StringType('ÄPFEL');
+        $this->assertFalse($s->isLower());
     }
 
     public function testCount()
@@ -79,19 +79,19 @@ class StringTypeTest extends TestCase
 
     public function testReversed()
     {
-        $s = new StringType( 'äpfel siNd' );
-        $this->assertEquals( 'dNis lefpä', $s->reversed() );
-        $this->assertNotEquals( 'dnis lefpä', $s->reversed() );
+        $s = new StringType('äpfel siNd');
+        $this->assertEquals('dNis lefpä', $s->reversed());
+        $this->assertNotEquals('dnis lefpä', $s->reversed());
     }
 
     public function testIsAlphaNumeric()
     {
-        $s = new StringType( 'apfel999' );
-        $this->assertTrue( $s->isAlphaNumeric() );
+        $s = new StringType('apfel999');
+        $this->assertTrue($s->isAlphaNumeric());
 
-        $s = new StringType( 'äpfel999' );
-        $this->assertFalse( $s->isAlphaNumeric() ); //TODO: failed not multi byte safe
-
+        $s = new StringType('äpfel999');
+        $this->assertFalse($s->isAlphaNumeric());
+// TODO: failed not multi byte safe.
     }
 
     public function testEncode()
@@ -101,23 +101,23 @@ class StringTypeTest extends TestCase
 
     public function testContains()
     {
-        $s = new StringType( 'äpfel siNd wiE Birnen! richtig?' );
-        $this->assertTrue( $s->contains( 'äpfel siNd ' ) );
-        $this->assertFalse( $s->contains( 'äpfel sind ' ) );
+        $s = new StringType('äpfel siNd wiE Birnen! richtig?');
+        $this->assertTrue($s->contains('äpfel siNd '));
+        $this->assertFalse($s->contains('äpfel sind '));
     }
 
     public function testEquals()
     {
-        $s = new StringType( 'äpfel siNd wiE Birnen! richtig?' );
-        $this->assertTrue( $s->equals( 'äpfel siNd wiE Birnen! richtig?' ) );
-        $this->assertFalse( $s->equals( 'äpfel siNd wie Birnen! richtig?' ) );
+        $s = new StringType('äpfel siNd wiE Birnen! richtig?');
+        $this->assertTrue($s->equals('äpfel siNd wiE Birnen! richtig?'));
+        $this->assertFalse($s->equals('äpfel siNd wie Birnen! richtig?'));
     }
 
     public function testLen()
     {
-        $s = new StringType( 'äpfel' );
-        $this->assertEquals( 5, $s->len() );
-        $this->assertNotEquals( 6, $s->len() );
+        $s = new StringType('äpfel');
+        $this->assertEquals(5, $s->len());
+        $this->assertNotEquals(6, $s->len());
     }
 
     public function testSnake()

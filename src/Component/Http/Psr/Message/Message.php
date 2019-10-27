@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -26,6 +26,7 @@ use Vection\Component\Http\Headers;
  */
 abstract class Message implements MessageInterface
 {
+
     /** @var string */
     protected $protocolVersion = '1.0';
 
@@ -44,8 +45,8 @@ abstract class Message implements MessageInterface
      */
     public function __construct(Headers $headers, ? StreamInterface $stream = null, string $protocolVersion = '1.0')
     {
-        $this->headers = $headers;
-        $this->stream = $stream;
+        $this->headers         = $headers;
+        $this->stream          = $stream;
         $this->protocolVersion = $protocolVersion;
     }
 
@@ -245,7 +246,7 @@ abstract class Message implements MessageInterface
      */
     public function getBody(): StreamInterface
     {
-        if( ! $this->stream ){
+        if ( ! $this->stream ) {
             $this->stream = new Stream(fopen('php://temp', 'rw+b'));
         }
 
@@ -268,7 +269,7 @@ abstract class Message implements MessageInterface
      */
     public function withBody(StreamInterface $body)
     {
-        $message = clone $this;
+        $message         = clone $this;
         $message->stream = $body;
 
         return $message;

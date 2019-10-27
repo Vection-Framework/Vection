@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -40,7 +51,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      * Contains namespaces which will be used for auto setting classes
      * into the registry. All classes in this namespaces no longer have
      * to be registered by the Container::set or config file.
-     * 
+     *
      * @var array
      */
     protected $registeredNamespaces;
@@ -93,10 +104,10 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
     {
         $this->logger = new NullLogger();
         $this->sharedObjects[self::class] = $this;
-        $this->definitions = new ArrayObject();
+        $this->definitions  = new ArrayObject();
         $this->dependencies = new ArrayObject();
-        $this->resolver = new Resolver($this->definitions, $this->dependencies);
-        $this->injector = new Injector($this, $this->dependencies);
+        $this->resolver     = new Resolver($this->definitions, $this->dependencies);
+        $this->injector     = new Injector($this, $this->dependencies);
     }
 
     /**
@@ -130,20 +141,20 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      */
     public function load(string $path): void
     {
-        if( ! ($pathArray = glob($path)) ) {
+        if ( ! ($pathArray = glob($path)) ) {
             throw new InvalidArgumentException("Given path is not valid or doesn't exists.");
         }
 
-        foreach( $pathArray as $_path ) {
-            /** @noinspection PhpIncludeInspection */
-            $definitions = require $_path;
+        foreach ( $pathArray as $filePath ) {
+            // @noinspection PhpIncludeInspection
+            $definitions = require $filePath;
 
-            if( ! is_array($definitions) ) {
-                throw new RuntimeException("Cannot load definition from {$_path}.");
+            if ( ! is_array($definitions) ) {
+                throw new RuntimeException("Cannot load definition from {$filePath}.");
             }
 
-            foreach( $definitions as $definition ){
-                if( ! $definition instanceof Definition ){
+            foreach ( $definitions as $definition ) {
+                if ( ! $definition instanceof Definition ) {
                     throw new RuntimeException(
                         'Invalid configuration file: Each entry must be of type Definition.'
                     );
@@ -165,17 +176,17 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
     {
         $factory = $this->definitions[$className]->getFactory();
 
-        if( $constructParams && ! $factory ){
+        if ( $constructParams && ! $factory ) {
             return new $className(...$constructParams);
         }
 
-        if( $factory ){
+        if ( $factory ) {
             return $factory($this, ...$constructParams);
         }
 
-        if( $constructParams = $this->dependencies[$className]['construct'] ){
+        if ( $constructParams = $this->dependencies[$className]['construct'] ) {
             $paramObjects = [];
-            foreach( $constructParams as $param ){
+            foreach ( $constructParams as $param ) {
                 $paramObjects[] = $this->get($param);
             }
             return new $className(...$paramObjects);
@@ -192,28 +203,28 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
     private function evaluate(string $id): bool
     {
         # Check if there is an defined entry for the given id
-        if( ! $this->has($id) ) {
+        if ( ! $this->has($id) ) {
             # There is no entry for this id
 
-            if( ! $this->registeredNamespaces ) {
+            if ( ! $this->registeredNamespaces ) {
                 # There is no entry and no scope, so return an empty array
                 return false;
             }
 
-            if( $this->registeredNamespaces[0] === '*' ){
+            if ( $this->registeredNamespaces[0] === '*' ) {
                 $this->set($id);
                 return true;
             }
 
             # Check if the id is part of a registered namespace scope
-            foreach( $this->registeredNamespaces as $namespace ) {
-                if( strpos($id, $namespace) === 0 ) {
+            foreach ( $this->registeredNamespaces as $namespace ) {
+                if ( strpos($id, $namespace) === 0 ) {
                     # The id matches a scope, so we allow to register a default definition for this id
                     $this->set($id);
                 }
             }
 
-            if( ! $this->has($id) ) {
+            if ( ! $this->has($id) ) {
                 # There is no entry for this id and it is not a part of a scope
                 return false;
             }
@@ -227,7 +238,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      */
     private function initializeObject(object $object): void
     {
-        if( method_exists($object, '__init') && is_callable($object->__init()) ) {
+        if ( method_exists($object, '__init') && is_callable($object->__init()) ) {
              $object->__init();
         }
     }
@@ -280,11 +291,11 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
     {
         $className = ltrim($id, "\\");
 
-        if( isset($this->sharedObjects[$className]) ) {
+        if ( isset($this->sharedObjects[$className]) ) {
             return $this->sharedObjects[$className];
         }
 
-        if( ! $this->evaluate($className) ) {
+        if ( ! $this->evaluate($className) ) {
             throw new NotFoundException('DI Container: Unregistered identifier: '.$className);
         }
 
@@ -292,7 +303,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
         $object = $this->createObject($className);
         $this->injector->injectDependencies($object);
 
-        if( ($definition = $this->definitions[$className] ?? null) && $definition->isShared() ) {
+        if ( ($definition = $this->definitions[$className] ?? null) && $definition->isShared() ) {
             $this->sharedObjects[$className] = $object;
         }
 
@@ -317,11 +328,11 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
     {
         $className = trim($identifier, "\\");
 
-        if( ! $this->evaluate($className) ) {
+        if ( ! $this->evaluate($className) ) {
             throw new NotFoundException('DI Container: Unregistered identifier: '.$className);
         }
 
-        if( ! isset($this->definitions[$className]) ){
+        if ( ! isset($this->definitions[$className]) ) {
             $this->definitions[$className] = new Definition($className);
         }
 
@@ -331,7 +342,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
         $object = $this->createObject($className, $constructParams);
         $this->injector->injectDependencies($object);
 
-        if( $shared ) {
+        if ( $shared ) {
             $this->sharedObjects[$className] = $object;
         }
 

@@ -3,7 +3,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Bjoern Klemm <vection@bjoernklemm.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -30,13 +30,13 @@ class FSHelper
     public static function getRelativePath(string $from, string $to): string
     {
         $from = \is_dir($from) ? \rtrim($from, '\/') . '/' : $from;
-        $to = \is_dir($to) ? \rtrim($to, '\/') . '/' : $to;
+        $to   = \is_dir($to) ? \rtrim($to, '\/') . '/' : $to;
 
         $from = \str_replace('\\', '/', $from);
-        $to = \str_replace('\\', '/', $to);
+        $to   = \str_replace('\\', '/', $to);
 
         $from = \explode('/', $from);
-        $to = \explode('/', $to);
+        $to   = \explode('/', $to);
 
         $relPath = $to;
 
@@ -47,11 +47,11 @@ class FSHelper
                 \array_shift($relPath);
             } else {
                 # get number of remaining dirs to $from
-                $remaining = \count($from) - $depth;
+                $remaining = (\count($from) - $depth);
                 if ( $remaining > 1 ) {
                     # add traversals up to first matching dir
-                    $padLength = ( \count($relPath) + $remaining - 1 ) * -1;
-                    $relPath = \array_pad($relPath, $padLength, '..');
+                    $padLength = (( \count($relPath) + $remaining - 1 ) * -1);
+                    $relPath   = \array_pad($relPath, $padLength, '..');
                     break;
                 }
                 $relPath[0] = './' . $relPath[0];
@@ -77,7 +77,7 @@ class FSHelper
      */
     public static function buildFilePath(string $path, array $fileparts, string $ext = null): string
     {
-        $ext = $ext ? '.' . $ext: '';
+        $ext = $ext ? '.' . $ext : '';
 
         $path = (substr($path, -1) === '/') ? $path : $path . DIRECTORY_SEPARATOR;
 
@@ -95,7 +95,7 @@ class FSHelper
      */
     public static function matchInFile(string $file, string $search): bool
     {
-        if ( ! is_file($file) ){
+        if ( ! is_file($file) ) {
             return false;
         }
 

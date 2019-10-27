@@ -27,6 +27,7 @@ use Vection\Contracts\Validator\Schema\SchemaValidatorInterface;
  */
 class SchemaValidator implements SchemaValidatorInterface
 {
+
     /**
      * @var SchemaInterface
      */
@@ -47,7 +48,7 @@ class SchemaValidator implements SchemaValidatorInterface
      */
     public function validate(string $path): array
     {
-        if( ! file_exists($path) ){
+        if ( ! file_exists($path) ) {
             throw new RuntimeException('File not exists: '.$path);
         }
 
@@ -55,11 +56,11 @@ class SchemaValidator implements SchemaValidatorInterface
 
         $content = file_get_contents($path);
 
-        if( in_array($ext, ['yaml', 'yml']) ){
+        if ( in_array($ext, ['yaml', 'yml']) ) {
             return $this->validateYamlString($content);
         }
 
-        if( $ext === 'json' ){
+        if ( $ext === 'json' ) {
             return $this->validateJsonString($content);
         }
 
@@ -73,7 +74,7 @@ class SchemaValidator implements SchemaValidatorInterface
     {
         $data = json_decode($json, true);
 
-        if( json_last_error() !== JSON_ERROR_NONE ) {
+        if ( json_last_error() !== JSON_ERROR_NONE ) {
             throw new RuntimeException(json_last_error_msg());
         }
 
@@ -87,13 +88,13 @@ class SchemaValidator implements SchemaValidatorInterface
      */
     public function validateYamlString(string $yaml): array
     {
-        if( ! function_exists('yaml_parse') ){
+        if ( ! function_exists('yaml_parse') ) {
             throw new RuntimeException('Schema validation for yaml files require the php yaml extension.');
         }
 
         $data = yaml_parse($yaml);
 
-        if( $data === false || ! is_array($data) ) {
+        if ( $data === false || ! is_array($data) ) {
             throw new RuntimeException('Schema validation: Cannot parse yaml string - invalid yaml.');
         }
 

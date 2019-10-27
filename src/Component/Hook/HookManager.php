@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -21,6 +32,7 @@ use Vection\Component\Hook\Exception\HookException;
  */
 class HookManager
 {
+
     /** @var array */
     protected $configuration;
 
@@ -32,12 +44,12 @@ class HookManager
      */
     public function loadConfig(string $path)
     {
-        if( ! file_exists($path) ){
+        if ( ! file_exists($path) ) {
             throw new \RuntimeException("Cannot find hook configuration by path '$path'");
         }
 
-        if( in_array(pathinfo($path, PATHINFO_EXTENSION), ['yml','yaml']) ){
-            if( ! function_exists('yaml_parse_file') ){
+        if ( in_array(pathinfo($path, PATHINFO_EXTENSION), ['yml','yaml']) ) {
+            if ( ! function_exists('yaml_parse_file') ) {
                 throw new \RuntimeException(
                     "Cannot parse hook config file: Please install yaml extension 
                     to parse yaml configuration or use json format."
@@ -47,38 +59,37 @@ class HookManager
             $this->configuration = yaml_parse_file($path);
         }
 
-        if( pathinfo($path, PATHINFO_EXTENSION) === 'json' ){
+        if ( pathinfo($path, PATHINFO_EXTENSION) === 'json' ) {
 
             $this->configuration = json_decode(file_get_contents($path), true);
 
-            if( json_last_error() !== JSON_ERROR_NONE ){
+            if ( json_last_error() !== JSON_ERROR_NONE ) {
                 throw new \RuntimeException(
                     "Invalid hook configuration ($path): " . json_last_error_msg()
                 );
             }
         }
 
-        if( ! $this->configuration ){
+        if ( ! $this->configuration ) {
             throw new \RuntimeException(
                 "Unsupported hook configuration file. Please use yaml or json format."
             );
         }
 
-        foreach( $this->configuration as $scope => &$config ){
+        foreach ( $this->configuration as $scope => &$config ) {
 
             $p = $config['hooks']['path'];
-            if( strpos($p, '.') === 0 ){
+            if ( strpos($p, '.') === 0 ) {
                 $config['hooks']['path'] = dirname($path) . '/'.$p;
             }
 
             $pattern = "{$config['hooks']['path']}/*/{$scope}.{yml,yaml,json}";
 
-            foreach( glob($pattern, GLOB_BRACE) as $path ){
+            foreach ( glob($pattern, GLOB_BRACE) as $path ) {
 
             }
 
         }
-
 
     }
 
@@ -113,11 +124,11 @@ class HookManager
      */
     public function getLoader(string $scope, string $hookPointName): HookLoader
     {
-        if( ! isset($this->configuration[$scope]) ){
+        if ( ! isset($this->configuration[$scope]) ) {
             throw new HookException("Cannot find given scope '$scope'.");
         }
 
-        if( ! isset($this->configuration[$scope]['providers'][$hookPointName]) ){
+        if ( ! isset($this->configuration[$scope]['providers'][$hookPointName]) ) {
             throw new HookException("Cannot find given hook point '$hookPointName'.");
         }
 

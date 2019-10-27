@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection project.
  * Visit project at https://www.vection.de
  *
@@ -33,13 +44,15 @@ class EventManagerTest extends TestCase
     {
         $eventManager = new EventManager();
 
-        /** @var TestEventListener $handler */
+        // @var TestEventListener $handler
         $handler = null;
 
-        $eventManager->setEventListenerFactory(function($className) use (&$handler){
+        $eventManager->setEventListenerFactory(
+            function($className) use (&$handler){
             # Only for testing the callback
             return $handler = new $className();
-        });
+            }
+        );
 
         $eventManager->addEventListener(TestEvent::NAME, [TestEventListener::class, 'onSetString']);
 
@@ -59,8 +72,7 @@ class EventManagerTest extends TestCase
         $eventManager->addEventListener('vection.test', [TestDefaultEventHandler::class, 'onTestEvent']);
         $eventManager->fire('vection.test');
 
-        //$this->assertEquals('vection.test', TEST_DEFAULT_EVENT_NAME);
-
+        // $this->assertEquals('vection.test', TEST_DEFAULT_EVENT_NAME);
         $this->assertTrue(true);
     }
 
@@ -72,15 +84,17 @@ class EventManagerTest extends TestCase
         $eventManager = new EventManager();
         $eventManager->setWildcardSeparator('.');
 
-        /** @var TestEventListener $handler */
-        $handler = null;
+        // @var TestEventListener $handler
+        $handler          = null;
         $handlerInitCount = 0;
 
-        $eventManager->setEventListenerFactory(function($className) use (&$handler, &$handlerInitCount){
+        $eventManager->setEventListenerFactory(
+            function($className) use (&$handler, &$handlerInitCount){
             $handler = new $className();
             $handlerInitCount++;
             return $handler;
-        });
+            }
+        );
 
         # This event listener register for wildcard event to be notified when fire 'vection.unit.test'
         $eventManager->addEventListener('vection.unit', [TestEventListener::class, 'onNotifyByWildcard']);

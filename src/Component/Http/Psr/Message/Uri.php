@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -24,6 +24,7 @@ use Psr\Http\Message\UriInterface;
  */
 class Uri implements UriInterface
 {
+
     /** @var string */
     protected $schema;
 
@@ -33,7 +34,7 @@ class Uri implements UriInterface
     /** @var string */
     protected $host;
 
-    /** @var int */
+    /** @var integer */
     protected $port;
 
     /** @var string */
@@ -84,17 +85,17 @@ class Uri implements UriInterface
      */
     public function getAuthority(): string
     {
-        if( ! $this->host ){
+        if ( ! $this->host ) {
             return '';
         }
 
         $authority = $this->host;
 
-        if( $this->userInfo ){
+        if ( $this->userInfo ) {
             $authority = $this->userInfo.'@'.$authority;
         }
 
-        if( $this->port !== null ){
+        if ( $this->port !== null ) {
             $authority .= ':'.$this->port;
         }
 
@@ -154,7 +155,7 @@ class Uri implements UriInterface
      */
     public function getPort(): ? int
     {
-        return $this->port ?? null;
+        return ($this->port ?? null);
     }
 
     /**
@@ -251,7 +252,7 @@ class Uri implements UriInterface
      */
     public function withScheme($scheme)
     {
-        $uri = clone $this;
+        $uri         = clone $this;
         $uri->schema = $scheme;
         return $uri;
     }
@@ -273,7 +274,7 @@ class Uri implements UriInterface
      */
     public function withUserInfo($user, $password = null)
     {
-        $uri = clone $this;
+        $uri           = clone $this;
         $uri->userInfo = $user . ($password ? ':'.$password : '');
         return $uri;
     }
@@ -293,7 +294,7 @@ class Uri implements UriInterface
      */
     public function withHost($host)
     {
-        $uri = clone $this;
+        $uri       = clone $this;
         $uri->host = $host;
         return $uri;
     }
@@ -318,11 +319,11 @@ class Uri implements UriInterface
      */
     public function withPort($port)
     {
-        if( !is_int($port) || $port < 0 || $port > 0xffff ){
+        if ( !is_int($port) || $port < 0 || $port > 0xffff ) {
             throw new InvalidArgumentException("Invalid port ($port). Expect integer between 0 and 65535.");
         }
 
-        $uri = clone $this;
+        $uri       = clone $this;
         $uri->port = $port;
         return $uri;
     }
@@ -352,7 +353,7 @@ class Uri implements UriInterface
      */
     public function withPath($path)
     {
-        $uri = clone $this;
+        $uri       = clone $this;
         $uri->path = $path;
         return $uri;
     }
@@ -375,7 +376,7 @@ class Uri implements UriInterface
      */
     public function withQuery($query)
     {
-        $uri = clone $this;
+        $uri        = clone $this;
         $uri->query = $query;
         return $uri;
     }
@@ -397,7 +398,7 @@ class Uri implements UriInterface
      */
     public function withFragment($fragment)
     {
-        $uri = clone $this;
+        $uri           = clone $this;
         $uri->fragment = $fragment;
         return $uri;
     }
@@ -429,24 +430,24 @@ class Uri implements UriInterface
     {
         $uri = ($this->schema ? $this->schema . ':' : '');
 
-        if( $authority = $this->getAuthority() ){
+        if ( $authority = $this->getAuthority() ) {
             $uri .= '//'.$authority;
         }
 
-        if( $path = $this->path ){
-            if( $path[0] !== '/' ){
+        if ( $path = $this->path ) {
+            if ( $path[0] !== '/' ) {
                 $path = $authority ? '/'.$path : $path;
-            }elseif( ($path[1] ?? null) === '/' ){
+            } else if ( ($path[1] ?? null) === '/' ) {
                 $path = $authority ? '' : '/' . ltrim($path, '/');
             }
             $uri .= $path;
         }
 
-        if( $this->query ){
+        if ( $this->query ) {
             $uri .= '?' . $this->query;
         }
 
-        if( $this->fragment ){
+        if ( $this->fragment ) {
             $uri .= '#' . $this->fragment;
         }
 

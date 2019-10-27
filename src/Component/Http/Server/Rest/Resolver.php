@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -29,6 +29,7 @@ use Vection\Contracts\Cache\CacheInterface;
  */
 class Resolver implements CacheAwareInterface
 {
+
     /**
      * @var RestResource[]
      */
@@ -89,7 +90,7 @@ class Resolver implements CacheAwareInterface
      */
     public function setMethodOperation(string $method, string $operation): void
     {
-        if( ! isset($this->methodOperations[$method = strtoupper($method)]) ){
+        if ( ! isset($this->methodOperations[$method = strtoupper($method)]) ) {
             throw new InvalidArgumentException("The method '{$method}' is not a valid http method.");
         }
 
@@ -117,8 +118,8 @@ class Resolver implements CacheAwareInterface
     {
         $method = strtoupper($method);
 
-        if( $this->cache && $this->cache->contains($path) ){
-            /** @var Match $match */
+        if ( $this->cache && $this->cache->contains($path) ) {
+            // @var Match $match
             $match = $this->cache->getObject($path);
             return $match;
         }
@@ -126,87 +127,86 @@ class Resolver implements CacheAwareInterface
         $tree = [];
 
         # Build routing tree
-        foreach( $this->resources as $resource ){
+        foreach ( $this->resources as $resource ) {
             $temp = &$tree;
-            foreach( explode('/', $resource->getCanonical()) as $seg) {
+            foreach ( explode('/', $resource->getCanonical()) as $seg) {
                 $temp = &$temp[$seg];
             }
             $temp['#resource'] = $resource;
         }
 
-        $resource = null;
-        $resourceIds = [];
-        $rootResource = null;
+        $resource         = null;
+        $resourceIds      = [];
+        $rootResource     = null;
         $methodOperations = $this->methodOperations;
-        $segments = explode('/', $path);
+        $segments         = explode('/', $path);
 
-        while( $segment = array_shift($segments) ){
+        while ( $segment = array_shift($segments) ) {
 
             $operation = null;
 
-            if( strpos($segment, ':') ){
+            if ( strpos($segment, ':') ) {
                 [$segment, $operation] = explode(':', $segment);
             }
 
-            if( ! isset($tree[$segment]) ){
+            if ( ! isset($tree[$segment]) ) {
                 throw new ResourceNotFoundException('The requested resource does not exists.');
             }
 
             $tree = $tree[$segment];
 
-            /** @var RestResource $resource */
-            $resource = $tree['#resource'];
+            // @var RestResource $resource
+            $resource   = $tree['#resource'];
             $resourceId = null;
 
-            if( $rootResource === null ){
+            if ( $rootResource === null ) {
                 $rootResource = $resource;
             }
 
             $allowedMethods = $resource->getAllowedMethods();
-            if( ! in_array($method, $allowedMethods, true) ){
+            if ( ! in_array($method, $allowedMethods, true) ) {
                 throw new BadRequestException(
                     'Invalid method. This resource supports only one of this methods: '.implode(', ', $allowedMethods)
                 );
             }
 
-            foreach( $this->guards as $guard ){
+            foreach ( $this->guards as $guard ) {
                 $guard($resource);
             }
 
-            if( $resource instanceof Collection){
+            if ( $resource instanceof Collection) {
 
                 $resourceId = array_shift($segments);
 
-                if( $operation ){
+                if ( $operation ) {
                     $methodOperations['POST'] = lcfirst($operation);
-                }elseif($resourceId === null){
+                } else if ($resourceId === null) {
                     $methodOperations['GET'] = 'list';
                 }
 
-                if( $resourceId === null ){
+                if ( $resourceId === null ) {
                     break;
                 }
 
                 $resourceIds[] = $resourceId;
-            }
-            elseif($operation){
+            } else if ($operation) {
                 $methodOperations['POST'] = lcfirst($operation);
             }
 
-            if( $operation && count($segments) > 0 ){
+            if ( $operation && count($segments) > 0 ) {
                 throw new BadRequestException(
                     'Alternative resource operations cannot contain further child resources.'
                 );
             }
         }
 
-        if( $methodOperations['POST'] !== 'create' ){
-            if( $method !== 'POST' ){
+        if ( $methodOperations['POST'] !== 'create' ) {
+            if ( $method !== 'POST' ) {
                 throw new BadRequestException(
                     'Alternative resource operations must be requested by POST.'
                 );
             }
-            if( ! preg_match('/^[a-zA-Z]+$/', $methodOperations['POST']) ){
+            if ( ! preg_match('/^[a-zA-Z]+$/', $methodOperations['POST']) ) {
                 throw new BadRequestException(
                     'Invalid operation method.'
                 );

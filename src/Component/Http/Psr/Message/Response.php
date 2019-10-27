@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -25,7 +36,8 @@ use Vection\Component\Http\Status;
  */
 class Response extends Message implements ResponseInterface
 {
-    /** @var int */
+
+    /** @var integer */
     protected $statusCode;
 
     /** @var string */
@@ -45,7 +57,7 @@ class Response extends Message implements ResponseInterface
     )
     {
         parent::__construct($headers ?: new Headers(), $body, $version);
-        $this->statusCode = $status;
+        $this->statusCode   = $status;
         $this->reasonPhrase = $reasonPhrase ?: Status::getPhrase($status);
     }
 
@@ -107,9 +119,9 @@ class Response extends Message implements ResponseInterface
         $response = clone $this;
         $response->statusCode = $code;
 
-        if( ! $reasonPhrase ){
+        if ( ! $reasonPhrase ) {
             $response->reasonPhrase = Status::getPhrase($code);
-        }else{
+        } else {
             $response->reasonPhrase = $reasonPhrase;
         }
 

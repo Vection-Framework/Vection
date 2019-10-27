@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -39,19 +39,19 @@ class UriFactory implements UriFactoryInterface
      */
     public function createUri(string $uriString = ''): UriInterface
     {
-        if( ! $uriString ){
+        if ( ! $uriString ) {
             return new Uri();
         }
 
-        if( ! $components = parse_url($uriString) ){
+        if ( ! $components = parse_url($uriString) ) {
             throw new InvalidArgumentException("Invalid URI '$uriString'");
         }
 
         $uri = $this->createFromUrlComponents($components);
 
-        if( ! $uri->getPort() ){
+        if ( ! $uri->getPort() ) {
             $port = Port::getDefaultPort($uri->getScheme());
-            if( $port ){
+            if ( $port ) {
                 $uri = $uri->withPort($port);
             }
         }
@@ -68,31 +68,31 @@ class UriFactory implements UriFactoryInterface
     {
         $uri = new Uri();
 
-        if( isset($urlComponents['scheme']) ){
+        if ( isset($urlComponents['scheme']) ) {
             $uri = $uri->withScheme($urlComponents['scheme']);
         }
 
-        if( isset($urlComponents['user']) ){
-            $uri = $uri->withUserInfo($urlComponents['user'], $urlComponents['pass'] ?? null);
+        if ( isset($urlComponents['user']) ) {
+            $uri = $uri->withUserInfo($urlComponents['user'], ($urlComponents['pass'] ?? null));
         }
 
-        if( isset($urlComponents['host']) ){
+        if ( isset($urlComponents['host']) ) {
             $uri = $uri->withHost($urlComponents['host']);
         }
 
-        if( isset($urlComponents['port']) ){
-            $uri = $uri->withPort((int)$urlComponents['port']);
+        if ( isset($urlComponents['port']) ) {
+            $uri = $uri->withPort((int) $urlComponents['port']);
         }
 
-        if( isset($urlComponents['path']) ){
+        if ( isset($urlComponents['path']) ) {
             $uri = $uri->withPath($urlComponents['path']);
         }
 
-        if( isset($urlComponents['query']) ){
+        if ( isset($urlComponents['query']) ) {
             $uri = $uri->withQuery($urlComponents['query']);
         }
 
-        if( isset($urlComponents['fragment']) ){
+        if ( isset($urlComponents['fragment']) ) {
             $uri = $uri->withFragment($urlComponents['fragment']);
         }
 

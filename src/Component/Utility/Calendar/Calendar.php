@@ -3,7 +3,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Bjoern Klemm <vection@bjoernklemm.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -19,21 +19,26 @@ namespace Vection\Component\Utility\Calendar;
  */
 class Calendar implements CalendarInterface
 {
+
     /** @var \DateTimeInterface */
     protected $dateTime;
+
+    /**
+     * @var array
+     */
     protected $fields = [];
 
 
-    public const DAY_OF_MONTH = 0;
+    public const DAY_OF_MONTH  = 0;
     public const DAYS_OF_MONTH = 1;
-    public const DAY_OF_WEEK = 2;
-    public const DAY_OF_YEAR = 3;
-    public const WEEK_OF_YEAR = 4;
+    public const DAY_OF_WEEK   = 2;
+    public const DAY_OF_YEAR   = 3;
+    public const WEEK_OF_YEAR  = 4;
     public const MONTH_OF_YEAR = 5;
-    public const MONTH = 6;
-    public const YEAR = 7;
-    public const IS_LEAP_YEAR = 8;
-    public const AM_PM = 9;
+    public const MONTH         = 6;
+    public const YEAR          = 7;
+    public const IS_LEAP_YEAR  = 8;
+    public const AM_PM         = 9;
 
     /**
      * Calendar constructor.
@@ -86,7 +91,7 @@ class Calendar implements CalendarInterface
      */
     public function add($f, $delta)
     {
-        $this->set($f, $this->get($f) + $delta);
+        $this->set($f, ($this->get($f) + $delta));
     }
 
     /**

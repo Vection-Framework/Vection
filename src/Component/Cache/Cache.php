@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection project.
  * Visit project at https://www.vection.de
  *
@@ -22,6 +33,7 @@ use Vection\Contracts\Cache\CacheProviderInterface;
  */
 class Cache implements CacheInterface
 {
+
     /**
      * Each cache instance can have a specific key namespace
      * to separate the values from other cache instances.
@@ -69,8 +81,8 @@ class Cache implements CacheInterface
     public function __construct(CacheProviderInterface $cacheProvider, string $namespace = '', string $nsSeparator = '')
     {
         $this->cacheProvider = $cacheProvider;
-        $this->namespace = $namespace ?: 'Vection-Cache';
-        $this->nsSeparator = $nsSeparator ?: ':';
+        $this->namespace     = $namespace ?: 'Vection-Cache';
+        $this->nsSeparator   = $nsSeparator ?: ':';
     }
 
     /**
@@ -88,8 +100,10 @@ class Cache implements CacheInterface
     {
         if ( ! isset($this->pools[$namespace]) ) {
             # Create and save new Cache pool with extended pool namespace
-            $this->pools[$namespace] =  new Cache(
-                $this->cacheProvider, $this->namespace . $this->nsSeparator . $namespace, $this->nsSeparator
+            $this->pools[$namespace] = new Cache(
+                $this->cacheProvider,
+                $this->namespace . $this->nsSeparator . $namespace,
+                $this->nsSeparator
             );
         }
 

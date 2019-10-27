@@ -28,6 +28,7 @@ use Vection\Contracts\Validator\Schema\SchemaInterface;
  */
 class Schema implements SchemaInterface
 {
+
     /**
      * @var array
      */
@@ -45,9 +46,9 @@ class Schema implements SchemaInterface
      */
     public function __construct(string $schemaFilePath = null)
     {
-        if( $schemaFilePath !== null ){
+        if ( $schemaFilePath !== null ) {
 
-            if( ! file_exists($schemaFilePath) ){
+            if ( ! file_exists($schemaFilePath) ) {
                 throw new RuntimeException(
                     "Schema: Cannot load schema from file {$schemaFilePath}, file not exits."
                 );
@@ -55,11 +56,11 @@ class Schema implements SchemaInterface
 
             $ext = pathinfo($schemaFilePath, PATHINFO_EXTENSION);
 
-            if( in_array($ext, ['yaml', 'yml']) ){
+            if ( in_array($ext, ['yaml', 'yml']) ) {
                 $this->loadFromJsonFile($schemaFilePath);
             }
 
-            if( $ext === 'json' ){
+            if ( $ext === 'json' ) {
                 $this->loadFromJsonFile($schemaFilePath);
             }
         }
@@ -70,17 +71,17 @@ class Schema implements SchemaInterface
      */
     public function loadFromYamlFile(string $path): void
     {
-        if( ! file_exists($path) ){
+        if ( ! file_exists($path) ) {
             throw new RuntimeException("Yaml Schema: Cannot load schema from file {$path}, file not exits.");
         }
 
-        if( ! function_exists('yaml_parse_file') ){
+        if ( ! function_exists('yaml_parse_file') ) {
             throw new RuntimeException('Yaml schemas require the php yaml extension.');
         }
 
         $schema = yaml_parse_file($path);
 
-        if( $schema === false ){
+        if ( $schema === false ) {
             throw new RuntimeException("Unable to load schema from file {$path}");
         }
 
@@ -92,19 +93,19 @@ class Schema implements SchemaInterface
      */
     public function loadFromJsonFile(string $path): void
     {
-        if( ! file_exists($path) ){
+        if ( ! file_exists($path) ) {
             throw new RuntimeException("Json Schema: Cannot load schema from file {$path}, file not exits.");
         }
 
         $schema = file_get_contents($path);
 
-        if( $schema === false ){
+        if ( $schema === false ) {
             throw new RuntimeException("Unable to load schema from file {$path}");
         }
 
         $schema = json_decode($schema, true);
 
-        if( json_last_error() !== JSON_ERROR_NONE ){
+        if ( json_last_error() !== JSON_ERROR_NONE ) {
             throw new RuntimeException('Invalid json schema file: '.json_last_error_msg());
         }
 
@@ -116,7 +117,7 @@ class Schema implements SchemaInterface
      */
     public function setSchema(array $schema): void
     {
-        if( isset($schema['@templates']) ){
+        if ( isset($schema['@templates']) ) {
             $this->templates = $schema['@templates'];
             unset($schema['@templates']);
         }

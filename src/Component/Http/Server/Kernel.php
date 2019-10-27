@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -30,6 +30,7 @@ use Vection\Contracts\Http\Server\ResponderInterface;
  */
 class Kernel implements KernelInterface
 {
+
     /** @var ServerRequestInterface */
     protected $request;
 
@@ -59,12 +60,12 @@ class Kernel implements KernelInterface
     )
     {
         $this->requestHandler = $requestHandler;
-        $this->request = $request;
-        $this->responder = $responder ?: new Responder();
+        $this->request        = $request;
+        $this->responder      = $responder ?: new Responder();
 
-        if( ! $this->request ){
+        if ( ! $this->request ) {
             $serverRequestFactory = new ServerRequestFactoryDecorator(new ServerRequestFactory());
-            $this->request = $serverRequestFactory->createFromGlobals();
+            $this->request        = $serverRequestFactory->createFromGlobals();
         }
     }
 
@@ -101,7 +102,7 @@ class Kernel implements KernelInterface
      */
     protected function fireEvent(string $event): void
     {
-        if( $this->eventManager ){
+        if ( $this->eventManager ) {
             $this->eventManager->fire('vection.http.kernel.'.$event);
         }
     }
@@ -111,7 +112,7 @@ class Kernel implements KernelInterface
      */
     protected function log(string $message): void
     {
-        if( $this->logger ){
+        if ( $this->logger ) {
             $this->logger->info($message);
         }
     }
@@ -147,7 +148,7 @@ class Kernel implements KernelInterface
 
         $this->fireEvent('afterSendRequest');
 
-        if( $terminate ){
+        if ( $terminate ) {
             $this->log('Vection HTTP: Kernel start termination');
             $this->fireEvent('beforeTerminate');
             $this->log('Vection HTTP: Kernel TERMINATED');

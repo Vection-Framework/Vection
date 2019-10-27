@@ -1,19 +1,19 @@
 <?php
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- *  (c) Vection <project@vection.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Vection\Bridge\Symfony\Cache;
 
-use Vection\Contracts\Cache\CacheProviderInterface;
 use Symfony\Component\Cache\Simple\AbstractCache;
+use Vection\Contracts\Cache\CacheProviderInterface;
 
 /**
  * Class SymfonyCacheBridge
@@ -22,6 +22,7 @@ use Symfony\Component\Cache\Simple\AbstractCache;
  */
 class SymfonyCacheProviderBridge implements CacheProviderInterface
 {
+
     /**
      * @var AbstractCache
      */
@@ -72,7 +73,7 @@ class SymfonyCacheProviderBridge implements CacheProviderInterface
      */
     public function getString(string $key): ?string
     {
-        return (string)$this->cache->get($key);
+        return (string) $this->cache->get($key);
     }
 
     /**
@@ -84,7 +85,7 @@ class SymfonyCacheProviderBridge implements CacheProviderInterface
      */
     public function getObject(string $key): ?object
     {
-        return (object)$this->cache->get($key);
+        return (object) $this->cache->get($key);
     }
 
     /**
@@ -96,7 +97,7 @@ class SymfonyCacheProviderBridge implements CacheProviderInterface
      */
     public function getArray(string $key): ?array
     {
-        return (array)$this->cache->get($key);
+        return (array) $this->cache->get($key);
     }
 
     /**
@@ -108,7 +109,7 @@ class SymfonyCacheProviderBridge implements CacheProviderInterface
      */
     public function getInt(string $key): ?int
     {
-        return (int)$this->cache->get($key);
+        return (int) $this->cache->get($key);
     }
 
     /**
@@ -120,7 +121,7 @@ class SymfonyCacheProviderBridge implements CacheProviderInterface
      */
     public function getFloat(string $key): ?float
     {
-        return (float)$this->cache->get($key);
+        return (float) $this->cache->get($key);
     }
 
     /**

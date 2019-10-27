@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -23,8 +23,9 @@ use Vection\Component\Http\Server\Rest\Resource as RestResource;
  */
 class Match
 {
+
     /**
-     * @var Resource
+     * @var resource
      */
     protected $resource;
 
@@ -47,8 +48,8 @@ class Match
      */
     public function __construct(RestResource $resource, string $operation, array $resourceIds)
     {
-        $this->resource = $resource;
-        $this->operation = $operation;
+        $this->resource    = $resource;
+        $this->operation   = $operation;
         $this->resourceIds = $resourceIds;
     }
 

@@ -26,6 +26,7 @@ use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
  */
 abstract class PropertyException extends Exception implements PropertyExceptionInterface
 {
+
     /**
      * @var string
      */

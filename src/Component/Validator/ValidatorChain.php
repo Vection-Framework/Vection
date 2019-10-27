@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -71,6 +82,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  */
 class ValidatorChain implements ValidatorChainInterface
 {
+
     /**
      * The factory which creating validator objects by its names.
      *
@@ -138,7 +150,7 @@ class ValidatorChain implements ValidatorChainInterface
      */
     public function __call($name, $constraints = []): ValidatorChain
     {
-        if( $name === 'nullable' ){
+        if ( $name === 'nullable' ) {
             # This is a virtual validator that marks the subject as nullable
             $this->nullable[key($this->chain)] = 1;
             return $this;
@@ -179,18 +191,18 @@ class ValidatorChain implements ValidatorChainInterface
      */
     public function verify(array $data): void
     {
-        foreach( $this->chain as $subject => $validators ){
+        foreach ( $this->chain as $subject => $validators ) {
 
             # First we have to know the current value
-            $value = $data[$subject] ?? null;
+            $value = ($data[$subject] ?? null);
 
             # Skip if value is null and validate against nullable
-            if( ($value === null || ! $validators) && isset($this->nullable[$subject]) ){
+            if ( ($value === null || ! $validators) && isset($this->nullable[$subject]) ) {
                 continue;
             }
 
-            foreach( $validators as $validator ){
-                if( $violation = $validator->validate($value) ){
+            foreach ( $validators as $validator ) {
+                if ( $violation = $validator->validate($value) ) {
                     # The value is invalid so take the violation and continue to next subject
                     $this->violations[$subject] = $violation;
                     continue 2;

@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -23,6 +23,7 @@ use Vection\Contracts\MessageBus\PayloadInterface;
  */
 class Payload implements PayloadInterface
 {
+
     /**
      * This property contains all the data that
      * were set by the setter method.
@@ -46,7 +47,7 @@ class Payload implements PayloadInterface
      */
     public function get(string $key): ? string
     {
-        $value = $this->data[$key] ?? null;
+        $value = ($this->data[$key] ?? null);
         return $value === null ? $value : (string) $value;
     }
 

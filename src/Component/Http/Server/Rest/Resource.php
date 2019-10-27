@@ -4,7 +4,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) David M. Lung <vection@davidlung.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -55,7 +55,7 @@ class Resource
      */
     public function __construct(string $canonical, string $identifier, array $allowedMethods = [], array $operations = [])
     {
-        $this->canonical = trim($canonical, '/');
+        $this->canonical  = trim($canonical, '/');
         $this->identifier = $identifier;
         $this->setAllowedMethods($allowedMethods);
         $this->operations = $operations;
@@ -87,8 +87,8 @@ class Resource
     {
         $methods = array_change_key_case($methods);
 
-        foreach( $methods as $method ){
-            if( ! in_array($method, self::METHODS, true) ){
+        foreach ( $methods as $method ) {
+            if ( ! in_array($method, self::METHODS, true) ) {
                 throw new InvalidArgumentException("The given http method '{$methods}' is not an valid method.");
             }
         }

@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -25,6 +36,7 @@ use RuntimeException;
  */
 class RequestHandler implements RequestHandlerInterface
 {
+
     /** @var MiddlewareInterface[] */
     protected $middleware;
 
@@ -35,7 +47,7 @@ class RequestHandler implements RequestHandlerInterface
      */
     public function __construct(array $middleware = [])
     {
-        foreach( $middleware as $handler ){
+        foreach ( $middleware as $handler ) {
             $this->addMiddleware($handler);
         }
     }
@@ -59,7 +71,7 @@ class RequestHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        if( $middleware = current($this->middleware) ){
+        if ( $middleware = current($this->middleware) ) {
             next($this->middleware);
             return $middleware->process($request, $this);
         }

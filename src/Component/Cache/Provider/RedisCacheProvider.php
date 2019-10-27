@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -22,6 +33,7 @@ use Vection\Contracts\Cache\CacheProviderInterface;
  */
 class RedisCacheProvider implements CacheProviderInterface
 {
+
     /** @var Redis */
     protected $redis;
 
@@ -49,7 +61,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function delete(string $key): bool
     {
-        return (bool)$this->redis->delete($key);
+        return (bool) $this->redis->delete($key);
     }
 
     /**
@@ -153,7 +165,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function clear(string $namespace = ''): bool
     {
-        if( ! $namespace ){
+        if ( ! $namespace ) {
             return $this->redis->flushAll();
         }
 
@@ -161,7 +173,7 @@ class RedisCacheProvider implements CacheProviderInterface
         $infinityLoopProtection = 0;
         $this->redis->setOption(\Redis::OPT_SCAN, \Redis::SCAN_RETRY);
 
-        while( ($keys = $this->redis->scan($iterator, addslashes($namespace).'*', 10000)) || $infinityLoopProtection > 1000 ){
+        while ( ($keys = $this->redis->scan($iterator, addslashes($namespace).'*', 10000)) || $infinityLoopProtection > 1000 ) {
             $this->redis->delete($keys);
             $infinityLoopProtection++;
         }

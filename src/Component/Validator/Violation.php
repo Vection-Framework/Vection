@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -26,6 +37,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  */
 class Violation implements ViolationInterface, \JsonSerializable
 {
+
     /** @var mixed */
     protected $value;
 
@@ -47,9 +59,9 @@ class Violation implements ViolationInterface, \JsonSerializable
      */
     public function __construct($value, array $constraints, string $message)
     {
-        $this->value = $value;
+        $this->value       = $value;
         $this->constraints = $constraints;
-        $this->message = $message;
+        $this->message     = $message;
     }
 
     /**
@@ -65,10 +77,10 @@ class Violation implements ViolationInterface, \JsonSerializable
      */
     public function getMessage(): string
     {
-        if( ! $this->result ){
+        if ( ! $this->result ) {
             $constraints = ['{value}' => $this->valueToString($this->value)];
 
-            foreach( $this->constraints as $name => $constraint ){
+            foreach ( $this->constraints as $name => $constraint ) {
                 $constraints['{'.$name.'}'] = $this->valueToString($constraint);
             }
 
@@ -114,7 +126,7 @@ class Violation implements ViolationInterface, \JsonSerializable
      */
     private function valueToString($value): string
     {
-        switch(gettype($value)) {
+        switch (gettype($value)) {
             case 'integer':
             case 'double':
             case 'string':  return (string) $value;

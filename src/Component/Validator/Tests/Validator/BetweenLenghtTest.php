@@ -3,7 +3,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * © BloodhunterD <vection@bloodhunterd.com>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -45,16 +45,16 @@ class BetweenLenghtTest extends TestCase
     public function provideValidValues(): array
     {
         $values = [
-          [0, 64, 16],
-          [10, 20, 10],
-          [256, 512, 256]
+            [0, 64, 16],
+            [10, 20, 10],
+            [256, 512, 256]
         ];
 
         foreach ($values as $value) {
             $return[] = [$value[0], $value[1], bin2hex(random_bytes($value[2]))];
         }
 
-        return $return ?? [];
+        return ($return ?? []);
     }
 
     /**
@@ -73,6 +73,6 @@ class BetweenLenghtTest extends TestCase
             $return[] = [$value[0], $value[1], bin2hex(random_bytes($value[2]))];
         }
 
-        return $return ?? [];
+        return ($return ?? []);
     }
 }

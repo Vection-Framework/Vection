@@ -1,4 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+/**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
 
 namespace Vection\Component\MessageBus\Query;
 
@@ -11,10 +22,11 @@ use Vection\Contracts\MessageBus\Query\ReadModelInterface;
  */
 class ReadModelCollection extends ReadModel implements \IteratorAggregate
 {
+
     /** @var string */
     protected $listKey;
 
-    /** @var int */
+    /** @var integer */
     protected $total;
 
     /** @var ReadModelInterface[] */
@@ -29,8 +41,8 @@ class ReadModelCollection extends ReadModel implements \IteratorAggregate
      */
     public function __construct(array $items, int $totalCount = 0, string $itemListKey = 'items')
     {
-        $this->items = $items;
-        $this->total = $totalCount ?: \count($items);
+        $this->items   = $items;
+        $this->total   = $totalCount ?: \count($items);
         $this->listKey = $itemListKey;
     }
 
@@ -45,7 +57,7 @@ class ReadModelCollection extends ReadModel implements \IteratorAggregate
     public static function of(string $readModel, array $records, int $totalCount = 0, string $itemListKey = 'items'): ReadModelCollection
     {
         $items = [];
-        foreach ( $records ?? [] as $row ) {
+        foreach ( ($records ?? []) as $row ) {
             $items[] = new $readModel($row);
         }
 
@@ -75,7 +87,7 @@ class ReadModelCollection extends ReadModel implements \IteratorAggregate
      */
     public function getItem($key): ?ReadModel
     {
-        return $this->items[(string)$key] ?: null;
+        return $this->items[(string) $key] ?: null;
     }
 
     /**

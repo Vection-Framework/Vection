@@ -3,7 +3,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * © BloodhunterD <vection@bloodhunterd.com>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -61,7 +61,7 @@ class EqualsTest extends TestCase
     {
         $emptyObject = new stdClass();
 
-        $filledObject = new stdClass();
+        $filledObject          = new stdClass();
         $filledObject->example = 'Example';
 
         return [

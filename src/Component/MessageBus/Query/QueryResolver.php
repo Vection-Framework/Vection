@@ -1,10 +1,10 @@
 <?php
 
 /**
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection <project@vection.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -24,6 +24,7 @@ use Vection\Contracts\MessageBus\Query\QueryResolverInterface;
  */
 class QueryResolver implements QueryResolverInterface
 {
+
     /** @var QueryHandlerFactoryInterface */
     protected $factory;
 
@@ -39,7 +40,7 @@ class QueryResolver implements QueryResolverInterface
     public function __construct(? QueryHandlerFactoryInterface $factory = null, array $queryHandlerMap = [])
     {
         $this->queryHandlerMap = $queryHandlerMap;
-        $this->factory = $factory;
+        $this->factory         = $factory;
     }
 
     /**
@@ -56,7 +57,7 @@ class QueryResolver implements QueryResolverInterface
      */
     public function resolve(QueryInterface $query): QueryHandlerInterface
     {
-        $className = $this->queryHandlerMap[get_class($query)] ?? null;
+        $className = ($this->queryHandlerMap[get_class($query)] ?? null);
 
         if ( ! $className ) {
             throw new \RuntimeException(

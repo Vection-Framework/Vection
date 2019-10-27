@@ -3,7 +3,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Bjoern Klemm <vection@bjoernklemm.de>
+ * (c) Vection-Framework <vection@appsdock.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -34,7 +34,7 @@ class DateTime extends \DateTime
      */
     public static function create(string $date): \DateTimeImmutable
     {
-        $tz = new \DateTimeZone(self::UTC);
+        $tz        = new \DateTimeZone(self::UTC);
         $immutable = \DateTimeImmutable::createFromFormat(self::W3C, $date, $tz);
 
         InvalidDateException::isValid($immutable);
@@ -52,7 +52,9 @@ class DateTime extends \DateTime
         $immutable = null;
         try {
             $immutable = new \DateTimeImmutable('now', $tz);
-        } catch (\Exception $ex){ /*Could never happen*/ }
+        } catch (\Exception $ex) {
+            // Could never happen.
+        }
 
         return $immutable;
     }
@@ -68,7 +70,7 @@ class DateTime extends \DateTime
     public function rangeFromString(string $start, string $end): \Generator
     {
         DateAssertion::invalidRange($start, $end);
-        
+
         return $this->iter(new self($start), new self($end));
     }
 
@@ -106,7 +108,7 @@ class DateTime extends \DateTime
      */
     private function iter(DateTime $param, DateTime $param1): \Generator
     {
-        for ($i = $param; $i <= $param1; $i->modify('+1 day')){
+        for ($i = $param; $i <= $param1; $i->modify('+1 day')) {
             yield $i->format(self::W3C);
         }
     }

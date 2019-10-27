@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -80,51 +91,51 @@ class Status
     public const PHRASE_508 = 'Loop Detected';
     public const PHRASE_511 = 'Network Authentication Required';
 
-    public const CODE_CONTINUE = 100;
+    public const CODE_CONTINUE            = 100;
     public const CODE_SWITCHING_PROTOCOLS = 101;
-    public const CODE_PROCESSING = 102;
-    public const CODE_EARLY_HINTS = 103;
-    public const CODE_OK = 200;
-    public const CODE_CREATED = 201;
+    public const CODE_PROCESSING          = 102;
+    public const CODE_EARLY_HINTS         = 103;
+    public const CODE_OK       = 200;
+    public const CODE_CREATED  = 201;
     public const CODE_ACCEPTED = 202;
     public const CODE_NON_AUTHORITATIVE_INFORMATION = 203;
-    public const CODE_NO_CONTENT = 204;
-    public const CODE_RESET_CONTENT = 205;
-    public const CODE_PARTIAL_CONTENT = 206;
-    public const CODE_MULTI_STATUS = 207;
-    public const CODE_ALREADY_REPORTED = 208;
-    public const CODE_IM_USED = 226;
-    public const CODE_MULTIPLE_CHOICES = 300;
+    public const CODE_NO_CONTENT        = 204;
+    public const CODE_RESET_CONTENT     = 205;
+    public const CODE_PARTIAL_CONTENT   = 206;
+    public const CODE_MULTI_STATUS      = 207;
+    public const CODE_ALREADY_REPORTED  = 208;
+    public const CODE_IM_USED           = 226;
+    public const CODE_MULTIPLE_CHOICES  = 300;
     public const CODE_MOVED_PERMANENTLY = 301;
-    public const CODE_FOUND = 302;
-    public const CODE_SEE_OTHER = 303;
+    public const CODE_FOUND        = 302;
+    public const CODE_SEE_OTHER    = 303;
     public const CODE_NOT_MODIFIED = 304;
-    public const CODE_USE_PROXY = 305;
-    public const CODE_RESERVED = 306;
-    public const CODE_TEMPORARY_REDIRECT = 307;
+    public const CODE_USE_PROXY    = 305;
+    public const CODE_RESERVED     = 306;
+    public const CODE_TEMPORARY_REDIRECT   = 307;
     public const CODE_PERMANENTLY_REDIRECT = 308;
-    public const CODE_BAD_REQUEST = 400;
-    public const CODE_UNAUTHORIZED = 401;
-    public const CODE_PAYMENT_REQUIRED = 402;
-    public const CODE_FORBIDDEN = 403;
-    public const CODE_NOT_FOUND = 404;
-    public const CODE_METHOD_NOT_ALLOWED = 405;
-    public const CODE_NOT_ACCEPTABLE = 406;
+    public const CODE_BAD_REQUEST          = 400;
+    public const CODE_UNAUTHORIZED         = 401;
+    public const CODE_PAYMENT_REQUIRED     = 402;
+    public const CODE_FORBIDDEN            = 403;
+    public const CODE_NOT_FOUND            = 404;
+    public const CODE_METHOD_NOT_ALLOWED   = 405;
+    public const CODE_NOT_ACCEPTABLE       = 406;
     public const CODE_PROXY_AUTHENTICATION_REQUIRED = 407;
     public const CODE_REQUEST_TIMEOUT = 408;
-    public const CODE_CONFLICT = 409;
-    public const CODE_GONE = 410;
+    public const CODE_CONFLICT        = 409;
+    public const CODE_GONE            = 410;
     public const CODE_LENGTH_REQUIRED = 411;
-    public const CODE_PRECONDITION_FAILED = 412;
+    public const CODE_PRECONDITION_FAILED      = 412;
     public const CODE_REQUEST_ENTITY_TOO_LARGE = 413;
-    public const CODE_REQUEST_URI_TOO_LONG = 414;
-    public const CODE_UNSUPPORTED_MEDIA_TYPE = 415;
+    public const CODE_REQUEST_URI_TOO_LONG     = 414;
+    public const CODE_UNSUPPORTED_MEDIA_TYPE   = 415;
     public const CODE_REQUESTED_RANGE_NOT_SATISFIABLE = 416;
-    public const CODE_EXPECTATION_FAILED = 417;
-    public const CODE_I_AM_A_TEAPOT = 418;
-    public const CODE_MISDIRECTED_REQUEST = 421;
+    public const CODE_EXPECTATION_FAILED   = 417;
+    public const CODE_I_AM_A_TEAPOT        = 418;
+    public const CODE_MISDIRECTED_REQUEST  = 421;
     public const CODE_UNPROCESSABLE_ENTITY = 422;
-    public const CODE_LOCKED = 423;
+    public const CODE_LOCKED            = 423;
     public const CODE_FAILED_DEPENDENCY = 424;
 
     public const PHRASES = [
@@ -195,7 +206,7 @@ class Status
      */
     public static function getPhrase(int $code): string
     {
-        if( ! isset(self::PHRASES[$code]) ){
+        if ( ! isset(self::PHRASES[$code]) ) {
             throw new RuntimeException("Invalid HTTP status code ($code). ");
         }
 

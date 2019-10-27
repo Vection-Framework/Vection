@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -31,22 +42,22 @@ class ClientFactory
      */
     public static function create(Environment $environment, ? Proxy $proxy = null): Client
     {
-        $clientIp = $environment->getRemoteAddr();
+        $clientIp      = $environment->getRemoteAddr();
         $requestedHost = $environment->getRemoteAddr();
         $requestedPort = (int) $environment->getRemotePort();
 
-        if( ! $requestedPort ){
+        if ( ! $requestedPort ) {
 
             [$protocol] = explode('/', $environment->getServerProtocol());
 
-            if( $protocol === 'HTTP' ){
+            if ( $protocol === 'HTTP' ) {
                 $requestedPort = $environment->get('REQUEST_SCHEME') === 'https'
                 || ($environment->has('HTTPS') && $environment->getHttps() !== 'off') ? 443 : 80;
             }
         }
 
-        if( $proxy ){
-            $clientIp = $proxy->getClientIP() ?: $clientIp;
+        if ( $proxy ) {
+            $clientIp      = $proxy->getClientIP() ?: $clientIp;
             $requestedHost = $proxy->getOriginHost() ?: $requestedHost;
             $requestedPort = $proxy->getOriginPort() ?: $requestedPort;
         }

@@ -1,6 +1,17 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
+ * This file is part of the Vection-Framework project.
+ * Visit project at https://github.com/Vection-Framework/Vection
+ *
+ * (c) Vection-Framework <vection@appsdock.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
@@ -24,6 +35,7 @@ use Vection\Contracts\Http\Server\ResponderInterface;
  */
 class Responder implements ResponderInterface
 {
+
     /**
      * @var string
      */
@@ -59,20 +71,20 @@ class Responder implements ResponderInterface
         $status = $response->getStatusCode();
 
         # Prepare some basic response properties
-        if( $request->getProtocolVersion() !== $response->getProtocolVersion() ){
+        if ( $request->getProtocolVersion() !== $response->getProtocolVersion() ) {
             $response = $response->withProtocolVersion($request->getProtocolVersion());
         }
 
         # Prepare and send response header
-        if( ! headers_sent() ){
-            foreach( $this->getFixedHeaders($response)->toArray() as $name => $values ){
+        if ( ! headers_sent() ) {
+            foreach ( $this->getFixedHeaders($response)->toArray() as $name => $values ) {
                 header($name.': '.implode(', ', $values), true, $status);
             }
 
             header("HTTP/{$response->getProtocolVersion()} {$status} {$response->getReasonPhrase()}");
         }
 
-        if( $status >= 200 && $request->getMethod() !== 'HEAD' && ! in_array($status, [204, 304], true) ){
+        if ( $status >= 200 && $request->getMethod() !== 'HEAD' && ! in_array($status, [204, 304], true) ) {
             # Send response body as string
             echo $response->getBody()->getContents();
         }
@@ -88,51 +100,51 @@ class Responder implements ResponderInterface
         $headers = new Headers($response->getHeaders());
 
         # Content-Type
-        if( ! $headers->has('Content-Type') ){
+        if ( ! $headers->has('Content-Type') ) {
             $headers->set('Content-Type', 'text/html; charset='.$this->charset);
-        }else{
+        } else {
             $contentType = $headers->getLine('Content-Type');
 
-            if( strpos($contentType, 'charset') === false ){
+            if ( strpos($contentType, 'charset') === false ) {
                 $types = $headers->get('Content-Type');
-                $types[count($types)-1] .= '; charset='.$this->charset;
+                $types[(count($types) - 1)] .= '; charset='.$this->charset;
                 $headers->set('Content-Type', $types);
             }
         }
 
-        if( ! $headers->has('Content-Length') ){
+        if ( ! $headers->has('Content-Length') ) {
             $headers->set('Content-Length', $response->getBody()->getSize());
         }
 
         # Status code
-        if( $response->getStatusCode() < 200 || in_array($response->getStatusCode(), [204, 304], true) ){
+        if ( $response->getStatusCode() < 200 || in_array($response->getStatusCode(), [204, 304], true) ) {
             $headers->remove('Content-Type');
             $headers->remove('Content-Length');
         }
 
         # Caching
-        if( $response->getProtocolVersion() === '1.0' && $headers->hasValue('Cache-Control', 'no-cache') ){
+        if ( $response->getProtocolVersion() === '1.0' && $headers->hasValue('Cache-Control', 'no-cache') ) {
             $headers->set('pragma', 'no-cache');
             $headers->set('expires', '-1');
         }
 
         # Other RFC adaption
-        if( $response->getStatusCode() === 304 ){
+        if ( $response->getStatusCode() === 304 ) {
             $remove = [
                 'Allow', 'Content-Encoding', 'Content-Language', 'Content-Length',
                 'Content-MD5', 'Content-Type', 'Last-Modified'
             ];
 
-            foreach( $remove as $headerName ){
+            foreach ( $remove as $headerName ) {
                 $headers->remove($headerName);
             }
         }
 
-        if( $headers->has('Transfer-Encoding') ){
+        if ( $headers->has('Transfer-Encoding') ) {
             $headers->remove('Content-Length');
         }
 
-        foreach( $this->headerReplacements as $name => $value ){
+        foreach ( $this->headerReplacements as $name => $value ) {
             $headers->set($name, $value);
         }
 
