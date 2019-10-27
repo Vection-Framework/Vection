@@ -23,8 +23,8 @@ Mapping of interfaces and implementations that will inject by setters defined in
 - **Explicit injection**<br>
 Injects the dependency via property definition by using `__inject` method.
 
-- **Injection by parent inheritance**<br>
-Child classes get automatically injection by parents dependencies defined in parent classes.
+- **Injection by class inheritance**<br>
+Subclasses get automatically injection by parents dependencies defined in parent classes.
 
 ### Installation
 Vection Components supports only installation via [composer](https://getcomposer.org). So first ensure your composer is installed, configured and ready to use.
@@ -146,7 +146,7 @@ class Awesome
 }
 ```
 
-#### Injection by parent inheritance
+#### Injection by parent class inheritance
 This feature allows subclasses to get automatically dependency injection by parent classes, if the parent class uses any injection type. 
 
 ```php
