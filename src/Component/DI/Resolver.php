@@ -269,12 +269,26 @@ class Resolver implements CacheAwareInterface
                     continue;
                 }
 
-                $regex = '/@Inject\(["\']+([a-zA-Z\\\\_0-9]+)["\']+\)/';
+                # Only supports by PHP >= 7.4.0
+                $typedPropertiesSupport = method_exists($property, 'getType');
 
-                if ( preg_match_all($regex, $doc, $match, PREG_SET_ORDER) ) {
-                    foreach ( $match as $m ) {
-                        $dependencies[$property->getName()] = $m[1];
-                        $this->resolveDependencies($m[1]);
+                if ($typedPropertiesSupport && $property->hasType() && preg_match('/@Inject/', $doc)) {
+
+                    $propertyType = $property->getType();
+
+                    if ($propertyType !== null) {
+                        $dependencyClassName = $propertyType->getName();
+                        $dependencies[$property->getName()] = $dependencyClassName;
+                        $this->resolveDependencies($dependencyClassName);
+                    }
+                }else{
+                    $regex = '/@Inject\(["\']+([a-zA-Z\\\\_0-9]+)["\']+\)/';
+
+                    if (preg_match_all($regex, $doc, $match, PREG_SET_ORDER)) {
+                        foreach ($match as $m) {
+                            $dependencies[$property->getName()] = $m[1];
+                            $this->resolveDependencies($m[1]);
+                        }
                     }
                 }
             }
