@@ -281,7 +281,7 @@ class Resolver implements CacheAwareInterface
                         $dependencies[$property->getName()] = $dependencyClassName;
                         $this->resolveDependencies($dependencyClassName);
                     }
-                }else{
+                } else {
                     $regex = '/@Inject\(["\']+([a-zA-Z\\\\_0-9]+)["\']+\)/';
 
                     if (preg_match_all($regex, $doc, $match, PREG_SET_ORDER)) {
