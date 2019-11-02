@@ -6,6 +6,7 @@ parameters:
     inferPrivatePropertyTypeFromConstructor: true
     ignoreErrors:
             - '#PHPDoc tag @param for parameter $list with type array|ArrayAccess|null is not subtype of native type array|null.#'
+            - '#Call to an undefined method ReflectionProperty::hasType().#'
     excludes_analyse:
         - %rootDir%/../../../src/Component/Http/*
         - %rootDir%/../../../src/Bridge/*
