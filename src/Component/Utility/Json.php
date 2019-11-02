@@ -57,9 +57,9 @@ class Json implements \JsonSerializable
      *
      * @throws JsonException
      *
-     * @return array|\stdClass
+     * @return array
      */
-    public static function decode(string $json, bool $assoc = true, int $depth = 512, int $options = 0)
+    public static function decode(string $json, bool $assoc = true, int $depth = 512, int $options = 0): array
     {
         $filePath = '';
 
