@@ -1,0 +1,38 @@
+{
+    "name": "vection-framework/messenger",
+    "type": "library",
+    "description": "A PHP message bus component for using as service bus (CQRS) and message transportation (queues).",
+    "keywords": [
+        "php",
+        "framework",
+        "cqrs",
+        "command-bus",
+        "query-bus",
+        "event-bus",
+        "message-bus",
+        "php-cqrs",
+        "message-broker",
+        "transport",
+        "service-bus",
+        "message-queue"
+    ],
+    "homepage": "https://vection.appsdock.org/components/messenger",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Lung",
+            "email": "vection@davidlung.de"
+        }
+    ],
+    "require": {
+        "vection-framework/contracts": "dev-master",
+        "php": "^7.2",
+        "psr/log": "~1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vection\\Component\\Messenger\\": "./"
+        }
+    },
+    "minimum-stability": "dev"
+}
