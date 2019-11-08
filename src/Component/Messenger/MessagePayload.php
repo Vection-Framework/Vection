@@ -56,7 +56,7 @@ class MessagePayload
      *
      * @return array
      */
-    final protected function toArray(): array
+    final public function toArray(): array
     {
         return $this->data;
     }

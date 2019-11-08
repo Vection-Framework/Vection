@@ -78,8 +78,7 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
         $headers = $message->getHeaders();
 
         $this->logger->info(sprintf(
-            "[MessageBus] Start dispatching message (%s) with payload (%s%s) with headers:\n%s",
-            $message->getHeaders()->getId(),
+            "[MessageBus] Start dispatching message with payload (%s%s) with headers:\n%s",
             gettype($payload),
             $payload !== null && is_object($payload) ? '@'.get_class($payload) : '',
             print_r($headers->toArray(), true)
@@ -89,21 +88,10 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
         $result = $this->executeMiddleware($message, $sequence);
 
         $this->logger->info(sprintf(
-            '[MessageBus] Messenger (%s) with payload (%s%s) has been dispatched.',
-            $message->getHeaders()->getId(),
+            '[MessageBus] Message with payload (%s%s) has been dispatched.',
             gettype($payload),
             $payload !== null && is_object($payload) ? '@'.get_class($payload) : ''
         ));
-
-        if ($message !== $result) {
-            $this->logger->info(sprintf(
-                "[MessageBus] Returned message (%s) differs from origin with payload (%s%s) and headers:\n%s",
-                $message->getHeaders()->getId(),
-                gettype($payload),
-                $payload !== null && is_object($payload) ? '@'.get_class($payload) : '',
-                print_r($headers->toArray(), true)
-            ));
-        }
 
         return $result;
     }

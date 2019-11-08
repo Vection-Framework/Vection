@@ -64,6 +64,6 @@ class QueryDispatcherMiddleware implements MessageBusMiddlewareInterface
 
         $message = (new MessageBuilder())->withPayload($readModel)->build();
 
-        $sequence->next($message);
+        return $sequence->next($message);
     }
 }

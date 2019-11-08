@@ -15,8 +15,6 @@ declare(strict_types = 1);
 namespace Vection\Component\Messenger;
 
 use Closure;
-use Error;
-use Exception;
 use Generator;
 use Vection\Contracts\Messenger\MessageBusMiddlewareInterface;
 use Vection\Contracts\Messenger\MessageInterface;
@@ -93,28 +91,14 @@ class MiddlewareSequence implements MiddlewareSequenceInterface
      * @param MessageInterface $message
      *
      * @return MessageInterface
-     * @throws MessageBusException
      */
     public function next(MessageInterface $message): MessageInterface
     {
         $middleware = ($this->sequence)();
 
         if ($middleware !== null) {
-
             $this->currentMiddleware = $middleware;
-
-            try {
-                return $middleware->handle($message, $this);
-            }
-            catch (Exception | Error $e) {
-
-                if ($e instanceof MessageBusException) {
-                    throw $e;
-                }
-
-                return $this->next($message);
-            }
-
+            return $middleware->handle($message, $this);
         }
 
         return $message;
