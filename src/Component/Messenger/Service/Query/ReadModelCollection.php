@@ -17,7 +17,7 @@ namespace Vection\Component\Messenger\Service\Query;
 use ArrayObject;
 use IteratorAggregate;
 use Traversable;
-use Vection\Contracts\MessageBus\Query\ReadModelInterface;
+use Vection\Contracts\Messenger\Service\Query\ReadModelInterface;
 use function count;
 
 /**
