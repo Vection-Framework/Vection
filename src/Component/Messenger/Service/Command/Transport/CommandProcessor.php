@@ -23,7 +23,7 @@ use Vection\Component\Messenger\Transport\Processor;
  *
  * @author  David Lung <vection@davidlung.de>
  */
-class CommandProcessor extends Processor
+abstract class CommandProcessor extends Processor
 {
     /**
      * @inheritDoc

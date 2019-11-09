@@ -79,22 +79,26 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
         $payload = $message->getPayload();
         $headers = $message->getHeaders();
 
-        $this->logger->info(sprintf(
-            '[MessageBus] DISPATCH %s (%s%s)',
-            $headers->getId(),
-            gettype($payload),
-            $payload !== null && is_object($payload) ? '@'.get_class($payload) : ''
-        ));
+        $this->logger->info(
+            sprintf(
+                '[MessageBus] DISPATCH %s (%s%s)',
+                $headers->getId(),
+                gettype($payload),
+                ($payload !== null && is_object($payload) ? '@'.get_class($payload) : '')
+            )
+        );
 
         $sequence = $this->middlewareSequenceFactory->create($this->middleware);
-        $result = $this->executeMiddleware($message, $sequence);
+        $result   = $this->executeMiddleware($message, $sequence);
 
-        $this->logger->info(sprintf(
-            '[MessageBus] FINISH %s (%s%s)',
-            $headers->getId(),
-            gettype($payload),
-            $payload !== null && is_object($payload) ? '@'.get_class($payload) : ''
-        ));
+        $this->logger->info(
+            sprintf(
+                '[MessageBus] FINISH %s (%s%s)',
+                $headers->getId(),
+                gettype($payload),
+                ($payload !== null && is_object($payload) ? '@'.get_class($payload) : '')
+            )
+        );
 
         return $result;
     }
@@ -114,20 +118,21 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
     {
         try {
             return $sequence->next($message);
-        }
-        catch (Exception | Error $e) {
+        } catch (Exception | Error $e) {
 
             if ($e instanceof MessageBusException) {
                 # Interrupt the middleware handling only if there is an hart error
                 # thrown by an exception of type MessageBusException
 
-                $this->logger->error(sprintf(
-                    "[MessageBus] ABORT %s\n%s\n%s\n%s",
-                    $message->getHeaders()->getId(),
-                    'An exception/error has caused an interruption of the further middleware execution.',
-                    $e->getMessage(),
-                    $e->getTraceAsString()
-                ));
+                $this->logger->error(
+                    sprintf(
+                        "[MessageBus] ABORT %s\n%s\n%s\n%s",
+                        $message->getHeaders()->getId(),
+                        'An exception/error has caused an interruption of the further middleware execution.',
+                        $e->getMessage(),
+                        $e->getTraceAsString()
+                    )
+                );
 
                 $preException = $e->getPrevious();
 
@@ -138,13 +143,15 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
                 throw $e;
             }
 
-            $this->logger->error(sprintf(
-                "[MessageBus] CATCH %s\nAn exception/error occurred at middleware %s.\n%s\n%s",
-                $message->getHeaders()->getId(),
-                get_class($sequence->getCurrent()),
-                $e->getMessage(),
-                $e->getTraceAsString()
-            ));
+            $this->logger->error(
+                sprintf(
+                    "[MessageBus] CATCH %s\nAn exception/error occurred at middleware %s.\n%s\n%s",
+                    $message->getHeaders()->getId(),
+                    get_class($sequence->getCurrent()),
+                    $e->getMessage(),
+                    $e->getTraceAsString()
+                )
+            );
 
             $this->logger->info('[MessageBus] CONTINUE Last error does not interrupt further execution.');
 

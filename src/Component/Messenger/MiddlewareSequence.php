@@ -15,7 +15,6 @@ declare(strict_types = 1);
 namespace Vection\Component\Messenger;
 
 use Closure;
-use Generator;
 use Vection\Contracts\Messenger\MessageBusMiddlewareInterface;
 use Vection\Contracts\Messenger\MessageInterface;
 use Vection\Contracts\Messenger\MiddlewareSequenceInterface;
@@ -63,7 +62,7 @@ class MiddlewareSequence implements MiddlewareSequenceInterface
     {
         $this->middleware = $middleware;
 
-        /** @var Generator $generator */
+        // @var Generator $generator
         $generator = (function(){
             foreach ($this->middleware as $m) {
                 yield $m;

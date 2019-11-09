@@ -23,7 +23,7 @@ use Vection\Component\Messenger\Transport\Processor;
  *
  * @author  David Lung <vection@davidlung.de>
  */
-class EventProcessor extends Processor
+abstract class EventProcessor extends Processor
 {
     /**
      * @inheritDoc

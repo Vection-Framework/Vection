@@ -56,7 +56,7 @@ class Json implements \JsonSerializable
      * @param int    $options
      *
      * @return array
-     *@throws JsonException
+     * @throws JsonException
      *
      */
     public static function decode(string $json, bool $assoc = true, int $depth = 512, int $options = 0): array

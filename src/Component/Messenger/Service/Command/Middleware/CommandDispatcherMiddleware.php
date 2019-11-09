@@ -64,8 +64,7 @@ class CommandDispatcherMiddleware implements MessageBusMiddlewareInterface
 
         try {
             $this->commandDispatcher->dispatch($command);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             throw new MessageBusException('Error while dispatching command.', 0, $e);
         }
 

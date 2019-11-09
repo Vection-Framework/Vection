@@ -47,8 +47,8 @@ class ReadModelCollection extends ReadModel implements IteratorAggregate
      */
     public function __construct(array $items, int $totalCount = 0, string $itemListKey = 'items')
     {
-        $this->items = $items;
-        $this->total = $totalCount ?: count($items);
+        $this->items   = $items;
+        $this->total   = $totalCount ?: count($items);
         $this->listKey = $itemListKey;
     }
 

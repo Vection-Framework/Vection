@@ -47,8 +47,7 @@ class Message implements MessageInterface
     {
         try {
             $id = bin2hex(random_bytes(16));
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $id = md5(uniqid((string) time(), true));
         }
 

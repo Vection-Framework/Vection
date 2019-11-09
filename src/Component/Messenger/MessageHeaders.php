@@ -31,7 +31,7 @@ class MessageHeaders implements MessageHeadersInterface
     protected $id;
 
     /**
-     * @var int
+     * @var integer
      */
     protected $timestamp;
 
@@ -49,9 +49,9 @@ class MessageHeaders implements MessageHeadersInterface
      */
     public function __construct(string $id, int $timestamp, array $userData = [])
     {
-        $this->id = $id;
+        $this->id        = $id;
         $this->timestamp = $timestamp;
-        $this->userData = $userData;
+        $this->userData  = $userData;
     }
 
     /**
@@ -95,7 +95,7 @@ class MessageHeaders implements MessageHeadersInterface
      */
     public function toArray(): array
     {
-        $array = $this->userData;
+        $array       = $this->userData;
         $array['id'] = $this->id;
         $array['timestamp'] = $this->timestamp;
         return $array;
