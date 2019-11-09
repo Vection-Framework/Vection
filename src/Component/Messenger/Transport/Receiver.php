@@ -40,14 +40,6 @@ abstract class Receiver implements ReceiverInterface
     protected $encoder;
 
     /**
-     * Sender constructor.
-     */
-    public function __construct()
-    {
-        $this->serializer = new DefaultSerializer();
-    }
-
-    /**
      * @inheritDoc
      */
     public function setSerializer(SerializerInterface $serializer): void
@@ -72,6 +64,10 @@ abstract class Receiver implements ReceiverInterface
      */
     protected function transformDataToMessage(string $content): MessageInterface
     {
+        if ($this->serializer === null) {
+            $this->serializer = new DefaultSerializer();
+        }
+
         if ($this->encoder !== null) {
             $content = $this->encoder->decode($content);
         }

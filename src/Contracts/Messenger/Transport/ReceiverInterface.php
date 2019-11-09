@@ -47,7 +47,7 @@ interface ReceiverInterface
      * stops by an error or terminating in common way. This method
      * uses the given processor to pass the message for processing.
      *
-     * @param ProcessorInterface $receiver
+     * @param ProcessorInterface $processor
      */
-    public function receive(ProcessorInterface $receiver): void;
+    public function receive(ProcessorInterface $processor): void;
 }

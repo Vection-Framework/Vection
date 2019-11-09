@@ -40,14 +40,6 @@ abstract class Sender implements SenderInterface
     protected $encoder;
 
     /**
-     * Sender constructor.
-     */
-    public function __construct()
-    {
-        $this->serializer = new DefaultSerializer();
-    }
-
-    /**
      * @inheritDoc
      */
     public function setSerializer(SerializerInterface $serializer): void
@@ -72,6 +64,10 @@ abstract class Sender implements SenderInterface
      */
     protected function transformMessage(MessageInterface $message): string
     {
+        if ($this->serializer === null) {
+            $this->serializer = new DefaultSerializer();
+        }
+
         $transportData = $this->serializer->serialize($message);
 
         if ($this->encoder !== null) {
