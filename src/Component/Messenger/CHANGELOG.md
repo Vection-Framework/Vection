@@ -1,7 +1,7 @@
 # CHANGELOG for pre-release v0.*
 This changelog contains important changes done for this component.
 
-## v0.2.2 (2019-11-08)
+## v0.3.0 (2019-11-09)
 Introducing the new Messenger component refactored from old MessageBus component.
 
 ##### Features

@@ -15,6 +15,8 @@ declare(strict_types = 1);
 namespace Vection\Component\Messenger\Service\Command\Middleware;
 
 use InvalidArgumentException;
+use Throwable;
+use Vection\Component\Messenger\MessageBusException;
 use Vection\Contracts\Messenger\MessageBusMiddlewareInterface;
 use Vection\Contracts\Messenger\MessageInterface;
 use Vection\Contracts\Messenger\MiddlewareSequenceInterface;
@@ -50,6 +52,7 @@ class CommandDispatcherMiddleware implements MessageBusMiddlewareInterface
      * @param MiddlewareSequenceInterface $sequence
      *
      * @return MessageInterface
+     * @throws MessageBusException
      */
     public function handle(MessageInterface $message, MiddlewareSequenceInterface $sequence): MessageInterface
     {
@@ -59,7 +62,12 @@ class CommandDispatcherMiddleware implements MessageBusMiddlewareInterface
             throw new InvalidArgumentException('Expects a message payload of type CommandInterface');
         }
 
-        $this->commandDispatcher->dispatch($command);
+        try {
+            $this->commandDispatcher->dispatch($command);
+        }
+        catch (Throwable $e) {
+            throw new MessageBusException('Error while dispatching command.', 0, $e);
+        }
 
         return $sequence->next($message);
     }

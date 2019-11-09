@@ -19,6 +19,7 @@ use Exception;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
+use Throwable;
 use Vection\Contracts\Messenger\MessageBusInterface;
 use Vection\Contracts\Messenger\MessageBusMiddlewareInterface;
 use Vection\Contracts\Messenger\MessageInterface;
@@ -71,6 +72,7 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
      * @return MessageInterface
      *
      * @throws MessageBusException
+     * @throws Throwable
      */
     public function dispatch(MessageInterface $message): MessageInterface
     {
@@ -78,17 +80,18 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
         $headers = $message->getHeaders();
 
         $this->logger->info(sprintf(
-            "[MessageBus] Start dispatching message with payload (%s%s) with headers:\n%s",
+            '[MessageBus] DISPATCH %s (%s%s)',
+            $headers->getId(),
             gettype($payload),
-            $payload !== null && is_object($payload) ? '@'.get_class($payload) : '',
-            print_r($headers->toArray(), true)
+            $payload !== null && is_object($payload) ? '@'.get_class($payload) : ''
         ));
 
         $sequence = $this->middlewareSequenceFactory->create($this->middleware);
         $result = $this->executeMiddleware($message, $sequence);
 
         $this->logger->info(sprintf(
-            '[MessageBus] Message with payload (%s%s) has been dispatched.',
+            '[MessageBus] FINISH %s (%s%s)',
+            $headers->getId(),
             gettype($payload),
             $payload !== null && is_object($payload) ? '@'.get_class($payload) : ''
         ));
@@ -103,6 +106,7 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
      * @return MessageInterface
      *
      * @throws MessageBusException
+     * @throws Throwable
      */
     protected function executeMiddleware(
         MessageInterface $message, MiddlewareSequenceInterface $sequence
@@ -118,24 +122,31 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
                 # thrown by an exception of type MessageBusException
 
                 $this->logger->error(sprintf(
-                    "[MessageBus] %s\nMessenger: %s\n%s\n%s",
-                    'Exception: An error has caused an interruption of the further middleware handling.',
+                    "[MessageBus] ABORT %s\n%s\n%s\n%s",
                     $message->getHeaders()->getId(),
+                    'An exception/error has caused an interruption of the further middleware execution.',
                     $e->getMessage(),
                     $e->getTraceAsString()
                 ));
+
+                $preException = $e->getPrevious();
+
+                if ($preException) {
+                    throw $preException;
+                }
 
                 throw $e;
             }
 
             $this->logger->error(sprintf(
-                '[MessageBus] Exception: An error occurred while handling by middleware %s. '
-                ."Continue with next middleware.\nMessenger: %s\n%s\n%s",
-                get_class($sequence->getCurrent()),
+                "[MessageBus] CATCH %s\nAn exception/error occurred at middleware %s.\n%s\n%s",
                 $message->getHeaders()->getId(),
+                get_class($sequence->getCurrent()),
                 $e->getMessage(),
                 $e->getTraceAsString()
             ));
+
+            $this->logger->info('[MessageBus] CONTINUE Last error does not interrupt further execution.');
 
             # Execute next middleware due a soft exception should not interrupt other middleware
             return $this->executeMiddleware($message, $sequence);
