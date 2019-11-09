@@ -4,7 +4,7 @@
 [![release](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases)](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases)
 
 ## Dependency Injection Container for PHP
-This vection component provides a powerful dependency injection container for PHP. It supports several ways of automatic injection like annotations and injection by interfaces. A optional configuration allows the mapping of interfaces and concrete implementation. What are the benefits of using this PHP-DI ?
+This vection component provides a powerful dependency injection container for PHP. It supports several ways of automatic injection like annotations and injection by interfaces. A optional configuration allows the mapping of interfaces and concrete implementation. ?
 
 ### Supported injection types
 
