@@ -250,6 +250,26 @@ class ServerRequestDecorator implements ServerRequestInterface
     }
 
     /**
+     * @return array
+     */
+    public function getParsedBodyArray(): array
+    {
+        $body = $this->getParsedBody();
+
+        return (is_array($body) ? $body : []);
+    }
+
+    /**
+     * @return object
+     */
+    public function getParsedBodyObject(): object
+    {
+        $body = $this->getParsedBody();
+
+        return (is_object($body) ? $body : new \stdClass());
+    }
+
+    /**
      * @param int $index
      *
      * @return string|null
