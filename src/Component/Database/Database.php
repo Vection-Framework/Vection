@@ -279,14 +279,18 @@ class Database implements DatabaseInterface
 
         # Check table definition for changes and sync
         foreach ( $schema->getTables() as $table ) {
+            if( ! in_array($table->getName(), $tablesNames) ){
+                continue;
+            }
+
             # Update table constraints
-            $stmt = $this->PDO->query(
-                "
-              SELECT `CONSTRAINT_NAME`, `CONSTRAINT_TYPE` 
-              FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
-              WHERE TABLE_SCHEMA = '{$schema->getName()}' AND TABLE_NAME = '{$table->getName()}';
-            "
-            );
+            #$stmt = $this->PDO->query(
+            #    "
+            #  SELECT `CONSTRAINT_NAME`, `CONSTRAINT_TYPE`
+            #  FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+            #  WHERE TABLE_SCHEMA = '{$schema->getName()}' AND TABLE_NAME = '{$table->getName()}';
+            #"
+            #);
             # TODO compare and update table constraints
 
             # Update table columns
