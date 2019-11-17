@@ -279,7 +279,7 @@ class Database implements DatabaseInterface
 
         # Check table definition for changes and sync
         foreach ( $schema->getTables() as $table ) {
-            if( ! in_array($table->getName(), $tablesNames) ){
+            if (! in_array($table->getName(), $tablesNames)) {
                 continue;
             }
 
