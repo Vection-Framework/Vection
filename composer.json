@@ -34,6 +34,7 @@
         "psr/http-factory": "1.*",
         "psr/http-server-handler": "1.*",
         "psr/http-server-middleware": "1.*",
+        "psr/event-dispatcher": "1.0.*",
         "ext-json": "*",
         "ext-pdo": "*",
         "ext-ctype": "*"

@@ -25,17 +25,11 @@ namespace Vection\Component\Event;
 
 use Exception;
 use InvalidArgumentException;
+use Psr\EventDispatcher\StoppableEventInterface;
 use RuntimeException;
-use Vection\Contracts\Event\EventHandlerMethodInterface;
 use Vection\Contracts\Event\EventInterface;
+use Vection\Contracts\Event\EventListenerInterface;
 use Vection\Contracts\Event\EventManagerInterface;
-use function class_exists;
-use function constant;
-use function count;
-use function defined;
-use function get_class;
-use function is_array;
-use function is_string;
 
 /**
  * Class EventManager
@@ -156,8 +150,8 @@ class EventManager implements EventManagerInterface
         }
 
         # Matched listeners that will be notified
-        $listeners           = [];
-        $registeredListeners = [];
+        $prioritizedListeners = [];
+        $registeredListeners  = [];
 
         if ( ! $this->eventWildcardSeparator ) {
             $registeredListeners = ($this->listeners[$eventName] ?? []);
@@ -221,16 +215,25 @@ class EventManager implements EventManagerInterface
             }
 
             # Saves the callable array by considering the priority
-            $listeners[($definition[1] ?? 0)][] = $handler;
+            if ($handler[0] instanceof EventListenerInterface) {
+                $prioritizedListeners[$handler[0]->getPriority()][] = $handler;
+            } else {
+                $prioritizedListeners[($definition[1] ?? 0)][] = $handler;
+            }
         }
 
-        for ( $i = (count($listeners) - 1); $i >= 0; $i-- ) {
-            foreach ( $listeners[$i] as $listener ) {
-                if ( $event->isPropagationStopped() ) {
+        # Sort by priority
+        ksort($prioritizedListeners);
+
+        # Start with highest priority x > 0
+        foreach (array_reverse($prioritizedListeners) as $listeners) {
+            foreach ($listeners as $listener) {
+
+                if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
                     return;
                 }
 
-                if ( $listener[0] instanceof EventHandlerMethodInterface ) {
+                if ($listener[0] instanceof EventListenerInterface) {
                     # This listener provides a method to determine the handler method
                     # instead of using the method section of the annotation
                     $listener[1] = $listener[0]->getHandlerMethodName();

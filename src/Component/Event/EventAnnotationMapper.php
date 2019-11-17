@@ -19,7 +19,7 @@ use ReflectionException;
 use Vection\Component\Event\Exception\InvalidAnnotationException;
 use Vection\Contracts\Cache\CacheAwareInterface;
 use Vection\Contracts\Cache\CacheInterface;
-use Vection\Contracts\Event\EventHandlerMethodInterface;
+use Vection\Contracts\Event\EventListenerInterface;
 use Vection\Contracts\Event\EventManagerInterface;
 
 /**
@@ -176,13 +176,13 @@ class EventAnnotationMapper implements CacheAwareInterface
                     }
 
                     if ( ! isset($subscription['method']) ) {
-                        if ( $reflection->implementsInterface(EventHandlerMethodInterface::class) ) {
+                        if ($reflection->implementsInterface(EventListenerInterface::class)) {
                             $subscription['method'] = '';
                         } else {
                             throw new InvalidAnnotationException(
                                 sprintf(
                                     'Missing handler method definition or implementation of %s in class %s.',
-                                    EventHandlerMethodInterface::class,
+                                    EventListenerInterface::class,
                                     $className
                                 )
                             );
