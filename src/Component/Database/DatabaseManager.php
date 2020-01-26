@@ -30,10 +30,10 @@ class DatabaseManager implements DatabaseInterface
     /** @var PDO */
     protected $PDO;
 
-    /** @var string[][] */
+    /** @var array */
     protected $SQLQueue;
 
-    /** @var string[][] */
+    /** @var array */
     protected $SQLFails;
 
     /**
@@ -86,7 +86,7 @@ class DatabaseManager implements DatabaseInterface
     # region Getter / Setter
 
     /**
-     * @return string[]
+     * @return array
      */
     public function getSQLQueue(): array
     {

@@ -5,7 +5,7 @@ language: php
 php:
   - 7.2
   - 7.3
-  - 7.4snapshot
+  - 7.4
 
 env:
   - CODECOV_TOKEN="e2bfdde9-5657-472b-bab2-8e2342933ba0"
