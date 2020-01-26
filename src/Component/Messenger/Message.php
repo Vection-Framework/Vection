@@ -57,7 +57,7 @@ class Message implements MessageInterface
     }
 
     /**
-     * @return mixed
+     * @return object
      */
     public function getBody(): object
     {
@@ -79,7 +79,7 @@ class Message implements MessageInterface
     }
 
     /**
-     * @param $body
+     * @param object $body
      *
      * @return static
      */
