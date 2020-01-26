@@ -117,6 +117,10 @@ class Responder implements ResponderInterface
         }
 
         # Status code
+        if (! $headers->has('Status')) {
+            $headers->set('Status', $response->getStatusCode().' '.$response->getReasonPhrase());
+        }
+
         if ( $response->getStatusCode() < 200 || in_array($response->getStatusCode(), [204, 304], true) ) {
             $headers->remove('Content-Type');
             $headers->remove('Content-Length');
