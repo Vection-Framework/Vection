@@ -12,24 +12,16 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Component\Messenger\Service\Command\Transport;
-
-use Vection\Component\Messenger\Transport\Processor;
+namespace Vection\Component\Messenger\Exception;
 
 /**
- * Class CommandProcessor
+ * Class LogicException
  *
- * @package Vection\Component\Messenger\Service\Command\Transport
+ * @package Vection\Component\Messenger\Exception
  *
  * @author  David Lung <vection@davidlung.de>
  */
-abstract class CommandProcessor extends Processor
+class LogicException extends \LogicException
 {
-    /**
-     * @inheritDoc
-     */
-    public function getTag(): string
-    {
-        return 'command';
-    }
+
 }

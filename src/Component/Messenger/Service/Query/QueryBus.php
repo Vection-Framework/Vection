@@ -15,10 +15,13 @@ declare(strict_types = 1);
 namespace Vection\Component\Messenger\Service\Query;
 
 use InvalidArgumentException;
-use Vection\Component\Messenger\MessageBuilder;
+use Vection\Component\Messenger\Message;
+use Vection\Component\Messenger\MessageHeaders;
+use Vection\Component\Messenger\MessageIdGenerator;
 use Vection\Contracts\Messenger\MessageBusInterface;
+use Vection\Contracts\Messenger\MessageIdGeneratorInterface;
+use Vection\Contracts\Messenger\MessageInterface;
 use Vection\Contracts\Messenger\Service\Query\QueryBusInterface;
-use Vection\Contracts\Messenger\Service\Query\QueryInterface;
 use Vection\Contracts\Messenger\Service\Query\ReadModelInterface;
 
 /**
@@ -36,28 +39,50 @@ class QueryBus implements QueryBusInterface
     protected $messageBus;
 
     /**
+     * @var MessageIdGeneratorInterface
+     */
+    protected $idGenerator;
+
+    /**
      * QueryBus constructor.
      *
-     * @param MessageBusInterface $messageBus
+     * @param MessageBusInterface              $messageBus
+     * @param MessageIdGeneratorInterface|null $idGenerator
      */
-    public function __construct(MessageBusInterface $messageBus)
+    public function __construct(MessageBusInterface $messageBus, MessageIdGeneratorInterface $idGenerator = null)
     {
         $this->messageBus = $messageBus;
+        $this->idGenerator = $idGenerator ?: new MessageIdGenerator();
     }
 
     /**
-     * @param QueryInterface $query
-     *
-     * @return ReadModelInterface|null
+     * @inheritDoc
      */
-    public function query(QueryInterface $query): ?ReadModelInterface
+    public function query(object $query): ?ReadModelInterface
     {
-        $message = (new MessageBuilder())->withPayload($query)->build();
+        if (! $query instanceof MessageInterface) {
+            $query = new Message($query);
+        }
 
-        $readModel = $this->messageBus->dispatch($message)->getPayload();
+        $headers = $query->getHeaders();
+
+        if (! $headers->has(MessageHeaders::MESSAGE_ID)) {
+            $query = $query->withHeader(MessageHeaders::MESSAGE_ID, $this->idGenerator->generate());
+        }
+
+        if (! $headers->has(MessageHeaders::TIMESTAMP)) {
+            $query = $query->withHeader(MessageHeaders::TIMESTAMP, (string) time());
+        }
+
+        $query = $query->withHeader(MessageHeaders::MESSAGE_TAG, 'query');
+
+        $message   = $this->messageBus->dispatch($query);
+        $readModel = $message->getBody();
 
         if ($readModel !== null && ! $readModel instanceof ReadModelInterface) {
-            throw new InvalidArgumentException('Except a message payload of type ReadModelInterface.');
+            throw new InvalidArgumentException(
+                'QueryBus: Except response message with body of type ReadModelInterface.'
+            );
         }
 
         return $readModel;

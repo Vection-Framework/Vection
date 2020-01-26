@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
@@ -12,24 +11,16 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Component\Messenger\Service\Event\Transport;
-
-use Vection\Component\Messenger\Transport\Processor;
+namespace Vection\Component\Messenger\Exception;
 
 /**
- * Class EventProcessor
+ * Class RuntimeException
  *
- * @package Vection\Component\Messenger\Service\Event\Transport
+ * @package Vection\Component\Messenger\Exception
  *
  * @author  David Lung <vection@davidlung.de>
  */
-abstract class EventProcessor extends Processor
+class RuntimeException extends \RuntimeException
 {
-    /**
-     * @inheritDoc
-     */
-    public function getTag(): string
-    {
-        return 'event';
-    }
+
 }

@@ -14,8 +14,6 @@ declare(strict_types = 1);
 
 namespace Vection\Component\Messenger\Transport\Serializer;
 
-use Vection\Component\Messenger\Message;
-use Vection\Contracts\Messenger\MessageInterface;
 use Vection\Contracts\Messenger\Transport\SerializerInterface;
 
 /**
@@ -30,7 +28,7 @@ class DefaultSerializer implements SerializerInterface
     /**
      * @inheritDoc
      */
-    public function serialize(MessageInterface $message): string
+    public function serialize(object $message): string
     {
         return serialize($message);
     }
@@ -38,8 +36,8 @@ class DefaultSerializer implements SerializerInterface
     /**
      * @inheritDoc
      */
-    public function unserialize(string $serial): MessageInterface
+    public function unserialize(string $serial, string $type): object
     {
-        return unserialize($serial, [Message::class]);
+        return unserialize($serial, [$type]);
     }
 }

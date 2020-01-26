@@ -18,7 +18,6 @@ use ArrayObject;
 use IteratorAggregate;
 use Traversable;
 use Vection\Contracts\Messenger\Service\Query\ReadModelInterface;
-use function count;
 
 /**
  * Class ReadModelCollection
@@ -29,47 +28,62 @@ use function count;
  */
 class ReadModelCollection extends ReadModel implements IteratorAggregate
 {
-    /** @var string */
-    protected $listKey;
+    /** @var ReadModelInterface[] */
+    protected $models;
 
     /** @var integer */
     protected $total;
 
-    /** @var ReadModelInterface[] */
-    protected $items;
-
     /**
      * ReadModelCollection constructor.
      *
-     * @param array  $items
-     * @param int    $totalCount
-     * @param string $itemListKey
+     * @param array $models
+     * @param int   $total
      */
-    public function __construct(array $items, int $totalCount = 0, string $itemListKey = 'items')
+    public function __construct(array $models, int $total = 0)
     {
-        $this->items   = $items;
-        $this->total   = $totalCount ?: count($items);
-        $this->listKey = $itemListKey;
+        $this->models  = $models;
+        $this->total   = $total ?: count($models);
     }
 
     /**
-     * @param string $readModel
+     * @inheritdoc
+     */
+    public function toArray(): array
+    {
+        $collection = [];
+
+        foreach ($this->models as $index => $model) {
+            $collection[$index] = $model->toArray();
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getIterator(): Traversable
+    {
+        return (new ArrayObject($this->models))->getIterator();
+    }
+
+    /**
+     * @param string $className
      * @param array  $records
-     * @param int    $totalCount
-     * @param string $itemListKey
+     * @param int    $total
      *
      * @return ReadModelCollection
      */
-    public static function of(
-        string $readModel, array $records, int $totalCount = 0, string $itemListKey = 'items'
-    ): ReadModelCollection
+    public static function of(string $className, array $records, int $total = 0): ReadModelCollection
     {
-        $items = [];
-        foreach (($records ?? []) as $row) {
-            $items[] = new $readModel($row);
+        $models = [];
+
+        foreach ($records as $record) {
+            $models[] = new $className($record);
         }
 
-        return new ReadModelCollection($items, $totalCount, $itemListKey);
+        return new ReadModelCollection($models, $total);
     }
 
     /**
@@ -77,36 +91,14 @@ class ReadModelCollection extends ReadModel implements IteratorAggregate
      */
     public function isEmpty(): bool
     {
-        return count($this->items) < 1;
+        return count($this->models) < 1;
     }
 
     /**
      * @return ReadModelInterface[]
      */
-    public function getItems(): array
+    public function getModels(): array
     {
-        return $this->items;
-    }
-
-    /**
-     * @param mixed $key
-     *
-     * @return null|ReadModel
-     */
-    public function getItem($key): ?ReadModel
-    {
-        return $this->items[(string) $key] ?: null;
-    }
-
-    /**
-     * Retrieve an external iterator
-     * @link  http://php.net/manual/en/iteratoraggregate.getiterator.php
-     * @return Traversable An instance of an object implementing <b>Iterator</b> or
-     * <b>Traversable</b>
-     * @since 5.0.0
-     */
-    public function getIterator()
-    {
-        return (new ArrayObject($this->items))->getIterator();
+        return $this->models;
     }
 }

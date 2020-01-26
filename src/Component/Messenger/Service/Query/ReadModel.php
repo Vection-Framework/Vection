@@ -14,10 +14,8 @@ declare(strict_types = 1);
 
 namespace Vection\Component\Messenger\Service\Query;
 
-use InvalidArgumentException;
+use Vection\Component\Messenger\Exception\RuntimeException;
 use Vection\Contracts\Messenger\Service\Query\ReadModelInterface;
-use function json_last_error_msg;
-use function substr;
 
 /**
  * Class ReadModel
@@ -31,9 +29,48 @@ class ReadModel implements ReadModelInterface
     /**
      * @inheritdoc
      */
-    public function isEmpty(): bool
+    public function jsonSerialize()
     {
-        return count(array_filter(get_object_vars($this))) <= 1;
+        return $this->toArray();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function toJson(): string
+    {
+        $json = json_encode($this);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new RuntimeException('Json Encode Error: '.json_last_error_msg());
+        }
+
+        return $json;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function toArray(): array
+    {
+        $properties = get_object_vars($this);
+
+        foreach ($properties as $name => $value) {
+
+            if ($value instanceof ReadModelInterface) {
+                $value = $value->toArray();
+                $properties[$name] = $value;
+            }
+
+            if (strpos($name, '_') === 0) {
+                if ($value !== null) {
+                    $properties[substr($name, 1)] = $value;
+                }
+                unset($properties[$name]);
+            }
+        }
+
+        return $properties;
     }
 
     /**
@@ -49,73 +86,11 @@ class ReadModel implements ReadModelInterface
      */
     public function __toString()
     {
-        return sprintf('ReadModel@%s (%s)', md5($this->toJson()), get_class($this));
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function toJson(): string
-    {
-        $json = json_encode($this);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new InvalidArgumentException('Json Encode Error: '.json_last_error_msg());
-        }
-        return $json;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function jsonSerialize()
-    {
-        return $this->toArray();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function toArray(): array
-    {
-        $data = get_object_vars($this);
-
-        if (! array_filter($data)) {
-            return [];
-        }
-
-        if ($this instanceof ReadModelCollection) {
-            $listKey = $data['listKey'];
-
-            if ($data['listKey'] !== 'items') {
-                $data[$listKey] = $data['items'];
-                unset($data['items']);
-            }
-
-            // @var ReadModel $item
-            foreach ($data[$listKey] as $key => $item) {
-                unset($data[$listKey][$key]);
-                if ($item instanceof self) {
-                    $data[$listKey][$key] = $item->toArray();
-                } else {
-                    $data[$listKey][$key] = (array) $item;
-                }
-            }
-        }
-
-        foreach ($data as $key => $value) {
-            if ($value instanceof self) {
-                $value = $value->toArray();
-            }
-            if (strpos($key, '_') === 0) {
-                if ($value !== null) {
-                    $data[substr($key, 1)] = $value;
-                }
-                unset($data[$key]);
-            } else {
-                $data[$key] = $value;
-            }
-        }
-
-        return $data;
+        return sprintf(
+            '%s@%s.%s',
+            str_replace('\\', '.', get_class($this)),
+            spl_object_id($this),
+            md5($this->toJson())
+        );
     }
 }

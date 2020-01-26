@@ -14,8 +14,13 @@ declare(strict_types = 1);
 
 namespace Vection\Component\Messenger\Service\Event;
 
-use Vection\Component\Messenger\MessageBuilder;
+use Vection\Component\Messenger\Message;
+use Vection\Component\Messenger\MessageHeaders;
+use Vection\Component\Messenger\MessageIdGenerator;
 use Vection\Contracts\Messenger\MessageBusInterface;
+use Vection\Contracts\Messenger\MessageIdGeneratorInterface;
+use Vection\Contracts\Messenger\MessageInterface;
+use Vection\Contracts\Messenger\MessageRelationInterface;
 use Vection\Contracts\Messenger\Service\Event\EventBusInterface;
 
 /**
@@ -33,22 +38,49 @@ class EventBus implements EventBusInterface
     protected $messageBus;
 
     /**
+     * @var MessageIdGeneratorInterface
+     */
+    protected $idGenerator;
+
+    /**
      * EventBus constructor.
      *
-     * @param MessageBusInterface $messageBus
+     * @param MessageBusInterface              $messageBus
+     * @param MessageIdGeneratorInterface|null $idGenerator
      */
-    public function __construct(MessageBusInterface $messageBus)
+    public function __construct(MessageBusInterface $messageBus, MessageIdGeneratorInterface $idGenerator = null)
     {
-        $this->messageBus = $messageBus;
+        $this->messageBus  = $messageBus;
+        $this->idGenerator = $idGenerator ?: new MessageIdGenerator();
     }
 
     /**
-     * @param mixed $event
+     * @inheritDoc
      */
-    public function publish($event): void
+    public function publish(object $event, ?MessageRelationInterface $relation = null): void
     {
-        $message = (new MessageBuilder())->withPayload($event)->build();
+        if (! $event instanceof MessageInterface) {
+            $event = new Message($event);
+        }
 
-        $this->messageBus->dispatch($message);
+        if( $relation ){
+            foreach($relation->getHeaders()->toArray() as $name => $value) {
+                $event = $event->withHeader($name, $value);
+            }
+        }
+
+        $headers = $event->getHeaders();
+
+        if (! $headers->has(MessageHeaders::MESSAGE_ID)) {
+            $event = $event->withHeader(MessageHeaders::MESSAGE_ID, $this->idGenerator->generate());
+        }
+
+        if (! $headers->has(MessageHeaders::TIMESTAMP)) {
+            $event = $event->withHeader(MessageHeaders::TIMESTAMP, (string) time());
+        }
+
+        $this->messageBus->dispatch(
+            $event->withHeader(MessageHeaders::MESSAGE_TAG, 'event')
+        );
     }
 }

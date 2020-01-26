@@ -12,46 +12,43 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Component\Messenger\Middleware;
+namespace Vection\Component\Messenger\Service\Event\Middleware;
 
 use Vection\Contracts\Messenger\MessageBusMiddlewareInterface;
 use Vection\Contracts\Messenger\MessageInterface;
 use Vection\Contracts\Messenger\MiddlewareSequenceInterface;
-use Vection\Contracts\Messenger\Transport\SenderInterface;
+use Vection\Contracts\Messenger\Service\Event\EventDispatcherInterface;
 
 /**
- * Class MessageSenderMiddleware
+ * Class DispatchEventMiddleware
  *
- * @package Vection\Component\Messenger\Middleware
+ * @package Vection\Component\Messenger\Service\Event\Middleware
  *
  * @author  David Lung <vection@davidlung.de>
  */
-class MessageSenderMiddleware implements MessageBusMiddlewareInterface
+class DispatchEventMiddleware implements MessageBusMiddlewareInterface
 {
     /**
-     * @var SenderInterface
+     * @var EventDispatcherInterface
      */
-    protected $sender;
+    protected $eventDispatcher;
 
     /**
-     * MessageSenderMiddleware constructor.
+     * DispatchEventMiddleware constructor.
      *
-     * @param SenderInterface $sender
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(SenderInterface $sender)
+    public function __construct(EventDispatcherInterface $eventDispatcher)
     {
-        $this->sender = $sender;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
-     * @param MessageInterface            $message
-     * @param MiddlewareSequenceInterface $sequence
-     *
-     * @return MessageInterface
+     * @inheritDoc
      */
     public function handle(MessageInterface $message, MiddlewareSequenceInterface $sequence): MessageInterface
     {
-        $this->sender->send($message);
+        $this->eventDispatcher->dispatch($message);
 
         return $sequence->next($message);
     }

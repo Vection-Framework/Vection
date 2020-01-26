@@ -12,20 +12,19 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Component\Messenger\Middleware\Exception;
+namespace Vection\Component\Messenger\Exception;
 
 use Throwable;
-use Vection\Component\Messenger\MessageBusException;
 use Vection\Contracts\Validator\ViolationInterface;
 
 /**
- * Class InvalidPayloadException
+ * Class ValidationFailedException
  *
  * @package Vection\Component\Messenger\Middleware\Exception
  *
  * @author  David Lung <vection@davidlung.de>
  */
-class InvalidPayloadException extends MessageBusException
+class ValidationFailedException extends RuntimeException
 {
     /**
      * @var ViolationInterface[]
@@ -41,7 +40,7 @@ class InvalidPayloadException extends MessageBusException
      */
     public function __construct(array $violations, $code = 0, Throwable $previous = null)
     {
-        parent::__construct('The message payload contains invalid data.', $code, $previous);
+        parent::__construct('The message body contains invalid data.', $code, $previous);
         $this->violations = $violations;
     }
 

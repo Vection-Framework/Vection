@@ -14,7 +14,6 @@ declare(strict_types = 1);
 
 namespace Vection\Component\Messenger;
 
-use Exception;
 use Vection\Contracts\Messenger\MessageHeadersInterface;
 use Vection\Contracts\Messenger\MessageInterface;
 
@@ -28,31 +27,25 @@ use Vection\Contracts\Messenger\MessageInterface;
 class Message implements MessageInterface
 {
     /**
-     * @var MessageHeaders
+     * @var MessageHeadersInterface
      */
     protected $headers;
 
     /**
-     * @var mixed|null
+     * @var object
      */
-    protected $payload;
+    protected $body;
 
     /**
-     * Messenger constructor.
+     * Message constructor.
      *
-     * @param mixed|null $payload
-     * @param array      $headerUserData
+     * @param object $body
+     * @param array  $headers
      */
-    public function __construct($payload, array $headerUserData = [])
+    public function __construct(object $body, array $headers = [])
     {
-        try {
-            $id = bin2hex(random_bytes(16));
-        } catch (Exception $e) {
-            $id = md5(uniqid((string) time(), true));
-        }
-
-        $this->payload = $payload;
-        $this->headers = new MessageHeaders($id, time(), $headerUserData);
+        $this->body = $body;
+        $this->headers = new MessageHeaders($headers);
     }
 
     /**
@@ -66,8 +59,35 @@ class Message implements MessageInterface
     /**
      * @return mixed
      */
-    public function getPayload()
+    public function getBody(): object
     {
-        return $this->payload;
+        return $this->body;
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     *
+     * @return static
+     */
+    public function withHeader(string $name, string $value): MessageInterface
+    {
+        $message = clone $this;
+        $message->headers = new MessageHeaders([$name => $value] + $this->headers->toArray());
+
+        return $message;
+    }
+
+    /**
+     * @param $body
+     *
+     * @return static
+     */
+    public function withBody($body): MessageInterface
+    {
+        $message = clone $this;
+        $message->body = $body;
+
+        return $message;
     }
 }

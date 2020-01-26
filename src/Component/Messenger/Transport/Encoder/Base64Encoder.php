@@ -29,6 +29,14 @@ class Base64Encoder implements EncoderInterface
     /**
      * @inheritDoc
      */
+    public function getName(): string
+    {
+        return 'base64';
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function encode(string $serial): string
     {
         return base64_encode($serial);

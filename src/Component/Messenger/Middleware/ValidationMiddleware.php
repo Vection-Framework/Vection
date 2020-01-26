@@ -14,11 +14,11 @@ declare(strict_types = 1);
 
 namespace Vection\Component\Messenger\Middleware;
 
-use Vection\Component\Messenger\Middleware\Exception\InvalidPayloadException;
+use Vection\Component\Messenger\Exception\ValidationFailedException;
 use Vection\Contracts\Messenger\MessageBusMiddlewareInterface;
 use Vection\Contracts\Messenger\MessageInterface;
 use Vection\Contracts\Messenger\MiddlewareSequenceInterface;
-use Vection\Contracts\Messenger\Payload\ValidatablePayloadInterface;
+use Vection\Contracts\Messenger\ValidatableInterface;
 
 /**
  * Class PayloadValidatorMiddleware
@@ -27,23 +27,23 @@ use Vection\Contracts\Messenger\Payload\ValidatablePayloadInterface;
  *
  * @author  David Lung <vection@davidlung.de>
  */
-class PayloadValidatorMiddleware implements MessageBusMiddlewareInterface
+class ValidationMiddleware implements MessageBusMiddlewareInterface
 {
     /**
      * @inheritDoc
      *
-     * @throws InvalidPayloadException
+     * @throws ValidationFailedException
      */
     public function handle(MessageInterface $message, MiddlewareSequenceInterface $sequence): MessageInterface
     {
-        $payload = $message->getPayload();
+        $body = $message->getBody();
 
-        if ($payload instanceof ValidatablePayloadInterface) {
-            $chain = $payload->getValidationChain();
-            $chain->verify($payload->getValidatableData());
+        if ($body instanceof ValidatableInterface) {
+            $chain = $body->getValidationChain();
+            $chain->verify($body->getValidatableData());
 
             if ($violations = $chain->getViolations()) {
-                throw new InvalidPayloadException($violations);
+                throw new ValidationFailedException($violations);
             }
         }
 

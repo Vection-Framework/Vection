@@ -12,18 +12,16 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Component\Messenger;
-
-use Exception;
+namespace Vection\Component\Messenger\Exception;
 
 /**
- * Class MessageBusException
+ * Class TransportException
  *
- * @package Vection\Component\Messenger
+ * @package Vection\Component\Messenger\Exception
  *
  * @author  David Lung <vection@davidlung.de>
  */
-class MessageBusException extends Exception
+class TransportException extends RuntimeException
 {
 
 }

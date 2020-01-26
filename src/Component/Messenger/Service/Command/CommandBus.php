@@ -14,10 +14,14 @@ declare(strict_types = 1);
 
 namespace Vection\Component\Messenger\Service\Command;
 
-use Vection\Component\Messenger\MessageBuilder;
+use Vection\Component\Messenger\Message;
+use Vection\Component\Messenger\MessageHeaders;
+use Vection\Component\Messenger\MessageIdGenerator;
 use Vection\Contracts\Messenger\MessageBusInterface;
+use Vection\Contracts\Messenger\MessageIdGeneratorInterface;
+use Vection\Contracts\Messenger\MessageInterface;
+use Vection\Contracts\Messenger\MessageRelationInterface;
 use Vection\Contracts\Messenger\Service\Command\CommandBusInterface;
-use Vection\Contracts\Messenger\Service\Command\CommandInterface;
 
 /**
  * Class CommandBus
@@ -34,21 +38,50 @@ class CommandBus implements CommandBusInterface
     protected $messageBus;
 
     /**
+     * @var MessageIdGeneratorInterface
+     */
+    protected $idGenerator;
+
+    /**
      * CommandBus constructor.
      *
-     * @param MessageBusInterface $messageBus
+     * @param MessageBusInterface              $messageBus
+     * @param MessageIdGeneratorInterface|null $idGenerator
      */
-    public function __construct(MessageBusInterface $messageBus)
+    public function __construct(MessageBusInterface $messageBus, MessageIdGeneratorInterface $idGenerator = null)
     {
         $this->messageBus = $messageBus;
+        $this->idGenerator = $idGenerator ?: new MessageIdGenerator();
     }
 
     /**
-     * @param CommandInterface $command
+     * @inheritDoc
      */
-    public function exec(CommandInterface $command): void
+    public function execute(object $command, ?MessageRelationInterface $relation = null): void
     {
-        $message = (new MessageBuilder())->withPayload($command)->build();
-        $this->messageBus->dispatch($message);
+        if (! $command instanceof MessageInterface) {
+            $command = new Message($command);
+        }
+
+        if( $relation ){
+            foreach($relation->getHeaders()->toArray() as $name => $value) {
+                $command = $command->withHeader($name, $value);
+            }
+        }
+
+        $headers = $command->getHeaders();
+
+        if (! $headers->has(MessageHeaders::MESSAGE_ID)) {
+            $command = $command->withHeader(MessageHeaders::MESSAGE_ID, $this->idGenerator->generate());
+        }
+
+        if (! $headers->has(MessageHeaders::TIMESTAMP)) {
+            $command = $command->withHeader(MessageHeaders::TIMESTAMP, (string) time());
+        }
+
+        $this->messageBus->dispatch(
+            $command->withHeader(MessageHeaders::MESSAGE_TAG, 'command')
+        );
     }
+
 }
