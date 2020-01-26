@@ -23,42 +23,38 @@ use InvalidArgumentException;
  */
 class Resource
 {
-    public const METHODS = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'];
-
-    /**
-     * @var string
-     */
-    protected $identifier;
-
     /**
      * @var string
      */
     protected $canonical;
 
     /**
-     * @var string[]
+     * @var string|null
      */
-    protected $allowedMethods = [];
+    protected $parameter;
 
     /**
      * @var string[]
      */
-    protected $operations = [];
+    protected $allowedMethods;
+
+    /**
+     * @var array
+     */
+    protected $metadata;
 
     /**
      * Resource constructor.
      *
      * @param string $canonical
-     * @param string $identifier
+     * @param string $parameter
      * @param array  $allowedMethods
-     * @param array  $operations
      */
-    public function __construct(string $canonical, string $identifier, array $allowedMethods = [], array $operations = [])
+    public function __construct(string $canonical, ?string $parameter = null, array $allowedMethods = [])
     {
-        $this->canonical  = trim($canonical, '/');
-        $this->identifier = $identifier;
+        $this->canonical = trim($canonical, '/');
+        $this->parameter = $parameter;
         $this->setAllowedMethods($allowedMethods);
-        $this->operations = $operations;
     }
 
     /**
@@ -71,12 +67,10 @@ class Resource
     }
 
     /**
-     *
-     * @return string
+     * @return string|null
      */
-    public function getIdentifier(): string
-    {
-        return $this->identifier;
+    public function getParameter(): ?string {
+        return $this->parameter;
     }
 
     /**
@@ -88,7 +82,7 @@ class Resource
         $methods = array_change_key_case($methods);
 
         foreach ( $methods as $method ) {
-            if ( ! in_array($method, self::METHODS, true) ) {
+            if ( ! in_array($method, ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'], true) ) {
                 throw new InvalidArgumentException("The given http method '{$methods}' is not an valid method.");
             }
         }
@@ -107,19 +101,19 @@ class Resource
 
     /**
      *
-     * @param array $operations
+     * @return array
      */
-    public function setOperations(array $operations): void
+    public function getMetadata(): array
     {
-        $this->operations = $operations;
+        return $this->metadata;
     }
 
     /**
      *
-     * @return array
+     * @param array $metadata
      */
-    public function getOperations(): array
+    public function setMetadata(array $metadata): void
     {
-        return $this->operations;
+        $this->metadata = $metadata;
     }
 }

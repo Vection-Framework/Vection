@@ -119,7 +119,7 @@ class Resolver implements CacheAwareInterface
         $method = strtoupper($method);
 
         if ( $this->cache && $this->cache->contains($path) ) {
-            // @var Match $match
+            /** @var Match $match */
             $match = $this->cache->getObject($path);
             return $match;
         }
@@ -155,7 +155,11 @@ class Resolver implements CacheAwareInterface
 
             $tree = $tree[$segment];
 
-            // @var RestResource $resource
+            if (! isset($tree['#resource'])) {
+                throw new ResourceNotFoundException('The requested resource does not exists.');
+            }
+
+            /** @var RestResource $resource */
             $resource   = $tree['#resource'];
             $resourceId = null;
 
@@ -174,7 +178,7 @@ class Resolver implements CacheAwareInterface
                 $guard($resource);
             }
 
-            if ( $resource instanceof Collection) {
+            if ( $resource->getParameter()) {
 
                 $resourceId = array_shift($segments);
 
