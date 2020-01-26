@@ -41,16 +41,6 @@ interface ColumnInterface
     public function getType(): string;
 
     /**
-     * @return string
-     */
-    public function getTypeName(): string;
-
-    /**
-     * @return array
-     */
-    public function getTypeSpecification(): array;
-
-    /**
      * @return bool
      */
     public function isNullable(): bool;
@@ -96,29 +86,6 @@ interface ColumnInterface
      * @return ColumnInterface
      */
     public function setExtra(string $extra): ColumnInterface;
-
-    # endregion
-
-    /**
-     * Sets all column definition properties from given
-     * definition array. This method is basically used for
-     * definition content provided by table definition files.
-     *
-     * @param array $definition
-     *
-     * @return ColumnInterface
-     */
-    public function fromArray(array $definition): ColumnInterface;
-
-    /**
-     * Compares column definition with an other column.
-     * Returns true if the columns has same definition.
-     *
-     * @param ColumnInterface $column
-     *
-     * @return bool
-     */
-    public function equals(ColumnInterface $column): bool;
 
     /**
      * Returns the database lang definition of this column.

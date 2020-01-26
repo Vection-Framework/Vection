@@ -36,5 +36,20 @@ interface MessageInterface
      *
      * @return mixed
      */
-    public function getPayload();
+    public function getBody();
+
+    /**
+     * @param string $name
+     * @param string $value
+     *
+     * @return static
+     */
+    public function withHeader(string $name, string $value): MessageInterface;
+
+    /**
+     * @param $body
+     *
+     * @return static
+     */
+    public function withBody($body): MessageInterface;
 }

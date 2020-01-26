@@ -14,7 +14,7 @@ declare(strict_types = 1);
 
 namespace Vection\Contracts\Messenger\Service\Event;
 
-use Vection\Component\Message\Service\Event\Middleware\EventDispatcherMiddleware;
+use Vection\Contracts\Messenger\MessageRelationInterface;
 
 /**
  * Interface EventBusInterface
@@ -33,10 +33,10 @@ interface EventBusInterface
      * the message bus has the correct setup and contains a related
      * event dispatcher middleware.
      *
-     * @param mixed $event
+     * @param object                        $event
+     * @param MessageRelationInterface|null $relation
      *
      * @see EventDispatcherMiddleware
-     *
      */
-    public function publish($event): void;
+    public function publish(object $event, ?MessageRelationInterface $relation = null): void;
 }

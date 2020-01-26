@@ -12,18 +12,18 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Contracts\Messenger\Payload;
+namespace Vection\Contracts\Messenger;
 
 use Vection\Contracts\Validator\ValidatorChainInterface;
 
 /**
- * Interface ValidatablePayloadInterface
+ * Interface ValidatableInterface
  *
  * @package Vection\Contracts\Messenger\Payload
  *
  * @author  David Lung <vection@davidlung.de>
  */
-interface ValidatablePayloadInterface
+interface ValidatableInterface
 {
     /**
      * Returns an ValidationChain object that defines the validators

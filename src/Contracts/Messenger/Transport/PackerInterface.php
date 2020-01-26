@@ -17,22 +17,25 @@ namespace Vection\Contracts\Messenger\Transport;
 use Vection\Contracts\Messenger\MessageInterface;
 
 /**
- * Interface SenderInterface
+ * Interface PackerInterface
  *
  * @package Vection\Contracts\Messenger\Transport
  *
  * @author  David Lung <vection@davidlung.de>
  */
-interface SenderInterface
+interface PackerInterface
 {
     /**
-     * Sends the serialized and optional encoded message via transport provider.
-     * This methods takes optional a tag as second parameter, which can be optionally used
-     * for common messaging purposes.
-     *
      * @param MessageInterface $message
+     *
+     * @return PackageInterface
+     */
+    public function pack(MessageInterface $message): PackageInterface;
+
+    /**
+     * @param PackageInterface $package
      *
      * @return MessageInterface
      */
-    public function send(MessageInterface $message): MessageInterface;
+    public function unpack(PackageInterface $package): MessageInterface;
 }

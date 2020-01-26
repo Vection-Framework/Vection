@@ -12,21 +12,21 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Contracts\Messenger\Service\Command;
+namespace Vection\Contracts\Messenger;
 
 /**
- * Interface CommandDispatcherInterface
+ * Interface MessageHandlerProviderInterface
  *
- * @package Vection\Contracts\Messenger\Service\Command
+ * @package Vection\Contracts\Messenger
  *
  * @author  David Lung <vection@davidlung.de>
  */
-interface CommandDispatcherInterface
+interface MessageHandlerProviderInterface
 {
     /**
-     * Dispatch and executes the command related handler.
+     * @param MessageInterface $message
      *
-     * @param CommandInterface $command
+     * @return callable|null
      */
-    public function dispatch(CommandInterface $command): void;
+    public function getHandler(MessageInterface $message): ?callable;
 }

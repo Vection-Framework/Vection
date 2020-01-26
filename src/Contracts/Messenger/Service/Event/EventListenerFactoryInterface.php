@@ -12,27 +12,24 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Contracts\Messenger\Transport;
+namespace Vection\Contracts\Messenger\Service\Event;
 
 use Vection\Contracts\Messenger\MessageInterface;
 
 /**
- * Interface SenderInterface
+ * Interface EventListenerFactoryInterface
  *
- * @package Vection\Contracts\Messenger\Transport
+ * @package Vection\Contracts\Messenger\Service\Event
  *
  * @author  David Lung <vection@davidlung.de>
  */
-interface SenderInterface
+interface EventListenerFactoryInterface
 {
     /**
-     * Sends the serialized and optional encoded message via transport provider.
-     * This methods takes optional a tag as second parameter, which can be optionally used
-     * for common messaging purposes.
-     *
+     * @param string           $className
      * @param MessageInterface $message
      *
-     * @return MessageInterface
+     * @return object
      */
-    public function send(MessageInterface $message): MessageInterface;
+    public function createListener(string $className, MessageInterface $message): object;
 }

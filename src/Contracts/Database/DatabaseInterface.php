@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
@@ -9,17 +10,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
-
-/*
- * This file is part of the AppsDock project.
- *  Visit project at https://github.com/Vection-Framework/Vection
- *
- *  (c) David Lung <vection@davidlung.de>
- *
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
- */
+declare(strict_types = 1);
 
 namespace Vection\Contracts\Database;
 
@@ -55,7 +46,7 @@ interface DatabaseInterface
      *
      * @return bool
      */
-    public function schemaExists(string $name): bool;
+    public function hasSchema(string $name): bool;
 
     /**
      * @param string $name
@@ -64,36 +55,9 @@ interface DatabaseInterface
 
     /**
      * @param SchemaInterface $schema
-     *
-     * @return string
-     *
-     * @throws BackupSchemaExceptionInterface
-     */
-    public function createSchemaBackup(SchemaInterface $schema): string;
-
-    /**
-     * @param string $schemaName
-     *
-     * @return bool
-     */
-    public function hasSchemaBackup(string $schemaName): bool;
-
-    /**
-     * @param SchemaInterface $schema
-     *
-     * @throws BackupSchemaExceptionInterface
-     */
-    public function restoreSchema(SchemaInterface $schema): void;
-
-    /**
-     * @param SchemaInterface $schema
      * @param bool            $ifNotExists
-     *
-     * @return bool
-     *
-     * @throws \PDOException
      */
-    public function createSchema(SchemaInterface $schema, bool $ifNotExists = true): bool;
+    public function createSchema(SchemaInterface $schema, bool $ifNotExists = true): void;
 
     /**
      * @param SchemaInterface $schema
@@ -102,13 +66,6 @@ interface DatabaseInterface
      * @throws BackupSchemaExceptionInterface
      */
     public function updateSchema(SchemaInterface $schema): void;
-
-    /**
-     * @param SchemaInterface $schema
-     *
-     * @return bool
-     */
-    public function importData(SchemaInterface $schema): bool;
 
     /**
      * @param string|null $schema

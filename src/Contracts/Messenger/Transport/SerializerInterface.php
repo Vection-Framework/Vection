@@ -14,8 +14,6 @@ declare(strict_types = 1);
 
 namespace Vection\Contracts\Messenger\Transport;
 
-use Vection\Contracts\Messenger\MessageInterface;
-
 /**
  * Interface SerializerInterface
  *
@@ -29,11 +27,11 @@ interface SerializerInterface
      * Serializes the given data and return a string.
      * This will be used for serializing the message for transport.
      *
-     * @param MessageInterface $message
+     * @param object $message
      *
      * @return string
      */
-    public function serialize(MessageInterface $message): string;
+    public function serialize(object $message): string;
 
     /**
      * Unserialize the given serial and returns a message.
@@ -41,7 +39,9 @@ interface SerializerInterface
      *
      * @param string $serial
      *
-     * @return MessageInterface
+     * @param string $type
+     *
+     * @return object
      */
-    public function unserialize(string $serial): MessageInterface;
+    public function unserialize(string $serial, string $type): object;
 }

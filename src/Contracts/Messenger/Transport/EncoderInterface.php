@@ -24,6 +24,11 @@ namespace Vection\Contracts\Messenger\Transport;
 interface EncoderInterface
 {
     /**
+     * @return string
+     */
+    public function getName(): string;
+
+    /**
      * Encodes the serialized message and returns the result.
      *
      * @param string $serial

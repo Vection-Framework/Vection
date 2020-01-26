@@ -26,13 +26,6 @@ use JsonSerializable;
 interface ReadModelInterface extends JsonSerializable
 {
     /**
-     * Returns whether this response is empty or not.
-     *
-     * @return bool
-     */
-    public function isEmpty(): bool;
-
-    /**
      * Returns an array that represents the response.
      *
      * @return array

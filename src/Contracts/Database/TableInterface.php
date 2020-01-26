@@ -107,14 +107,14 @@ interface TableInterface
     /**
      * @return string
      */
-    public function getCharSet(): string;
+    public function getCharset(): string;
 
     /**
      * @param string $charSet
      *
      * @return TableInterface
      */
-    public function setCharSet(string $charSet): TableInterface;
+    public function setCharset(string $charSet): TableInterface;
 
     /**
      * @return string
@@ -141,22 +141,11 @@ interface TableInterface
     public function setEngine(string $engine): TableInterface;
 
     /**
-     * Sets all table definition properties from given
-     * definition array. This method is basically used for
-     * definition content provided by table definition files.
-     *
-     * @param array $definition
-     *
-     * @return TableInterface
-     */
-    public function fromArray(array $definition): TableInterface;
-
-    /**
      * Returns the create statement as database language representation.
      *
-     * @param bool $drop
+     * @param bool $dropIfExists
      *
      * @return string
      */
-    public function getCreateStatement(bool $drop = false): string;
+    public function getCreateStatement(bool $dropIfExists = false): string;
 }

@@ -14,7 +14,7 @@ declare(strict_types = 1);
 
 namespace Vection\Contracts\Messenger\Service\Command;
 
-use Vection\Component\Message\Service\Command\Middleware\CommandDispatcherMiddleware;
+use Vection\Contracts\Messenger\MessageRelationInterface;
 
 /**
  * Interface CommandBusInterface
@@ -33,10 +33,10 @@ interface CommandBusInterface
      * the message bus has the correct setup and contains a related
      * command dispatcher middleware.
      *
-     * @param CommandInterface $command
+     * @param object                        $command
+     * @param MessageRelationInterface|null $relation
      *
-     * @see CommandDispatcherMiddleware
-     *
+     * @see CommandHandlerMiddleware
      */
-    public function exec(CommandInterface $command): void;
+    public function execute(object $command, ?MessageRelationInterface $relation = null): void;
 }

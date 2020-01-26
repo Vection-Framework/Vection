@@ -14,6 +14,7 @@ declare(strict_types = 1);
 
 namespace Vection\Contracts\Messenger\Service\Query;
 
+use AppsDock\Core\Infrastructure\Messenger\Query\QueryHandlerMiddleware;
 use Vection\Component\Message\Service\Query\Middleware\QueryDispatcherMiddleware;
 
 /**
@@ -33,11 +34,11 @@ interface QueryBusInterface
      * the message bus has the correct setup and contains a related
      * query dispatcher middleware.
      *
-     * @param QueryInterface $query
+     * @param object $query
      *
      * @return ReadModelInterface|null
-     * @see QueryDispatcherMiddleware
-     *
+     *                                
+     * @see QueryHandlerMiddleware
      */
-    public function query(QueryInterface $query): ?ReadModelInterface;
+    public function query(object $query): ?ReadModelInterface;
 }

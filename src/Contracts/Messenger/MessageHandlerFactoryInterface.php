@@ -12,23 +12,21 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Contracts\Messenger\Service\Command;
+namespace Vection\Contracts\Messenger;
 
 /**
- * Interface CommandInterface
+ * Interface MessageHandlerFactoryInterface
  *
- * @package Vection\Contracts\Messenger\Service\Command
+ * @package Vection\Contracts\Messenger
  *
  * @author  David Lung <vection@davidlung.de>
  */
-interface CommandInterface
+interface MessageHandlerFactoryInterface
 {
     /**
-     * Returns an unique global id if provided, otherwise null.
-     * This id should identify the change made by the handler
-     * of this command.
+     * @param string $className
      *
-     * @return string|null
+     * @return callable
      */
-    public function getId(): ?string;
+    public function create(string $className): callable;
 }

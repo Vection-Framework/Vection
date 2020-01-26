@@ -12,16 +12,19 @@
 
 declare(strict_types = 1);
 
-namespace Vection\Contracts\Messenger\Service\Query;
+namespace Vection\Contracts\Messenger;
 
 /**
- * Interface QueryInterface
+ * Interface MessageIdGenerator
  *
- * @package Vection\Contracts\Messenger\Service\Query
+ * @package Vection\Contracts\Messenger
  *
  * @author  David Lung <vection@davidlung.de>
  */
-interface QueryInterface
+interface MessageIdGeneratorInterface
 {
-    # Type safety
+    /**
+     * @return string
+     */
+    public function generate(): string;
 }

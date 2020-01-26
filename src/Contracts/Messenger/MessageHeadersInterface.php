@@ -24,21 +24,6 @@ namespace Vection\Contracts\Messenger;
 interface MessageHeadersInterface
 {
     /**
-     * Returns a global unique identifier for this message.
-     * Each created message has its own global unique id.
-     *
-     * @return string
-     */
-    public function getId(): string;
-
-    /**
-     * Returns the timestamp the message was created at.
-     *
-     * @return int
-     */
-    public function getTimestamp(): int;
-
-    /**
      * Returns a value from the user data of this headers object.
      *
      * @param string $name

@@ -17,31 +17,31 @@ namespace Vection\Contracts\Messenger\Service\Event;
 use Vection\Contracts\Messenger\MessageInterface;
 
 /**
- * Interface EventDispatcherInterface
+ * Interface ProcessStateProviderInterface
  *
  * @package Vection\Contracts\Messenger\Service\Event
  *
  * @author  David Lung <vection@davidlung.de>
  */
-interface EventDispatcherInterface
+interface StateProviderInterface
 {
     /**
-     * @param EventListenerFactoryInterface $eventListenerFactory
+     * @param MessageInterface $message
+     *
+     * @return StateInterface|null
      */
-    public function setListenerFactory(EventListenerFactoryInterface $eventListenerFactory): void;
+    public function getState(MessageInterface $message): ?StateInterface;
 
     /**
-     * @param StateProviderInterface $stateProvider
-     */
-    public function setStateProvider(StateProviderInterface $stateProvider): void;
-
-    /**
-     * @param string $className
-     */
-    public function registerListener(string $className): void;
-
-    /**
+     * @param StateInterface   $state
      * @param MessageInterface $message
      */
-    public function dispatch(MessageInterface $message): void;
+    public function addState(StateInterface $state, MessageInterface $message): void;
+
+    /**
+     * @param string $name
+     *
+     * @return StateInterface
+     */
+    public function createNewState(string $name): StateInterface;
 }

@@ -14,6 +14,8 @@ declare(strict_types = 1);
 
 namespace Vection\Contracts\Messenger\Transport;
 
+use Vection\Contracts\Messenger\MessageInterface;
+
 /**
  * Interface ReceiverInterface
  *
@@ -24,30 +26,22 @@ namespace Vection\Contracts\Messenger\Transport;
 interface ReceiverInterface
 {
     /**
-     * Sets a serializer which is used to unserialize the received message.
-     * If none serializer is set, this receiver uses the serializer which is defined
-     * as default serializer from php configuration.
-     *
-     * @param SerializerInterface $serializer
+     * @param array $options
      */
-    public function setSerializer(SerializerInterface $serializer): void;
+    public function setup(array $options = []): void;
 
     /**
-     * Sets an encoder which decodes a received serialized message.
-     * If none encoder is set, this receiver uses the unserialized content.
-     * The serializer and encoder of this receiver must match the setup
-     * of the sender to create the message object successfully.
-     *
-     * @param EncoderInterface $encoder
+     * @return MessageInterface|null
      */
-    public function setEncoder(EncoderInterface $encoder): void;
+    public function next(): ?MessageInterface;
 
     /**
-     * Starts the receiving and processing of messages until it
-     * stops by an error or terminating in common way. This method
-     * uses the given processor to pass the message for processing.
-     *
-     * @param ProcessorInterface $processor
+     * @param MessageInterface $message
      */
-    public function receive(ProcessorInterface $processor): void;
+    public function ack(MessageInterface $message): void;
+
+    /**
+     * @param MessageInterface $message
+     */
+    public function reject(MessageInterface $message): void;
 }
