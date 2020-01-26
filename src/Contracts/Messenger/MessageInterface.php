@@ -47,7 +47,7 @@ interface MessageInterface
     public function withHeader(string $name, string $value): MessageInterface;
 
     /**
-     * @param $body
+     * @param object $body
      *
      * @return static
      */
