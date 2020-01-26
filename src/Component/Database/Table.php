@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
@@ -10,16 +11,6 @@
  */
 
 declare(strict_types=1);
-
-/*
- * This file is part of the AppsDock project.
- *  Visit project at https://github.com/Vection-Framework/Vection
- *
- *  (c) David Lung <vection@davidlung.de>
- *
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
- */
 
 namespace Vection\Component\Database;
 
@@ -53,7 +44,7 @@ class Table implements TableInterface
     protected $engine;
 
     /** @var string */
-    protected $charSet;
+    protected $charset;
 
     /** @var string */
     protected $collate;
@@ -69,12 +60,10 @@ class Table implements TableInterface
         $this->keys    = [];
         $this->indexes = [];
         $this->columns = [];
-        $this->charSet = 'utf8';
+        $this->charset = 'utf8';
         $this->collate = 'utf8_unicode_ci';
         $this->engine  = 'InnoDB';
     }
-
-    # region Getter / Setter
 
     /**
      * @return string
@@ -206,19 +195,19 @@ class Table implements TableInterface
     /**
      * @return string
      */
-    public function getCharSet(): string
+    public function getCharset(): string
     {
-        return $this->charSet;
+        return $this->charset;
     }
 
     /**
-     * @param string $charSet
+     * @param string $charset
      *
      * @return TableInterface
      */
-    public function setCharSet(string $charSet): TableInterface
+    public function setCharset(string $charset): TableInterface
     {
-        $this->charSet = $charSet;
+        $this->charset = $charset;
         return $this;
     }
 
@@ -260,75 +249,45 @@ class Table implements TableInterface
         return $this;
     }
 
-    # endregion
-
-    /**
-     * Sets all table definition properties from given
-     * definition array. This method is basically used for
-     * definition content provided by table definition files.
-     *
-     * @param array $definition
-     *
-     * @return TableInterface
-     */
-    public function fromArray(array $definition): TableInterface
-    {
-        $definition = $definition['table'];
-
-        isset($definition['comment']) and $this->setComment($definition['comment']);
-        isset($definition['keys'])    and $this->setKeys($definition['keys']);
-        isset($definition['engine'])  and $this->setEngine($definition['engine']);
-        isset($definition['charset']) and $this->setCharSet($definition['charset']);
-        isset($definition['collate']) and $this->setCollate($definition['collate']);
-
-        foreach ( $definition['columns'] as $name => $colDef ) {
-            $column = new Column($name, $colDef['type']);
-            $column->fromArray($colDef);
-            $this->addColumn($column);
-        }
-
-        return $this;
-    }
-
     /**
      * Returns the create statement as database language representation.
      *
-     * @param bool $drop
+     * @param bool $dropIfExists
      *
      * @return string
      */
-    public function getCreateStatement(bool $drop = false): string
+    public function getCreateStatement(bool $dropIfExists = false): string
     {
         $def = [];
 
-        $drop && ($def[] = "DROP TABLE IF EXISTS `{$this->name}`;");
+        $dropIfExists && ($def[] = "DROP TABLE IF EXISTS `{$this->name}`;");
 
         $def[] = "CREATE TABLE IF NOT EXISTS `{$this->name}` (";
 
-        $colDef[] = \implode(",\n", $this->columns);
+        $colDef[] = implode(",\n", $this->columns);
 
         if ( isset($this->keys['primary']) ) {
             $pkContent = $this->keys['primary'];
 
-            if ( \is_array($pkContent) ) {
-                $pkContent = \implode('`,`', $this->keys['primary']);
+            if ( is_array($pkContent) ) {
+                $pkContent = implode('`,`', $this->keys['primary']);
             }
 
             $colDef[] = "PRIMARY KEY (`{$pkContent}`)";
         }
 
         foreach ( ($this->keys['unique'] ?? []) as $key ) {
-            $parts    = \explode(' ', $key);
+            $parts    = explode(' ', $key);
             $colDef[] = "UNIQUE KEY `{$parts[0]}`".(isset($parts[1]) ? " (`{$parts[1]}`)" : '');
         }
 
         # TODO handle index
 
-        $def[] = \implode(",\n", $colDef);
-        $def[] = ") ENGINE = ".$this->engine;
-        $def[] = "DEFAULT CHARSET = ". $this->charSet;
-        $def[] = "COLLATE = ".$this->collate;
+        $def[] = implode(",\n", $colDef);
+        $def[] = ') ENGINE = '.$this->engine;
+        $def[] = 'DEFAULT CHARSET = '. $this->charset;
+        $def[] = 'COLLATE = '.$this->collate;
 
-        return \implode("\n", $def).';';
+        return implode("\n", $def).';';
     }
 }

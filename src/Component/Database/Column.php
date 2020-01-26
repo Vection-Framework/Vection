@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
@@ -11,16 +12,6 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the AppsDock project.
- *  Visit project at https://github.com/Vection-Framework/Vection
- *
- *  (c) David Lung <vection@davidlung.de>
- *
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
- */
-
 namespace Vection\Component\Database;
 
 use Vection\Contracts\Database\ColumnInterface;
@@ -32,7 +23,6 @@ use Vection\Contracts\Database\ColumnInterface;
  */
 class Column implements ColumnInterface
 {
-
     /** @var string */
     protected $name;
 
@@ -65,8 +55,6 @@ class Column implements ColumnInterface
         $this->extra    = '';
     }
 
-    # region Getter / Setter
-
     /**
      * @return string
      */
@@ -81,39 +69,6 @@ class Column implements ColumnInterface
     public function getType(): string
     {
         return $this->type;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTypeName(): string
-    {
-        if ( \strpos($this->type, '(') === false ) {
-            return $this->type;
-        }
-
-        return \substr($this->type, 0, \strpos($this->type, '('));
-    }
-
-    /**
-     * @return array
-     */
-    public function getTypeSpecification(): array
-    {
-        if ( \strpos($this->type, '(') === false ) {
-            return [];
-        }
-
-        $spec = \substr($this->type, (\strpos($this->type, '(') + 1), -1);
-
-        if ( \strpos($spec, ',') === false ) {
-            return [$spec];
-        }
-
-        $spec = \explode(',', $spec);
-        array_walk($spec, 'trim');
-
-        return $spec;
     }
 
     /**
@@ -192,53 +147,6 @@ class Column implements ColumnInterface
         return $this;
     }
 
-    # endregion
-
-    /**
-     * Sets all column definition properties from given
-     * definition array. This method is basically used for
-     * definition content provided by table definition files.
-     *
-     * @param array $definition
-     *
-     * @return ColumnInterface
-     */
-    public function fromArray(array $definition): ColumnInterface
-    {
-        isset($definition['nullable']) && $definition['nullable'] && $this->setNullable(true);
-        isset($definition['collate'])  && $this->setCollate($definition['collate']);
-        isset($definition['extra'])    && $this->setExtra($definition['extra']);
-
-        if ( \array_key_exists('default', $definition) ) {
-            $this->setDefault(
-                \is_numeric($definition['default']) ? (string) $definition['default'] : $definition['default']
-            );
-        }
-
-        return $this;
-    }
-
-    /**
-     * Compares column definition with an other column.
-     * Returns true if the columns has same definition.
-     *
-     * @param ColumnInterface $column
-     *
-     * @return bool
-     */
-    public function equals(ColumnInterface $column): bool
-    {
-        return
-            $this->name === $column->getName()
-            && $this->getTypeName() === $column->getTypeName()
-            && $this->getDefault() === $column->getDefault()
-            && $column->getCollate() === $this->getCollate()
-            && !\array_diff(
-                $this->getTypeSpecification(),
-                $column->getTypeSpecification()
-            );
-    }
-
     /**
      * Returns the database lang definition of this column.
      *
@@ -246,9 +154,7 @@ class Column implements ColumnInterface
      */
     public function getDefinition(): string
     {
-        $def = ["`{$this->name}`"];
-
-        $def[] = $this->type;
+        $def = ["`{$this->name}`", $this->type];
 
         if ( $this->collate ) {
             $def[] = 'COLLATE '.$this->collate;
@@ -256,15 +162,19 @@ class Column implements ColumnInterface
 
         $def[] = $this->nullable ? 'NULL' : 'NOT NULL';
 
-        if ( ($this->nullable && $this->default === null) || ($this->default || is_string($this->default)) ) {
-            $def[] = 'DEFAULT '.($this->default === null ? 'NULL' : (\in_array($this->default, ['CURRENT_TIMESTAMP']) ? $this->default : "'{$this->default}'"));
+        if ($this->default === null && $this->nullable) {
+            $def[] = 'DEFAULT NULL';
+        }
+        elseif ($this->default !== null) {
+            $specialValues = ['CURRENT_TIMESTAMP'];
+            $def[] = 'DEFAULT '.(in_array($this->default, $specialValues, true) ? $this->default : "'{$this->default}'");
         }
 
         if ( $this->extra ) {
-            $def[] = \strtoupper($this->extra);
+            $def[] = strtoupper($this->extra);
         }
 
-        return \implode("\t", $def);
+        return implode("\t", $def);
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
@@ -10,16 +11,6 @@
  */
 
 declare(strict_types=1);
-
-/*
- * This file is part of the AppsDock project.
- *  Visit project at https://github.com/Vection-Framework/Vection
- *
- *  (c) David Lung <vection@davidlung.de>
- *
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
- */
 
 namespace Vection\Component\Database;
 
@@ -33,12 +24,11 @@ use Vection\Contracts\Database\TableInterface;
  */
 class Schema implements SchemaInterface
 {
-
     /** @var string */
     protected $name;
 
     /** @var string */
-    protected $charSet;
+    protected $charset;
 
     /** @var string */
     protected $collate;
@@ -46,26 +36,23 @@ class Schema implements SchemaInterface
     /** @var TableInterface[] */
     protected $tables;
 
-    /** @var string[] */
-    protected $insert;
-
     /**
      * Schema constructor.
      *
      * @param string $name
-     *
+     * @param string $charset
+     * @param string $collate
      */
-    public function __construct(string $name)
+    public function __construct(string $name, string $charset = 'utf8', string $collate = 'utf8_unicode_ci')
     {
         $this->name    = $name;
-        $this->charSet = 'utf8';
-        $this->collate = 'utf8_unicode_ci';
+        $this->charset = $charset;
+        $this->collate = $collate;
         $this->tables  = [];
-        $this->insert  = [];
     }
 
     /**
-     * @return string
+     * @inheritDoc
      */
     public function getName(): string
     {
@@ -73,9 +60,7 @@ class Schema implements SchemaInterface
     }
 
     /**
-     * @param TableInterface $table
-     *
-     * @return SchemaInterface
+     * @inheritDoc
      */
     public function addTable(TableInterface $table): SchemaInterface
     {
@@ -84,7 +69,7 @@ class Schema implements SchemaInterface
     }
 
     /**
-     * @return TableInterface[]
+     * @inheritDoc
      */
     public function getTables(): array
     {
@@ -92,7 +77,7 @@ class Schema implements SchemaInterface
     }
 
     /**
-     * @return bool
+     * @inheritDoc
      */
     public function hasTables(): bool
     {
@@ -100,9 +85,7 @@ class Schema implements SchemaInterface
     }
 
     /**
-     * @param string $name
-     *
-     * @return bool
+     * @inheritDoc
      */
     public function hasTable(string $name): bool
     {
@@ -110,118 +93,16 @@ class Schema implements SchemaInterface
     }
 
     /**
-     * @param string $statement
-     *
-     * @return SchemaInterface
+     * @inheritDoc
      */
-    public function addInsertStatement(string $statement): SchemaInterface
+    public function getCreateStatement(bool $dropIfExists = false): string
     {
-        $this->insert[] = $statement;
-        return $this;
-    }
+        $SQL = ["CREATE DATABASE `{$this->name}` CHARACTER SET {$this->charset} COLLATE {$this->collate};"];
 
-    /**
-     * @param array $statements
-     *
-     * @return SchemaInterface
-     */
-    public function setInsertStatements(array $statements): SchemaInterface
-    {
-        $this->insert = $statements;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasInsertStatements(): bool
-    {
-        return \count($this->insert) > 0;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getInsertStatements(): array
-    {
-        return $this->insert;
-    }
-
-    /**
-     * @param string $filePath
-     *
-     * @return SchemaInterface
-     */
-    public function addDataInsertFile(string $filePath): SchemaInterface
-    {
-        foreach ( \glob($filePath) as $file ) {
-            $this->addInsertStatement(\file_get_contents($file));
+        if ($dropIfExists) {
+            array_unshift($SQL, "DROP DATABASE IF EXISTS `{$this->name}`;");
         }
 
-        return $this;
-    }
-
-    /**
-     * @param array $definition
-     *
-     * @return SchemaInterface
-     */
-    public function loadTableFromArray(array $definition): SchemaInterface
-    {
-        $table = new Table($definition['table']['name']);
-        $table->fromArray($definition);
-        $this->addTable($table);
-        return $this;
-    }
-
-    /**
-     * @param string $filePath
-     *
-     * @return SchemaInterface
-     */
-    public function loadTableFromFile(string $filePath): SchemaInterface
-    {
-        foreach ( \glob($filePath) as $file ) {
-
-            $definition = [];
-
-            if ( \in_array(\pathinfo($file, PATHINFO_EXTENSION), ['yml', 'yaml']) ) {
-                $definition = \yaml_parse_file($file);
-
-                if ( ! $definition ) {
-                    throw new \RuntimeException(
-                        "Vection.Database.Schema: YAML ERROR - malformed file ({$file})"
-                    );
-                }
-            }
-
-            if ( ! $definition ) {
-                throw new \RuntimeException(
-                    "Vection.Database.Schema: Unsupported file type ({$file})"
-                );
-            }
-
-            $this->loadTableFromArray($definition);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Returns the create statement as database language representation.
-     *
-     * @param bool $withDrop
-     *
-     * @return string
-     */
-    public function getCreateStatement(bool $withDrop = false): string
-    {
-        $SQL = [];
-
-        $withDrop and ($SQL[] = "DROP DATABASE IF EXISTS `{$this->name}`;");
-
-        $SQL[] = "CREATE DATABASE `{$this->name}` CHARACTER SET {$this->charSet} COLLATE {$this->collate};";
-
-        return \implode("\n", $SQL);
+        return implode("\n", $SQL);
     }
 }
