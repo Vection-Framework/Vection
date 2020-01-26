@@ -44,7 +44,7 @@ class Message implements MessageInterface
      */
     public function __construct(object $body, array $headers = [])
     {
-        $this->body = $body;
+        $this->body    = $body;
         $this->headers = new MessageHeaders($headers);
     }
 
@@ -72,8 +72,8 @@ class Message implements MessageInterface
      */
     public function withHeader(string $name, string $value): MessageInterface
     {
-        $message = clone $this;
-        $message->headers = new MessageHeaders([$name => $value] + $this->headers->toArray());
+        $message          = clone $this;
+        $message->headers = new MessageHeaders(([$name => $value] + $this->headers->toArray()));
 
         return $message;
     }
@@ -85,7 +85,7 @@ class Message implements MessageInterface
      */
     public function withBody($body): MessageInterface
     {
-        $message = clone $this;
+        $message       = clone $this;
         $message->body = $body;
 
         return $message;

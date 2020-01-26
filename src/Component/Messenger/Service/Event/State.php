@@ -84,7 +84,7 @@ class State implements StateInterface
      */
     public function getAttribute(string $name): ?string
     {
-        return $this->attributes[$name] ?? null;
+        return ($this->attributes[$name] ?? null);
     }
 
     /**

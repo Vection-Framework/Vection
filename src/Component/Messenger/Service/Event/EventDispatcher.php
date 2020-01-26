@@ -73,7 +73,7 @@ class EventDispatcher implements EventDispatcherInterface
     {
         try {
             $reflection = new ReflectionClass($className);
-            $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
+            $methods    = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
 
             foreach ($methods as $method) {
                 if ( strpos($method->getName(), 'on') !== 0 ) {
@@ -96,7 +96,7 @@ class EventDispatcher implements EventDispatcherInterface
 
                 $eventName = explode('\\', $eventClassName)[substr_count($eventClassName, '\\')];
 
-                if ( $method->getName() !== 'on'.$eventName ){
+                if ( $method->getName() !== 'on'.$eventName ) {
                     continue;
                 }
 
@@ -108,8 +108,7 @@ class EventDispatcher implements EventDispatcherInterface
                     'class' => $className, 'method' => 'on'.$eventName
                 ];
             }
-        }
-        catch (ReflectionException $e) {
+        } catch (ReflectionException $e) {
             throw new RuntimeException('Unable to register process manager class.', 0, $e);
         }
     }
@@ -127,14 +126,14 @@ class EventDispatcher implements EventDispatcherInterface
             $exceptions = [];
             $state      = null;
 
-            foreach( $this->listeners[$eventClassName] as $listenerInfo ) {
+            foreach ( $this->listeners[$eventClassName] as $listenerInfo ) {
 
                 $listenerClassName  = $listenerInfo['class'];
                 $listenerMethodName = $listenerInfo['method'];
 
                 if ($this->eventListenerFactory) {
                     $listener = $this->eventListenerFactory->createListener($listenerClassName, $message);
-                }else{
+                } else {
                     $listener = new $listenerClassName($message);
                 }
 
@@ -150,9 +149,9 @@ class EventDispatcher implements EventDispatcherInterface
                         );
                     }
 
-                    if( $state === null ){
+                    if ( $state === null ) {
                         $state = $this->stateProvider->getState($message);
-                        if( $state === null ){
+                        if ( $state === null ) {
                             $state = $this->stateProvider->createNewState('START');
                         }
                     }
@@ -162,7 +161,7 @@ class EventDispatcher implements EventDispatcherInterface
 
                     $newState = $stateManager->applyActive($state, $eventObject);
 
-                    if($newState === null) {
+                    if ($newState === null) {
                         continue;
                     }
 
@@ -175,8 +174,7 @@ class EventDispatcher implements EventDispatcherInterface
                         $newState = $stateManager->applyPassive($state, $eventObject);
                         $this->stateProvider->addState($newState, $message);
                         $stateDepleted = true;
-                    }
-                    catch(Throwable $e) {
+                    } catch (Throwable $e) {
                         $exceptions[] = $e;
                     }
 
@@ -185,8 +183,7 @@ class EventDispatcher implements EventDispatcherInterface
 
                 try {
                     $listener->{$listenerMethodName}($eventObject, $message);
-                }
-                catch(Throwable $e) {
+                } catch (Throwable $e) {
                     $exceptions[] = $e;
                 }
             }

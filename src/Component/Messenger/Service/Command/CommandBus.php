@@ -50,7 +50,7 @@ class CommandBus implements CommandBusInterface
      */
     public function __construct(MessageBusInterface $messageBus, MessageIdGeneratorInterface $idGenerator = null)
     {
-        $this->messageBus = $messageBus;
+        $this->messageBus  = $messageBus;
         $this->idGenerator = $idGenerator ?: new MessageIdGenerator();
     }
 
@@ -63,8 +63,8 @@ class CommandBus implements CommandBusInterface
             $command = new Message($command);
         }
 
-        if( $relation ){
-            foreach($relation->getHeaders()->toArray() as $name => $value) {
+        if ( $relation ) {
+            foreach ($relation->getHeaders()->toArray() as $name => $value) {
                 $command = $command->withHeader($name, $value);
             }
         }

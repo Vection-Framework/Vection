@@ -78,7 +78,8 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
         $this->logger->info(
             sprintf(
                 '[MessageBus] DISPATCH %s (ID:%s)',
-                $body, $headers->get(MessageHeaders::MESSAGE_ID) ?: '[none]'
+                $body,
+                $headers->get(MessageHeaders::MESSAGE_ID) ?: '[none]'
             )
         );
 
@@ -90,19 +91,20 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
             $this->logger->info(
                 sprintf(
                     '[MessageBus] DONE %s (ID:%s) TERMINATED BY %s',
-                    $body, $headers->get(MessageHeaders::MESSAGE_ID) ?: '[none]',
+                    $body,
+                    $headers->get(MessageHeaders::MESSAGE_ID) ?: '[none]',
                     $result->getHeaders()->get(MessageHeaders::TERMINATED_MIDDLEWARE) ?: 'unknown'
                 )
             );
 
             return $result;
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
 
             $this->logger->error(
                 sprintf(
                     "[MessageBus] ERROR %s (ID:%s)\n%s at %s\n%s\n%s",
-                    $body, $message->getHeaders()->get(MessageHeaders::MESSAGE_ID) ?: '[none]',
+                    $body,
+                    $message->getHeaders()->get(MessageHeaders::MESSAGE_ID) ?: '[none]',
                     (new \ReflectionObject($e))->getShortName(),
                     str_replace('\\', '.', get_class($sequence->getCurrent())),
                     $e->getMessage(),

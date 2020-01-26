@@ -164,10 +164,9 @@ class Column implements ColumnInterface
 
         if ($this->default === null && $this->nullable) {
             $def[] = 'DEFAULT NULL';
-        }
-        elseif ($this->default !== null) {
+        } else if ($this->default !== null) {
             $specialValues = ['CURRENT_TIMESTAMP'];
-            $def[] = 'DEFAULT '.(in_array($this->default, $specialValues, true) ? $this->default : "'{$this->default}'");
+            $def[]         = 'DEFAULT '.(in_array($this->default, $specialValues, true) ? $this->default : "'{$this->default}'");
         }
 
         if ( $this->extra ) {

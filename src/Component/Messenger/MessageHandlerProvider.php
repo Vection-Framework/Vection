@@ -48,7 +48,7 @@ class MessageHandlerProvider implements MessageHandlerProviderInterface
      */
     public function __construct(array $handlerClassNames = [], ?MessageHandlerFactoryInterface $factory = null)
     {
-        $this->map = [];
+        $this->map     = [];
         $this->factory = $factory;
 
         foreach ($handlerClassNames as $className) {
@@ -63,7 +63,7 @@ class MessageHandlerProvider implements MessageHandlerProviderInterface
     {
         try {
             $invokeMethod = new ReflectionMethod($handlerClassName, '__invoke');
-            $parameters = $invokeMethod->getParameters();
+            $parameters   = $invokeMethod->getParameters();
             $errorMessage = 'Invalid message handler: The __invoke method must has a typed message parameter.';
 
             if (count($parameters) === 0) {
@@ -77,8 +77,7 @@ class MessageHandlerProvider implements MessageHandlerProviderInterface
             }
 
             $this->map[$type->getName()] = $handlerClassName;
-        }
-        catch (ReflectionException $e) {
+        } catch (ReflectionException $e) {
             throw new RuntimeException('Unable to register message handler class.', 0, $e);
         }
     }

@@ -63,8 +63,8 @@ class EventBus implements EventBusInterface
             $event = new Message($event);
         }
 
-        if( $relation ){
-            foreach($relation->getHeaders()->toArray() as $name => $value) {
+        if ( $relation ) {
+            foreach ($relation->getHeaders()->toArray() as $name => $value) {
                 $event = $event->withHeader($name, $value);
             }
         }

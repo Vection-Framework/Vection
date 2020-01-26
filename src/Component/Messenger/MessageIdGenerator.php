@@ -34,24 +34,25 @@ class MessageIdGenerator implements MessageIdGeneratorInterface
     {
         try {
             $bytes = random_bytes(16);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             throw new RuntimeException(
-                'Insufficient OS ext tool requirements for generating unique IDs.', 0, $e
+                'Insufficient OS ext tool requirements for generating unique IDs.',
+                0,
+                $e
             );
         }
 
         # $byte will always have a valid value!
-        $hex = bin2hex($bytes ?? '');
+        $hex = bin2hex(($bytes ?? ''));
 
         $version = 4;
 
-        $timeHi = substr($hex, 12, 4);
-        $timeHi = hexdec($timeHi) & 0x0fff;
+        $timeHi  = substr($hex, 12, 4);
+        $timeHi  = (hexdec($timeHi) & 0x0fff);
         $timeHi &= ~(0xf000);
-        $timeHi |= $version << 12;
+        $timeHi |= ($version << 12);
 
-        $clockSeqHi = hexdec(substr($hex, 16, 2));
+        $clockSeqHi  = hexdec(substr($hex, 16, 2));
         $clockSeqHi &= 0x3f;
         $clockSeqHi &= ~(0xc0);
         $clockSeqHi |= 0x80;

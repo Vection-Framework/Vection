@@ -53,7 +53,7 @@ class SenderMiddleware implements MessageBusMiddlewareInterface
      */
     public function handle(MessageInterface $message, MiddlewareSequenceInterface $sequence): MessageInterface
     {
-        if ( ! $message->getHeaders()->has(MessageHeaders::RECEIVED_TIMESTAMP) ){
+        if ( ! $message->getHeaders()->has(MessageHeaders::RECEIVED_TIMESTAMP) ) {
 
             if (! $message->getHeaders()->has(MessageHeaders::MESSAGE_TYPE)) {
                 $message = $message->withHeader(MessageHeaders::MESSAGE_TYPE, get_class($message->getBody()));
@@ -62,11 +62,10 @@ class SenderMiddleware implements MessageBusMiddlewareInterface
             try {
                 if ($message->getHeaders()->has(MessageHeaders::DELIVERY_TIMESTAMP)) {
                     $this->sender->send($message->withHeader(MessageHeaders::REDELIVERED_TIMESTAMP, (string) time()));
-                }else{
+                } else {
                     $this->sender->send($message->withHeader(MessageHeaders::DELIVERY_TIMESTAMP, (string) time()));
                 }
-            }
-            catch(TransportException $e) {
+            } catch (TransportException $e) {
                 # TODO redelivery queue!
             }
         }

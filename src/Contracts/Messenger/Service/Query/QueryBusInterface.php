@@ -37,7 +37,7 @@ interface QueryBusInterface
      * @param object $query
      *
      * @return ReadModelInterface|null
-     *                                
+     *
      * @see QueryHandlerMiddleware
      */
     public function query(object $query): ?ReadModelInterface;

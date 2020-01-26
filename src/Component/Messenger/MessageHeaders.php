@@ -28,14 +28,14 @@ class MessageHeaders implements MessageHeadersInterface
     /**
      * Default message headers
      */
-    public const MESSAGE_ID            = 'MESSAGE_ID';
-    public const CORRELATION_ID        = 'CORRELATION_ID';
-    public const CAUSATION_ID          = 'CAUSATION_ID';
-    public const USER_ID               = 'USER_ID';
-    public const TENANT_ID             = 'TENANT_ID';
-    public const APP_ID                = 'APP_ID';
-    public const CONTEXT               = 'CONTEXT';
-    public const TIMESTAMP             = 'TIMESTAMP';
+    public const MESSAGE_ID     = 'MESSAGE_ID';
+    public const CORRELATION_ID = 'CORRELATION_ID';
+    public const CAUSATION_ID   = 'CAUSATION_ID';
+    public const USER_ID        = 'USER_ID';
+    public const TENANT_ID      = 'TENANT_ID';
+    public const APP_ID         = 'APP_ID';
+    public const CONTEXT        = 'CONTEXT';
+    public const TIMESTAMP      = 'TIMESTAMP';
     public const DELIVERY_TIMESTAMP    = 'DELIVERY_TIMESTAMP';
     public const REDELIVERED_TIMESTAMP = 'REDELIVERED_TIMESTAMP';
     public const RECEIVED_TIMESTAMP    = 'RECEIVED_TIMESTAMP';
@@ -56,7 +56,7 @@ class MessageHeaders implements MessageHeadersInterface
      */
     public function __construct(array $map = [])
     {
-        $this->map  = $map;
+        $this->map = $map;
     }
 
     /**

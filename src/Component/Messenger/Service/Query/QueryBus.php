@@ -51,7 +51,7 @@ class QueryBus implements QueryBusInterface
      */
     public function __construct(MessageBusInterface $messageBus, MessageIdGeneratorInterface $idGenerator = null)
     {
-        $this->messageBus = $messageBus;
+        $this->messageBus  = $messageBus;
         $this->idGenerator = $idGenerator ?: new MessageIdGenerator();
     }
 

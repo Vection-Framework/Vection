@@ -204,8 +204,7 @@ class DatabaseManager implements DatabaseInterface
                     continue;
                 }
 
-                $hasDifference =
-                    $column->getName() !== $name
+                $hasDifference = $column->getName() !== $name
                     || strtoupper($column->getType()) !== strtoupper($type)
                     || $column->isNullable() !== ($null === 'YES')
                     || $column->getDefault() !== $default

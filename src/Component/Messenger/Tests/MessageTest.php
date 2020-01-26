@@ -29,7 +29,7 @@ class MessageTest extends TestCase
 
     protected function getMessage(): Message
     {
-        $body = new \stdClass();
+        $body      = new \stdClass();
         $body->foo = 1;
 
         return new Message($body, ['TEST_HEADER_1' => 'foo', 'TEST_HEADER_2' => 'bar']);
@@ -57,11 +57,10 @@ class MessageTest extends TestCase
 
     public function testWithBody()
     {
-        $body = new \stdClass();
+        $body      = new \stdClass();
         $body->bar = 42;
 
         $body = $this->getMessage()->withBody($body)->getBody();
-
 
         $this->assertIsObject($body);
         $this->assertSame(42, $body->bar);

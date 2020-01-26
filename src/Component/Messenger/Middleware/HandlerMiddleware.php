@@ -63,7 +63,7 @@ class HandlerMiddleware implements MessageBusMiddlewareInterface
         try {
             $handler = $this->handlerMapper->getHandler($message);
 
-            if( $handler === null ){
+            if ( $handler === null ) {
                 throw new HandlerNotFoundException(
                     sprintf(
                         'Missing handler mapping for message with body %s',
@@ -74,8 +74,7 @@ class HandlerMiddleware implements MessageBusMiddlewareInterface
 
             $handler($message->getBody(), $message);
             $message = $message->withHeader(MessageHeaders::HANDLED_TIMESTAMP, (string) time());
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             throw new HandlerFailedException($e);
         }
 

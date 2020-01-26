@@ -42,8 +42,8 @@ class ReadModelCollection extends ReadModel implements IteratorAggregate
      */
     public function __construct(array $models, int $total = 0)
     {
-        $this->models  = $models;
-        $this->total   = $total ?: count($models);
+        $this->models = $models;
+        $this->total  = $total ?: count($models);
     }
 
     /**

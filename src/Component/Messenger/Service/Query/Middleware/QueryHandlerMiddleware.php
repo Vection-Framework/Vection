@@ -37,13 +37,12 @@ class QueryHandlerMiddleware extends HandlerMiddleware
     {
         try {
             $handler = $this->handlerMapper->getHandler($message);
-            $body = $handler($message->getBody(), $message);
+            $body    = $handler($message->getBody(), $message);
             return $message
                 ->withHeader(MessageHeaders::HANDLED_TIMESTAMP, (string) time())
                 ->withHeader(MessageHeaders::TERMINATED_MIDDLEWARE, 'QueryHandlerMiddleware')
                 ->withBody($body);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             throw new HandlerFailedException($e);
         }
     }

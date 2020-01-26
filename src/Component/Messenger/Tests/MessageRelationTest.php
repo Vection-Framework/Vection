@@ -42,13 +42,16 @@ class MessageRelationTest extends TestCase
 
     public function testWith()
     {
-        $message = new Message(new \stdClass(), [
-            MessageHeaders::CORRELATION_ID => 'correlation_test',
-            MessageHeaders::MESSAGE_ID => '123456abcdef',
-            'barFoo' => 'test'
-        ]);
+        $message = new Message(
+            new \stdClass(),
+            [
+                MessageHeaders::CORRELATION_ID => 'correlation_test',
+                MessageHeaders::MESSAGE_ID => '123456abcdef',
+                'barFoo' => 'test'
+            ]
+        );
 
-        $mr = new MessageRelation();
+        $mr      = new MessageRelation();
         $headers = $mr->with($message)->getHeaders();
 
         $this->assertTrue($headers->has(MessageHeaders::CORRELATION_ID));
