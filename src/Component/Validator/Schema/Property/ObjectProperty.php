@@ -81,7 +81,7 @@ class ObjectProperty extends Property
                 if ( ! $property->isRequired() ) {
                     continue;
                 }
-                throw new MissingPropertyException($property->getName());
+                throw new MissingPropertyException($this->name.'.'.$property->getName());
             }
 
             try {
