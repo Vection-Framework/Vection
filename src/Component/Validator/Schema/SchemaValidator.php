@@ -56,12 +56,16 @@ class SchemaValidator implements SchemaValidatorInterface
 
         $content = file_get_contents($path);
 
-        if ( in_array($ext, ['yaml', 'yml']) ) {
-            return $this->validateYamlString($content);
-        }
+        try{
+            if ( in_array($ext, ['yaml', 'yml']) ) {
+                return $this->validateYamlString($content);
+            }
 
-        if ( $ext === 'json' ) {
-            return $this->validateJsonString($content);
+            if ( $ext === 'json' ) {
+                return $this->validateJsonString($content);
+            }
+        }catch (\RuntimeException $e) {
+            throw new RuntimeException('Unable to validate file '.$path, 0, $e);
         }
 
         throw new RuntimeException('Schema validator: Expects json or yaml, got unsupported file: '.$path.'');
@@ -75,7 +79,7 @@ class SchemaValidator implements SchemaValidatorInterface
         $data = json_decode($json, true);
 
         if ( json_last_error() !== JSON_ERROR_NONE ) {
-            throw new RuntimeException(json_last_error_msg());
+            throw new RuntimeException('JSON '.json_last_error_msg());
         }
 
         $this->validateArray($data);
