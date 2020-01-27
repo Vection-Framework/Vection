@@ -56,7 +56,7 @@ class SchemaValidator implements SchemaValidatorInterface
 
         $content = file_get_contents($path);
 
-        try{
+        try {
             if ( in_array($ext, ['yaml', 'yml']) ) {
                 return $this->validateYamlString($content);
             }
@@ -64,7 +64,7 @@ class SchemaValidator implements SchemaValidatorInterface
             if ( $ext === 'json' ) {
                 return $this->validateJsonString($content);
             }
-        }catch (\RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             throw new RuntimeException('Unable to validate file '.$path, 0, $e);
         }
 
