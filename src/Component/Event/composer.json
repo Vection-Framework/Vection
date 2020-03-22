@@ -1,8 +1,8 @@
 {
-    "name": "vection-framework/event-manager",
+    "name": "vection-framework/event-dispatcher",
     "type": "library",
-    "description": "PHP Event Manager - Vection Framework Component",
-    "keywords": ["php", "framework", "event", "event manager"],
+    "description": "PHP Event Dispatcher - Vection Component",
+    "keywords": ["php", "framework", "event", "event", "dispatcher"],
     "homepage": "https://vection.appsdock.org",
     "license": "MIT",
     "authors": [
