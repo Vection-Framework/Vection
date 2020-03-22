@@ -33,6 +33,8 @@ class EventListenerProviderTest extends TestCase
     {
         $provider = new EventListenerProvider();
         $provider->register(TestEventListener::class);
+
+        /** @var array $listeners */
         $listeners = $provider->getListenersForEvent(new TestEvent());
 
         $this->assertIsArray($listeners);
@@ -42,6 +44,8 @@ class EventListenerProviderTest extends TestCase
         $this->assertSame('onTestEvent', $listeners[0][1]);
 
         $provider->register(TestEventListener2::class);
+
+        /** @var array $listeners */
         $listeners = $provider->getListenersForEvent(new TestEvent());
 
         $this->assertIsArray($listeners);

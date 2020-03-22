@@ -3,7 +3,6 @@ sudo: false
 language: php
 
 php:
-  - 7.2
   - 7.3
   - 7.4
 
@@ -24,11 +23,7 @@ jobs:
   include:
     - stage: Test
       if: type = cron
-      php: 7.2
-
-    - stage: Test
-      if: type = cron
-      php: 7.4snapshot
+      php: 7.4
 
     - stage: Test
       if: type = cron
@@ -52,11 +47,11 @@ jobs:
         - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
       script: vendor/bin/phpstan analyse
 
-    - stage: Code Quality
-      install: travis_retry composer install --prefer-dist
-      php: 7.2
-      script:
-        - ./vendor/bin/phpcs
+    #- stage: Code Quality
+    #  install: travis_retry composer install --prefer-dist
+    #  php: 7.2
+    #  script:
+    #    - ./vendor/bin/phpcs
 
     #- stage: Code Quality
     #  install: travis_retry composer install --prefer-dist
@@ -72,8 +67,8 @@ jobs:
     #  script:
     #    - ./infection.phar --min-msi=48 --threads=4
 
-  allow_failures:
-    - php: 7.4snapshot
+  #allow_failures:
+  #  - php: 7.4
 
 cache:
   directories:
