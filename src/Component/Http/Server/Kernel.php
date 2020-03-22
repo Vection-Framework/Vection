@@ -1,10 +1,9 @@
 <?php
 
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -19,7 +18,11 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Vection\Component\Http\Psr\Message\Factory\ServerRequestFactory;
 use Vection\Component\Http\Server\Decorator\Factory\ServerRequestFactoryDecorator;
-use Vection\Contracts\Event\EventManagerInterface;
+use Vection\Component\Http\Server\Event\AfterSendRequestEvent;
+use Vection\Component\Http\Server\Event\BeforeHandleRequestEvent;
+use Vection\Component\Http\Server\Event\BeforeSendRequestEvent;
+use Vection\Component\Http\Server\Event\BeforeTerminateRequestEvent;
+use Vection\Contracts\Event\EventDispatcherInterface;
 use Vection\Contracts\Http\Server\KernelInterface;
 use Vection\Contracts\Http\Server\ResponderInterface;
 
@@ -27,6 +30,8 @@ use Vection\Contracts\Http\Server\ResponderInterface;
  * Class Kernel
  *
  * @package Vection\Component\Http\Server
+ *
+ * @author  David M. Lung <vection@davidlung.de>
  */
 class Kernel implements KernelInterface
 {
@@ -40,8 +45,8 @@ class Kernel implements KernelInterface
     /** @var ResponderInterface */
     protected $responder;
 
-    /** @var EventManagerInterface */
-    protected $eventManager;
+    /** @var EventDispatcherInterface */
+    protected $eventDispatcher;
 
     /** @var LoggerInterface */
     protected $logger;
@@ -80,11 +85,11 @@ class Kernel implements KernelInterface
     }
 
     /**
-     * @param EventManagerInterface $eventManager
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function setEventManager(EventManagerInterface $eventManager): void
+    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher): void
     {
-        $this->eventManager = $eventManager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -98,12 +103,12 @@ class Kernel implements KernelInterface
     }
 
     /**
-     * @param string $event
+     * @param object $event
      */
-    protected function fireEvent(string $event): void
+    protected function fireEvent(object $event): void
     {
-        if ( $this->eventManager ) {
-            $this->eventManager->fire('vection.http.kernel.'.$event);
+        if ( $this->eventDispatcher ) {
+            $this->eventDispatcher->dispatch($event);
         }
     }
 
@@ -123,38 +128,38 @@ class Kernel implements KernelInterface
      * the client.
      *
      * If the kernel has an event manager then the following event will be fired:
-     *  - vection.http.kernel.beforeHandleRequest
-     *  - vection.http.kernel.beforeSendRequest
-     *  - vection.http.kernel.afterSendRequest
-     *  - vection.http.kernel.beforeTerminate (only if argument 1 is true)
-     *
-     * @see Kernel::setEventManager()
+     *  - BeforeHandleRequestEvent
+     *  - BeforeSendRequestEvent
+     *  - AfterSendRequestEvent
+     *  - BeforeTerminateRequestEvent (only if argument 1 is true)
      *
      * @param bool $terminate
+     *
+     *@see Kernel::setEventDispatcher()
+     *
      */
     public function execute(bool $terminate = true): void
     {
-        $this->fireEvent('beforeHandleRequest');
+        $this->log('HTTP.Kernel A new request has been received @ '.$this->request->getUri());
+        $this->fireEvent(new BeforeHandleRequestEvent());
 
-        $this->log('Vection HTTP: Kernel start handle request by middleware');
+        $this->log('HTTP.Kernel execute middleware');
         $response = $this->requestHandler->handle($this->request);
-        $this->log('Vection HTTP: Kernel finished request handling');
 
-        $this->fireEvent('beforeSendRequest');
+        $this->fireEvent(new BeforeSendRequestEvent());
 
-        $this->log('Vection HTTP: Kernel.Responder start processing');
+        $this->log('HTTP.Kernel.Responder start preparing response');
         $this->responder->send($response, $this->request);
-        $this->log('Vection HTTP: Kernel.Responder request sent');
+        $this->log(sprintf('HTTP.Kernel.Responder response sent (%d)', $response->getStatusCode()));
 
-        $this->fireEvent('afterSendRequest');
+        $this->fireEvent(new AfterSendRequestEvent());
 
         if ( $terminate ) {
-            $this->log('Vection HTTP: Kernel start termination');
-            $this->fireEvent('beforeTerminate');
-            $this->log('Vection HTTP: Kernel TERMINATED');
+            $this->fireEvent(new BeforeTerminateRequestEvent());
+            $this->log('HTTP.Kernel TERMINATED');
             die(0);
         }
 
-        $this->log('Vection HTTP: Kernel finished execution without termination');
+        $this->log('HTTP.Kernel finished execution without termination');
     }
 }

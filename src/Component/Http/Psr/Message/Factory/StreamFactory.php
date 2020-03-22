@@ -1,11 +1,10 @@
 <?php
 
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
- *
+ * (c) David M. Lung <vection@davidlung.de>
+ *  
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -19,11 +18,14 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 use Vection\Component\Http\Psr\Message\Stream;
+use Vection\Component\Http\ResourceMode;
 
 /**
  * Class StreamFactory
  *
- * @package Vection\Component\Http\Psr\Factory
+ * @package Vection\Component\Http\Psr\Message\Factory
+ *
+ * @author  David M. Lung <vection@davidlung.de>
  */
 class StreamFactory implements StreamFactoryInterface
 {
@@ -70,7 +72,7 @@ class StreamFactory implements StreamFactoryInterface
             throw new RuntimeException("Unable to create stream from file: File not found ($filename).");
         }
 
-        if ( ! isset(Stream::RESOURCE_MODES['read'][$mode]) && ! isset(Stream::RESOURCE_MODES['write'][$mode]) ) {
+        if ( ! isset(ResourceMode::READ[$mode]) && ! isset(ResourceMode::WRITE[$mode]) ) {
             throw new InvalidArgumentException("Unable to open stream: Invalid mode '$mode'.");
         }
 

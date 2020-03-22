@@ -1,11 +1,10 @@
 <?php
 
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
- *
+ * (c) David M. Lung <vection@davidlung.de>
+ *  
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -20,7 +19,9 @@ use Psr\Http\Message\UriInterface;
 /**
  * Class Uri
  *
- * @package Vection\Component\Http\Psr
+ * @package Vection\Component\Http\Psr\Message
+ *
+ * @author  David M. Lung <vection@davidlung.de>
  */
 class Uri implements UriInterface
 {
@@ -250,7 +251,7 @@ class Uri implements UriInterface
      * @return static A new instance with the specified scheme.
      * @throws InvalidArgumentException for invalid or unsupported schemes.
      */
-    public function withScheme($scheme)
+    public function withScheme($scheme): UriInterface
     {
         $uri         = clone $this;
         $uri->schema = $scheme;
@@ -272,7 +273,7 @@ class Uri implements UriInterface
      *
      * @return static A new instance with the specified user information.
      */
-    public function withUserInfo($user, $password = null)
+    public function withUserInfo($user, $password = null): UriInterface
     {
         $uri           = clone $this;
         $uri->userInfo = $user . ($password ? ':'.$password : '');
@@ -292,7 +293,7 @@ class Uri implements UriInterface
      * @return static A new instance with the specified host.
      * @throws InvalidArgumentException for invalid hostnames.
      */
-    public function withHost($host)
+    public function withHost($host): UriInterface
     {
         $uri       = clone $this;
         $uri->host = $host;
@@ -317,7 +318,7 @@ class Uri implements UriInterface
      * @return static A new instance with the specified port.
      * @throws InvalidArgumentException for invalid ports.
      */
-    public function withPort($port)
+    public function withPort($port): UriInterface
     {
         if ( !is_int($port) || $port < 0 || $port > 0xffff ) {
             throw new InvalidArgumentException("Invalid port ($port). Expect integer between 0 and 65535.");
@@ -351,7 +352,7 @@ class Uri implements UriInterface
      * @return static A new instance with the specified path.
      * @throws InvalidArgumentException for invalid paths.
      */
-    public function withPath($path)
+    public function withPath($path): UriInterface
     {
         $uri       = clone $this;
         $uri->path = $path;
@@ -374,7 +375,7 @@ class Uri implements UriInterface
      * @return static A new instance with the specified query string.
      * @throws InvalidArgumentException for invalid query strings.
      */
-    public function withQuery($query)
+    public function withQuery($query): UriInterface
     {
         $uri        = clone $this;
         $uri->query = $query;
@@ -396,7 +397,7 @@ class Uri implements UriInterface
      *
      * @return static A new instance with the specified fragment.
      */
-    public function withFragment($fragment)
+    public function withFragment($fragment): UriInterface
     {
         $uri           = clone $this;
         $uri->fragment = $fragment;

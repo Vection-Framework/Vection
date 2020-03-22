@@ -1,11 +1,10 @@
 <?php
 
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
- *
+ * (c) David M. Lung <vection@davidlung.de>
+ *  
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -17,30 +16,17 @@ namespace Vection\Component\Http\Psr\Message;
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
+use Vection\Component\Http\ResourceMode;
 
 /**
  * Class Stream
  *
- * @package Vection\Component\Http\Psr
+ * @package Vection\Component\Http\Psr\Message
+ *
+ * @author  David M. Lung <vection@davidlung.de>
  */
 class Stream implements StreamInterface
 {
-    /** @var array */
-    public const RESOURCE_MODES = [
-        'read' => [
-            'r' => true, 'w+' => true, 'r+' => true, 'x+' => true, 'c+' => true,
-            'rb' => true, 'w+b' => true, 'r+b' => true, 'x+b' => true,
-            'c+b' => true, 'rt' => true, 'w+t' => true, 'r+t' => true,
-            'x+t' => true, 'c+t' => true, 'a+' => true,
-        ],
-        'write' => [
-            'w' => true, 'w+' => true, 'rw' => true, 'r+' => true, 'x+' => true,
-            'c+' => true, 'wb' => true, 'w+b' => true, 'r+b' => true,
-            'x+b' => true, 'c+b' => true, 'w+t' => true, 'r+t' => true,
-            'x+t' => true, 'c+t' => true, 'a' => true, 'a+' => true,
-        ],
-    ];
-
     /** @var resource */
     protected $resource;
 
@@ -63,7 +49,6 @@ class Stream implements StreamInterface
      * Stream constructor.
      *
      * @param resource $resource
-     *
      */
     public function __construct($resource)
     {
@@ -77,8 +62,8 @@ class Stream implements StreamInterface
         $meta           = $this->getMetadata();
 
         $this->seekable = $meta['seekable'];
-        $this->readable = isset(self::RESOURCE_MODES['read'][$meta['mode']]);
-        $this->writable = isset(self::RESOURCE_MODES['write'][$meta['mode']]);
+        $this->readable = isset(ResourceMode::READ[$meta['mode']]);
+        $this->writable = isset(ResourceMode::WRITE[$meta['mode']]);
         $this->uri      = $meta['uri'];
     }
 

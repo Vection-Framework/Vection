@@ -1,11 +1,10 @@
 <?php
 
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
- *
+ * (c) David M. Lung <vection@davidlung.de>
+ *  
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -22,7 +21,9 @@ use Vection\Component\Http\Headers;
 /**
  * Class Message
  *
- * @package Vection\Component\Http\Psr
+ * @package Vection\Component\Http\Psr\Message
+ *
+ * @author  David M. Lung <vection@davidlung.de>
  */
 abstract class Message implements MessageInterface
 {
@@ -76,7 +77,7 @@ abstract class Message implements MessageInterface
      *
      * @return static
      */
-    public function withProtocolVersion($version)
+    public function withProtocolVersion($version): MessageInterface
     {
         $message = clone $this;
         $message->protocolVersion = $version;
@@ -188,7 +189,7 @@ abstract class Message implements MessageInterface
      * @return static
      * @throws InvalidArgumentException for invalid header names or values.
      */
-    public function withHeader($name, $value)
+    public function withHeader($name, $value): MessageInterface
     {
         $message = clone $this;
         $message->headers->set($name, $value);
@@ -212,7 +213,7 @@ abstract class Message implements MessageInterface
      * @return static
      * @throws InvalidArgumentException for invalid header names or values.
      */
-    public function withAddedHeader($name, $value)
+    public function withAddedHeader($name, $value): MessageInterface
     {
         $message = clone $this;
         $message->headers->add($name, $value);
@@ -232,7 +233,7 @@ abstract class Message implements MessageInterface
      *
      * @return static
      */
-    public function withoutHeader($name)
+    public function withoutHeader($name): MessageInterface
     {
         $message = clone $this;
         $message->headers->remove($name);
@@ -267,7 +268,7 @@ abstract class Message implements MessageInterface
      * @return static
      * @throws InvalidArgumentException When the body is not valid.
      */
-    public function withBody(StreamInterface $body)
+    public function withBody(StreamInterface $body): MessageInterface
     {
         $message         = clone $this;
         $message->stream = $body;

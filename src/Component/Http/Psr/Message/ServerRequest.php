@@ -1,25 +1,15 @@
 <?php
+
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
- *
+ * (c) David M. Lung <vection@davidlung.de>
+ *  
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 declare(strict_types=1);
-
-/*
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
- *
- * (c) David M. Lung <vection@davidlung.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace Vection\Component\Http\Psr\Message;
 
@@ -33,7 +23,9 @@ use Vection\Component\Http\Server\Environment;
 /**
  * Class ServerRequest
  *
- * @package Vection\Component\Http\Psr
+ * @package Vection\Component\Http\Psr\Message
+ *
+ * @author  David M. Lung <vection@davidlung.de>
  */
 class ServerRequest extends Request implements ServerRequestInterface
 {
@@ -124,7 +116,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return static
      */
-    public function withCookieParams(array $cookies)
+    public function withCookieParams(array $cookies): ServerRequestInterface
     {
         $request = clone $this;
         $request->cookieParams = $cookies;
@@ -171,7 +163,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return static
      */
-    public function withQueryParams(array $query)
+    public function withQueryParams(array $query): ServerRequestInterface
     {
         $request = clone $this;
         $request->queryParams = $query;
@@ -207,7 +199,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @return static
      * @throws InvalidArgumentException if an invalid structure is provided.
      */
-    public function withUploadedFiles(array $uploadedFiles)
+    public function withUploadedFiles(array $uploadedFiles): ServerRequestInterface
     {
         foreach ( $uploadedFiles as $uploadedFile ) {
             if ( ! $uploadedFile instanceof UploadedFileInterface) {
@@ -272,7 +264,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @throws InvalidArgumentException if an unsupported argument type is
      *     provided.
      */
-    public function withParsedBody($data)
+    public function withParsedBody($data): ServerRequestInterface
     {
         if ( ! is_object($data) && ! is_array($data) && $data !== null ) {
             throw new InvalidArgumentException('Given data to withParsedBody MUST be array, object or null.');
@@ -340,7 +332,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @return static
      * @see getAttributes()
      */
-    public function withAttribute($name, $value)
+    public function withAttribute($name, $value): ServerRequestInterface
     {
         $request = clone $this;
         $request->attributes[$name] = $value;
@@ -362,7 +354,8 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @return static
      * @see getAttributes()
      */
-    public function withoutAttribute($name){
+    public function withoutAttribute($name): ServerRequestInterface
+    {
         $request = clone $this;
 
         if ( array_key_exists($name, $request->attributes) ) {

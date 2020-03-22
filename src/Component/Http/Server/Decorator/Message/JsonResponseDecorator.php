@@ -1,11 +1,10 @@
 <?php
 
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
- *
+ * (c) David M. Lung <vection@davidlung.de>
+ *  
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -21,6 +20,8 @@ use Psr\Http\Message\StreamInterface;
  * Class JsonResponseDecorator
  *
  * @package Vection\Component\Http\Server\Decorator\Message
+ *
+ * @author  David M. Lung <vection@davidlung.de>
  */
 class JsonResponseDecorator implements ResponseInterface
 {
