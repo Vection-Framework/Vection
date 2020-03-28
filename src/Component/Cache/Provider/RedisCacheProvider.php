@@ -61,7 +61,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function delete(string $key): bool
     {
-        return (bool) $this->redis->delete($key);
+        return (bool) $this->redis->del($key);
     }
 
     /**
@@ -171,10 +171,10 @@ class RedisCacheProvider implements CacheProviderInterface
 
         $iterator = null;
         $infinityLoopProtection = 0;
-        $this->redis->setOption(\Redis::OPT_SCAN, \Redis::SCAN_RETRY);
+        $this->redis->setOption(Redis::OPT_SCAN, Redis::SCAN_RETRY);
 
         while ( ($keys = $this->redis->scan($iterator, addslashes($namespace).'*', 10000)) || $infinityLoopProtection > 1000 ) {
-            $this->redis->delete($keys);
+            $this->redis->del($keys);
             $infinityLoopProtection++;
         }
 
