@@ -44,10 +44,10 @@ class HookLoader
 
     public function getHookContextList(): array
     {
-
+        return [];
     }
 
-    public function load(string $hookName): object
+    public function load(string $hookName): ?object
     {
         $path    = $this->provider->getPath();
         $scope   = $this->provider->getScope();
@@ -56,10 +56,12 @@ class HookLoader
         foreach ( glob($pattern, GLOB_BRACE) as $path ) {
             $_path = $path;
         }
+
+        return null;
     }
 
     public function loadAll(): array
     {
-
+        return [];
     }
 }

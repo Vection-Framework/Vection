@@ -26,6 +26,6 @@ class Order implements OrderInterface
      */
     public function getProductName(): string
     {
-        // TODO: Implement getProductName() method.
+        return '';
     }
 }
