@@ -57,6 +57,6 @@ class IllegalPropertyException extends PropertyException
      */
     public function withProperty(string $property): void
     {
-        throw new static($property.'.'.$this->property, $this->rawMessage, $this->details);
+        throw new self($property.'.'.$this->property, $this->rawMessage, $this->details);
     }
 }
