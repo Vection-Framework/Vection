@@ -40,7 +40,6 @@
         "ext-pdo": "*",
         "ext-ctype": "*",
         "ext-curl": "*",
-        "ext-redis": "*",
         "ext-mbstring": "*"
     },
     "require-dev": {
