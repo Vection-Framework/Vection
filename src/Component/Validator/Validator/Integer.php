@@ -17,6 +17,8 @@ use Vection\Component\Validator\Validator;
  * Class Integer
  *
  * @package Vection\Component\Validator\Validator
+ *
+ * @author  Bjoern Klemm <vection@bjoernklemm.de>
  */
 class Integer extends Validator
 {

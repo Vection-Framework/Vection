@@ -169,7 +169,7 @@ abstract class Property implements PropertyInterface
     abstract protected function onEvaluate(array $schema): void;
 
     /**
-     * @param string|int|float|array $value
+     * @param string|int|float|array|bool $value
      *
      * @throws PropertyExceptionInterface
      */
