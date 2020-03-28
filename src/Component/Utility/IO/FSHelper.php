@@ -15,6 +15,9 @@ namespace Vection\Component\Utility\IO;
  * Class FSHelper
  *
  * @package Vection\Component\Utility
+ *
+ * @author  Bjoern Klemm <vection@bjoernklemm.de>
+ * @author  David M. Lung <vection@davidlung.de>
  */
 class FSHelper
 {
@@ -35,19 +38,19 @@ class FSHelper
         $from = \str_replace('\\', '/', $from);
         $to   = \str_replace('\\', '/', $to);
 
-        $from = \explode('/', $from);
-        $to   = \explode('/', $to);
+        $_from = \explode('/', $from);
+        $_to   = \explode('/', $to);
 
-        $relPath = $to;
+        $relPath = $_to;
 
-        foreach ( $from as $depth => $dir ) {
+        foreach ( $_from as $depth => $dir ) {
             # find first non-matching dir
             if ( $dir === $to[$depth] ) {
                 # ignore this directory
                 \array_shift($relPath);
             } else {
                 # get number of remaining dirs to $from
-                $remaining = (\count($from) - $depth);
+                $remaining = (\count($_from) - $depth);
                 if ( $remaining > 1 ) {
                     # add traversals up to first matching dir
                     $padLength = (( \count($relPath) + $remaining - 1 ) * -1);

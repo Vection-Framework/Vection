@@ -31,6 +31,8 @@ namespace Vection\Component\Utility\Lang;
  *
  * @package Vection\Component\Utility\Lang
  *
+ * @author  Bjoern Klemm <vection@bjoernklemm.de>
+ *
  * @SuppressWarnings(PHPMD.TooManyMethods)
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
@@ -141,7 +143,7 @@ final class StringType
      */
     public function endsWith(string $needle): bool
     {
-        return mb_substr($this->str, -\strlen($needle), $this->encoding) === $needle;
+        return mb_substr($this->str, -\strlen($needle), null, $this->encoding) === $needle;
     }
 
     /**
