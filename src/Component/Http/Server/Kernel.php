@@ -135,7 +135,7 @@ class Kernel implements KernelInterface
      *
      * @param bool $terminate
      *
-     *@see Kernel::setEventDispatcher()
+     * @see Kernel::setEventDispatcher()
      *
      */
     public function execute(bool $terminate = true): void
