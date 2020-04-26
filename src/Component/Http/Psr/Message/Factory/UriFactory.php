@@ -53,7 +53,7 @@ class UriFactory implements UriFactoryInterface
             if (count($authParts) === 2 && strtolower($authParts[0]) === 'basic') {
                 $authData = base64_decode($authParts[1]);
                 if ($authData) {
-                    $credentials = explode(':', $authData);
+                    $credentials        = explode(':', $authData);
                     $components['user'] = $credentials[0];
                     if (isset($credentials[1])) {
                        $components['pass'] = $credentials[1];
