@@ -1,9 +1,8 @@
 <?php
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Bjoern Klemm <vection@bjoernklemm.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -52,30 +51,30 @@ class StringTypeTest extends TestCase
         $this->assertFalse($s->isLower());
     }
 
-    public function testCount()
-    {
-
-    }
-
-    public function testCapitalize()
-    {
-
-    }
-
-    public function testOrd()
-    {
-
-    }
-
-    public function testAppend()
-    {
-
-    }
-
-    public function testSplit()
-    {
-
-    }
+//    public function testCount()
+//    {
+//
+//    }
+//
+//    public function testCapitalize()
+//    {
+//
+//    }
+//
+//    public function testOrd()
+//    {
+//
+//    }
+//
+//    public function testAppend()
+//    {
+//
+//    }
+//
+//    public function testSplit()
+//    {
+//
+//    }
 
     public function testReversed()
     {
@@ -94,10 +93,10 @@ class StringTypeTest extends TestCase
 // TODO: failed not multi byte safe.
     }
 
-    public function testEncode()
-    {
-
-    }
+//    public function testEncode()
+//    {
+//
+//    }
 
     public function testContains()
     {
@@ -120,78 +119,78 @@ class StringTypeTest extends TestCase
         $this->assertNotEquals(6, $s->len());
     }
 
-    public function testSnake()
-    {
-
-    }
-
-    public function testJoin()
-    {
-
-    }
-
-    public function testIsUpper()
-    {
-
-    }
-
-    public function testPos()
-    {
-
-    }
-
-    public function testRpos()
-    {
-
-    }
-
-    public function testEndsWith()
-    {
-
-    }
-
-    public function testLimit()
-    {
-
-    }
-
-    public function testPrepend()
-    {
-
-    }
-
-    public function testCamalize()
-    {
-
-    }
-
-    public function testIsAlpha()
-    {
-
-    }
-
-    public function testIsDigit()
-    {
-
-    }
-
-    public function testNotContains()
-    {
-
-    }
-
-    public function testReplace()
-    {
-
-    }
-
-    public function testLower()
-    {
-
-    }
-
-    public function testRepeat()
-    {
-
-    }
+//    public function testSnake()
+//    {
+//
+//    }
+//
+//    public function testJoin()
+//    {
+//
+//    }
+//
+//    public function testIsUpper()
+//    {
+//
+//    }
+//
+//    public function testPos()
+//    {
+//
+//    }
+//
+//    public function testRpos()
+//    {
+//
+//    }
+//
+//    public function testEndsWith()
+//    {
+//
+//    }
+//
+//    public function testLimit()
+//    {
+//
+//    }
+//
+//    public function testPrepend()
+//    {
+//
+//    }
+//
+//    public function testCamalize()
+//    {
+//
+//    }
+//
+//    public function testIsAlpha()
+//    {
+//
+//    }
+//
+//    public function testIsDigit()
+//    {
+//
+//    }
+//
+//    public function testNotContains()
+//    {
+//
+//    }
+//
+//    public function testReplace()
+//    {
+//
+//    }
+//
+//    public function testLower()
+//    {
+//
+//    }
+//
+//    public function testRepeat()
+//    {
+//
+//    }
 }
