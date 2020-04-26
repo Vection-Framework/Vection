@@ -54,8 +54,8 @@ class EventDispatcher implements EventDispatcherInterface
     {
         $listeners = $this->listenerProvider->getListenersForEvent($event);
 
-        foreach($listeners as $listener) {
-            if($event instanceof EventInterface && $event->isPropagationStopped()) {
+        foreach ($listeners as $listener) {
+            if ($event instanceof EventInterface && $event->isPropagationStopped()) {
                 break;
             }
 

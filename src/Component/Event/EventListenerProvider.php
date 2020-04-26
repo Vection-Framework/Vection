@@ -59,7 +59,7 @@ class EventListenerProvider implements EventListenerProviderInterface
     public function register(string $className): void
     {
         try {
-            $methods = (new ReflectionClass($className))->getMethods(ReflectionMethod::IS_PUBLIC);
+            $methods       = (new ReflectionClass($className))->getMethods(ReflectionMethod::IS_PUBLIC);
             $validListener = false;
 
             foreach ($methods as $method) {
@@ -106,8 +106,7 @@ class EventListenerProvider implements EventListenerProviderInterface
                     )
                 );
             }
-        }
-        catch (ReflectionException $e) {
+        } catch (ReflectionException $e) {
             throw new RuntimeException('Unable to register unknown listener class.', 0, $e);
         }
     }
@@ -128,7 +127,7 @@ class EventListenerProvider implements EventListenerProviderInterface
             foreach ($this->listeners[get_class($event)] as $listener) {
                 if ($this->eventListenerFactory !== null) {
                     $object = $this->eventListenerFactory->create($listener['class']);
-                }else{
+                } else {
                     $object = new $listener['class'];
                 }
                 $listeners[] = [$object, $listener['method']];

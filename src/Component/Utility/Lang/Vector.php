@@ -3,7 +3,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection-Framework <vection@appsdock.de>
+ * (c) Bjoern Klemm <vection@bjoernklemm.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,6 +18,8 @@ use Traversable;
  * Class Vector
  *
  * @package Vection\Component\Utility\Lang;
+ *
+ * @author  Bjoern Klemm <vection@bjoernklemm.de>
  *
  * @SuppressWarnings(PHPMD.TooManyMethods)
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
@@ -92,7 +94,7 @@ class Vector implements \Countable, \ArrayAccess, \IteratorAggregate
      *
      * @return array
      */
-    public function map(callable $function, ?array $list = null): array
+    public function map(callable $function, $list = null): array
     {
         $result = [];
 
@@ -196,9 +198,10 @@ class Vector implements \Countable, \ArrayAccess, \IteratorAggregate
      * <b>Traversable</b>
      * @since 5.0.0
      */
-    public function getIterator()
+    public function getIterator(): ?Traversable
     {
         // TODO: Implement getIterator() method.
+        return null;
     }
 
     /**
@@ -215,9 +218,9 @@ class Vector implements \Countable, \ArrayAccess, \IteratorAggregate
      * The return value will be casted to boolean if non-boolean was returned.
      * @since 5.0.0
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
-        // TODO: Implement offsetExists() method.
+        return array_key_exists($offset,$this->list);
     }
 
     /**
@@ -233,7 +236,7 @@ class Vector implements \Countable, \ArrayAccess, \IteratorAggregate
      */
     public function offsetGet($offset)
     {
-        // TODO: Implement offsetGet() method.
+        return $this->list[$offset];
     }
 
     /**
@@ -250,7 +253,7 @@ class Vector implements \Countable, \ArrayAccess, \IteratorAggregate
      * @return void
      * @since 5.0.0
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         // TODO: Implement offsetSet() method.
     }
@@ -266,7 +269,7 @@ class Vector implements \Countable, \ArrayAccess, \IteratorAggregate
      * @return void
      * @since 5.0.0
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         // TODO: Implement offsetUnset() method.
     }
@@ -280,7 +283,7 @@ class Vector implements \Countable, \ArrayAccess, \IteratorAggregate
      * The return value is cast to an integer.
      * @since 5.1.0
      */
-    public function count()
+    public function count(): int
     {
         return \count($this->list);
     }

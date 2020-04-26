@@ -80,7 +80,7 @@ class MessageRelation implements MessageRelationInterface
             MessageHeaders::CAUSATION_ID => $this->causationId
         ];
 
-        if ( $this->message ) {
+        if ( $this->message instanceof MessageInterface ) {
             $messageHeaders = $this->message->getHeaders();
 
             if ($messageHeaders->has(MessageHeaders::CORRELATION_ID)) {

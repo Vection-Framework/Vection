@@ -47,11 +47,11 @@ jobs:
         - echo "extension=redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
       script: vendor/bin/phpstan analyse
 
-    #- stage: Code Quality
-    #  install: travis_retry composer install --prefer-dist
-    #  php: 7.2
-    #  script:
-    #    - ./vendor/bin/phpcs
+    - stage: Code Quality
+      install: travis_retry composer install --prefer-dist
+      php: 7.3
+      script:
+        - ./vendor/bin/phpcs --ignore="*/Tests/*"
 
     #- stage: Code Quality
     #  install: travis_retry composer install --prefer-dist
@@ -63,7 +63,7 @@ jobs:
     #    - chmod +x infection.phar
     #    - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{.disabled,}
     #    - if [[ ! $(php -m | grep -si xdebug) ]]; then echo "xdebug required for coverage"; exit 1; fi
-    #  php: 7.2
+    #  php: 7.3
     #  script:
     #    - ./infection.phar --min-msi=48 --threads=4
 

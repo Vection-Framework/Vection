@@ -1,15 +1,10 @@
 includes:
-    - vendor/phpstan/phpstan/conf/config.level3.neon
+    - phpstan-baseline.neon
 parameters:
+    level: 5
     paths:
         - src
     inferPrivatePropertyTypeFromConstructor: true
-    ignoreErrors:
-        - '#PHPDoc tag @param for parameter $list with type array|ArrayAccess|null is not subtype of native type array|null.#'
-        - '#Call to an undefined method ReflectionProperty::hasType().#'
-        - '#Call to an undefined method ReflectionProperty::getType().#'
     excludes_analyse:
+        - %rootDir%/../../../src/Component/*/Tests/*
         - %rootDir%/../../../src/Component/Http/*
-        - %rootDir%/../../../src/Bridge/*
-        - %rootDir%/../../../src/Component/Cache/Provider/APCuCacheProvider.php
-        - %rootDir%/../../../src/Component/Database/Database.php

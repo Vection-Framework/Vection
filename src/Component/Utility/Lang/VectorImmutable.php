@@ -3,7 +3,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection-Framework <vection@appsdock.de>
+ * (c) Bjoern Klemm <vection@bjoernklemm.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,6 +18,8 @@ use Vection\Component\Utility\Lang\Exception\VectorException;
  * Class VectorImmutable
  *
  * @package Vection\Component\Utility\Lang
+ *
+ * @author  Bjoern Klemm <vection@bjoernklemm.de>
  */
 class VectorImmutable extends Vector
 {
@@ -27,7 +29,7 @@ class VectorImmutable extends Vector
      *
      * @throws VectorException
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         VectorException::isImmutable();
     }
@@ -37,7 +39,7 @@ class VectorImmutable extends Vector
      *
      * @throws VectorException
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         VectorException::isImmutable();
     }

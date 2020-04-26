@@ -41,7 +41,7 @@ class EventDispatcher implements EventDispatcherInterface
     protected $listeners;
 
     /**
-     * @var EventListenerFactoryInterface
+     * @var EventListenerFactoryInterface|null
      */
     protected $eventListenerFactory;
 

@@ -3,7 +3,7 @@
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Vection-Framework <vection@appsdock.de>
+ * (c) Bjoern Klemm <vection@bjoernklemm.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -21,6 +21,8 @@ use Vection\Component\Validator\Validator;
  * https://en.wikipedia.org/wiki/International_Bank_Account_Number#Validating_the_IBAN
  *
  * @package Vection\Component\Validator\Validator
+ *
+ * @author  Bjoern Klemm <vection@bjoernklemm.de>
  */
 class Iban extends Validator
 {
