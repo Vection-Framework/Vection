@@ -48,6 +48,20 @@ class UriFactory implements UriFactoryInterface
             throw new InvalidArgumentException("Invalid URI '$uriString'");
         }
 
+        if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+            $authParts = explode(' ', trim($_SERVER['HTTP_AUTHORIZATION']));
+            if (count($authParts) === 2 && strtolower($authParts[0]) === 'basic') {
+                $authData = base64_decode($authParts[1]);
+                if ($authData) {
+                    $credentials = explode(':', $authData);
+                    $components['user'] = $credentials[0];
+                    if (isset($credentials[1])) {
+                       $components['pass'] = $credentials[1];
+                    }
+                }
+            }
+        }
+
         $uri = $this->createFromUrlComponents($components);
 
         if ( ! $uri->getPort() ) {
