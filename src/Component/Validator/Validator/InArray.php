@@ -24,23 +24,32 @@ use Vection\Component\Validator\Validator;
 class InArray extends Validator
 {
     /** @var array */
-    protected $values;
+    protected $haystack;
 
     /**
      * Max constructor.
      *
-     * @param array $values
+     * @param array $haystack
      */
-    public function __construct(array $values)
+    public function __construct(array $haystack)
     {
-        $this->values = $values;
+        $this->haystack = $haystack;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getConstraints(): array
+    {
+        return ['haystack' => $this->haystack];
+    }
+
     /**
      * @inheritDoc
      */
     protected function onValidate($value): bool
     {
-        return \in_array($value, $this->values, true);
+        return \in_array($value, $this->haystack, true);
     }
 
     /**
@@ -48,6 +57,6 @@ class InArray extends Validator
      */
     protected function getMessage(): string
     {
-        return 'Value "{value}" is not available in array "{values}".';
+        return 'Value "{value}" is not available in array "{haystack}".';
     }
 }
