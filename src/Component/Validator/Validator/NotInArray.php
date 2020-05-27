@@ -29,21 +29,24 @@ use Vection\Component\Validator\Validator;
  * Class NotMember
  *
  * @package Vection\Component\Validator\Validator
+ *
+ * @author Bjorn Klemm <bjoern.klemm@appsdock.de>
+ * @author David Lung <vection@davidlung.de>
  */
-class NotMember extends Validator
+class NotInArray extends Validator
 {
 
     /** @var array */
-    protected $needle;
+    protected $haystack;
 
     /**
      * NotMember constructor.
      *
-     * @param array $needle
+     * @param array $haystack
      */
-    public function __construct(array $needle)
+    public function __construct(array $haystack)
     {
-        $this->needle = $needle;
+        $this->haystack = $haystack;
     }
 
     /**
@@ -51,7 +54,7 @@ class NotMember extends Validator
      */
     public function getConstraints(): array
     {
-        return ['needle' => $this->needle];
+        return ['haystack' => $this->haystack];
     }
 
     /**
@@ -59,7 +62,7 @@ class NotMember extends Validator
      */
     public function getMessage(): string
     {
-        return 'Value "{value}" is a member of {needle}.';
+        return 'Value "{value}" is a member of {haystack}.';
     }
 
     /**
@@ -67,6 +70,6 @@ class NotMember extends Validator
      */
     protected function onValidate($value): bool
     {
-        return ! in_array($value, $this->needle);
+        return ! \in_array($value, $this->haystack, true);
     }
 }
