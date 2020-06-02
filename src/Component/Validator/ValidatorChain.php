@@ -1,9 +1,8 @@
 <?php
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -128,13 +127,14 @@ class ValidatorChain implements ValidatorChainInterface
      * Adds a key for which all following
      * assertion will be set.
      *
-     * @param string $name
+     * @param string ...$keys
      *
      * @return ValidatorChain
      */
-    public function __invoke(string $name): ValidatorChain
+    public function __invoke(string ...$keys): ValidatorChain
     {
-        $this->chain[$name] = [];
+        # Add support for multi dimension array values!
+        $this->chain[$keys[0]] = [];
         end($this->chain);
         return $this;
     }
@@ -202,9 +202,9 @@ class ValidatorChain implements ValidatorChainInterface
             }
 
             foreach ( $validators as $validator ) {
-                if ( $violation = $validator->validate($value) ) {
+                if ( $violation = $validator->validate($value, $subject) ) {
                     # The value is invalid so take the violation and continue to next subject
-                    $this->violations[$subject] = $violation;
+                    $this->violations[] = $violation;
                     continue 2;
                 }
             }

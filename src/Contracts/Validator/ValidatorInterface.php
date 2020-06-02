@@ -1,9 +1,8 @@
 <?php
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -40,10 +39,11 @@ interface ValidatorInterface
      * this method returns an object of ViolationInterface that contains
      * the invalid value and an user message.
      *
-     * @param mixed $value
+     * @param mixed  $value
+     * @param string $subject
      *
      * @return ViolationInterface|null
      */
-    public function validate($value): ? ViolationInterface;
+    public function validate($value, string $subject): ? ViolationInterface;
 
 }

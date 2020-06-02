@@ -1,9 +1,8 @@
 <?php
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -50,15 +49,20 @@ class Violation implements ViolationInterface, \JsonSerializable
     /** @var string */
     protected $result = '';
 
+    /** @var string */
+    protected $subject;
+
     /**
      * Violation constructor.
      *
-     * @param mixed $value
+     * @param string $subject
+     * @param mixed  $value
      * @param array  $constraints
      * @param string $message
      */
-    public function __construct($value, array $constraints, string $message)
+    public function __construct(string $subject, $value, array $constraints, string $message)
     {
+        $this->subject     = $subject;
         $this->value       = $value;
         $this->constraints = $constraints;
         $this->message     = $message;
@@ -112,6 +116,7 @@ class Violation implements ViolationInterface, \JsonSerializable
     public function jsonSerialize()
     {
         return [
+            'parameter' => $this->subject,
             'value' => $this->valueToString($this->value),
             'message' => $this->getMessage()
         ];
