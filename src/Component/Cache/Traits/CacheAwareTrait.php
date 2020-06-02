@@ -1,9 +1,9 @@
 <?php
+
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,18 +11,10 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the Vection project.
- * Visit project at https://www.vection.de
- *
- * (c) Vection <project@vection.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Vection\Component\Cache\Traits;
 
+use Vection\Component\Cache\Cache;
+use Vection\Component\Cache\Provider\ArrayCacheProvider;
 use Vection\Contracts\Cache\CacheInterface;
 
 /**
@@ -36,6 +28,8 @@ use Vection\Contracts\Cache\CacheInterface;
  * @see \Vection\Contracts\Cache\CacheInterface
  *
  * @package Vection\Component\Cache\Traits
+ *
+ * @author  David Lung <vection@davidlung.de>
  */
 trait CacheAwareTrait
 {
@@ -50,11 +44,11 @@ trait CacheAwareTrait
     /**
      * Returns the cache instance if exists or null otherwise.
      *
-     * @return null|CacheInterface
+     * @return CacheInterface
      */
-    public function getCache(): ? CacheInterface
+    public function getCache(): CacheInterface
     {
-        return $this->cache;
+        return ($this->cache ?: ($this->cache = new Cache(new ArrayCacheProvider())));
     }
 
     /**

@@ -1,25 +1,15 @@
 <?php
+
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
- *
- * (c) Vection-Framework <vection@appsdock.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-declare(strict_types=1);
-
-/*
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
  * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types = 1);
 
 namespace Vection\Component\Cache\Provider;
 
@@ -47,7 +37,7 @@ class ArrayCacheProvider implements CacheProviderInterface
      */
     public function contains(string $key): bool
     {
-        return \array_key_exists($key, $this->cache);
+        return array_key_exists($key, $this->cache);
     }
 
     /**
@@ -59,7 +49,7 @@ class ArrayCacheProvider implements CacheProviderInterface
      */
     public function delete(string $key): bool
     {
-        if ( $this->contains($key) ) {
+        if ($this->contains($key)) {
             unset($this->cache[$key]);
 
             return true;
@@ -231,8 +221,8 @@ class ArrayCacheProvider implements CacheProviderInterface
      */
     public function clear(string $namespace = ''): bool
     {
-        foreach ( $this->cache as $key => $value ) {
-            if ( ! $namespace || strpos($key, $namespace) === 0 ) {
+        foreach ($this->cache as $key => $value) {
+            if (! $namespace || strpos($key, $namespace) === 0) {
                 unset($this->cache[$key]);
             }
         }
