@@ -1,10 +1,9 @@
 <?php
 
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -54,6 +53,46 @@ class OpenSSLEncryption
         if ( ! in_array($method, openssl_get_cipher_methods(), true) ) {
             throw new RuntimeException("OpenSSL: Invalid cipher method '{$method}'.");
         }
+    }
+
+    /**
+     * @param string $content
+     * @param string $key
+     * @param int    $padding
+     *
+     * @return string
+     */
+    public function publicEncrypt(string $content, string $key, int $padding = OPENSSL_PKCS1_PADDING): string
+    {
+        $crypted = null;
+
+        if (strpos($key, '-----') !== 0 && file_exists($key)) {
+            $key = file_get_contents($key);
+        }
+
+        openssl_public_encrypt($content, $crypted, $key, $padding);
+
+        return $crypted;
+    }
+
+    /**
+     * @param string $crypted
+     * @param string $key
+     * @param int    $padding
+     *
+     * @return string
+     */
+    public function privateDecrypt(string $crypted, string $key, int $padding = OPENSSL_PKCS1_PADDING): string
+    {
+        $decrypted = null;
+
+        if (strpos($key, '-----') !== 0 && file_exists($key)) {
+            $key = file_get_contents($key);
+        }
+
+        openssl_private_decrypt($crypted, $decrypted, $key, $padding);
+
+        return $decrypted;
     }
 
     /**
