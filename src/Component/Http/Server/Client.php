@@ -32,18 +32,23 @@ class Client
     /** @var integer */
     private $port;
 
+    /** @var string */
+    private $userAgent;
+
     /**
      * Client constructor.
      *
      * @param string $ip
      * @param string $requestedHost
      * @param int    $requestedPort
+     * @param string $userAgent
      */
-    public function __construct(string $ip, string $requestedHost, int $requestedPort)
+    public function __construct(string $ip, string $requestedHost, int $requestedPort, string $userAgent)
     {
-        $this->ip   = $ip;
-        $this->host = $requestedHost;
-        $this->port = $requestedPort;
+        $this->ip        = $ip;
+        $this->host      = $requestedHost;
+        $this->port      = $requestedPort;
+        $this->userAgent = $userAgent;
     }
 
     /**
@@ -69,4 +74,13 @@ class Client
     {
         return $this->host;
     }
+
+    /**
+     * @return string
+     */
+    public function getUserAgent(): string
+    {
+        return $this->userAgent;
+    }
+
 }

@@ -54,6 +54,6 @@ class ClientFactory
             $requestedPort = $proxy->getOriginPort() ?: $requestedPort;
         }
 
-        return new Client($clientIp, $requestedHost, $requestedPort);
+        return new Client($clientIp, $requestedHost, $requestedPort, $environment->getHttpUserAgent());
     }
 }

@@ -34,7 +34,7 @@ class ProxyFactory
     {
         $for  = [];
         $host = $proto = '';
-        $port = '';
+        $port = null;
 
         if ( $environment->has(Proxy::HEADER_FORWARDED) ) {
             $directives = self::parseForwardedRFC7239($environment->get(Proxy::HEADER_FORWARDED));
@@ -63,7 +63,7 @@ class ProxyFactory
         }
 
         if ( $environment->has(Proxy::HEADER_X_FORWARDED_PORT) ) {
-            $port = $environment->get(Proxy::HEADER_X_FORWARDED_PORT);
+            $port = (int) $environment->get(Proxy::HEADER_X_FORWARDED_PORT);
         }
 
         return new Proxy($for, $host, $port, $proto);
