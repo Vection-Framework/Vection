@@ -1,9 +1,9 @@
 <?php
-/**
+/*
  * This file is part of the Vection-Framework project.
  * Visit project at https://github.com/Vection-Framework/Vection
  *
- * (c) Bjoern Klemm <vection@bjoernklemm.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -22,7 +22,7 @@ use Vection\Component\Validator\Validator;
  *
  * @package Vection\Component\Validator\Validator
  *
- * @author  Bjoern Klemm <vection@bjoernklemm.de>
+ * @author Bjoern Klemm <bjoern.klemm@appsdock.de>
  */
 class Iban extends Validator
 {
@@ -65,7 +65,7 @@ class Iban extends Validator
     protected function onValidate($value): bool
     {
         $iban    = $this->normalize($value);
-        $isoCode = substr($value,0, 2);
+        $isoCode = (string) substr($value,0, 2);
 
         if ( ! array_key_exists($isoCode, self::ISO_CODES) ) {
             return false;
