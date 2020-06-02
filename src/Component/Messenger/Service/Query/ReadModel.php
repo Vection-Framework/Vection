@@ -1,10 +1,9 @@
 <?php
 
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -26,6 +25,36 @@ use Vection\Contracts\Messenger\Service\Query\ReadModelInterface;
  */
 class ReadModel implements ReadModelInterface
 {
+    /**
+     * @param array  $data
+     * @param string $key
+     *
+     * @return int|null
+     */
+    protected function getInt(array $data, string $key): ?int
+    {
+        if (array_key_exists($key, $data)) {
+            return (int) $data[$key];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array  $data
+     * @param string $key
+     *
+     * @return string|null
+     */
+    protected function getString(array $data, string $key): ?string
+    {
+        if (array_key_exists($key, $data)) {
+            return (string) $data[$key];
+        }
+
+        return null;
+    }
+
     /**
      * @inheritdoc
      */
