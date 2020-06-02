@@ -15,8 +15,9 @@ namespace Vection\Component\Http\Server\Rest;
 
 use Closure;
 use InvalidArgumentException;
-use Vection\Component\Http\Server\Rest\Exception\BadRequestException;
-use Vection\Component\Http\Server\Rest\Exception\ResourceNotFoundException;
+use Vection\Component\Http\Exception\HttpBadRequestException;
+use Vection\Component\Http\Exception\HttpMethodNotAllowedException;
+use Vection\Component\Http\Exception\HttpNotFoundException;
 use Vection\Component\Http\Server\Rest\Resource as RestResource;
 use Vection\Contracts\Cache\CacheAwareInterface;
 use Vection\Contracts\Cache\CacheInterface;
@@ -57,7 +58,7 @@ class Resolver implements CacheAwareInterface
     public function __construct()
     {
         $this->methodOperations = [
-            'GET' => 'get', 'POST' => 'create', 'PUT' => 'update', 'DELETE' => 'delete'
+            'GET' => 'get', 'POST' => 'create', 'PUT' => 'update', 'DELETE' => 'delete', 'PATCH' => 'modify'
         ];
     }
 
@@ -91,7 +92,8 @@ class Resolver implements CacheAwareInterface
      */
     public function setMethodOperation(string $method, string $operation): void
     {
-        if ( ! isset($this->methodOperations[$method = strtoupper($method)]) ) {
+        $knownMethods = $this->methodOperations + ['HEAD' => true, 'OPTIONS' => true];
+        if ( ! isset($knownMethods[$method = strtoupper($method)]) ) {
             throw new InvalidArgumentException("The method '{$method}' is not a valid http method.");
         }
 
@@ -112,15 +114,16 @@ class Resolver implements CacheAwareInterface
      *
      * @return Match
      *
-     * @throws BadRequestException
-     * @throws ResourceNotFoundException
+     * @throws HttpBadRequestException
+     * @throws HttpNotFoundException
+     * @throws HttpMethodNotAllowedException
      */
     public function match(string $method, string $path): Match
     {
         $method = strtoupper($method);
 
         if ( $this->cache && $this->cache->contains($path) ) {
-            // @var Match $match
+            /** @var Match $match */
             $match = $this->cache->getObject($path);
             return $match;
         }
@@ -151,28 +154,21 @@ class Resolver implements CacheAwareInterface
             }
 
             if ( ! isset($tree[$segment]) ) {
-                throw new ResourceNotFoundException('The requested resource does not exists.');
+                throw new HttpNotFoundException('The requested resource does not exists.');
             }
 
             $tree = $tree[$segment];
 
             if (! isset($tree['#resource'])) {
-                throw new ResourceNotFoundException('The requested resource does not exists.');
+                throw new HttpNotFoundException('The requested resource does not exists.');
             }
 
-            // @var RestResource $resource
+            /** @var RestResource $resource */
             $resource   = $tree['#resource'];
             $resourceId = null;
 
             if ( $rootResource === null ) {
                 $rootResource = $resource;
-            }
-
-            $allowedMethods = $resource->getAllowedMethods();
-            if ( ! in_array($method, $allowedMethods, true) ) {
-                throw new BadRequestException(
-                    'Invalid method. This resource supports only one of this methods: '.implode(', ', $allowedMethods)
-                );
             }
 
             foreach ( $this->guards as $guard ) {
@@ -199,7 +195,7 @@ class Resolver implements CacheAwareInterface
             }
 
             if ( $operation && count($segments) > 0 ) {
-                throw new BadRequestException(
+                throw new HttpBadRequestException(
                     'Alternative resource operations cannot contain further child resources.'
                 );
             }
@@ -207,15 +203,20 @@ class Resolver implements CacheAwareInterface
 
         if ( $methodOperations['POST'] !== 'create' ) {
             if ( $method !== 'POST' ) {
-                throw new BadRequestException(
+                throw new HttpBadRequestException(
                     'Alternative resource operations must be requested by POST.'
                 );
             }
             if ( ! preg_match('/^[a-zA-Z]+$/', $methodOperations['POST']) ) {
-                throw new BadRequestException(
-                    'Invalid operation method.'
-                );
+                throw new HttpBadRequestException('Invalid operation method.');
             }
+        }
+
+        $allowedMethods = $resource->getAllowedMethods();
+        if ( ! in_array($method, $allowedMethods + ['OPTIONS', 'HEAD'], true) ) {
+            throw new HttpMethodNotAllowedException(
+                'Invalid method. This resource supports only one of this methods: '.implode(', ', $allowedMethods)
+            );
         }
 
         $match = new Match($resource, $methodOperations[$method], $resourceIds);
