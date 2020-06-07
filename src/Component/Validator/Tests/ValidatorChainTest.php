@@ -1,10 +1,9 @@
 <?php
 
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -90,11 +89,11 @@ class ValidatorChainTest extends TestCase
         $this->assertNotNull($violationB);
 
         if ( $violationA !== null ) {
-            $this->assertEquals($violationA->getMessage(), $violations['a']->getMessage());
+            $this->assertEquals($violationA->getMessage(), $violations[0]->getMessage());
         }
 
         if ( $violationB !== null ) {
-            $this->assertEquals($violationB->getMessage(), $violations['b']->getMessage());
+            $this->assertEquals($violationB->getMessage(), $violations[1]->getMessage());
         }
     }
 
