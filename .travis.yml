@@ -55,14 +55,6 @@ jobs:
 
     - stage: Test Quality
       install: travis_retry composer install --prefer-dist
-      before_script:
-        - wget https://github.com/infection/infection/releases/download/0.14.1/infection.phar
-        - wget https://github.com/infection/infection/releases/download/0.14.1/infection.phar.asc
-        - gpg --keyserver hkps.pool.sks-keyservers.net --recv-keys 493B4AA0
-        - gpg --with-fingerprint --verify infection.phar.asc infection.phar
-        - chmod +x infection.phar
-        - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{.disabled,}
-        - if [[ ! $(php -m | grep -si xdebug) ]]; then echo "xdebug required for coverage"; exit 1; fi
       php: 7.3
       script:
         - composer run-script infection
