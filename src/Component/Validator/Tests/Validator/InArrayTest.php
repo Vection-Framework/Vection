@@ -13,14 +13,14 @@ namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
 use stdClass;
-use Vection\Component\Validator\Validator\Member;
+use Vection\Component\Validator\Validator\InArray;
 
 /**
  * Class MemberTest
  *
  * @package Vection\Component\Validator\Tests\Validator
  */
-class MemberTest extends TestCase
+class InArrayTest extends TestCase
 {
 
     /**
@@ -28,7 +28,7 @@ class MemberTest extends TestCase
      */
     public function testValidValues($needle, $value): void
     {
-        $this->assertNull((new Member($needle))->validate($value));
+        $this->assertNull((new InArray($needle))->validate($value));
     }
 
     /**
@@ -36,7 +36,7 @@ class MemberTest extends TestCase
      */
     public function testInvalidValues($needle, $value): void
     {
-        $this->assertNotNull((new Member($needle))->validate($value));
+        $this->assertNotNull((new InArray($needle))->validate($value));
     }
 
     /**
