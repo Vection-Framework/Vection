@@ -82,7 +82,7 @@ abstract class Validator implements ValidatorInterface
     /**
      * @inheritDoc
      */
-    public function validate($value, string $subject): ?ViolationInterface
+    public function validate($value, string $subject = ''): ?ViolationInterface
     {
         if ($this->onValidate($value)) {
             return null;
