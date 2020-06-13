@@ -122,9 +122,9 @@ class Resolver implements CacheAwareInterface
     {
         $method = strtoupper($method);
 
-        if ( $this->cache && $this->cache->contains($path) ) {
+        if ( $this->cache && $this->cache->contains($method.$path) ) {
             /** @var Match $match */
-            $match = $this->cache->getObject($path);
+            $match = $this->cache->getObject($method.$path);
             return $match;
         }
 
@@ -220,7 +220,7 @@ class Resolver implements CacheAwareInterface
         }
 
         $match = new Match($resource, $methodOperations[$method], $resourceIds);
-        $this->cache && $this->cache->setObject($path, $match);
+        $this->cache && $this->cache->setObject($method.$path, $match);
         return $match;
     }
 }
