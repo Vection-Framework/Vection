@@ -1,10 +1,9 @@
 <?php
 
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -75,11 +74,9 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
         $headers = $message->getHeaders();
         $body    = str_replace('\\', '.', get_class($message->getBody()));
 
-        $this->logger->info(
+        $this->logger->debug(
             sprintf(
-                '[MessageBus] DISPATCH %s (ID:%s)',
-                $body,
-                $headers->get(MessageHeaders::MESSAGE_ID) ?: '[none]'
+                'DISPATCH id=%s body=%s', $headers->get(MessageHeaders::MESSAGE_ID) ?: '-', $body
             )
         );
 
@@ -87,28 +84,26 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
 
         try {
             $result = $sequence->next($message);
+            $middleware = $result->getHeaders()->get(MessageHeaders::TERMINATED_MIDDLEWARE);
 
-            $this->logger->info(
+            $this->logger->debug(
                 sprintf(
-                    '[MessageBus] DONE %s (ID:%s) TERMINATED BY %s',
+                    'DONE id=%s body=%s %s',
+                    $headers->get(MessageHeaders::MESSAGE_ID) ?: '-',
                     $body,
-                    $headers->get(MessageHeaders::MESSAGE_ID) ?: '[none]',
-                    $result->getHeaders()->get(MessageHeaders::TERMINATED_MIDDLEWARE) ?: 'unknown'
+                    $middleware ? "with response from $middleware" : ''
                 )
             );
 
             return $result;
         } catch (Throwable $e) {
 
-            $this->logger->error(
+            $this->logger->debug(
                 sprintf(
-                    "[MessageBus] ERROR %s (ID:%s)\n%s at %s\n%s\n%s",
-                    $body,
-                    $message->getHeaders()->get(MessageHeaders::MESSAGE_ID) ?: '[none]',
-                    (new \ReflectionObject($e))->getShortName(),
+                    "FAILED id=%s at %s body=%s",
+                    $message->getHeaders()->get(MessageHeaders::MESSAGE_ID) ?: '-',
                     str_replace('\\', '.', get_class($sequence->getCurrent())),
-                    $e->getMessage(),
-                    $e->getTraceAsString()
+                    $body
                 )
             );
 
