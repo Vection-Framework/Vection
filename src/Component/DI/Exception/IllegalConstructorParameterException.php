@@ -9,20 +9,20 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Vection\Component\DI\Exception;
 
-use Psr\Container\NotFoundExceptionInterface;
+use LogicException;
 
 /**
- * Class NotFoundException
+ * Class IllegalConstructParameterException
  *
  * @package Vection\Component\DI\Exception
  *
  * @author  David M. Lung <vection@davidlung.de>
  */
-class NotFoundException extends \RuntimeException implements NotFoundExceptionInterface
+class IllegalConstructorParameterException extends LogicException
 {
 
 }

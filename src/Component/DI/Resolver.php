@@ -1,19 +1,7 @@
 <?php
+
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
- *
- * (c) Vection-Framework <vection@appsdock.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-declare(strict_types=1);
-
-/*
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
  * (c) David M. Lung <vection@davidlung.de>
  *
@@ -21,12 +9,15 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Vection\Component\DI;
 
 use ArrayObject;
 use ReflectionClass;
 use ReflectionException;
 use Vection\Component\DI\Exception\ContainerException;
+use Vection\Component\DI\Exception\IllegalConstructorParameterException;
 use Vection\Component\DI\Traits\AnnotationInjection;
 use Vection\Contracts\Cache\CacheAwareInterface;
 use Vection\Contracts\Cache\CacheInterface;
@@ -39,6 +30,8 @@ use Vection\Contracts\Cache\CacheInterface;
  * they have to be injected by the Injector class.
  *
  * @package Vection\Component\DI
+ *
+ * @author  David M. Lung <vection@davidlung.de>
  */
 class Resolver implements CacheAwareInterface
 {
@@ -169,13 +162,25 @@ class Resolver implements CacheAwareInterface
 
         if ( $constructor && ($constructParams = $constructor->getParameters()) ) {
             foreach ( $constructParams as $param ) {
-                if ( $param->hasType() && $param->getType() !== null && ! $param->getType()->isBuiltin() ) {
-                    $dependencies[] = $param->getClass()->name;
-                    if ( $param->getClass()->isInstantiable() ) {
-                        $this->resolveDependencies($param->getClass()->name);
+                $type = $param->getType();
+
+                if ($type === null) {
+                    throw new IllegalConstructorParameterException(
+                        'Constructor parameter injection requires typed parameters, no given in '.$className
+                    );
+                }
+
+                if ($type->isBuiltin()) {
+                    if (!$param->isDefaultValueAvailable()) {
+                        $this->dependencies[$className]['constructor_has_primitives'] = true;
                     }
-                } else {
-                    return [];
+
+                    break;
+                }
+
+                $dependencies[] = $param->getClass()->name;
+                if ( $param->getClass()->isInstantiable() ) {
+                    $this->resolveDependencies($param->getClass()->name);
                 }
             }
         }
@@ -248,7 +253,7 @@ class Resolver implements CacheAwareInterface
     {
         $reflection        = new ReflectionClass($className);
         $dependencies      = [];
-        $useInjectionTrait = ($reflection->getTraits()[AnnotationInjection::class] ?? false);
+        $useInjectionTrait = isset($reflection->getTraits()[AnnotationInjection::class]);
 
         # Add annotation injection by parent classes
         if ( $parents = class_parents($className, true) ) {
@@ -269,10 +274,7 @@ class Resolver implements CacheAwareInterface
                     continue;
                 }
 
-                # Only supports by PHP >= 7.4.0
-                $typedPropertiesSupport = method_exists($property, 'getType');
-
-                if ($typedPropertiesSupport && $property->hasType() && preg_match('/@Inject/', $doc)) {
+                if (PHP_VERSION_ID >= 70400 && $property->hasType() && preg_match('/@Inject/', $doc)) {
 
                     $propertyType = $property->getType();
 

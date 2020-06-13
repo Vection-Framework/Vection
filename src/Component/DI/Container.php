@@ -1,25 +1,15 @@
 <?php
+
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
- *
- * (c) Vection-Framework <vection@appsdock.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-declare(strict_types=1);
-
-/*
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
  * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Vection\Component\DI;
 
@@ -28,6 +18,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
+use Vection\Component\DI\Exception\IllegalConstructorParameterException;
 use Vection\Component\DI\Exception\InvalidArgumentException;
 use Vection\Component\DI\Exception\NotFoundException;
 use Vection\Component\DI\Exception\RuntimeException;
@@ -42,6 +33,8 @@ use Vection\Contracts\Cache\CacheInterface;
  * and define dependencies.
  *
  * @package Vection\Component\DI
+ *
+ * @author  David M. Lung <vection@davidlung.de>
  */
 class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareInterface
 {
@@ -190,6 +183,14 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
                 $paramObjects[] = $this->get($param);
             }
             return new $className(...$paramObjects);
+        }
+
+        if (isset($this->dependencies[$className]['constructor_has_primitives']) && !$constructParams) {
+            throw new IllegalConstructorParameterException(
+                'The use of primitive parameter types at constructor injection can only be used when '.
+                'creating object with explicit construct parameters e.g. '.
+                'Container::create(class, [param1, param2,..])), occurred in class '.$className
+            );
         }
 
         return new $className();

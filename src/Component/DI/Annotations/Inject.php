@@ -1,25 +1,15 @@
 <?php
+
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
- *
- * (c) Vection-Framework <vection@appsdock.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-declare(strict_types=1);
-
-/*
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
  * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Vection\Component\DI\Annotations;
 
@@ -29,11 +19,13 @@ namespace Vection\Component\DI\Annotations;
  * @Annotation
  *
  * @package Vection\Component\DI\Annotations
+ *
+ * @author  David M. Lung <vection@davidlung.de>
  */
 final class Inject
 {
 
-    /** @var string */
+    /** @var string|null */
     public $fqcn;
 
     /**
@@ -41,7 +33,7 @@ final class Inject
      *
      * @param string $fqcn
      */
-    public function __construct(string $fqcn = '')
+    public function __construct(?string $fqcn = null)
     {
         $this->fqcn = $fqcn;
     }
