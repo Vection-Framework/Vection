@@ -1,10 +1,9 @@
 <?php
 
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,6 +13,7 @@ declare(strict_types = 1);
 
 namespace Vection\Component\Messenger\Service\Command;
 
+use Vection\Component\Messenger\Exception\HandlerFailedException;
 use Vection\Component\Messenger\Message;
 use Vection\Component\Messenger\MessageHeaders;
 use Vection\Component\Messenger\MessageIdGenerator;
@@ -79,9 +79,15 @@ class CommandBus implements CommandBusInterface
             $command = $command->withHeader(MessageHeaders::TIMESTAMP, (string) time());
         }
 
-        $this->messageBus->dispatch(
-            $command->withHeader(MessageHeaders::MESSAGE_TAG, 'command')
-        );
+        try{
+            $this->messageBus->dispatch(
+                $command->withHeader(MessageHeaders::MESSAGE_TAG, 'command')
+            );
+        }
+        catch (HandlerFailedException $e) {
+            $pe = $e->getPrevious() ?: $e;
+            throw new CommandExecutionException('Command execution failed: '.$pe->getMessage(), $pe->getCode(), $pe);
+        }
     }
 
 }

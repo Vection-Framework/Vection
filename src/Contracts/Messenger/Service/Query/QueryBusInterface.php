@@ -1,10 +1,9 @@
 <?php
 
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,9 +12,6 @@
 declare(strict_types = 1);
 
 namespace Vection\Contracts\Messenger\Service\Query;
-
-use AppsDock\Core\Infrastructure\Messenger\Query\QueryHandlerMiddleware;
-use Vection\Component\Message\Service\Query\Middleware\QueryDispatcherMiddleware;
 
 /**
  * Interface QueryBusInterface
