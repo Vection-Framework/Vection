@@ -37,6 +37,6 @@ class DefaultSerializer implements SerializerInterface
      */
     public function unserialize(string $serial, string $type): object
     {
-        return unserialize($serial, ['allowed_classes' => $type]);
+        return unserialize($serial, [true]);
     }
 }
