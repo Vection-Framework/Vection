@@ -117,7 +117,7 @@ class Violation implements ViolationInterface, \JsonSerializable
     {
         return [
             'parameter' => $this->subject,
-            'value' => $this->valueToString($this->value),
+            'actual' => $this->valueToString($this->value),
             'message' => $this->getMessage()
         ];
     }
