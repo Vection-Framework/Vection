@@ -13,6 +13,10 @@ declare(strict_types = 1);
 
 namespace Vection\Component\Event;
 
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\NullLogger;
+use Throwable;
 use Vection\Contracts\Event\EventDispatcherInterface;
 use Vection\Contracts\Event\EventInterface;
 use Vection\Contracts\Event\EventListenerProviderInterface;
@@ -24,21 +28,31 @@ use Vection\Contracts\Event\EventListenerProviderInterface;
  *
  * @author  David Lung <vection@davidlung.de>
  */
-class EventDispatcher implements EventDispatcherInterface
+class EventDispatcher implements EventDispatcherInterface, LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @var EventListenerProviderInterface
      */
     protected $listenerProvider;
 
     /**
+     * @var bool
+     */
+    protected $catchExceptions;
+
+    /**
      * EventDispatcher constructor.
      *
      * @param EventListenerProviderInterface $listenerProvider
+     * @param bool                           $catchExceptions
      */
-    public function __construct(EventListenerProviderInterface $listenerProvider)
+    public function __construct(EventListenerProviderInterface $listenerProvider, bool $catchExceptions = true)
     {
         $this->listenerProvider = $listenerProvider;
+        $this->catchExceptions = $catchExceptions;
+        $this->logger = new NullLogger();
     }
 
     /**
@@ -54,12 +68,35 @@ class EventDispatcher implements EventDispatcherInterface
     {
         $listeners = $this->listenerProvider->getListenersForEvent($event);
 
+        if ($c = count($listeners)) {
+            $this->logger->debug(
+                sprintf('Execute %d listeners for event %s', $c, str_replace('\\', '.', get_class($event)))
+            );
+        }else{
+            $this->logger->debug(
+                sprintf('No listeners for event %s', str_replace('\\', '.', get_class($event)))
+            );
+        }
+
         foreach ($listeners as $listener) {
             if ($event instanceof EventInterface && $event->isPropagationStopped()) {
                 break;
             }
 
-            $listener($event);
+            try{
+                $listener($event);
+            }
+            catch (Throwable $e) {
+                $this->logger->critical('Unexpected exception during execution of event listener.', [
+                    'event' => get_class($event),
+                    'listener' => get_class($listener),
+                    'exception' => $e
+                ]);
+
+                if (!$this->catchExceptions) {
+                    throw $e;
+                }
+            }
         }
 
         return $event;
