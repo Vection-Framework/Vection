@@ -16,6 +16,7 @@ namespace Vection\Component\Http\Server;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Vection\Component\Http\Psr\Message\Factory\ServerRequestFactory;
 use Vection\Component\Http\Server\Decorator\Factory\ServerRequestFactoryDecorator;
 use Vection\Component\Http\Server\Event\AfterSendRequestEvent;
@@ -35,7 +36,6 @@ use Vection\Contracts\Http\Server\ResponderInterface;
  */
 class Kernel implements KernelInterface
 {
-
     /** @var ServerRequestInterface */
     protected $request;
 
@@ -67,6 +67,7 @@ class Kernel implements KernelInterface
         $this->requestHandler = $requestHandler;
         $this->request        = $request;
         $this->responder      = $responder ?: new Responder();
+        $this->logger         = new NullLogger();
 
         if ( ! $this->request ) {
             $serverRequestFactory = new ServerRequestFactoryDecorator(new ServerRequestFactory());
@@ -113,16 +114,6 @@ class Kernel implements KernelInterface
     }
 
     /**
-     * @param string $message
-     */
-    protected function log(string $message): void
-    {
-        if ( $this->logger ) {
-            $this->logger->info($message);
-        }
-    }
-
-    /**
      * Uses the request and response to execute the registered
      * request middleware handler and send the response to
      * the client.
@@ -140,26 +131,20 @@ class Kernel implements KernelInterface
      */
     public function execute(bool $terminate = true): void
     {
-        $this->log('HTTP.Kernel A new request has been received @ '.$this->request->getUri());
+        $this->logger->info('Start handle request '.$this->request->getUri());
         $this->fireEvent(new BeforeHandleRequestEvent());
-
-        $this->log('HTTP.Kernel execute middleware');
         $response = $this->requestHandler->handle($this->request);
 
+        $this->logger->info('Send response to client');
         $this->fireEvent(new BeforeSendRequestEvent());
-
-        $this->log('HTTP.Kernel.Responder start preparing response');
         $this->responder->send($response, $this->request);
-        $this->log(sprintf('HTTP.Kernel.Responder response sent (%d)', $response->getStatusCode()));
-
+        $this->logger->info(sprintf('Status %d %s', $response->getStatusCode(), $response->getReasonPhrase()));
         $this->fireEvent(new AfterSendRequestEvent());
 
         if ( $terminate ) {
             $this->fireEvent(new BeforeTerminateRequestEvent());
-            $this->log('HTTP.Kernel TERMINATED');
+            $this->logger->info('Request process terminated.');
             die(0);
         }
-
-        $this->log('HTTP.Kernel finished execution without termination');
     }
 }
