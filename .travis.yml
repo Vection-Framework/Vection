@@ -9,6 +9,7 @@ env:
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+  - ./script.sh
 
 before_install:
   - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug not available"
