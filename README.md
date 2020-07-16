@@ -21,9 +21,9 @@ Vection provides on the one hand direct full operative components and on the oth
 Vection decouples the api/interfaces (__<a href="https://github.com/Vection-Framework/Contracts">Contracts</a>__) and its implementation to achieve maximum flexibility. Each component has in additional its own package which can be used as a standalone dependency. Vection currently provides the following components:
 
 - The most advanced __<a href="https://github.com/Vection-Framework/DI-Container">Dependency Injection Container</a>__.
-- Type save and pool based __<a href="https://github.com/Vection-Framework/Http">Cache</a>__ component with support for different cache providers.
+- Type save and pool based __<a href="https://github.com/Vection-Framework/Cache">Cache</a>__ component with support for different cache providers.
 - Event type based and fully PSR compatible __<a href="https://github.com/Vection-Framework/Event">Event Dispatcher</a>__
-- Middleware based __<a href="https://github.com/Vection-Framework/MessageBus">Messenger / System Bus</a>__ with CQRS and transport layer, async processing (MQ) support.
+- Middleware based __<a href="https://github.com/Vection-Framework/Messenger">Messenger / System Bus</a>__ with CQRS and transport layer, async processing (MQ) support.
 - PSR based __<a href="https://github.com/Vection-Framework/Http">HTTP</a>__ component includes kernel, responder, server/client, REST API and proxy support.
 - __<a href="https://github.com/Vection-Framework/Validator">Validator</a>__ for php data and json/yaml schema validation. 
 - Utilities for common usage.
