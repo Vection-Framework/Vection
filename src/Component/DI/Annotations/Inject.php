@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Vection\Component\DI\Annotations;
 
+use Vection\Contracts\DI\Annotation;
+
 /**
  * Class Inject
  *
@@ -22,19 +24,18 @@ namespace Vection\Component\DI\Annotations;
  *
  * @author  David M. Lung <vection@davidlung.de>
  */
-final class Inject
+final class Inject implements Annotation
 {
-
     /** @var string|null */
-    public $fqcn;
+    public $fullQualifiedClassName;
 
     /**
      * Inject constructor.
      *
-     * @param string $fqcn
+     * @param string|null $fullQualifiedClassName
      */
-    public function __construct(?string $fqcn = null)
+    public function __construct(?string $fullQualifiedClassName = null)
     {
-        $this->fqcn = $fqcn;
+        $this->fullQualifiedClassName = $fullQualifiedClassName;
     }
 }
