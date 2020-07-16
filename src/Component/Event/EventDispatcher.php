@@ -83,20 +83,22 @@ class EventDispatcher implements EventDispatcherInterface, LoggerAwareInterface
                 break;
             }
 
-            try{
+            if (!$this->catchExceptions) {
                 $listener($event);
             }
-            catch (Throwable $e) {
-                $this->logger->critical('Unexpected exception during execution of event listener.', [
-                    'event' => get_class($event),
-                    'listener' => get_class($listener),
-                    'exception' => $e
-                ]);
-
-                if (!$this->catchExceptions) {
-                    throw $e;
+            else{
+                try{
+                    $listener($event);
+                }
+                catch (Throwable $e) {
+                    $this->logger->critical('Unexpected exception during execution of event listener.', [
+                        'event' => get_class($event),
+                        'listener' => is_object($listener) ? get_class($listener) : $listener,
+                        'exception' => $e
+                    ]);
                 }
             }
+
         }
 
         return $event;
