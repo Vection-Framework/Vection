@@ -41,6 +41,4 @@ $ composer require vection-framework/vection
 # Documentation
 For the latest online documentation visit [https://vection.appsdock.org/docs](https://vection.appsdock.org/docs "Latest documentation").
 
-# Contributing
-In progress....
 
