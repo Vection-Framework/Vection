@@ -117,7 +117,7 @@ class ResolverTest extends TestCase
         $definitions[TestObject::class] = (new Definition(TestObject::class))
             ->factory(
                 function(){
-                return new TestObject(null);
+                    return new TestObject(null);
                 }
             );
 
@@ -128,7 +128,7 @@ class ResolverTest extends TestCase
         $resolver->resolveDependencies(TestObject::class);
 
         $expectedConstruct = [
-            'Vection\Component\DI\Tests\Fixtures\ConstructorInjectedObject'
+            # Empty because of defined factory method and manual instantiation and null param
         ];
 
         $expectedSetter = [
