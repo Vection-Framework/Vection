@@ -107,6 +107,10 @@ class Resolver implements CacheAwareInterface
             try {
                 if ( isset($this->definitions[$className]) ) {
                     $this->dependencies[$className] = $this->definitions[$className]->getDependencies();
+                    if ($this->definitions[$className]->getFactory() !== null) {
+                        # If this definition has a factory, we don't need resolve the construct params
+                        $this->dependencies[$className]['construct'] = [];
+                    }
                 }
 
                 if ( ! isset($this->dependencies[$className]['construct']) ) {
