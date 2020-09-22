@@ -139,6 +139,11 @@ class OpenSSLEncryption
         }
 
         $info = base64_decode(str_rot13($content));
+
+        if ($info === false || strpos($info, '||') === false) {
+            return null;
+        }
+        
         [$hashLength, $info] = explode('||', $info);
         $hashLength          = (int) $hashLength;
         $iv        = substr($info,0, $ivLen);
