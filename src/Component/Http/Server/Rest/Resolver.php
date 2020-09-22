@@ -58,7 +58,8 @@ class Resolver implements CacheAwareInterface
     public function __construct()
     {
         $this->methodOperations = [
-            'GET' => 'get', 'POST' => 'create', 'PUT' => 'update', 'DELETE' => 'delete', 'PATCH' => 'modify'
+            'GET' => 'get', 'POST' => 'create', 'PUT' => 'update', 'DELETE' => 'delete', 'PATCH' => 'modify',
+            'OPTIONS' => 'options', 'HEAD' => 'head'
         ];
     }
 
@@ -92,8 +93,7 @@ class Resolver implements CacheAwareInterface
      */
     public function setMethodOperation(string $method, string $operation): void
     {
-        $knownMethods = $this->methodOperations + ['HEAD' => true, 'OPTIONS' => true];
-        if ( ! isset($knownMethods[$method = strtoupper($method)]) ) {
+        if ( ! isset($this->methodOperations[$method = strtoupper($method)]) ) {
             throw new InvalidArgumentException("The method '{$method}' is not a valid http method.");
         }
 
@@ -207,13 +207,14 @@ class Resolver implements CacheAwareInterface
                     'Alternative resource operations must be requested by POST.'
                 );
             }
-            if ( ! preg_match('/^[a-zA-Z]+$/', $methodOperations['POST']) ) {
+            if ( ! preg_match('/^[a-zA-Z_-]+$/', $methodOperations['POST']) ) {
                 throw new HttpBadRequestException('Invalid operation method.');
             }
         }
 
-        $allowedMethods = $resource->getAllowedMethods();
-        if ( ! in_array($method, $allowedMethods + ['OPTIONS', 'HEAD'], true) ) {
+        $allowedMethods = array_merge($resource->getAllowedMethods(), ['OPTIONS', 'HEAD']);
+
+        if ( ! in_array($method, $allowedMethods, true) ) {
             throw new HttpMethodNotAllowedException(
                 'Invalid method. This resource supports only one of this methods: '.implode(', ', $allowedMethods)
             );
