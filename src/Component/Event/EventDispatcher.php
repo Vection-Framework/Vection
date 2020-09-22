@@ -72,10 +72,6 @@ class EventDispatcher implements EventDispatcherInterface, LoggerAwareInterface
             $this->logger->debug(
                 sprintf('Execute %d listeners for event %s', $c, str_replace('\\', '.', get_class($event)))
             );
-        }else{
-            $this->logger->debug(
-                sprintf('No listeners for event %s', str_replace('\\', '.', get_class($event)))
-            );
         }
 
         foreach ($listeners as $listener) {
