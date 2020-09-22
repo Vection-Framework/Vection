@@ -76,7 +76,7 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
 
         $this->logger->debug(
             sprintf(
-                'DISPATCH id=%s body=%s', $headers->get(MessageHeaders::MESSAGE_ID) ?: '-', $body
+                'DISPATCH %s (%s)', $headers->get(MessageHeaders::MESSAGE_ID) ?: '-', $body
             )
         );
 
@@ -88,10 +88,9 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
 
             $this->logger->debug(
                 sprintf(
-                    'DONE id=%s body=%s %s',
+                    'SUCCEEDED %s %s',
                     $headers->get(MessageHeaders::MESSAGE_ID) ?: '-',
-                    $body,
-                    $middleware ? "with response from $middleware" : ''
+                    $middleware ? "response by $middleware" : ''
                 )
             );
 
@@ -100,10 +99,9 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
 
             $this->logger->debug(
                 sprintf(
-                    "FAILED id=%s at %s body=%s",
+                    "FAILED %s at %s",
                     $message->getHeaders()->get(MessageHeaders::MESSAGE_ID) ?: '-',
-                    str_replace('\\', '.', get_class($sequence->getCurrent())),
-                    $body
+                    str_replace('\\', '.', get_class($sequence->getCurrent()))
                 )
             );
 
