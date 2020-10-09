@@ -131,19 +131,24 @@ class Kernel implements KernelInterface
      */
     public function execute(bool $terminate = true): void
     {
-        $this->logger->info('Start handle request '.$this->request->getUri());
+        $this->logger->info(
+            sprintf('Received request %s %s', $this->request->getMethod(), $this->request->getUri())
+        );
+
         $this->fireEvent(new BeforeHandleRequestEvent());
         $response = $this->requestHandler->handle($this->request);
 
-        $this->logger->info('Send response to client');
         $this->fireEvent(new BeforeSendRequestEvent());
+
+        $this->logger->info(
+            sprintf('Response sent with status %d %s', $response->getStatusCode(), $response->getReasonPhrase())
+        );
+
         $this->responder->send($response, $this->request);
-        $this->logger->info(sprintf('Status %d %s', $response->getStatusCode(), $response->getReasonPhrase()));
         $this->fireEvent(new AfterSendRequestEvent());
 
         if ( $terminate ) {
             $this->fireEvent(new BeforeTerminateRequestEvent());
-            $this->logger->info('Request process terminated.');
             die(0);
         }
     }
