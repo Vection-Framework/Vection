@@ -44,26 +44,28 @@ interface ReceiverInterface
     public function next(): ?MessageInterface;
 
     /**
-     * Sends an acknolegement flag to the MQ server.
+     * Sends an acknowledgement flag to the MQ server.
      *
      * @param MessageInterface $message
      */
     public function ack(MessageInterface $message): void;
 
     /**
-     * Sends an negative acknolegement flag to the MQ server.
-     * NACKed masseges will be requeued by default, use the second
+     * Sends an negative acknowledgement flag to the MQ server.
+     * NACKed messages will be not requeued by default, use the second
      * parameter to change this default behavior.
      *
      * @param MessageInterface $message
      * @param bool             $requeue
      */
-    public function nack(MessageInterface $message, bool $requeue = true): void;
+    public function nack(MessageInterface $message, bool $requeue = false): void;
 
     /**
-     * Rejects the message back to the MQ server.
-     * This method is used to do an explicit drop of the message from queue
-     * to prevent redelivery by the MQ server.
+     * Rejects the message back to the MQ server in case it cannot be processes
+     * by this consumer because of queue count limitation or other reasons.
+     * A rejection of a message is usually used to requeue the message immediately
+     * in order that the MQ server can e.g. send it to an other consumer which
+     * is able to process the message.
      *
      * @param MessageInterface $message
      */
