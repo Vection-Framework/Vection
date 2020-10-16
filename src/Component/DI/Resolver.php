@@ -182,9 +182,15 @@ class Resolver implements CacheAwareInterface
                     break;
                 }
 
-                $dependencies[] = $param->getClass()->name;
-                if ( $param->getClass()->isInstantiable() ) {
-                    $this->resolveDependencies($param->getClass()->name);
+                $clazz = ($param->getType() && !$param->getType()->isBuiltin())
+                    ? new ReflectionClass($param->getType()->getName())
+                    : null;
+
+                if ($clazz !== null) {
+                    $dependencies[] = $clazz->getName();
+                    if ( $clazz->isInstantiable() ) {
+                        $this->resolveDependencies($clazz->getName());
+                    }
                 }
             }
         }
@@ -325,7 +331,7 @@ class Resolver implements CacheAwareInterface
 
             foreach ( ($method->getParameters() ?? []) as $param ) {
                 if ( $param->hasType() && $param->getType() !== null && ! $param->getType()->isBuiltin() ) {
-                    $dependencies[] = $param->getClass()->name;
+                    $dependencies[] = $param->getType()->getName();
                 } else {
                     # We can only inject if ALL parameters are injectable objects
                     return [];
