@@ -134,7 +134,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      */
     public function load(string $path): void
     {
-        if ( ! ($pathArray = glob($path)) ) {
+        if ( ($pathArray = glob($path)) === false ) {
             throw new InvalidArgumentException("Given path is not valid or doesn't exists.");
         }
 
