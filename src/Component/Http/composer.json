@@ -14,7 +14,8 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.4||^8.0",
+        "vection-framework/contracts": "v0.*",
         "psr/http-message": "1.*",
         "psr/http-server-handler": "1.*",
         "psr/http-client": "1.0.*",
@@ -26,5 +27,5 @@
             "Vection\\Component\\Http\\": "./"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }

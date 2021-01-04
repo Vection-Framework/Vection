@@ -19,10 +19,10 @@
         }
     },
     "require": {
-        "vection-framework/contracts": "dev-master",
-        "php": "^7.2",
+        "php": "^7.4||^8.0",
+        "vection-framework/contracts": "v0.*",
         "psr/log": "~1.0",
         "psr/container": "^1.0"
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }

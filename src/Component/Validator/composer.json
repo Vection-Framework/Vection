@@ -12,9 +12,8 @@
         }
     ],
     "require": {
-        "vection-framework/contracts": "dev-master",
-        "php": "^7.2",
-        "ext-json": "*",
+        "php": "^7.4||^8.0",
+        "vection-framework/contracts": "v0.*",
         "ext-ctype": "*"
     },
     "autoload": {
@@ -22,5 +21,5 @@
             "Vection\\Component\\Validator\\": "./"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }

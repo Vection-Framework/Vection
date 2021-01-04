@@ -12,8 +12,8 @@
         }
     ],
     "require": {
-        "vection-framework/contracts": "dev-master",
-        "php": "^7.2",
+        "php": "^7.4||^8.0",
+        "vection-framework/contracts": "v0.*",
         "psr/event-dispatcher": "1.0.*",
         "psr/log": "1.0.*"
     },
@@ -22,5 +22,5 @@
             "Vection\\Component\\Event\\": "./"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }

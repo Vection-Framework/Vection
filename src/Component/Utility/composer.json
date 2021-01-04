@@ -12,7 +12,8 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.4||^8.0",
+        "vection-framework/contracts": "v0.*",
         "ext-mbstring": "*",
         "ext-ctype": "*"
     },
@@ -21,5 +22,5 @@
             "Vection\\Component\\Utility\\": "./"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }
