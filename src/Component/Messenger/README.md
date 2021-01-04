@@ -1,5 +1,5 @@
 # Vection Component - Messenger (MessageBus)
-[![Build Status](https://travis-ci.org/Vection-Framework/Vection.svg?branch=master)](https://travis-ci.org/Vection-Framework/Vection)
+[![Build Status](https://img.shields.io/github/workflow/status/Vection-Framework/Vection/Test%20and%20QA)](https://github.com/Vection-Framework/Vection/actions) 
 [![phpstan](https://img.shields.io/badge/PHPStan-level%207-brightgreen.svg?style=flat)](https://img.shields.io/badge/PHPStan-level%207-brightgreen.svg?style=flat)
 [![release](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases)](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases)
 
