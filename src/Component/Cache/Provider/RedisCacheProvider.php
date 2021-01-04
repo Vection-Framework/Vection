@@ -117,7 +117,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function setString(string $key, string $value, int $ttl = 0): bool
     {
-        return $this->redis->set($key, $value, $ttl === 0 ? null : $ttl);
+        return $this->set($key, $value, $ttl);
     }
 
     /**
@@ -125,7 +125,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function setObject(string $key, object $value, int $ttl = 0): bool
     {
-        return $this->redis->set($key, \serialize($value), $ttl === 0 ? null : $ttl);
+        return $this->set($key, \serialize($value), $ttl);
     }
 
     /**
@@ -133,7 +133,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function setArray(string $key, array $value, int $ttl = 0): bool
     {
-        return $this->redis->set($key, \json_encode($value), $ttl === 0 ? null : $ttl);
+        return $this->set($key, \json_encode($value), $ttl);
     }
 
     /**
@@ -141,7 +141,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function setInt(string $key, int $value, int $ttl = 0): bool
     {
-        return $this->redis->set($key, (string) $value, $ttl === 0 ? null : $ttl);
+        return $this->set($key, $value, $ttl);
     }
 
     /**
@@ -149,7 +149,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function setFloat(string $key, float $value, int $ttl = 0): bool
     {
-        return $this->redis->set($key, (string) $value, $ttl === 0 ? null : $ttl);
+        return $this->set($key, $value, $ttl);
     }
 
     /**
@@ -157,7 +157,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function set(string $key, $value, int $ttl = 0): bool
     {
-        return $this->redis->set($key, $value, $ttl === 0 ? null : $ttl);
+        return $ttl ? $this->redis->setex($key, $ttl, $value) : $this->redis->set($key, $value);
     }
 
     /**
