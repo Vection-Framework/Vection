@@ -30,4 +30,9 @@ parameters:
 			count: 1
 			path: src/Component/Messenger/Transport/Serializer/DefaultSerializer.php
 
+		-
+			message: "#Strict comparison using === between string and false will always evaluate to false.#"
+			count: 1
+			path: src/Component/Utility/Security/OpenSSLEncryption.php
+
 
