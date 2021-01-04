@@ -56,7 +56,7 @@
     "minimum-stability": "stable",
 
     "scripts": {
-        "test": "vendor/bin/phpunit",
+        "test": "vendor/bin/phpunit --no-coverage",
         "phpstan": "vendor/bin/phpstan analyse",
         "phpcs": "vendor/bin/phpcs --ignore=\"*/Tests/*",
         "infection": "vendor/bin/infection --min-msi=48 --threads=4 > mutation-report.json"
