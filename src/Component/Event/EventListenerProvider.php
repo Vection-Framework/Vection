@@ -75,7 +75,7 @@ class EventListenerProvider implements EventListenerProviderInterface
 
                 $type = $parameters[0]->getType();
 
-                if ($type === null) {
+                if ($type === null || ! $type instanceof \ReflectionNamedType) {
                     continue;
                 }
 

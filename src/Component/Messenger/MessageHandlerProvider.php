@@ -72,7 +72,7 @@ class MessageHandlerProvider implements MessageHandlerProviderInterface
 
             $type = $parameters[0]->getType();
 
-            if ( $type === null ) {
+            if ( $type === null || ! $type instanceof \ReflectionNamedType) {
                 throw new RuntimeException($errorMessage);
             }
 

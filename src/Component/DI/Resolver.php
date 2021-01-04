@@ -174,7 +174,7 @@ class Resolver implements CacheAwareInterface
                     );
                 }
 
-                if ($type->isBuiltin()) {
+                if (!$type instanceof \ReflectionNamedType || $type->isBuiltin()) {
                     if (!$param->isDefaultValueAvailable()) {
                         $this->dependencies[$className]['constructor_has_primitives'] = true;
                     }
@@ -182,15 +182,11 @@ class Resolver implements CacheAwareInterface
                     break;
                 }
 
-                $clazz = ($param->getType() && !$param->getType()->isBuiltin())
-                    ? new ReflectionClass($param->getType()->getName())
-                    : null;
+                $clazz = new ReflectionClass($type->getName());
 
-                if ($clazz !== null) {
-                    $dependencies[] = $clazz->getName();
-                    if ( $clazz->isInstantiable() ) {
-                        $this->resolveDependencies($clazz->getName());
-                    }
+                $dependencies[] = $clazz->getName();
+                if ( $clazz->isInstantiable() ) {
+                    $this->resolveDependencies($clazz->getName());
                 }
             }
         }
@@ -330,12 +326,15 @@ class Resolver implements CacheAwareInterface
             $method = $reflection->getMethod('__inject');
 
             foreach ( ($method->getParameters() ?? []) as $param ) {
-                if ( $param->hasType() && $param->getType() !== null && ! $param->getType()->isBuiltin() ) {
-                    $dependencies[] = $param->getType()->getName();
-                } else {
-                    # We can only inject if ALL parameters are injectable objects
-                    return [];
+                if ($param->hasType()) {
+                    $type = $param->getType();
+                    if ( $type instanceof \ReflectionNamedType && ! $type->isBuiltin() ) {
+                        $dependencies[] = $type->getName();
+                        continue;
+                    }
                 }
+                # We can only inject if ALL parameters are injectable objects
+                return [];
             }
         }
 

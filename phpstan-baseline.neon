@@ -1,35 +1,16 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Call to an undefined method ReflectionType\\:\\:getName\\(\\)\\.$#"
-			count: 1
-			path: src/Component/DI/Resolver.php
-
-		-
-			message: "#^Call to an undefined method ReflectionType\\:\\:getName\\(\\)\\.$#"
-			count: 1
-			path: src/Component/Event/EventListenerProvider.php
-
-		-
 			message: "#^PHPDoc tag @param for parameter \\$previous with type Throwable\\|null is not subtype of native type Throwable\\.$#"
 			count: 1
 			path: src/Component/Messenger/Exception/HandlerFailedException.php
-
-		-
-			message: "#^Call to an undefined method ReflectionType\\:\\:getName\\(\\)\\.$#"
-			count: 1
-			path: src/Component/Messenger/MessageHandlerProvider.php
-
-		-
-			message: "#^Call to an undefined method ReflectionType\\:\\:getName\\(\\)\\.$#"
-			count: 1
-			path: src/Component/Messenger/Service/Event/EventDispatcher.php
 
 		-
 			message: "#^Parameter \\#2 \\$allowed_classes of function unserialize expects array\\(\\)\\|array\\('allowed_classes' \\=\\> array\\<string\\>\\|bool\\), array\\(string\\) given\\.$#"
 			count: 1
 			path: src/Component/Messenger/Transport/Serializer/DefaultSerializer.php
 
+        # false positive
 		-
 			message: "#Strict comparison using === between string and false will always evaluate to false.#"
 			count: 1
