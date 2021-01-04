@@ -288,7 +288,7 @@ class Resolver implements CacheAwareInterface
 
                     $propertyType = $property->getType();
 
-                    if ($propertyType !== null) {
+                    if ($propertyType instanceof \ReflectionNamedType) {
                         $dependencyClassName = $propertyType->getName();
                         $dependencies[$property->getName()] = $dependencyClassName;
                         $this->resolveDependencies($dependencyClassName);
