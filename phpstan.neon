@@ -3,6 +3,7 @@ parameters:
     paths:
         - src
     inferPrivatePropertyTypeFromConstructor: true
+    reportUnmatchedIgnoredErrors: false
 
     excludes_analyse:
         - %rootDir%/../../../src/Component/*/Tests/*

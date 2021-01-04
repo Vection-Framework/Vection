@@ -57,7 +57,7 @@
 
     "scripts": {
         "test": "vendor/bin/phpunit --no-coverage",
-        "phpstan": "vendor/bin/phpstan analyse",
+        "phpstan": "vendor/bin/phpstan analyse --no-progress",
         "phpcs": "vendor/bin/phpcs --ignore=\"*/Tests/*",
         "infection": "vendor/bin/infection --min-msi=48 --threads=4 > mutation-report.json"
     }
