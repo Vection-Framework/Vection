@@ -1,10 +1,26 @@
-includes:
-    - phpstan-baseline.neon
 parameters:
     level: 5
     paths:
         - src
     inferPrivatePropertyTypeFromConstructor: true
+
     excludes_analyse:
         - %rootDir%/../../../src/Component/*/Tests/*
         - %rootDir%/../../../src/Component/Http/*
+
+    ignoreErrors:
+        -
+            message: "#PHPDoc tag @param for parameter \\$previous with type Throwable\\|null is not subtype of native type Throwable\\.#"
+            count: 1
+            path: src/Component/Messenger/Exception/HandlerFailedException.php
+
+        -
+            message: "#Parameter \\#2 \\$allowed_classes of function unserialize expects array\\(\\)\\|array\\('allowed_classes' => array<string>\\|bool\\), array\\(true\\) given\\.#"
+            count: 1
+            path: src/Component/Messenger/Transport/Serializer/DefaultSerializer.php
+
+        # false positive
+        -
+            message: "#Strict comparison using === between string and false will always evaluate to false\\.#"
+            count: 1
+            path: src/Component/Utility/Security/OpenSSLEncryption.php
