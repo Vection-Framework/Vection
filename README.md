@@ -4,11 +4,11 @@
     </a>
 </p-->
 
-[![Build Status](https://travis-ci.org/Vection-Framework/Vection.svg?branch=master)](https://travis-ci.org/Vection-Framework/Vection)
-[![codecov](https://codecov.io/gh/Vection-Framework/Vection/branch/master/graph/badge.svg)](https://codecov.io/gh/Vection-Framework/Vection)
+[![Build Status](https://img.shields.io/github/workflow/status/Vection-Framework/Vection/Test%20and%20QA)](https://github.com/Vection-Framework/Vection/actions) 
 [![phpstan](https://img.shields.io/badge/PHPStan-level%205-brightgreen.svg?style=flat)](https://img.shields.io/badge/PHPStan-level%203-brightgreen.svg?style=flat)
+[![codecov](https://codecov.io/gh/Vection-Framework/Vection/branch/master/graph/badge.svg)](https://codecov.io/gh/Vection-Framework/Vection)
 [![release](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases)](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases)
-[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FVection-Framework%2FVection%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/Vection-Framework/Vection/master)
+
 
 <a href="https://vection.appsdock.org">Vection</a> is a future-proof PHP component library and framework that focuses on flexibility, developer friendly code and lightweight to rich enterprise components. Vection can be used to realize small to large enterprise applications.
 
