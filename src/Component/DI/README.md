@@ -4,15 +4,38 @@
 [![release](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases)](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases)
 
 ## Dependency Injection Container for PHP
-This vection component provides a powerful dependency injection container for PHP. It supports several ways of automatic injection like annotations and injection by interfaces. A optional configuration allows the mapping of interfaces and concrete implementation. ?
+This vection component provides a powerful dependency injection container for PHP. It supports several ways of automatic injection like annotations, attributes and injection by interfaces. An optional configuration allows the mapping of interfaces and concrete implementation.
+
+```php
+<?php
+
+use Vection\Component\DI\Traits\AnnotationInjection;
+
+class MyApiController implements LoggerAwareInterface // Auto injection Logger via mapping in container config.
+{
+    use AnnotationInjection; 
+    
+    #[Inject]
+    private IdentityQueryService $identityQueryService;
+    
+    /** @Inject */
+    private PermissionController $permissionController;
+    
+    /** @Inject(AnotherService) */
+    private $anotherService;
+    
+    public function __construct(CommandBusInterface $commandBus) 
+    { // Auto constructor parameter injection }
+}
+```
 
 ### Supported injection types
 
 - **Constructor injection**<br>
 Constructor params will automatically resolved and injected by container.
 
-- **Annotation injection**<br>
-Class property injection by using `@Inject` annotation.
+- **Annotation/Attribute (since PHP 8.0) injection**<br>
+Class property injection by using `@Inject` or `#[Inject]`annotation.
 
 - **Interface injection**<br>
 Mapping of interfaces and implementations that can be inject via construct, methods and property.
@@ -43,7 +66,7 @@ This DI container supports the automatically injection of construct properties i
 public function __construct(FooBar $fooBar)
 ```
 
-#### Annotation injection
+#### Annotation / Attribute injection
 The annotation injection provides a powerful possibility to injection dependencies into protected object properties by using the `@Inject` annotation on properties. The usage of annotation injection requires the use of the `AnnotationInjection` trait. Annotations also requires the fully qualified class names (< PHP 7.4)
 
 ```php
@@ -52,15 +75,18 @@ The annotation injection provides a powerful possibility to injection dependenci
 class Awesome
 {
     use AnnotationInjection;
+
+    #[Inject]
+    protected FooBar $fooBar;  // supported since php >= 8.0
+    
+    /** @Inject */
+    protected FooBar $fooBar;  // supported since php >= 7.4 
     
     /**
      * @Inject("My\Awesome\FooBar")  // important: use full qualified class name
      * @var FooBar
      */   
     protected $fooBar;
-
-    /** @Inject */
-    protected FooBar $fooBar;  // supported since php >= 7.4 
 }
 ```
 > **Important notice**<br>
@@ -73,11 +99,8 @@ class Awesome
 {
     use AnnotationInjection;
     
-    /**
-     * @Inject("My\Awesome\FooBar")  // important: use full qualified class name
-     * @var FooBar
-     */   
-    protected $fooBar;
+    #[Inject]
+    protected FooBar $fooBar;
 
     public function __construct()   
     {
@@ -103,15 +126,6 @@ It provides the injection by using the interfaces instead of concrete implementa
 class Awesome
 {
     use AnnotationInjection;
-            
-    /**
-     * @Inject("My\Awesome\FooBarInterface") 
-     * @var FooBarInterface
-     */   
-    protected $fooBar;
-
-    /** @Inject */
-    protected FooBarInterface $fooBar;  // supported since php >= 7.4 
     
     public function __construct(FooBarInterface $fooBar)
     {...}
@@ -121,7 +135,7 @@ This kind of injection requires the following entry in the configuration file. (
 ```php
 set(FooBarInterface::class)
    ->factory(static function(Container $container){
-       return new FooBar();
+       return $container->get(FooBar::class);
    })
 ,
 ```
@@ -185,14 +199,8 @@ class AwesomeParent
 {
     use AnnotationInjection;
                 
-    /**
-     * @Inject("My\Awesome\FooBarInterface") 
-     * @var FooBarInterface
-     */   
-    protected $fooBar;
-
-    /** @Inject */
-    protected FooBarInterface $fooBar;  // supported since php >= 7.4 
+    #[Inject]
+    protected FooService $service;
     
     public function __construct(FooBarInterface $fooBar)
     {...}
