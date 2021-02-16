@@ -59,12 +59,14 @@ class SenderMiddleware implements MessageBusMiddlewareInterface
                 $message = $message->withHeader(MessageHeaders::MESSAGE_TYPE, get_class($message->getBody()));
             }
 
+            if ($message->getHeaders()->has(MessageHeaders::DELIVERY_TIMESTAMP)) {
+                $message = $message->withHeader(MessageHeaders::REDELIVERED_TIMESTAMP, (string) time());
+            } else {
+                $message = $message->withHeader(MessageHeaders::DELIVERY_TIMESTAMP, (string) time());
+            }
+
             try {
-                if ($message->getHeaders()->has(MessageHeaders::DELIVERY_TIMESTAMP)) {
-                    $this->sender->send($message->withHeader(MessageHeaders::REDELIVERED_TIMESTAMP, (string) time()));
-                } else {
-                    $this->sender->send($message->withHeader(MessageHeaders::DELIVERY_TIMESTAMP, (string) time()));
-                }
+                $this->sender->send($message);
             } catch (TransportException $e) {
                 # TODO redelivery queue!
             }
