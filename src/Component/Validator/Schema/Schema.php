@@ -57,7 +57,7 @@ class Schema implements SchemaInterface
             $ext = pathinfo($schemaFilePath, PATHINFO_EXTENSION);
 
             if ( in_array($ext, ['yaml', 'yml']) ) {
-                $this->loadFromJsonFile($schemaFilePath);
+                $this->loadFromYamlFile($schemaFilePath);
             }
 
             if ( $ext === 'json' ) {
