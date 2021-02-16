@@ -41,4 +41,16 @@ trait ContainerAwareTrait
     {
         return $this->container;
     }
+
+    /**
+     * @param string $identifier
+     * @param array  $constructParams
+     * @param bool   $shared
+     *
+     * @return object
+     */
+    protected function new(string $identifier, array $constructParams = [], bool $shared = true): object
+    {
+        return $this->container->create($identifier, $constructParams, $shared);
+    }
 }
