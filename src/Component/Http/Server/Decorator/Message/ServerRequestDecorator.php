@@ -299,7 +299,7 @@ class ServerRequestDecorator implements ServerRequestInterface
     {
         $path = $this->request->getUri()->getPath();
 
-        if ( strpos($path, $this->contextPath) === 0 ) {
+        if ( $this->contextPath !== '/' && strpos($path, $this->contextPath) === 0 ) {
             $path = substr($path, strlen($this->contextPath));
         }
 

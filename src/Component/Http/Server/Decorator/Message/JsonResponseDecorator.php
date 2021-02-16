@@ -120,7 +120,7 @@ class JsonResponseDecorator implements ResponseInterface
         $body = $this->response->getBody();
 
         if ( $body->getSize() === 0 ) {
-            $body->write(json_encode($this->data));
+            $body->write(json_encode($this->data, JSON_PARTIAL_OUTPUT_ON_ERROR|JSON_INVALID_UTF8_IGNORE));
         }
 
         return $body;
