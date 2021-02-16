@@ -29,6 +29,7 @@ class MessageHeaders implements MessageHeadersInterface
      * Default message headers
      */
     public const MESSAGE_ID     = 'MESSAGE_ID';
+    public const REQUEST_ID     = 'REQUEST_ID';
     public const CORRELATION_ID = 'CORRELATION_ID';
     public const CAUSATION_ID   = 'CAUSATION_ID';
     public const USER_ID        = 'USER_ID';
