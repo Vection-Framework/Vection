@@ -179,8 +179,17 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
 
         if ( $constructParams = $this->dependencies[$className]['construct'] ) {
             $paramObjects = [];
+            $nullableInterfaces = $this->dependencies[$className]['constructor_nullable_interface'] ?? [];
+            $preventInjectionParams = $this->dependencies[$className]['constructor_prevent_injection'] ?? [];
+
             foreach ( $constructParams as $param ) {
-                $paramObjects[] = $this->get($param);
+                $isNullableInterface = in_array($param, $nullableInterfaces, true);
+                $isPreventInjectionParam = in_array($param, $preventInjectionParams, true);
+                if (($isNullableInterface && !isset($this->definitions[$param])) || $isPreventInjectionParam) {
+                    $paramObjects[] = null;
+                }else{
+                    $paramObjects[] = $this->get($param);
+                }
             }
             return new $className(...$paramObjects);
         }

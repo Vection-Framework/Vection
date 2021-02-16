@@ -16,8 +16,11 @@ namespace Vection\Component\DI;
 use ArrayObject;
 use ReflectionClass;
 use ReflectionException;
+use Vection\Component\DI\Attributes\Inject;
+use Vection\Component\DI\Attributes\PreventInjection;
 use Vection\Component\DI\Exception\ContainerException;
 use Vection\Component\DI\Exception\IllegalConstructorParameterException;
+use Vection\Component\DI\Exception\RuntimeException;
 use Vection\Component\DI\Traits\AnnotationInjection;
 use Vection\Contracts\Cache\CacheAwareInterface;
 use Vection\Contracts\Cache\CacheInterface;
@@ -164,7 +167,16 @@ class Resolver implements CacheAwareInterface
         $dependencies = [];
         $constructor  = (new ReflectionClass($className))->getConstructor();
 
+        if ( isset($this->definitions[$className]) && array_key_exists('construct', $this->definitions[$className]->getDependencies())) {
+            return $dependencies;
+        }
+
         if ( $constructor && ($constructParams = $constructor->getParameters()) ) {
+
+            if (PHP_VERSION_ID >= 80000 && $constructor->getAttributes(PreventInjection::class)) {
+                return $dependencies;
+            }
+
             foreach ( $constructParams as $param ) {
                 $type = $param->getType();
 
@@ -183,6 +195,20 @@ class Resolver implements CacheAwareInterface
                 }
 
                 $clazz = new ReflectionClass($type->getName());
+
+                if ($clazz->isInterface() && $param->allowsNull()) {
+                    if (!isset($this->dependencies[$className]['constructor_nullable_interface'])) {
+                        $this->dependencies[$className]['constructor_nullable_interface'] = [];
+                    }
+                    $this->dependencies[$className]['constructor_nullable_interface'][] = $clazz->getName();
+                }
+
+                if (PHP_VERSION_ID >= 80000 && $param->allowsNull() && $param->getAttributes(PreventInjection::class)) {
+                    if (!isset($this->dependencies[$className]['constructor_prevent_injection'])) {
+                        $this->dependencies[$className]['constructor_prevent_injection'] = [];
+                    }
+                    $this->dependencies[$className]['constructor_prevent_injection'][] = $clazz->getName();
+                }
 
                 $dependencies[] = $clazz->getName();
                 if ( $clazz->isInstantiable() ) {
@@ -276,28 +302,42 @@ class Resolver implements CacheAwareInterface
         if ( $useInjectionTrait || $dependencies ) {
 
             foreach ( $reflection->getProperties() as $property ) {
-                if ( ! ($doc = $property->getDocComment()) ) {
+
+                $doc = $property->getDocComment();
+                $propertyType = null;
+
+                if (!$doc && PHP_VERSION_ID < 80000) {
                     continue;
                 }
 
-                if (PHP_VERSION_ID >= 70400 && $property->hasType() && preg_match('/@Inject/', $doc)) {
+                if (PHP_VERSION_ID >= 80000 && $property->getAttributes(Inject::class)) {
+
+                    if (!$property->hasType()) {
+                        throw new RuntimeException(
+                            'The use of attribute based injection requires typed properties. '.
+                            "Property {$property->getName()} in class {$className} has no type."
+                        );
+                    }
 
                     $propertyType = $property->getType();
 
-                    if ($propertyType instanceof \ReflectionNamedType) {
-                        $dependencyClassName = $propertyType->getName();
-                        $dependencies[$property->getName()] = $dependencyClassName;
-                        $this->resolveDependencies($dependencyClassName);
-                    }
-                } else {
-                    $regex = '/@Inject\(["\']+([a-zA-Z\\\\_0-9]+)["\']+\)/';
+                }
+                else if ($doc && PHP_VERSION_ID >= 70400 && $property->hasType() && preg_match('/@Inject/', $doc)) {
 
-                    if (preg_match_all($regex, $doc, $match, PREG_SET_ORDER)) {
-                        foreach ($match as $m) {
-                            $dependencies[$property->getName()] = $m[1];
-                            $this->resolveDependencies($m[1]);
-                        }
+                    $propertyType = $property->getType();
+
+                }
+                else if ($doc && preg_match_all('/@Inject\(["\']+([a-zA-Z\\\\_0-9]+)["\']+\)/', $doc, $match, PREG_SET_ORDER)) {
+                    foreach ($match as $m) {
+                        $dependencies[$property->getName()] = $m[1];
+                        $this->resolveDependencies($m[1]);
                     }
+                }
+
+                if ($propertyType instanceof \ReflectionNamedType ) {
+                    $dependencyClassName = $propertyType->getName();
+                    $dependencies[$property->getName()] = $dependencyClassName;
+                    $this->resolveDependencies($dependencyClassName);
                 }
             }
         }
