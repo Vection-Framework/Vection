@@ -27,7 +27,7 @@ class TestEventListener2
     /**
      * @param TestEvent $event
      */
-    public function onTestEvent(TestEvent $event): void
+    public function __invoke(TestEvent $event): void
     {
 
     }

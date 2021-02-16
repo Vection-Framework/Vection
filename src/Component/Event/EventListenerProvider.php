@@ -13,11 +13,6 @@ declare(strict_types = 1);
 
 namespace Vection\Component\Event;
 
-use ReflectionClass;
-use ReflectionException;
-use ReflectionMethod;
-use Vection\Component\Event\Exception\InvalidEventListenerException;
-use Vection\Component\Event\Exception\RuntimeException;
 use Vection\Contracts\Event\EventListenerFactoryInterface;
 use Vection\Contracts\Event\EventListenerProviderInterface;
 
@@ -33,12 +28,17 @@ class EventListenerProvider implements EventListenerProviderInterface
     /**
      * @var array
      */
-    protected $listeners;
+    protected $listeners = [];
 
     /**
      * @var EventListenerFactoryInterface|null
      */
     protected $eventListenerFactory;
+
+    /**
+     * @var callable|null
+     */
+    protected $lazyListenerLoader = null;
 
     /**
      * EventListenerProvider constructor.
@@ -51,64 +51,31 @@ class EventListenerProvider implements EventListenerProviderInterface
     }
 
     /**
-     * Registers the given class to one or more events.
-     * The events will be get from existing "on" methods with typed event parameter.
+     * Loads and registers all listeners just before the first listener
+     * is requested by the event dispatcher.
      *
-     * @param string $className
+     * @param callable $fn
      */
-    public function register(string $className): void
+    public function onLazyLoad(callable $fn): void
     {
-        try {
-            $methods       = (new ReflectionClass($className))->getMethods(ReflectionMethod::IS_PUBLIC);
-            $validListener = false;
+        $this->lazyListenerLoader = $fn;
+    }
 
-            foreach ($methods as $method) {
-                if (strpos($method->getName(), 'on') !== 0) {
-                    continue;
-                }
-
-                $parameters = $method->getParameters();
-
-                if (count($parameters) === 0) {
-                    continue;
-                }
-
-                $type = $parameters[0]->getType();
-
-                if ($type === null || ! $type instanceof \ReflectionNamedType) {
-                    continue;
-                }
-
-                $eventClassName = $type->getName();
-
-                $eventName = explode('\\', $eventClassName)[substr_count($eventClassName, '\\')];
-
-                if ($method->getName() !== 'on'.$eventName) {
-                    continue;
-                }
-
-                $validListener = true;
-
-                if (! isset($this->listeners[$eventClassName])) {
-                    $this->listeners[$eventClassName] = [];
-                }
-
-                $this->listeners[$eventClassName][] = [
-                    'class' => $className, 'method' => $method->getName(),
-                ];
-            }
-
-            if (! $validListener) {
-                throw new InvalidEventListenerException(
-                    sprintf(
-                        'Cannot register class %s. A listener must have at least one handler method with typed event.',
-                        $className
-                    )
-                );
-            }
-        } catch (ReflectionException $e) {
-            throw new RuntimeException('Unable to register unknown listener class.', 0, $e);
+    /**
+     * @param string $event
+     * @param string $listener
+     * @param string $method
+     */
+    public function register(string $event, string $listener, string $method = '__invoke'): void
+    {
+        if (! isset($this->listeners[$event])) {
+            $this->listeners[$event] = [];
         }
+
+        $this->listeners[$event][] = [
+            'class' => $listener,
+            'method' => $method
+        ];
     }
 
     /**
@@ -122,6 +89,10 @@ class EventListenerProvider implements EventListenerProviderInterface
     public function getListenersForEvent(object $event): iterable
     {
         $listeners = [];
+
+        if ($this->lazyListenerLoader !== null && count($this->listeners) === 0) {
+            ($this->lazyListenerLoader)($this);
+        }
 
         if (isset($this->listeners[get_class($event)])) {
             foreach ($this->listeners[get_class($event)] as $listener) {

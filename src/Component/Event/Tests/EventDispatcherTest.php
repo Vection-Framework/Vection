@@ -35,7 +35,7 @@ class EventDispatcherTest extends TestCase
     public function testDispatch(): void
     {
         $provider = new EventListenerProvider();
-        $provider->register(TestEventListener::class);
+        $provider->register(TestEvent::class, TestEventListener::class);
 
         $dispatcher = new EventDispatcher($provider);
         $dispatcher->dispatch(new TestEvent());

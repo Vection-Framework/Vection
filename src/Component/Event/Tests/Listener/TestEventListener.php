@@ -27,7 +27,7 @@ class TestEventListener
     /**
      * @param TestEvent $event
      */
-    public function onTestEvent(TestEvent $event): void
+    public function __invoke(TestEvent $event): void
     {
         define('TEST__EVENT_DISPATCHER_DISPATCH', true);
     }
