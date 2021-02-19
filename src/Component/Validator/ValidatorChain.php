@@ -77,6 +77,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @method ValidatorChain digit()
  * @method ValidatorChain integer()
  * @method ValidatorChain isString()
+ * @method ValidatorChain isArray()
  * @method ValidatorChain iban()
  * @method ValidatorChain hex()
  */
