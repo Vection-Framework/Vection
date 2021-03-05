@@ -56,7 +56,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @method ValidatorChain length(int $length)
  * @method ValidatorChain lessOrEqualThan(int $limit)
  * @method ValidatorChain lessThan(int $limit)
- * @method ValidatorChain locale()
+ * @method ValidatorChain locale(bool $strict, string $separator)
  * @method ValidatorChain max(int $value)
  * @method ValidatorChain maxLength(int $length)
  * @method ValidatorChain min(int $limit)
