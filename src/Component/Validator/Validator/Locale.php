@@ -23,6 +23,35 @@ use Vection\Component\Validator\Validator;
  */
 class Locale extends Validator
 {
+    public const HYPHEN     = '-';
+    public const UNDERSCORE = '_';
+
+    /** @var boolean */
+    protected bool $strict;
+
+    /** @var string */
+    protected string $separator;
+
+    /**
+     * Locale constructor.
+     *
+     * @param bool $strict
+     * @param string $separator
+     */
+    public function __construct(bool $strict = true, string $separator = self::HYPHEN)
+    {
+        $this->strict    = $strict;
+        $this->separator = $separator;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getConstraints(): array
+    {
+        return ['strict' => $this->strict, 'separator' => $this->separator];
+    }
+
     /**
      * @inheritDoc
      */
@@ -36,6 +65,25 @@ class Locale extends Validator
      */
     protected function onValidate($value): bool
     {
-        return preg_match('/^[A-Za-z]{2,4}([_-][A-Za-z]{4})?([_-]([A-Za-z]{2}|[\d]{3}))?$/', $value) === 1;
+        $language = '[A-Za-z]{2,4}';
+        $script   = '[A-Za-z]{4}';
+        $region   = '[A-Za-z]{2}';
+
+        if ($this->strict) {
+            $language = '[a-z]{2,3}';
+            $script   = '[A-Z]{1}[a-z]{3}';
+            $region   = '[A-Z]{2}';
+        }
+
+        $pattern = sprintf(
+            '/^%s([%s]%s)?([%s](%s|[\d]{3}))?$/',
+            $language,
+            $this->separator,
+            $script,
+            $this->separator,
+            $region
+        );
+
+        return preg_match($pattern, $value) === 1;
     }
 }
