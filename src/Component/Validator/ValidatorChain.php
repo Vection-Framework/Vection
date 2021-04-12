@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Vection\Component\Validator;
 
+use Vection\Component\Validator\Validator\IsRequired;
 use Vection\Contracts\Validator\ValidatorChainInterface;
 use Vection\Contracts\Validator\ValidatorInterface;
 use Vection\Contracts\Validator\ViolationInterface;
@@ -79,6 +80,8 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @method ValidatorChain integer()
  * @method ValidatorChain isString()
  * @method ValidatorChain isArray()
+ * @method ValidatorChain isRequired()
+ * @method ValidatorChain optional()
  * @method ValidatorChain iban()
  * @method ValidatorChain hex()
  */
@@ -146,7 +149,10 @@ class ValidatorChain implements ValidatorChainInterface
     public function __invoke(string ...$keys): ValidatorChain
     {
         # Add support for multi dimension array values!
-        $this->chain[$keys[0]] = [];
+        $this->chain[$keys[0]] = [
+            # All definition are required by default
+            new IsRequired()
+        ];
         end($this->chain);
         return $this;
     }
@@ -225,7 +231,15 @@ class ValidatorChain implements ValidatorChainInterface
             }
 
             foreach ( $validators as $validator ) {
-                if ( $violation = $validator->validate($value, $subject) ) {
+
+                if ($validator instanceof IsRequired) {
+                    $violation = $validator->validate($valueExists, $subject);
+                }
+                else {
+                    $violation = $validator->validate($value, $subject);
+                }
+
+                if ( $violation ) {
                     # The value is invalid so take the violation and continue to next subject
                     $this->violations[] = $violation;
                     continue 2;
