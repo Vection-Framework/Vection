@@ -90,7 +90,7 @@ class ValidatorChain implements ValidatorChainInterface
      *
      * @var ValidatorFactory
      */
-    protected $validatorFactory;
+    protected ValidatorFactory $validatorFactory;
 
     /**
      * This property contains assertion definition.
@@ -99,7 +99,7 @@ class ValidatorChain implements ValidatorChainInterface
      *
      * @var Validator[][]
      */
-    protected $chain = [];
+    protected array $chain = [];
 
     /**
      * This property contains all violation objects
@@ -107,7 +107,7 @@ class ValidatorChain implements ValidatorChainInterface
      *
      * @var ViolationInterface[]
      */
-    protected $violations = [];
+    protected array $violations = [];
 
     /**
      * Contains the mapping of given data value names and
@@ -116,7 +116,16 @@ class ValidatorChain implements ValidatorChainInterface
      *
      * @var int[]
      */
-    protected $nullable = [];
+    protected array $nullable = [];
+
+    /**
+     * Contains the mapping of given data value names and
+     * the virtual validator "optional" to determine the optional
+     * values that can be skipped if payload does not contains the expected data..
+     *
+     * @var int[]
+     */
+    protected array $optional = [];
 
     /**
      * ValidatorChain constructor.
@@ -159,6 +168,12 @@ class ValidatorChain implements ValidatorChainInterface
             return $this;
         }
 
+        if ( $name === 'optional' ) {
+            # This is a virtual validator that marks the subject as optional
+            $this->optional[key($this->chain)] = 1;
+            return $this;
+        }
+
         # Create the validator object and save for current subject
         $validator = $this->validatorFactory->create($name, $constraints);
 
@@ -198,9 +213,14 @@ class ValidatorChain implements ValidatorChainInterface
 
             # First we have to know the current value
             $value = ($data[$subject] ?? null);
+            $valueExists = array_key_exists($subject, $data);
+
+            if (!$valueExists && isset($this->optional[$subject])) {
+                continue;
+            }
 
             # Skip if value is null and validate against nullable
-            if ( ($value === null || ! $validators) && isset($this->nullable[$subject]) ) {
+            if ( ($value === null || ! $validators) && isset($this->nullable[$subject]) && $valueExists ) {
                 continue;
             }
 
