@@ -40,7 +40,7 @@ class ValidatorChainTest extends TestCase
             ->alphaNumeric()
             ->betweenLength(0, 7);
 
-        $chain('ac')
+        $chain('c')
             ->nullable()
             ->alphaNumeric()
             ->betweenLength(0, 7);
