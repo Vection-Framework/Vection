@@ -41,7 +41,7 @@ class EventListenerProviderTest extends TestCase
         $this->assertCount(1, $listeners);
         $this->assertCount(2, $listeners[0]);
         $this->assertInstanceOf(TestEventListener::class, $listeners[0][0]);
-        $this->assertSame('onTestEvent', $listeners[0][1]);
+        $this->assertSame('__invoke', $listeners[0][1]);
 
         $provider->register(TestEvent::class, TestEventListener2::class);
 
@@ -52,7 +52,7 @@ class EventListenerProviderTest extends TestCase
         $this->assertCount(2, $listeners);
         $this->assertCount(2, $listeners[1]);
         $this->assertInstanceOf(TestEventListener2::class, $listeners[1][0]);
-        $this->assertSame('onTestEvent', $listeners[1][1]);
+        $this->assertSame('__invoke', $listeners[1][1]);
     }
 
 }
