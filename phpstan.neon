@@ -11,6 +11,11 @@ parameters:
 
     ignoreErrors:
         -
+            message: "#Call to an undefined method ReflectionMethod::getAttributes\\(\\).#"
+            count: 3
+            path: src/Component/DI/Resolver.php
+
+        -
             message: "#PHPDoc tag @param for parameter \\$previous with type Throwable\\|null is not subtype of native type Throwable\\.#"
             count: 1
             path: src/Component/Messenger/Exception/HandlerFailedException.php
