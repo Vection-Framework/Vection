@@ -468,7 +468,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function withAttribute($name, $value)
     {
-        return new self($this->request->withAttribute($name, $value));
+        return new static($this->request->withAttribute($name, $value));
     }
 
     /**
@@ -476,7 +476,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function withoutAttribute($name)
     {
-        return new self($this->request->withoutAttribute($name));
+        return new static($this->request->withoutAttribute($name));
     }
 
     /**
@@ -484,7 +484,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function withProtocolVersion($version)
     {
-        return new self($this->request->withProtocolVersion($version));
+        return new static($this->request->withProtocolVersion($version));
     }
 
     /**
@@ -492,7 +492,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function withParsedBody($data)
     {
-        return new self($this->request->withParsedBody($data));
+        return new static($this->request->withParsedBody($data));
     }
 
     /**
@@ -500,7 +500,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function withUploadedFiles(array $uploadedFiles)
     {
-        return new self($this->request->withUploadedFiles($uploadedFiles));
+        return new static($this->request->withUploadedFiles($uploadedFiles));
     }
 
     /**
@@ -508,7 +508,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function withRequestTarget($requestTarget)
     {
-        return new self($this->request->withRequestTarget($requestTarget));
+        return new static($this->request->withRequestTarget($requestTarget));
     }
 
     /**
@@ -516,7 +516,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function withQueryParams(array $query)
     {
-        return new self($this->request->withQueryParams($query));
+        return new static($this->request->withQueryParams($query));
     }
 
     /**
@@ -524,7 +524,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function withBody(StreamInterface $body)
     {
-        return new self($this->request->withBody($body));
+        return new static($this->request->withBody($body));
     }
 
     /**
@@ -532,7 +532,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function withCookieParams(array $cookies)
     {
-        return new self($this->request->withCookieParams($cookies));
+        return new static($this->request->withCookieParams($cookies));
     }
 
     /**
@@ -540,7 +540,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function withUri(UriInterface $uri, $preserveHost = false)
     {
-        return new self($this->request->withUri($uri, $preserveHost));
+        return new static($this->request->withUri($uri, $preserveHost));
     }
 
     /**
@@ -548,7 +548,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function withMethod($method)
     {
-        return new self($this->request->withMethod($method));
+        return new static($this->request->withMethod($method));
     }
 
     /**
@@ -556,7 +556,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function withHeader($name, $value)
     {
-        return new self($this->request->withHeader($name, $value));
+        return new static($this->request->withHeader($name, $value));
     }
 
     /**
@@ -564,7 +564,7 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function withAddedHeader($name, $value)
     {
-        return new self($this->request->withAddedHeader($name, $value));
+        return new static($this->request->withAddedHeader($name, $value));
     }
 
     /**
@@ -572,6 +572,6 @@ class ServerRequestDecorator implements ServerRequestInterface
      */
     public function withoutHeader($name)
     {
-        return new self($this->request->withoutHeader($name));
+        return new static($this->request->withoutHeader($name));
     }
 }
