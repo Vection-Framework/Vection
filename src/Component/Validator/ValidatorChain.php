@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Vection package.
  *
@@ -10,19 +11,10 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
- *
- * (c) Vection-Framework <vection@appsdock.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Vection\Component\Validator;
 
 use Vection\Component\Validator\Validator\IsRequired;
+use Vection\Component\Validator\Validator\Locale;
 use Vection\Contracts\Validator\ValidatorChainInterface;
 use Vection\Contracts\Validator\ValidatorInterface;
 use Vection\Contracts\Validator\ViolationInterface;
@@ -57,7 +49,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @method ValidatorChain length(int $length)
  * @method ValidatorChain lessOrEqualThan(int $limit)
  * @method ValidatorChain lessThan(int $limit)
- * @method ValidatorChain locale(bool $strict, string $separator)
+ * @method ValidatorChain locale(bool $strict = true, string $separator = Locale::HYPHEN)
  * @method ValidatorChain max(int $value)
  * @method ValidatorChain maxLength(int $length)
  * @method ValidatorChain min(int $limit)
@@ -84,6 +76,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @method ValidatorChain optional()
  * @method ValidatorChain iban()
  * @method ValidatorChain hex()
+ * @method ValidatorChain timezone(int $group = null, string $countryCode = null)
  */
 class ValidatorChain implements ValidatorChainInterface
 {

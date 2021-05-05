@@ -23,13 +23,10 @@ use Vection\Component\Validator\Validator;
  */
 class Locale extends Validator
 {
-    public const HYPHEN     = '-';
+    public const HYPHEN = '-';
     public const UNDERSCORE = '_';
 
-    /** @var boolean */
     protected bool $strict;
-
-    /** @var string */
     protected string $separator;
 
     /**
@@ -40,7 +37,7 @@ class Locale extends Validator
      */
     public function __construct(bool $strict = true, string $separator = self::HYPHEN)
     {
-        $this->strict    = $strict;
+        $this->strict = $strict;
         $this->separator = $separator;
     }
 
@@ -76,7 +73,7 @@ class Locale extends Validator
         }
 
         $pattern = sprintf(
-            '/^%s([%s]%s)?([%s](%s|[\d]{3}))?$/',
+            '/^%s([%s]%s)?([%s](%s|[\d]{3}))$/',
             $language,
             $this->separator,
             $script,
