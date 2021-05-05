@@ -166,7 +166,7 @@ class ValidatorChain implements ValidatorChainInterface
      *
      * @return ValidatorChain
      */
-    public function __call($name, $constraints = []): ValidatorChain
+    public function __call(string $name, $constraints = []): ValidatorChain
     {
         if ( $name === 'nullable' ) {
             # This is a virtual validator that marks the subject as nullable

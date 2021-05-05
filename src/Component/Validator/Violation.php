@@ -36,21 +36,12 @@ use Vection\Contracts\Validator\ViolationInterface;
  */
 class Violation implements ViolationInterface, \JsonSerializable
 {
-
     /** @var mixed */
     protected $value;
-
-    /** @var array */
-    protected $constraints;
-
-    /** @var string */
-    protected $message;
-
-    /** @var string */
-    protected $result = '';
-
-    /** @var string */
-    protected $subject;
+    protected array $constraints;
+    protected string $message;
+    protected string $result = '';
+    protected string $subject;
 
     /**
      * Violation constructor.
@@ -116,7 +107,7 @@ class Violation implements ViolationInterface, \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'parameter' => $this->subject,
+            'property' => $this->subject,
             'actual' => $this->valueToString($this->value),
             'message' => $this->getMessage()
         ];
