@@ -29,7 +29,7 @@ class ValidationFailedException extends RuntimeException
     /**
      * @var ViolationInterface[]
      */
-    protected $violations;
+    protected array $violations;
 
     /**
      * InvalidPayloadException constructor.

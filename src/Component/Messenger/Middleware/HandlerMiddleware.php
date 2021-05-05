@@ -31,10 +31,7 @@ use Vection\Contracts\Messenger\MiddlewareSequenceInterface;
  */
 class HandlerMiddleware implements MessageBusMiddlewareInterface
 {
-    /**
-     * @var MessageHandlerProviderInterface
-     */
-    protected $handlerMapper;
+    protected MessageHandlerProviderInterface $handlerMapper;
 
     /**
      * CommandHandlerMiddleware constructor.
@@ -47,36 +44,29 @@ class HandlerMiddleware implements MessageBusMiddlewareInterface
     }
 
     /**
-     * Handles the message.
-     * After this middleware is finished with handling, it must call
-     * the next middleware by the sequence object and return its result.
-     *
-     * @param MessageInterface            $message
-     * @param MiddlewareSequenceInterface $sequence
-     *
-     * @return MessageInterface
-     * @throws HandlerFailedException
+     * @inheritDoc
      */
     public function handle(MessageInterface $message, MiddlewareSequenceInterface $sequence): MessageInterface
     {
+        $handler = $this->handlerMapper->getHandler($message);
+
+        if ( $handler === null ) {
+            throw new HandlerNotFoundException(
+                sprintf(
+                    'Missing handler mapping for message with body %s',
+                    get_class($message->getBody())
+                )
+            );
+        }
+
         try {
-            $handler = $this->handlerMapper->getHandler($message);
-
-            if ( $handler === null ) {
-                throw new HandlerNotFoundException(
-                    sprintf(
-                        'Missing handler mapping for message with body %s',
-                        get_class($message->getBody())
-                    )
-                );
-            }
-
             $handler($message->getBody(), $message);
-            $message = $message->withHeader(MessageHeaders::HANDLED_TIMESTAMP, (string) time());
         }
         catch (Throwable $e) {
-            throw new HandlerFailedException($e);
+            throw new HandlerFailedException($message, $e);
         }
+
+        $message = $message->withHeader(MessageHeaders::HANDLED_TIMESTAMP, (string) time());
 
         return $sequence->next($message);
     }

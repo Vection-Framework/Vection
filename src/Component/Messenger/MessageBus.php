@@ -19,7 +19,9 @@ use Psr\Log\NullLogger;
 use Throwable;
 use Vection\Contracts\Messenger\MessageBusInterface;
 use Vection\Contracts\Messenger\MessageBusMiddlewareInterface;
+use Vection\Contracts\Messenger\MessageIdGeneratorInterface;
 use Vection\Contracts\Messenger\MessageInterface;
+use Vection\Contracts\Messenger\MessageRelationInterface;
 use Vection\Contracts\Messenger\MiddlewareSequenceFactoryInterface;
 
 /**
@@ -36,22 +38,36 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
     /**
      * @var MessageBusMiddlewareInterface[]
      */
-    protected $middleware;
-
-    /**
-     * @var MiddlewareSequenceFactoryInterface
-     */
-    protected $middlewareSequenceFactory;
+    protected array $middleware;
+    protected array $defaultHeaders;
+    protected MiddlewareSequenceFactoryInterface $middlewareSequenceFactory;
+    protected MessageIdGeneratorInterface $idGenerator;
 
     /**
      * MessageBus constructor.
      *
+     * @param array                                   $defaultHeaders
      * @param MiddlewareSequenceFactoryInterface|null $middlewareSequenceFactory
+     * @param MessageIdGeneratorInterface|null        $idGenerator
      */
-    public function __construct(MiddlewareSequenceFactoryInterface $middlewareSequenceFactory = null)
+    public function __construct(
+        array $defaultHeaders = [],
+        MiddlewareSequenceFactoryInterface $middlewareSequenceFactory = null,
+        MessageIdGeneratorInterface $idGenerator = null
+    )
     {
         $this->logger = new NullLogger();
         $this->middlewareSequenceFactory = ($middlewareSequenceFactory ?: new MiddlewareSequenceFactory());
+        $this->idGenerator = $idGenerator ?: new MessageIdGenerator();
+        $this->defaultHeaders = $defaultHeaders;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addDefaultHeader(string $name, string $value): void
+    {
+        $this->defaultHeaders[$name] = $value;
     }
 
     /**
@@ -63,49 +79,47 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
     }
 
     /**
-     * @param MessageInterface $message
-     *
-     * @return MessageInterface
-     *
-     * @throws Throwable
+     * @inheritDoc
      */
-    public function dispatch(MessageInterface $message): MessageInterface
+    public function dispatch(object $message, ?MessageRelationInterface $relation = null): MessageInterface
     {
-        $headers = $message->getHeaders();
-        $body    = str_replace('\\', '.', get_class($message->getBody()));
+        if (! $message instanceof MessageInterface) {
+            $message = new Message($message);
+        }
 
-        $this->logger->debug(
-            sprintf(
-                'DISPATCH %s (%s)', $headers->get(MessageHeaders::MESSAGE_ID) ?: '-', $body
-            )
-        );
+        $headers  = $message->getHeaders();
+        $body     = $message->getBody();
+
+        if (!$headers->has(MessageHeaders::MESSAGE_ID)) {
+            $message = $message->withHeader(MessageHeaders::MESSAGE_ID, $this->idGenerator->generate());
+        }
+
+        if (!$headers->has(MessageHeaders::TIMESTAMP)) {
+            $message = $message->withHeader(MessageHeaders::TIMESTAMP, (string) time());
+        }
+
+        if ( $relation ) {
+            foreach ($relation->getHeaders()->toArray() as $name => $value) {
+                $message = $message->withHeader($name, $value);
+            }
+        }
+
+        foreach ($this->defaultHeaders as $headerName => $headerValue) {
+            if (!$headers->has($headerName)) {
+                $message = $message->withHeader($headerName, $headerValue);
+            }
+        }
+
+        $bodyType = is_object($body) ? str_replace('\\', '.', get_class($body)) : gettype($body);
+
+        $this->logger->debug(sprintf('DISPATCH %s (%s)', $headers->get(MessageHeaders::MESSAGE_ID), $bodyType));
 
         $sequence = $this->middlewareSequenceFactory->create($this->middleware);
 
-        try {
-            $result = $sequence->next($message);
-            $middleware = $result->getHeaders()->get(MessageHeaders::TERMINATED_MIDDLEWARE);
+        $result = $sequence->next($message);
 
-            $this->logger->debug(
-                sprintf(
-                    'SUCCEEDED %s %s',
-                    $headers->get(MessageHeaders::MESSAGE_ID) ?: '-',
-                    $middleware ? "response by $middleware" : ''
-                )
-            );
+        $this->logger->debug('SUCCEEDED %s', $headers->get(MessageHeaders::MESSAGE_ID));
 
-            return $result;
-        } catch (Throwable $e) {
-
-            $this->logger->debug(
-                sprintf(
-                    "FAILED %s at %s",
-                    $message->getHeaders()->get(MessageHeaders::MESSAGE_ID) ?: '-',
-                    str_replace('\\', '.', get_class($sequence->getCurrent()))
-                )
-            );
-
-            throw  $e;
-        }
+        return $result;
     }
 }

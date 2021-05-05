@@ -33,15 +33,29 @@ interface MessageBusInterface
     public function addMiddleware(MessageBusMiddlewareInterface $middleware): void;
 
     /**
+     * Add a default header which is passed to every message before dispatching.
+     * The header does not overwrite existing headers of the message.
+     *
+     * @param string $name
+     * @param string $value
+     */
+    public function addDefaultHeader(string $name, string $value): void;
+
+    /**
      * Starts dispatching the message and executes the middleware by using
      * the sequence object. At the end of the dispatching this method returns
      * the result of the handling by each middleware. The returned message is
      * the message which is passed for dispatching or a new message created by
      * one of the middleware instances.
      *
-     * @param MessageInterface $message
+     * @param MessageInterface|object       $message An object of type MessageInterface or an any object.
+     *                                               If any object is given which is not from type MessageInterface then
+     *                                               this object will be wrapped by the default Message implementation whereas
+     *                                               the object is treated as the message body.
+     * @param MessageRelationInterface|null $relation A message relation which adds the additionally message headers
+     *                                                correlation and causation to the message.
      *
      * @return MessageInterface
      */
-    public function dispatch(MessageInterface $message): MessageInterface;
+    public function dispatch(object $message, ?MessageRelationInterface $relation = null): MessageInterface;
 }

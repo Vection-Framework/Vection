@@ -39,6 +39,13 @@ interface MessageInterface
     public function getBody();
 
     /**
+     * Returns the type of the body. If the body is an object, the class name is returned.
+     *
+     * @return string
+     */
+    public function getBodyType(): string;
+
+    /**
      * @param string $name
      * @param string $value
      *

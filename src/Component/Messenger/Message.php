@@ -31,7 +31,7 @@ class Message implements MessageInterface
     protected $headers;
 
     /**
-     * @var null|object
+     * @var object
      */
     protected $body;
 
@@ -61,6 +61,14 @@ class Message implements MessageInterface
     public function getBody()
     {
         return $this->body;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBodyType(): string
+    {
+        return is_object($this->body) ? str_replace('\\', '.', get_class($this->body)) : gettype($this->body);
     }
 
     /**
