@@ -1,0 +1,24 @@
+{
+    "name": "vection-framework/common",
+    "type": "library",
+    "description": "The Vection Common Framework Component",
+    "keywords": ["framework", "common"],
+    "homepage": "https://vection.appsdock.org",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Lung",
+            "email": "vection@davidlung.de"
+        }
+    ],
+    "require": {
+        "php": "^7.4||^8.0",
+        "vection-framework/contracts": "v0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vection\\Component\\Common\\": "./"
+        }
+    },
+    "minimum-stability": "stable"
+}
