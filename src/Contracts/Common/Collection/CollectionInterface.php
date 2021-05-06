@@ -16,7 +16,6 @@ namespace Vection\Contracts\Common\Collection;
 use ArrayAccess;
 use Countable;
 use Iterator;
-use IteratorAggregate;
 use JsonSerializable;
 
 /**
@@ -26,7 +25,7 @@ use JsonSerializable;
  *
  * @author  David M. Lung <vection@davidlung.de>
  */
-interface CollectionInterface extends Countable, ArrayAccess, Iterator, IteratorAggregate, JsonSerializable
+interface CollectionInterface extends Countable, ArrayAccess, Iterator, JsonSerializable
 {
     /**
      * @param mixed $element

@@ -214,14 +214,6 @@ class ArrayCollection implements CollectionInterface
     /**
      * @inheritDoc
      */
-    public function getIterator(): ArrayIterator
-    {
-        return new ArrayIterator($this->elements);
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function offsetExists($offset): bool
     {
         return $this->has($offset);
