@@ -118,7 +118,7 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
 
         $result = $sequence->next($message);
 
-        $this->logger->debug('SUCCEEDED %s', $headers->get(MessageHeaders::MESSAGE_ID));
+        $this->logger->debug(sprintf('SUCCEEDED %s', $headers->get(MessageHeaders::MESSAGE_ID)));
 
         return $result;
     }
