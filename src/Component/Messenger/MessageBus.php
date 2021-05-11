@@ -104,11 +104,15 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
             }
         }
 
+        $headers = $message->getHeaders();
+
         foreach ($this->defaultHeaders as $headerName => $headerValue) {
             if (!$headers->has($headerName)) {
                 $message = $message->withHeader($headerName, $headerValue);
             }
         }
+
+        $headers = $message->getHeaders();
 
         $bodyType = is_object($body) ? str_replace('\\', '.', get_class($body)) : gettype($body);
 
