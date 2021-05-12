@@ -30,10 +30,7 @@ use Vection\Contracts\Messenger\Transport\SenderInterface;
  */
 class SenderMiddleware implements MessageBusMiddlewareInterface
 {
-    /**
-     * @var SenderInterface
-     */
-    protected $sender;
+    protected SenderInterface $sender;
 
     /**
      * MessageSenderMiddleware constructor.
@@ -50,6 +47,8 @@ class SenderMiddleware implements MessageBusMiddlewareInterface
      * @param MiddlewareSequenceInterface $sequence
      *
      * @return MessageInterface
+     *
+     * @throws TransportException
      */
     public function handle(MessageInterface $message, MiddlewareSequenceInterface $sequence): MessageInterface
     {
@@ -65,11 +64,7 @@ class SenderMiddleware implements MessageBusMiddlewareInterface
                 $message = $message->withHeader(MessageHeaders::DELIVERY_TIMESTAMP, (string) time());
             }
 
-            try {
-                $this->sender->send($message);
-            } catch (TransportException $e) {
-                # TODO redelivery queue!
-            }
+            $this->sender->send($message);
         }
 
         return $sequence->next($message);

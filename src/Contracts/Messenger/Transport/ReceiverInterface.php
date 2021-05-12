@@ -27,7 +27,7 @@ interface ReceiverInterface
 {
     /**
      * Setup the receiver client with client specific options
-     * provided by the choosed provider.
+     * provided by the chosen provider.
      *
      * @param array $options
      */
@@ -51,23 +51,13 @@ interface ReceiverInterface
     public function ack(MessageInterface $message): void;
 
     /**
-     * Sends an negative acknowledgement flag to the MQ server.
-     * NACKed messages will be not requeued by default, use the second
-     * parameter to change this default behavior.
+     * Rejects the message back to the MQ server in case it cannot be processes
+     * by this consumer because of queue count limitation or other reasons.
+     * The rejected message can be optionally requeue in case of e.g. temporary issues
+     * or resource limitations.
      *
      * @param MessageInterface $message
      * @param bool             $requeue
      */
-    public function nack(MessageInterface $message, bool $requeue = false): void;
-
-    /**
-     * Rejects the message back to the MQ server in case it cannot be processes
-     * by this consumer because of queue count limitation or other reasons.
-     * A rejection of a message is usually used to requeue the message immediately
-     * in order that the MQ server can e.g. send it to an other consumer which
-     * is able to process the message.
-     *
-     * @param MessageInterface $message
-     */
-    public function reject(MessageInterface $message): void;
+    public function reject(MessageInterface $message, bool $requeue = false): void;
 }
