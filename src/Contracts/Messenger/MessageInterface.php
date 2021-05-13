@@ -31,6 +31,13 @@ interface MessageInterface
     public function getHeaders(): MessageHeadersInterface;
 
     /**
+     * Returns a global unique ID for this message.
+     *
+     * @return string
+     */
+    public function getId(): string;
+
+    /**
      * Returns the payload of this message.
      *
      * @return object
