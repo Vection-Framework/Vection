@@ -1,10 +1,9 @@
 <?php
 
-/**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+/*
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -34,9 +33,9 @@ interface MessageInterface
     /**
      * Returns the payload of this message.
      *
-     * @return mixed
+     * @return object
      */
-    public function getBody();
+    public function getBody(): object;
 
     /**
      * Returns the type of the body. If the body is an object, the class name is returned.
@@ -58,5 +57,5 @@ interface MessageInterface
      *
      * @return static
      */
-    public function withBody($body): MessageInterface;
+    public function withBody(object $body): MessageInterface;
 }

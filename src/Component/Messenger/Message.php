@@ -25,15 +25,8 @@ use Vection\Contracts\Messenger\MessageInterface;
  */
 class Message implements MessageInterface
 {
-    /**
-     * @var MessageHeadersInterface
-     */
-    protected $headers;
-
-    /**
-     * @var object
-     */
-    protected $body;
+    protected MessageHeadersInterface $headers;
+    protected object $body;
 
     /**
      * Message constructor.
@@ -44,7 +37,20 @@ class Message implements MessageInterface
     public function __construct(object $body, array $headers = [])
     {
         $this->body    = $body;
+
+        if (!isset($headers[MessageHeaders::MESSAGE_ID])) {
+            $headers[MessageHeaders::MESSAGE_ID] = (new MessageIdGenerator())->generate();
+        }
+
         $this->headers = new MessageHeaders($headers);
+    }
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->headers->get(MessageHeaders::MESSAGE_ID);
     }
 
     /**
@@ -58,7 +64,7 @@ class Message implements MessageInterface
     /**
      * @return object
      */
-    public function getBody()
+    public function getBody(): object
     {
         return $this->body;
     }
@@ -86,11 +92,11 @@ class Message implements MessageInterface
     }
 
     /**
-     * @param null|object $body
+     * @param object $body
      *
      * @return static
      */
-    public function withBody($body): MessageInterface
+    public function withBody(object $body): MessageInterface
     {
         $message       = clone $this;
         $message->body = $body;

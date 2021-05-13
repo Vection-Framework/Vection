@@ -60,4 +60,12 @@ interface ReceiverInterface
      * @param bool             $requeue
      */
     public function reject(MessageInterface $message, bool $requeue = false): void;
+
+    /**
+     * Rejects all messages that already has been received and not fetched
+     * for processing yet. By default, all these messages should be requeue.
+     *
+     * @param bool             $requeue
+     */
+    public function rejectAll(bool $requeue = true): void;
 }

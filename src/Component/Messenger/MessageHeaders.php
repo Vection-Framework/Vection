@@ -1,10 +1,9 @@
 <?php
 
-/**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+/*
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -25,9 +24,6 @@ use Vection\Contracts\Messenger\MessageHeadersInterface;
  */
 class MessageHeaders implements MessageHeadersInterface
 {
-    /**
-     * Default message headers
-     */
     public const MESSAGE_ID     = 'MESSAGE_ID';
     public const REQUEST_ID     = 'REQUEST_ID';
     public const CORRELATION_ID = 'CORRELATION_ID';
@@ -45,10 +41,7 @@ class MessageHeaders implements MessageHeadersInterface
     public const MESSAGE_TYPE          = 'MESSAGE_TYPE';
     public const MESSAGE_TAG           = 'MESSAGE_TAG';
 
-    /**
-     * @var array
-     */
-    protected $map;
+    protected array $map;
 
     /**
      * MessageHeaders constructor.
