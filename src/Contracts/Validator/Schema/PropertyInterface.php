@@ -44,6 +44,11 @@ interface PropertyInterface
     public function isRequired(): bool;
 
     /**
+     * @return bool
+     */
+    public function isNullable(): bool;
+
+    /**
      * @param array $schema
      *
      * @throws SchemaExceptionInterface

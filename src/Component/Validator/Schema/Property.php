@@ -49,6 +49,11 @@ abstract class Property implements PropertyInterface
     protected $required;
 
     /**
+     * @var boolean
+     */
+    protected $nullable;
+
+    /**
      * @var ValidatorInterface[]
      */
     protected $validators;
@@ -106,6 +111,14 @@ abstract class Property implements PropertyInterface
     /**
      * @inheritDoc
      */
+    public function isNullable(): bool
+    {
+        return $this->nullable;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function evaluate(array $schema): void
     {
         if ( isset($schema['@template']) ) {
@@ -138,6 +151,7 @@ abstract class Property implements PropertyInterface
         }
 
         $this->required = ($schema['@required'] ?? false);
+        $this->nullable = ($schema['@nullable'] ?? false);
         $this->type     = $schema['@type'];
         $this->onEvaluate($schema);
     }
@@ -147,6 +161,10 @@ abstract class Property implements PropertyInterface
      */
     public function validate($value): void
     {
+        if ($this->nullable && $value === null) {
+            return;
+        }
+
         if ( count($this->validators) > 0 ) {
             foreach ( $this->validators as $validator ) {
                 $violation = $validator->validate($value);
