@@ -1,9 +1,9 @@
 <?php
+
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,34 +11,20 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the AppsDock project.
- *  Visit project at https://github.com/Vection-Framework/Vection
- *
- *  (c) David Lung <vection@davidlung.de>
- *
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
- */
-
 namespace Vection\Component\Validator\Validator;
 
 use Vection\Component\Validator\Validator;
 
 /**
- * Class EndsLengthWith
+ * Class Length
  *
  * @package Vection\Component\Validator\Validator
  */
 class Length extends Validator
 {
-
-    /** @var integer */
-    protected $length;
+    protected int $length;
 
     /**
-     * Length constructor.
-     *
      * @param int $length
      */
     public function __construct(int $length)
@@ -59,7 +45,7 @@ class Length extends Validator
      */
     public function getMessage(): string
     {
-        return 'Value length "{value}" does not the length of {length}.';
+        return 'The length of "{value}" does not correspond to the required length of {length}.';
     }
 
     /**
