@@ -17,6 +17,7 @@ use Throwable;
 use Vection\Component\Messenger\Exception\HandlerFailedException;
 use Vection\Component\Messenger\Exception\HandlerNotFoundException;
 use Vection\Component\Messenger\MessageHeaders;
+use Vection\Contracts\Messenger\ConditionalHandlerInterface;
 use Vection\Contracts\Messenger\MessageBusMiddlewareInterface;
 use Vection\Contracts\Messenger\MessageHandlerProviderInterface;
 use Vection\Contracts\Messenger\MessageInterface;
@@ -60,6 +61,10 @@ class HandlerMiddleware implements MessageBusMiddlewareInterface
         }
 
         try {
+            if ($handler instanceof ConditionalHandlerInterface) {
+                $handler->checkCondition();
+            }
+
             $handler($message->getBody(), $message);
         }
         catch (Throwable $e) {
