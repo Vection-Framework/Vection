@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Vection\Component\Http\Psr\Message\Factory;
 
+use JsonException;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -43,8 +44,8 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
     /**
      * ServerRequestFactory constructor.
      *
-     * @param StreamFactoryInterface       $streamFactory
-     * @param UploadedFileFactoryInterface $uploadedFileFactory
+     * @param StreamFactoryInterface|null $streamFactory
+     * @param UploadedFileFactoryInterface|null $uploadedFileFactory
      */
     public function __construct(
         StreamFactoryInterface $streamFactory = null, UploadedFileFactoryInterface $uploadedFileFactory = null
@@ -82,14 +83,12 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
         $parsedBody    = $this->parseBody($method, $stream, $headers);
         $uploadedFiles = $this->createUploadedFiles();
 
-        $request = (new ServerRequest($method, $uri, $headers, $version, $environment))
+        return (new ServerRequest($method, $uri, $headers, $version, $environment))
             ->withBody($stream)
             ->withParsedBody($parsedBody)
             ->withUploadedFiles($uploadedFiles)
             ->withQueryParams($_GET)
             ->withCookieParams($_COOKIE);
-
-        return $request;
     }
 
     /**
@@ -132,8 +131,8 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
     }
 
     /**
-     * @param string           $method
-     * @param StreamInterface  $stream
+     * @param string $method
+     * @param StreamInterface $stream
      * @param Headers $headers
      *
      * @return array
@@ -143,21 +142,23 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
         $postHeaders = ['application/x-www-form-urlencoded', 'multipart/form-data'];
         $contentType = explode(';', $headers->getLine('content-type'))[0];
 
-        if ( $method === 'POST' && in_array($contentType, $postHeaders, true) ) {
+        if ($method === 'POST' && in_array($contentType, $postHeaders, true)) {
             return $_POST;
         }
 
         $content = trim($stream->getContents());
 
-        if ( ! empty($content) ) {
-
-            if ( $contentType === 'application/json' ) {
-                $data = json_decode($content, true);
-                return json_last_error() !== JSON_ERROR_NONE ? [] : $data;
+        if (!empty($content )) {
+            if ($contentType === 'application/json') {
+                try {
+                    return json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+                }
+                catch (JsonException $e) {
+                    return [$content];
+                }
             }
 
             return [$content];
-
         }
 
         return [];
