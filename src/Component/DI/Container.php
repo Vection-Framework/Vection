@@ -194,7 +194,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
             return new $className(...$paramObjects);
         }
 
-        if (isset($this->dependencies[$className]['constructor_has_primitives']) && !$constructParams) {
+        if (isset($this->dependencies[$className]['constructor_has_primitives']) && count($constructParams) === 0) {
             throw new IllegalConstructorParameterException(
                 'The use of primitive parameter types at constructor injection can only be used when '.
                 'creating object with explicit construct parameters e.g. '.

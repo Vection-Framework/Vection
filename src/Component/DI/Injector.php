@@ -24,14 +24,9 @@ use ArrayObject;
  */
 class Injector
 {
-
-    /** @var Container */
-    protected $container;
-
-    /**
-     * @var ArrayObject
-     */
-    protected $dependencies;
+    protected Container $container;
+    protected ArrayObject $dependencies;
+    protected array $infiniteLoopPreventedObjects = [];
 
     /**
      * Resolver constructor.
@@ -52,9 +47,13 @@ class Injector
      */
     public function injectDependencies(object $object): void
     {
+        $this->infiniteLoopPreventedObjects[get_class($object)] = $object;
+
         $this->injectByInterface($object);
         $this->injectByAnnotations($object);
         $this->injectByExplicit($object);
+
+        unset($this->infiniteLoopPreventedObjects[get_class($object)]);
 
         # If object uses ContainerAwareTrait, inject the container itself
         if ( method_exists($object, '__setContainer') ) {
@@ -72,7 +71,13 @@ class Injector
         if ( ($this->dependencies[$id]['setter'] ?? null) ) {
 
             foreach ( $this->dependencies[$id]['setter'] as $setter => $dependency ) {
-                $dependencyObject = $this->container->get($dependency);
+
+                if (isset($this->infiniteLoopPreventedObjects[$dependency])) {
+                    $dependencyObject = $this->infiniteLoopPreventedObjects[$dependency];
+                } else {
+                    $dependencyObject = $this->container->get($dependency);
+                }
+
                 $object->$setter($dependencyObject);
             }
 
@@ -91,7 +96,11 @@ class Injector
             $dependencies = [];
 
             foreach ( $this->dependencies[$id]['annotation'] as $property => $dependency ) {
-                $dependencies[$property] = $this->container->get($dependency);
+                if (isset($this->infiniteLoopPreventedObjects[$dependency])) {
+                    $dependencies[$property] = $this->infiniteLoopPreventedObjects[$dependency];
+                } else {
+                    $dependencies[$property] = $this->container->get($dependency);
+                }
             }
 
             $object->__annotationInjection($dependencies);
@@ -110,7 +119,11 @@ class Injector
             $dependencies = [];
 
             foreach ( $this->dependencies[$id]['explicit'] as $dependency ) {
-                $dependencies[] = $this->container->get($dependency);
+                if (isset($this->infiniteLoopPreventedObjects[$dependency])) {
+                    $dependencies[] = $this->infiniteLoopPreventedObjects[$dependency];
+                } else {
+                    $dependencies[] = $this->container->get($dependency);
+                }
             }
 
             $object->__inject(...$dependencies);
