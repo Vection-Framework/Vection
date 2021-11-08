@@ -37,7 +37,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @method ValidatorChain boolean()
  * @method ValidatorChain color(string $format = Color::HEX)
  * @method ValidatorChain contains(array $needle)
- * @method ValidatorChain iconName(string $prefix = IconName::MATERIAL_DESIGN_ICON, int $maxLength = 30)
+ * @method ValidatorChain iconName(string $prefix = null, int $maxLength = null)
  * @method ValidatorChain notEmpty()
  * @method ValidatorChain date(string $format)
  * @method ValidatorChain numeric()

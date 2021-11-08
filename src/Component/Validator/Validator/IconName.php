@@ -30,10 +30,10 @@ class IconName extends Validator
     protected int    $maxLength;
 
     /**
-     * @param string $prefix
-     * @param int    $maxLength
+     * @param string|null $prefix
+     * @param int|null    $maxLength
      */
-    public function __construct(string $prefix = self::MATERIAL_DESIGN_ICON, int $maxLength = 30)
+    public function __construct(string $prefix = null, int $maxLength = null)
     {
         $this->prefix    = $prefix;
         $this->maxLength = $maxLength;
@@ -60,6 +60,8 @@ class IconName extends Validator
      */
     protected function onValidate($value): bool
     {
-        return preg_match("/^$this->prefix[a-z0-9-]{1,$this->maxLength}/$", $value) === 1;
+        $pattern = "/^$this->prefix[a-z0-9-]{1,$this->maxLength}$/";
+
+        return preg_match($pattern, $value) === 1;
     }
 }
