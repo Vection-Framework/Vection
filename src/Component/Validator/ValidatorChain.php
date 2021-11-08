@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Vection\Component\Validator;
 
 use Vection\Component\Validator\Validator\Color;
+use Vection\Component\Validator\Validator\IconName;
 use Vection\Component\Validator\Validator\IsRequired;
 use Vection\Component\Validator\Validator\Locale;
 use Vection\Contracts\Validator\ValidatorChainInterface;
@@ -36,6 +37,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @method ValidatorChain boolean()
  * @method ValidatorChain color(string $format = Color::HEX)
  * @method ValidatorChain contains(array $needle)
+ * @method ValidatorChain iconName(string $prefix = IconName::MATERIAL_DESIGN_ICON, int $maxLength = 30)
  * @method ValidatorChain notEmpty()
  * @method ValidatorChain date(string $format)
  * @method ValidatorChain numeric()

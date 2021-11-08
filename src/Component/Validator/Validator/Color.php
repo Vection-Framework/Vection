@@ -20,7 +20,7 @@ use Vection\Component\Validator\Validator;
  * Class Color
  *
  * @package Vection\Component\Validator\Validator
- * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
+ * @author  BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class Color extends Validator
 {
@@ -30,9 +30,6 @@ class Color extends Validator
     public const RGB  = 8;
     public const RGBA = 16;
 
-    /**
-     * @var integer
-     */
     protected int $format;
 
     /**
