@@ -10,18 +10,9 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
- *
- * (c) Vection-Framework <vection@appsdock.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Vection\Component\Validator;
 
+use JsonSerializable;
 use Vection\Contracts\Validator\ViolationInterface;
 
 /**
@@ -34,7 +25,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  *
  * @package Vection\Component\Validator
  */
-class Violation implements ViolationInterface, \JsonSerializable
+class Violation implements ViolationInterface, JsonSerializable
 {
     /** @var mixed */
     protected $value;
@@ -100,11 +91,11 @@ class Violation implements ViolationInterface, \JsonSerializable
     /**
      * Specify data which should be serialized to JSON
      * @link  https://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * @return array data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      * @since 5.4.0
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'property' => $this->subject,

@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Vection\Component\Validator;
 
 use Vection\Component\Validator\Validator\Color;
-use Vection\Component\Validator\Validator\IconName;
 use Vection\Component\Validator\Validator\IsRequired;
 use Vection\Component\Validator\Validator\Locale;
+use Vection\Component\Validator\Validator\TypedArray;
 use Vection\Contracts\Validator\ValidatorChainInterface;
 use Vection\Contracts\Validator\ValidatorInterface;
 use Vection\Contracts\Validator\ViolationInterface;
@@ -35,7 +35,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @method ValidatorChain betweenValue(int $min, int $max)
  * @method ValidatorChain betweenLength(int $min, int $max)
  * @method ValidatorChain boolean()
- * @method ValidatorChain color(string $format = Color::HEX)
+ * @method ValidatorChain color(int $format = Color::HEX)
  * @method ValidatorChain contains(array $needle)
  * @method ValidatorChain iconName(string $prefix = null, int $maxLength = null)
  * @method ValidatorChain notEmpty()
@@ -81,6 +81,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @method ValidatorChain iban()
  * @method ValidatorChain hex()
  * @method ValidatorChain timezone(int $group = null, string $countryCode = null)
+ * @method ValidatorChain typedArray(int $type = TypedArray::STRING)
  */
 class ValidatorChain implements ValidatorChainInterface
 {
@@ -128,7 +129,7 @@ class ValidatorChain implements ValidatorChainInterface
     protected array $optional = [];
 
     /**
-     * ValidatorChain constructor.
+     * Creates a new validator factory.
      */
     public function __construct()
     {
@@ -136,8 +137,7 @@ class ValidatorChain implements ValidatorChainInterface
     }
 
     /**
-     * Adds a key for which all following
-     * assertion will be set.
+     * Adds a key for which all following assertion will be set.
      *
      * @param string ...$keys
      *
@@ -163,7 +163,7 @@ class ValidatorChain implements ValidatorChainInterface
      *
      * @return ValidatorChain
      */
-    public function __call(string $name, $constraints = []): ValidatorChain
+    public function __call(string $name, array $constraints = []): ValidatorChain
     {
         if ( $name === 'nullable' ) {
             # This is a virtual validator that marks the subject as nullable
@@ -242,8 +242,6 @@ class ValidatorChain implements ValidatorChainInterface
                     continue 2;
                 }
             }
-
         }
     }
-
 }
