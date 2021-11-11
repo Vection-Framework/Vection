@@ -33,7 +33,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @package Vection\Component\Validator
  *
  * @method ValidatorChain alphaNumeric()
- * @method ValidatorChain arraySchema(Schema $schema)
+ * @method ValidatorChain arraySchema(array $schema)
  * @method ValidatorChain betweenValue(int $min, int $max)
  * @method ValidatorChain betweenLength(int $min, int $max)
  * @method ValidatorChain boolean()

@@ -26,14 +26,15 @@ use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
  */
 class ArraySchema extends Validator
 {
-    protected Schema $scheme;
+    protected Schema $schema;
 
     /**
-     * @param array $types
+     * @param array $schema
      */
-    public function __construct(Schema $scheme)
+    public function __construct(array $schema)
     {
-        $this->scheme = $scheme;
+        $this->schema = new Schema();
+        $this->schema->setSchema($schema);
     }
 
     /**
@@ -50,7 +51,7 @@ class ArraySchema extends Validator
     protected function onValidate($value): bool
     {
         try {
-            (new SchemaValidator($this->scheme))->validateArray($value);
+            (new SchemaValidator($this->schema))->validateArray($value);
             return true;
         }
         catch (PropertyExceptionInterface $e) {
