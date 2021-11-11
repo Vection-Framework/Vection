@@ -11,8 +11,8 @@
 
 namespace Vection\Component\Validator\Validator;
 
-
 use Vection\Component\Validator\Validator;
+use function in_array;
 
 /**
  * Class InArray validate that a value is in array of values
@@ -23,12 +23,9 @@ use Vection\Component\Validator\Validator;
  */
 class InArray extends Validator
 {
-    /** @var array */
-    protected $haystack;
+    protected array $haystack;
 
     /**
-     * Max constructor.
-     *
      * @param array $haystack
      */
     public function __construct(array $haystack)
@@ -49,7 +46,7 @@ class InArray extends Validator
      */
     protected function onValidate($value): bool
     {
-        return \in_array($value, $this->haystack, true);
+        return in_array($value, $this->haystack, true);
     }
 
     /**
