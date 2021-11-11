@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Vection\Component\Validator;
 
+use Vection\Component\Validator\Schema\Schema;
 use Vection\Component\Validator\Validator\Color;
 use Vection\Component\Validator\Validator\IsRequired;
 use Vection\Component\Validator\Validator\Locale;
@@ -32,6 +33,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @package Vection\Component\Validator
  *
  * @method ValidatorChain alphaNumeric()
+ * @method ValidatorChain arraySchema(Schema $schema)
  * @method ValidatorChain betweenValue(int $min, int $max)
  * @method ValidatorChain betweenLength(int $min, int $max)
  * @method ValidatorChain boolean()
