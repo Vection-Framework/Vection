@@ -11,7 +11,6 @@
 
 namespace Vection\Component\Validator\Validator;
 
-
 use Vection\Component\Validator\Validator;
 
 /**
