@@ -64,7 +64,7 @@ class Color extends Validator
      */
     public function getMessage(): string
     {
-        return 'Value "{value}" is not a valid color.';
+        return 'Value "{value}" has not a valid color format.';
     }
 
     /**
@@ -77,19 +77,15 @@ class Color extends Validator
         if ($this->format & self::HEX) {
             $patterns[] = $this->patterns[self::HEX];
         }
-
         if ($this->format & self::HSL) {
             $patterns[] = $this->patterns[self::HSL];
         }
-
         if ($this->format & self::HSLA) {
             $patterns[] = $this->patterns[self::HSLA];
         }
-
         if ($this->format & self::RGB) {
             $patterns[] = $this->patterns[self::RGB];
         }
-
         if ($this->format & self::RGBA) {
             $patterns[] = $this->patterns[self::RGBA];
         }
