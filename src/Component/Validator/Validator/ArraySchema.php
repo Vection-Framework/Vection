@@ -26,7 +26,8 @@ use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
  */
 class ArraySchema extends Validator
 {
-    protected Schema $schema;
+    protected Schema                     $schema;
+    protected PropertyExceptionInterface $exception;
 
     /**
      * @param array $schema
@@ -42,7 +43,7 @@ class ArraySchema extends Validator
      */
     public function getMessage(): string
     {
-        return 'Value "{value}" does not correspond to the required scheme.';
+        return 'Value "{value}" does not correspond to the required scheme. '.$this->exception->getMessage();
     }
 
     /**
@@ -55,6 +56,7 @@ class ArraySchema extends Validator
             return true;
         }
         catch (PropertyExceptionInterface $e) {
+            $this->exception = $e;
             return false;
         }
     }

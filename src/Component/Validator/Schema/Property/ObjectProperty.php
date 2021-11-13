@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Vection\Component\Validator\Schema\Property;
 
@@ -29,16 +29,9 @@ use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
  */
 class ObjectProperty extends Property
 {
-
-    /**
-     * @var Property[]
-     */
-    protected $properties = [];
-
-    /**
-     * @var Property
-     */
-    protected $property;
+    /** @var Property[] */
+    protected array     $properties = [];
+    protected ?Property $property   = null;
 
     /**
      * @inheritDoc
@@ -109,7 +102,5 @@ class ObjectProperty extends Property
                 }
             }
         }
-
     }
-
 }

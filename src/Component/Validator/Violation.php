@@ -35,8 +35,6 @@ class Violation implements ViolationInterface, JsonSerializable
     protected string $subject;
 
     /**
-     * Violation constructor.
-     *
      * @param string $subject
      * @param mixed  $value
      * @param array  $constraints
@@ -99,8 +97,8 @@ class Violation implements ViolationInterface, JsonSerializable
     {
         return [
             'property' => $this->subject,
-            'actual' => $this->valueToString($this->value),
-            'message' => $this->getMessage()
+            'actual'   => $this->value,
+            'message'  => $this->getMessage()
         ];
     }
 
@@ -119,7 +117,7 @@ class Violation implements ViolationInterface, JsonSerializable
             case 'string':  return (string) $value;
             case 'boolean': return $value ? 'true' : 'false';
             case 'NULL':    return 'null';
-            case 'array':   return 'Array(' . implode(', ', $value) . ')';
+            case 'array':   return 'Array';
             case 'object':  return 'Object';
             default:        return '<unsupported-type>';
         }

@@ -22,13 +22,9 @@ use Vection\Component\Validator\Validator;
  */
 class StartsWith extends Validator
 {
-
-    /** @var string */
-    protected $needle;
+    protected string $needle;
 
     /**
-     * StartsWith constructor.
-     *
      * @param string $needle
      */
     public function __construct(string $needle)
@@ -57,6 +53,6 @@ class StartsWith extends Validator
      */
     protected function onValidate($value): bool
     {
-        return (substr($value,0, \strlen($this->needle)) === $this->needle);
+        return strpos($value, $this->needle) === 0;
     }
 }
