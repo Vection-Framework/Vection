@@ -26,8 +26,8 @@ use Vection\Component\Validator\Schema\Property;
  */
 class StringProperty extends Property
 {
-    protected array  $allowed = [];
-    protected string $regex;
+    protected array   $allowed = [];
+    protected ?string $regex   = null;
 
     /**
      * @inheritDoc
