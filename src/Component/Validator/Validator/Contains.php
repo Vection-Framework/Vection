@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Vection\Component\Validator\Validator;
 
+use InvalidArgumentException;
 use Vection\Component\Validator\Validator;
 
 /**
@@ -22,13 +23,9 @@ use Vection\Component\Validator\Validator;
  */
 class Contains extends Validator
 {
-
-    /** @var mixed */
     protected $needle;
 
     /**
-     * Contains constructor.
-     *
      * @param mixed $needle
      */
     public function __construct($needle)
@@ -49,6 +46,9 @@ class Contains extends Validator
      */
     public function getMessage(): string
     {
+        if ($this->invalidArgumentException) {
+            return $this->invalidArgumentException->getMessage();
+        }
         return 'Value "{value}" does not contains {needle}.';
     }
 
@@ -57,6 +57,11 @@ class Contains extends Validator
      */
     protected function onValidate($value): bool
     {
+        if (!is_array($value)) {
+            throw new InvalidArgumentException(
+                sprintf('The argument must be of type "array", but type "%s" was passed.', gettype($value))
+            );
+        }
         return in_array($this->needle, $value, true);
     }
 }

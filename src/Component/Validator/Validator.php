@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Vection\Component\Validator;
 
+use InvalidArgumentException;
 use Vection\Contracts\Validator\ValidatorInterface;
 use Vection\Contracts\Validator\ViolationInterface;
 
@@ -20,7 +21,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  * Class Validator
  *
  * This class is an abstract validator that determines the
- * correctness of an given value by using specific rules and
+ * correctness of a given value by using specific rules and
  * dynamic constraints.
  *
  * @package Vection\Component\Validator
@@ -29,9 +30,8 @@ use Vection\Contracts\Validator\ViolationInterface;
  */
 abstract class Validator implements ValidatorInterface
 {
-
-    /** @var string */
-    protected $message;
+    protected InvalidArgumentException $invalidArgumentException;
+    protected string                   $message;
 
     /**
      * @param mixed $value
@@ -43,7 +43,7 @@ abstract class Validator implements ValidatorInterface
     /**
      * Returns an array of the validator implementation specific constraints
      * which are used to validate the given value. This returned array
-     * should using the constraint names as key.
+     * should use the constraint names as key.
      *
      * E.g. constraints: min and max:
      * ['min' => $min, 'max' => $max]
@@ -56,13 +56,13 @@ abstract class Validator implements ValidatorInterface
     }
 
     /**
-     * Returns an message which will be display when the validation
-     * failed. The message can contains the constraint names in curly brackets
+     * Returns a message which will be display when the validation
+     * failed. The message can contain the constraint names in curly brackets
      * that will be replaced with the values from constraints get by getConstraints method.
      *
-     * E.g. "Value {value} does not match the given format {format}.
+     * E.g. "Value {value} does not match the given format {format}."
      *
-     * By default you can use the {value} token to place the current value.
+     * By default, you can use the {value} token to place the current value.
      *
      * @return string
      */
@@ -84,8 +84,12 @@ abstract class Validator implements ValidatorInterface
      */
     public function validate($value, string $subject = ''): ?ViolationInterface
     {
-        if ($this->onValidate($value)) {
-            return null;
+        try {
+            if ($this->onValidate($value)) {
+                return null;
+            }
+        } catch (InvalidArgumentException $e) {
+            $this->invalidArgumentException = $e;
         }
 
         return new Violation($subject, $value, $this->getConstraints(), $this->message ?: $this->getMessage());

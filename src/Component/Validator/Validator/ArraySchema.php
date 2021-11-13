@@ -13,10 +13,12 @@ declare(strict_types=1);
 
 namespace Vection\Component\Validator\Validator;
 
+use InvalidArgumentException;
 use Vection\Component\Validator\Schema\Schema;
 use Vection\Component\Validator\Schema\SchemaValidator;
 use Vection\Component\Validator\Validator;
 use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
+use Vection\Contracts\Validator\Schema\SchemaExceptionInterface;
 
 /**
  * Class Schema
@@ -26,8 +28,10 @@ use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
  */
 class ArraySchema extends Validator
 {
+    protected InvalidArgumentException   $invalidArgumentException;
+    protected PropertyExceptionInterface $propertyException;
     protected Schema                     $schema;
-    protected PropertyExceptionInterface $exception;
+    protected SchemaExceptionInterface   $schemaException;
 
     /**
      * @param array $schema
@@ -43,7 +47,13 @@ class ArraySchema extends Validator
      */
     public function getMessage(): string
     {
-        return 'Value "{value}" does not correspond to the required scheme. '.$this->exception->getMessage();
+        if ($this->invalidArgumentException) {
+            return $this->invalidArgumentException->getMessage();
+        }
+        if ($this->schemaException) {
+            return 'The schema is flawed. '.$this->schemaException->getMessage();
+        }
+        return 'Value "{value}" does not correspond to the required scheme. '.$this->propertyException->getMessage();
     }
 
     /**
@@ -51,13 +61,22 @@ class ArraySchema extends Validator
      */
     protected function onValidate($value): bool
     {
+        if (!is_array($value)) {
+            throw new InvalidArgumentException(
+                sprintf('The argument must be of type "array", but type "%s" given.', gettype($value))
+            );
+        }
+
         try {
             (new SchemaValidator($this->schema))->validateArray($value);
             return true;
         }
         catch (PropertyExceptionInterface $e) {
-            $this->exception = $e;
-            return false;
+            $this->propertyException = $e;
         }
+        catch (SchemaExceptionInterface $e) {
+            $this->schemaException = $e;
+        }
+        return false;
     }
 }
