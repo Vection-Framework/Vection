@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Vection\Component\Validator\Schema\Property;
 
@@ -22,16 +22,11 @@ use Vection\Component\Validator\Schema\Property;
  * Class IntegerProperty
  *
  * @package Vection\Component\Validator\Schema\Property
- *
- * @author David Lung <vection@davidlung.de>
+ * @author  David Lung <vection@davidlung.de>
  */
 class IntegerProperty extends Property
 {
-
-    /**
-     * @var array
-     */
-    protected $range = [];
+    protected array $range = [];
 
     /**
      * @inheritDoc

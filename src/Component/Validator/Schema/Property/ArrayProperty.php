@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Vection\Component\Validator\Schema\Property;
 
@@ -23,16 +23,11 @@ use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
  * Class ArrayProperty
  *
  * @package Vection\Component\Validator\Schema\Property
- *
- * @author David Lung <vection@davidlung.de>
+ * @author  David Lung <vection@davidlung.de>
  */
 class ArrayProperty extends Property
 {
-
-    /**
-     * @var Property
-     */
-    protected $property;
+    protected Property $property;
 
     /**
      * @inheritDoc
@@ -72,7 +67,6 @@ class ArrayProperty extends Property
             } catch (PropertyExceptionInterface $e) {
                 $e->withProperty($this->name);
             }
-
         }
     }
 }

@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Vection\Component\Validator\Schema;
 
@@ -22,20 +22,13 @@ use Vection\Contracts\Validator\Schema\SchemaValidatorInterface;
  * Class SchemaValidator
  *
  * @package Vection\Component\Validator\Schema
- *
- * @author David Lung <vection@davidlung.de>
+ * @author  David Lung <vection@davidlung.de>
  */
 class SchemaValidator implements SchemaValidatorInterface
 {
+    protected SchemaInterface $schema;
 
     /**
-     * @var SchemaInterface
-     */
-    protected $schema;
-
-    /**
-     * SchemaValidator constructor.
-     *
      * @param SchemaInterface $schema
      */
     public function __construct(SchemaInterface $schema)
@@ -64,7 +57,7 @@ class SchemaValidator implements SchemaValidatorInterface
             if ( $ext === 'json' ) {
                 return $this->validateJsonString($content);
             }
-        } catch (\RuntimeException $e) {
+        } catch (RuntimeException $e) {
             throw new RuntimeException('Unable to validate file '.$path, 0, $e);
         }
 

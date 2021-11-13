@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Vection\Component\Validator\Schema;
 
@@ -27,47 +27,21 @@ use Vection\Contracts\Validator\ValidatorInterface;
  * Class JsonProperty
  *
  * @package Vection\Component\Validator\Schema
- *
- * @author David Lung <vection@davidlung.de>
+ * @author  David Lung <vection@davidlung.de>
  */
 abstract class Property implements PropertyInterface
 {
+    protected string  $type;
+    protected ?string $name;
+    protected bool    $required;
+    protected bool    $nullable;
+    /** @var ValidatorInterface[] */
+    protected array   $validators;
+    private array     $templates;
 
     /**
-     * @var string
-     */
-    protected $type;
-
-    /**
-     * @var string|null
-     */
-    protected $name;
-
-    /**
-     * @var boolean
-     */
-    protected $required;
-
-    /**
-     * @var boolean
-     */
-    protected $nullable;
-
-    /**
-     * @var ValidatorInterface[]
-     */
-    protected $validators;
-
-    /**
-     * @var array
-     */
-    private $templates;
-
-    /**
-     * JsonProperty constructor.
-     *
-     * @param string $name
-     * @param array  $templates
+     * @param string|null $name
+     * @param array       $templates
      */
     public function __construct(? string $name = null, array $templates = [])
     {
@@ -221,7 +195,7 @@ abstract class Property implements PropertyInterface
     protected function getTemplate(string $name): array
     {
         if ( ! isset($this->templates[$name]) ) {
-            throw new SchemaException("Cannot use property template ({$name}) because it does not exists.");
+            throw new SchemaException("Cannot use property template ($name) because it does not exists.");
         }
 
         return $this->templates[$name];

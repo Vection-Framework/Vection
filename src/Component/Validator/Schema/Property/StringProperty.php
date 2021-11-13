@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Vection\Component\Validator\Schema\Property;
 
@@ -22,21 +22,12 @@ use Vection\Component\Validator\Schema\Property;
  * Class StringProperty
  *
  * @package Vection\Component\Validator\Schema\Property
- *
  * @author  David Lung <vection@davidlung.de>
  */
 class StringProperty extends Property
 {
-
-    /**
-     * @var array
-     */
-    protected $allowed = [];
-
-    /**
-     * @var string
-     */
-    protected $regex;
+    protected array  $allowed = [];
+    protected string $regex;
 
     /**
      * @inheritDoc
