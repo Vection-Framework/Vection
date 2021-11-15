@@ -30,7 +30,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  */
 abstract class Validator implements ValidatorInterface
 {
-    protected string                   $message;
+    protected string $message = '';
 
     /**
      * @param mixed $value
@@ -83,12 +83,11 @@ abstract class Validator implements ValidatorInterface
      */
     public function validate($value, string $subject = ''): ?ViolationInterface
     {
-        $message = $this->message ?: $this->getMessage();
-
         try {
             if ($this->onValidate($value)) {
                 return null;
             }
+            $message = $this->message ?: $this->getMessage();
         } catch (IllegalTypeException $e) {
             $message = $e->getMessage();
         }
