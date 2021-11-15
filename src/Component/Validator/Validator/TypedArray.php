@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace Vection\Component\Validator\Validator;
 
 use InvalidArgumentException;
+use RuntimeException;
 use Vection\Component\Validator\Validator;
+use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
 
 /**
  * Class TypedArray
@@ -68,9 +70,6 @@ class TypedArray extends Validator
      */
     public function getMessage(): string
     {
-        if ($this->invalidArgumentException) {
-            return $this->invalidArgumentException->getMessage();
-        }
         return 'Value "{value}" does not contain only the required types.';
     }
 
@@ -80,8 +79,8 @@ class TypedArray extends Validator
     protected function onValidate($value): bool
     {
         if (!is_array($value)) {
-            throw new InvalidArgumentException(
-                sprintf('The argument must be of type "array", but type "%s" given.', gettype($value))
+            throw new IllegalTypeException(
+                sprintf('The value must be of type "array", but type "%s" was passed.', gettype($value))
             );
         }
 

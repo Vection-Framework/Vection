@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Vection\Component\Validator\Validator;
 
-use InvalidArgumentException;
+use Vection\Component\Validator\Schema\Exception\SchemaException;
 use Vection\Component\Validator\Schema\Schema;
 use Vection\Component\Validator\Schema\SchemaValidator;
 use Vection\Component\Validator\Validator;
+use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
 use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
-use Vection\Contracts\Validator\Schema\SchemaExceptionInterface;
 
 /**
  * Class Schema
@@ -28,10 +28,8 @@ use Vection\Contracts\Validator\Schema\SchemaExceptionInterface;
  */
 class ArraySchema extends Validator
 {
-    protected InvalidArgumentException   $invalidArgumentException;
     protected PropertyExceptionInterface $propertyException;
     protected Schema                     $schema;
-    protected SchemaExceptionInterface   $schemaException;
 
     /**
      * @param array $schema
@@ -47,23 +45,19 @@ class ArraySchema extends Validator
      */
     public function getMessage(): string
     {
-        if ($this->invalidArgumentException) {
-            return $this->invalidArgumentException->getMessage();
-        }
-        if ($this->schemaException) {
-            return 'The schema is flawed. '.$this->schemaException->getMessage();
-        }
-        return 'Value "{value}" does not correspond to the required scheme. '.$this->propertyException->getMessage();
+        return $this->propertyException->getMessage();
     }
 
     /**
      * @inheritDoc
+     *
+     * @throws SchemaException
      */
     protected function onValidate($value): bool
     {
         if (!is_array($value)) {
-            throw new InvalidArgumentException(
-                sprintf('The argument must be of type "array", but type "%s" given.', gettype($value))
+            throw new IllegalTypeException(
+                sprintf('The value must be of type "array", but type "%s" was passed.', gettype($value))
             );
         }
 
@@ -73,10 +67,7 @@ class ArraySchema extends Validator
         }
         catch (PropertyExceptionInterface $e) {
             $this->propertyException = $e;
+            return false;
         }
-        catch (SchemaExceptionInterface $e) {
-            $this->schemaException = $e;
-        }
-        return false;
     }
 }

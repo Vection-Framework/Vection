@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Vection\Component\Validator;
 
-use InvalidArgumentException;
+use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
 use Vection\Contracts\Validator\ValidatorInterface;
 use Vection\Contracts\Validator\ViolationInterface;
 
@@ -30,7 +30,6 @@ use Vection\Contracts\Validator\ViolationInterface;
  */
 abstract class Validator implements ValidatorInterface
 {
-    protected InvalidArgumentException $invalidArgumentException;
     protected string                   $message;
 
     /**
@@ -84,14 +83,16 @@ abstract class Validator implements ValidatorInterface
      */
     public function validate($value, string $subject = ''): ?ViolationInterface
     {
+        $message = $this->message ?: $this->getMessage();
+
         try {
             if ($this->onValidate($value)) {
                 return null;
             }
-        } catch (InvalidArgumentException $e) {
-            $this->invalidArgumentException = $e;
+        } catch (IllegalTypeException $e) {
+            $message = $e->getMessage();
         }
 
-        return new Violation($subject, $value, $this->getConstraints(), $this->message ?: $this->getMessage());
+        return new Violation($subject, $value, $this->getConstraints(), $message);
     }
 }
