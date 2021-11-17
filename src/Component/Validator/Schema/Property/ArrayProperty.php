@@ -34,11 +34,6 @@ class ArrayProperty extends Property
      */
     protected function onEvaluate(array $schema): void
     {
-        if ( isset($schema['@property']['@template']) ) {
-            $schema['@property'] = $this->getTemplate($schema['@property']['@template']);
-            unset($schema['@property']['@template']);
-        }
-
         $this->property = $this->createProperty($schema['@property']['@type']);
         $this->property->evaluate($schema['@property']);
     }

@@ -31,23 +31,31 @@ use Vection\Contracts\Validator\ValidatorInterface;
  */
 abstract class Property implements PropertyInterface
 {
-    protected string  $type;
-    protected ?string $name;
-    protected bool    $required;
-    protected bool    $nullable;
+    protected string   $type;
+    protected ? string $name;
+    protected bool     $required;
+    protected bool     $nullable;
     /** @var ValidatorInterface[] */
-    protected array   $validators;
-    private array     $templates;
+    protected array    $validators;
+    private array      $templates;
+    private ? string   $template = null;
+    private ? Property $parent;
+    protected int      $maxTemplateRecursion;
 
     /**
-     * @param string|null $name
-     * @param array       $templates
+     * @param string|null   $name
+     * @param Property|null $parent
+     * @param array         $templates
      */
-    public function __construct(? string $name = null, array $templates = [])
+    public function __construct(
+        ?string $name = null, ? Property $parent = null, array $templates = [], int $maxTemplateRecursion = 3
+    )
     {
-        $this->name       = $name;
-        $this->templates  = $templates;
-        $this->validators = [];
+        $this->name                 = $name;
+        $this->parent               = $parent;
+        $this->templates            = $templates;
+        $this->maxTemplateRecursion = $maxTemplateRecursion;
+        $this->validators           = [];
     }
 
     /**
@@ -95,9 +103,36 @@ abstract class Property implements PropertyInterface
      */
     public function evaluate(array $schema): void
     {
-        if ( isset($schema['@template']) ) {
-            $schema = $this->getTemplate($schema['@template']);
-            unset($schema['@template']);
+        if ( isset($schema['@property']['@template']) ) {
+            $templateName = $schema['@property']['@template'];
+            $templateSchema = $this->getTemplate($templateName);
+            $schema['@property'] = $templateSchema + ['@fromTemplate' => $templateName];
+        }
+
+        if ( isset($schema['@properties']) ) {
+            foreach ( $schema['@properties'] as $name => $propertySchema ) {
+                if ( isset($propertySchema['@template']) ) {
+                    $templateName = $propertySchema['@template'];
+                    $templateSchema = $this->getTemplate($templateName);
+                    $schema['@properties'][$name] = $templateSchema + ['@fromTemplate' => $templateName];
+                }
+            }
+        }
+
+        if ( isset($schema['@fromTemplate']) ) {
+            $this->template = $schema['@fromTemplate'];
+
+            $templates = [];
+
+            $templateChain = $this->resolveTemplateChain();
+            $templateChainString = implode('/', $templateChain);
+
+            foreach ( $templateChain as $template ) {
+                $templates[] = $template;
+                if ( substr_count($templateChainString, implode('/', $templates)) === $this->maxTemplateRecursion ) {
+                    return;
+                }
+            }
         }
 
         if ( isset($schema['@validator']) ) {
@@ -182,7 +217,7 @@ abstract class Property implements PropertyInterface
             throw new RuntimeException('Cannot instantiate unknown property type: '.$type);
         }
 
-        return new $className($name, $this->templates);
+        return new $className($name, $this, $this->templates, $this->maxTemplateRecursion);
     }
 
     /**
@@ -199,5 +234,19 @@ abstract class Property implements PropertyInterface
         }
 
         return $this->templates[$name];
+    }
+
+    /**
+     * @return array
+     */
+    public function resolveTemplateChain(): array
+    {
+        $chain = $this->parent ? $this->parent->resolveTemplateChain() : [];
+
+        if ($this->template) {
+            $chain[] = $this->template;
+        }
+
+        return $chain;
     }
 }

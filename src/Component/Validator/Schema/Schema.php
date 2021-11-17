@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Vection\Component\Validator\Schema;
 
@@ -28,20 +28,11 @@ use Vection\Contracts\Validator\Schema\SchemaInterface;
  */
 class Schema implements SchemaInterface
 {
+    protected int   $maxTemplateRecursion = 3;
+    protected array $schema               = [];
+    protected array $templates            = [];
 
     /**
-     * @var array
-     */
-    protected $schema = [];
-
-    /**
-     * @var array
-     */
-    protected $templates = [];
-
-    /**
-     * Schema constructor.
-     *
      * @param string|null $schemaFilePath
      */
     public function __construct(string $schemaFilePath = null)
@@ -50,7 +41,7 @@ class Schema implements SchemaInterface
 
             if ( ! file_exists($schemaFilePath) ) {
                 throw new RuntimeException(
-                    "Schema: Cannot load schema from file {$schemaFilePath}, file not exits."
+                    "Schema: Cannot load schema from file $schemaFilePath, file not exits."
                 );
             }
 
@@ -72,7 +63,7 @@ class Schema implements SchemaInterface
     public function loadFromYamlFile(string $path): void
     {
         if ( ! file_exists($path) ) {
-            throw new RuntimeException("Yaml Schema: Cannot load schema from file {$path}, file not exits.");
+            throw new RuntimeException("Yaml Schema: Cannot load schema from file $path, file not exits.");
         }
 
         if ( ! function_exists('yaml_parse_file') ) {
@@ -82,7 +73,7 @@ class Schema implements SchemaInterface
         $schema = yaml_parse_file($path);
 
         if ( $schema === false ) {
-            throw new RuntimeException("Unable to load schema from file {$path}");
+            throw new RuntimeException("Unable to load schema from file $path");
         }
 
         $this->setSchema($schema);
@@ -94,13 +85,13 @@ class Schema implements SchemaInterface
     public function loadFromJsonFile(string $path): void
     {
         if ( ! file_exists($path) ) {
-            throw new RuntimeException("Json Schema: Cannot load schema from file {$path}, file not exits.");
+            throw new RuntimeException("Json Schema: Cannot load schema from file $path, file not exits.");
         }
 
         $schema = file_get_contents($path);
 
         if ( $schema === false ) {
-            throw new RuntimeException("Unable to load schema from file {$path}");
+            throw new RuntimeException("Unable to load schema from file $path");
         }
 
         $schema = json_decode($schema, true);
@@ -142,11 +133,19 @@ class Schema implements SchemaInterface
     }
 
     /**
+     * @param int $count
+     */
+    public function setMaxTemplateRecursion(int $count): void
+    {
+        $this->maxTemplateRecursion = $count;
+    }
+
+    /**
      * @inheritDoc
      */
     public function evaluate(): PropertyInterface
     {
-        $root = new ObjectProperty('$', $this->templates);
+        $root = new ObjectProperty('$', null, $this->templates, $this->maxTemplateRecursion);
         $root->evaluate($this->schema);
 
         return $root;

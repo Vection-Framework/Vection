@@ -28,16 +28,28 @@ use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
  */
 class ArraySchema extends Validator
 {
+    protected int                        $maxTemplateRecursion;
     protected PropertyExceptionInterface $propertyException;
     protected Schema                     $schema;
 
     /**
      * @param array $schema
      */
-    public function __construct(array $schema)
+    public function __construct(array $schema, int $maxTemplateRecursion = 3)
     {
+        $this->maxTemplateRecursion = $maxTemplateRecursion;
+
         $this->schema = new Schema();
         $this->schema->setSchema($schema);
+        $this->schema->setMaxTemplateRecursion($this->maxTemplateRecursion);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getConstraints(): array
+    {
+        return ['schema' => $this->schema, 'maxTemplateRecursion' => $this->maxTemplateRecursion];
     }
 
     /**
