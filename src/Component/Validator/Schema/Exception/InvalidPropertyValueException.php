@@ -15,13 +15,13 @@ declare(strict_types=1);
 namespace Vection\Component\Validator\Schema\Exception;
 
 /**
- * Class IllegalPropertyException
+ * Class InvalidPropertyValueException
  *
  * @package Vection\Component\Validator\Schema\Exception
  *
  * @author David Lung <vection@davidlung.de>
  */
-class InvalidPropertyException extends PropertyException
+class InvalidPropertyValueException extends PropertyException
 {
 
     /**

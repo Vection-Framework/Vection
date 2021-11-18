@@ -14,10 +14,8 @@ declare(strict_types=1);
 
 namespace Vection\Component\Validator\Schema\Property;
 
-use Vection\Component\Validator\Schema\Exception\IllegalPropertyTypeException;
-use Vection\Component\Validator\Schema\Exception\MissingPropertyException;
 use Vection\Component\Validator\Schema\Property;
-use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
+use Vection\Component\Validator\Schema\Property\Traits\ArrayPropertyTrait;
 
 /**
  * Class ArrayProperty
@@ -27,6 +25,8 @@ use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
  */
 class ArrayProperty extends Property
 {
+    use ArrayPropertyTrait;
+
     protected Property $property;
 
     /**
@@ -34,34 +34,14 @@ class ArrayProperty extends Property
      */
     protected function onEvaluate(array $schema): void
     {
-        $this->property = $this->createProperty($schema['@property']['@type']);
-        $this->property->evaluate($schema['@property']);
+        $this->evaluateArrayProperty($schema);
     }
 
     /**
      * @inheritDoc
-     *
-     * @throws MissingPropertyException
      */
     public function onValidate($values): void
     {
-        if ( ! is_array($values) ) {
-            throw new IllegalPropertyTypeException($this->name, 'array');
-        }
-
-        if ( $this->isRequired() && count($values) === 0 ) {
-            throw new MissingPropertyException($this->name.'.0');
-        }
-
-        foreach ( $values as $name => $value ) {
-
-            $this->property->setName((string) $name);
-
-            try {
-                $this->property->validate($value);
-            } catch (PropertyExceptionInterface $e) {
-                $e->withProperty($this->name);
-            }
-        }
+        $this->validateArrayProperty($values);
     }
 }

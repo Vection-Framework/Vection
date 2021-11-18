@@ -31,24 +31,25 @@ use Vection\Contracts\Validator\ValidatorInterface;
  */
 abstract class Property implements PropertyInterface
 {
-    protected string   $type;
-    protected ? string $name;
-    protected bool     $required;
-    protected bool     $nullable;
+    protected string     $type;
+    protected string     $name;
+    protected bool       $required;
+    protected bool       $nullable;
     /** @var ValidatorInterface[] */
-    protected array    $validators;
-    private array      $templates;
-    private ? string   $template = null;
-    private ? Property $parent;
-    protected int      $maxTemplateRecursion;
+    protected array      $validators;
+    protected array      $templates;
+    protected ? string   $template = null;
+    protected ? Property $parent;
+    protected int        $maxTemplateRecursion;
 
     /**
      * @param string|null   $name
      * @param Property|null $parent
      * @param array         $templates
+     * @param int           $maxTemplateRecursion
      */
     public function __construct(
-        ?string $name = null, ? Property $parent = null, array $templates = [], int $maxTemplateRecursion = 3
+        string $name, ? Property $parent = null, array $templates = [], int $maxTemplateRecursion = 3
     )
     {
         $this->name                 = $name;
@@ -203,13 +204,12 @@ abstract class Property implements PropertyInterface
     abstract protected function onValidate($value): void;
 
     /**
-     * @param string      $type
-     *
-     * @param string|null $name
+     * @param string $name
+     * @param string $type
      *
      * @return Property
      */
-    protected function createProperty(string $type, ? string $name = null): PropertyInterface
+    protected function createProperty(string $name, string $type): PropertyInterface
     {
         $className = __NAMESPACE__.'\\Property\\'.ucfirst($type).'Property';
 

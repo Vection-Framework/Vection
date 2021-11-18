@@ -17,17 +17,24 @@ namespace Vection\Component\Validator\Schema\Property;
 use Vection\Component\Validator\Schema\Exception\IllegalPropertyTypeException;
 use Vection\Component\Validator\Schema\Exception\IllegalPropertyValueException;
 use Vection\Component\Validator\Schema\Property;
+use Vection\Component\Validator\Schema\Property\Traits\ArrayPropertyTrait;
+use Vection\Component\Validator\Schema\Property\Traits\ObjectPropertyTrait;
 
 /**
- * Class ValueProperty
+ * Class MixedProperty
  *
  * @package Vection\Component\Validator\Schema\Property
  * @author  David Lung <vection@davidlung.de>
  */
-class ValueProperty extends Property
+class MixedProperty extends Property
 {
-    protected array   $allowed = [];
-    protected ?string $regex = null;
+    use ArrayPropertyTrait;
+    use ObjectPropertyTrait;
+
+    protected array      $allowed    = [];
+    protected array      $properties = [];
+    protected ? Property $property   = null;
+    protected ? string   $regex      = null;
 
     /**
      * @inheritDoc
@@ -39,6 +46,9 @@ class ValueProperty extends Property
         }
 
         $this->regex = ($schema['@regex'] ?? null);
+
+        $this->evaluateArrayProperty($schema);
+        $this->evaluateObjectProperty($schema);
     }
 
     /**
@@ -49,8 +59,15 @@ class ValueProperty extends Property
      */
     public function onValidate($value): void
     {
-        if ( ! is_string($value) && ! is_numeric($value) && ! is_int($value) && ! is_bool($value) ) {
-            throw new IllegalPropertyTypeException($this->name, 'value');
+        if (
+            ! is_string($value)  &&
+            ! is_numeric($value) &&
+            ! is_int($value)     &&
+            ! is_float($value)   &&
+            ! is_bool($value)    &&
+            ! is_array($value)
+        ) {
+            throw new IllegalPropertyTypeException($this->name, 'mixed');
         }
 
         if ( $this->regex !== null && ! preg_match($this->regex, $value) ) {
@@ -59,6 +76,15 @@ class ValueProperty extends Property
 
         if ( count($this->allowed) > 0 && ! in_array($value, $this->allowed, true) ) {
             throw new IllegalPropertyValueException($this->name, implode('|', $this->allowed));
+        }
+
+        if ( is_array($value)) {
+            if ( array_keys($value) !== range(0, count($value) - 1) ) {
+                $this->validateObjectProperty($value);
+            }
+            else {
+                $this->validateArrayProperty($value);
+            }
         }
     }
 }
