@@ -41,14 +41,17 @@ class MixedProperty extends Property
      */
     protected function onEvaluate(array $schema): void
     {
+        $this->regex = ($schema['@regex'] ?? null);
+
         if ( isset($schema['@allowed']) ) {
             $this->allowed = explode('|', $schema['@allowed']);
         }
-
-        $this->regex = ($schema['@regex'] ?? null);
-
-        $this->evaluateArrayProperty($schema);
-        $this->evaluateObjectProperty($schema);
+        if ( isset($schema['@property']) ) {
+            $this->evaluateArrayProperty($schema);
+        }
+        if ( isset($schema['@property']) || isset($schema['@properties']) ) {
+            $this->evaluateObjectProperty($schema);
+        }
     }
 
     /**
