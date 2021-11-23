@@ -27,7 +27,7 @@ class File extends Validator
      */
     public function getMessage(): string
     {
-        return 'Path "{value}" is not a valid directory.';
+        return 'Path "{value}" is not a valid file.';
     }
 
     /**
