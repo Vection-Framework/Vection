@@ -86,7 +86,7 @@ trait ObjectPropertyTrait
 
         if ( $this->property !== null ) {
             foreach ( $values as $name => $value ) {
-                $this->property->setName($name);
+                $this->property->setName((string)$name);
                 try {
                     $this->property->validate($value);
                 } catch (PropertyExceptionInterface $e) {

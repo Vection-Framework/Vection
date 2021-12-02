@@ -43,7 +43,7 @@ abstract class Property implements PropertyInterface
     protected int        $maxTemplateRecursion;
 
     /**
-     * @param string|null   $name
+     * @param string   $name
      * @param Property|null $parent
      * @param array         $templates
      * @param int           $maxTemplateRecursion
