@@ -11,7 +11,6 @@
 
 namespace Vection\Component\Common\Collection;
 
-use ArrayIterator;
 use LogicException;
 use Vection\Contracts\Common\Collection\CollectionInterface;
 
@@ -21,6 +20,8 @@ use Vection\Contracts\Common\Collection\CollectionInterface;
  * @package Vection\Component\Common\Collection
  *
  * @author  David M. Lung <vection@davidlung.de>
+ *
+ * @deprecated Use \Vection\Component\Common\VArray instead.
  */
 class ArrayCollection implements CollectionInterface
 {

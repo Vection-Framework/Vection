@@ -21,6 +21,8 @@ use RuntimeException;
  * @package Vection\Component\Utility\Security
  *
  * @author David Lung <vection@davidlung.de>
+ *
+ * @deprecated Use \Vection\Component\Common\Crypto instead.
  */
 class OpenSSLEncryption
 {
