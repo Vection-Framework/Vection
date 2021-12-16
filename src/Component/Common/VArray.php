@@ -43,7 +43,7 @@ class VArray implements Countable, ArrayAccess, Iterator, IteratorAggregate, Jso
         }
 
         if (!in_array($ext = pathinfo($filePath, PATHINFO_EXTENSION), ['json', 'yaml', 'yml'])) {
-            throw new IOException('Unsupported');
+            throw new RuntimeException('Unsupported file format. Supported formats are json, yaml.');
         }
 
         $content = file_get_contents($filePath);
