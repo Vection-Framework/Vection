@@ -106,22 +106,32 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
                 $uploadedFiles[$index] = [];
 
                 for ( $i = 0, $c = count($info['name']); $i < $c; $i++) {
-                    $stream = $this->streamFactory->createStreamFromFile($info['tmp_name'][$i]);
+
+                    if ((int) $info['error'][$i] === 0) {
+                        $stream = $this->streamFactory->createStreamFromFile($info['tmp_name'][$i]);
+                    } else {
+                        $stream = $this->streamFactory->createStream();
+                    }
+
                     $uploadedFiles[$index][] = $this->uploadedFileFactory->createUploadedFile(
                         $stream,
                         $info['size'][$i],
                         $info['error'][$i],
-                        $info['tmp_name'][$i],
+                        $info['name'][$i],
                         $info['type'][$i]
                     );
                 }
             } else {
-                $stream = $this->streamFactory->createStreamFromFile($info['tmp_name']);
+                if ((int) $info['error'] === 0) {
+                    $stream = $this->streamFactory->createStreamFromFile($info['tmp_name']);
+                } else {
+                    $stream = $this->streamFactory->createStream();
+                }
                 $uploadedFiles[$index] = $this->uploadedFileFactory->createUploadedFile(
                     $stream,
                     $info['size'],
                     $info['error'],
-                    $info['tmp_name'],
+                    $info['name'],
                     $info['type']
                 );
             }

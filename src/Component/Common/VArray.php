@@ -298,14 +298,6 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
     }
 
     /**
-     * @return bool
-     */
-    public function reset(): bool
-    {
-        return reset($this->data);
-    }
-
-    /**
      * @inheritDoc
      */
     public function current()
@@ -326,7 +318,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
      */
     public function rewind(): void
     {
-        $this->reset();
+        reset($this->data);
     }
 
     /**
