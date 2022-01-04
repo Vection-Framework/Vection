@@ -7,7 +7,6 @@ namespace Vection\Component\Common;
 use ArrayAccess;
 use Countable;
 use Iterator;
-use IteratorAggregate;
 use JsonException;
 use JsonSerializable;
 use LogicException;
@@ -20,7 +19,7 @@ use Vection\Component\Common\Exception\RuntimeException;
  * @package Vection\Component\Common
  * @author  David Lung <david.lung@appsdock.de>
  */
-class VArray implements Countable, ArrayAccess, Iterator, IteratorAggregate, JsonSerializable
+class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
 {
     protected array $data;
     protected bool $immutable;
@@ -356,14 +355,6 @@ class VArray implements Countable, ArrayAccess, Iterator, IteratorAggregate, Jso
     public function jsonSerialize(): array
     {
         return $this->data;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getIterator()
-    {
-        return $this;
     }
 
     # endregion
