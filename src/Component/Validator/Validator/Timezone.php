@@ -20,16 +20,15 @@ use Vection\Component\Validator\Validator;
  * Class Timezone
  *
  * @package Vection\Component\Validator\Validator
- * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
+ * @author  BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class Timezone extends Validator
 {
-    protected ?int $group;
+    protected ?int    $group;
     protected ?string $countryCode;
 
     /**
-     * Timezone constructor.
-     * @param int|null $group
+     * @param int|null    $group
      * @param string|null $countryCode
      */
     public function __construct(int $group = null, string $countryCode = null)

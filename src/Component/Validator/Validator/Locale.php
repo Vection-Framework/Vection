@@ -19,11 +19,11 @@ use Vection\Component\Validator\Validator;
  * Class Locale
  *
  * @package Vection\Component\Validator\Validator
- * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
+ * @author  BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class Locale extends Validator
 {
-    public const HYPHEN = '-';
+    public const HYPHEN     = '-';
     public const UNDERSCORE = '_';
 
     protected bool   $strict;

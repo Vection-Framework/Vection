@@ -22,18 +22,12 @@ use Vection\Component\Validator\Validator;
  */
 class Range extends Validator
 {
-
-    /** @var integer */
-    protected $min;
-
-    /** @var integer */
-    protected $max;
+    protected int $min;
+    protected int $max;
 
     /**
-     * Range constructor.
-     *
-     * @param int    $min
-     * @param int    $max
+     * @param int $min
+     * @param int $max
      */
     public function __construct(int $min, int $max)
     {

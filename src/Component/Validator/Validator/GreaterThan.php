@@ -22,15 +22,10 @@ use Vection\Component\Validator\Validator;
  */
 class GreaterThan extends Validator
 {
-
-    /** @var integer */
-    protected $limit;
+    protected int $limit;
 
     /**
-     * GreaterThan constructor.
-     *
      * @param int $limit
-     *
      */
     public function __construct(int $limit)
     {

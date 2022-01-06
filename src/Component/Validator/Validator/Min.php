@@ -22,13 +22,9 @@ use Vection\Component\Validator\Validator;
  */
 class Min extends Validator
 {
-
-    /** @var integer */
-    protected $min;
+    protected int $min;
 
     /**
-     * Min constructor.
-     *
      * @param int $min
      */
     public function __construct(int $min)

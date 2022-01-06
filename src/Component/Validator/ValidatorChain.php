@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Vection\Component\Validator;
 
-use Vection\Component\Validator\Schema\Schema;
 use Vection\Component\Validator\Validator\Color;
 use Vection\Component\Validator\Validator\IsRequired;
 use Vection\Component\Validator\Validator\Locale;

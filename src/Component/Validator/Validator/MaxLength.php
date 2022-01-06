@@ -53,6 +53,10 @@ class MaxLength extends Validator
      */
     protected function onValidate($value): bool
     {
+        if (is_countable($value)) {
+            return count($value) <= $this->length;
+        }
+
         return strlen($value) <= $this->length;
     }
 }

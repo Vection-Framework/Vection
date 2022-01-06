@@ -22,15 +22,10 @@ use Vection\Component\Validator\Validator;
  */
 class Max extends Validator
 {
-
-    /** @var integer */
-    protected $max;
+    protected int $max;
 
     /**
-     * Max constructor.
-     *
      * @param int $max
-     *
      */
     public function __construct(int $max)
     {
