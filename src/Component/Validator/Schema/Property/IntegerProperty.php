@@ -17,6 +17,7 @@ namespace Vection\Component\Validator\Schema\Property;
 use Vection\Component\Validator\Schema\Exception\IllegalPropertyTypeException;
 use Vection\Component\Validator\Schema\Exception\IllegalPropertyValueException;
 use Vection\Component\Validator\Schema\Property;
+use Vection\Component\Validator\Schema\Property\Traits\IntegerPropertyTrait;
 
 /**
  * Class IntegerProperty
@@ -26,16 +27,14 @@ use Vection\Component\Validator\Schema\Property;
  */
 class IntegerProperty extends Property
 {
-    protected array $range = [];
+    use IntegerPropertyTrait;
 
     /**
      * @inheritDoc
      */
     protected function onEvaluate(array $schema): void
     {
-        if ( isset($schema['@range']) ) {
-            $this->range = explode('..', $schema['@range']);
-        }
+        $this->evaluateIntegerProperty($schema);
     }
 
     /**
@@ -46,12 +45,6 @@ class IntegerProperty extends Property
      */
     public function onValidate($value): void
     {
-        if ( ! is_int($value) ) {
-            throw new IllegalPropertyTypeException($this->name, 'integer');
-        }
-
-        if ( count($this->range) > 0 && ($value < $this->range[0] || $value > $this->range[1]) ) {
-            throw new IllegalPropertyValueException($this->name, implode('-', $this->range));
-        }
+        $this->validateIntegerProperty($value);
     }
 }

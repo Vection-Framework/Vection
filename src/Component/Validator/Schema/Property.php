@@ -31,19 +31,19 @@ use Vection\Contracts\Validator\ValidatorInterface;
  */
 abstract class Property implements PropertyInterface
 {
-    protected string     $type;
-    protected string     $name;
-    protected bool       $required;
-    protected bool       $nullable;
+    protected string    $type;
+    protected string    $name;
+    protected ?bool     $required = null;
+    protected ?bool     $nullable = null;
     /** @var ValidatorInterface[] */
-    protected array      $validators;
-    protected array      $templates;
-    protected ? string   $template = null;
-    protected ? Property $parent;
-    protected int        $maxTemplateRecursion;
+    protected array     $validators;
+    protected array     $templates;
+    protected ?string   $template = null;
+    protected ?Property $parent;
+    protected int       $maxTemplateRecursion;
 
     /**
-     * @param string   $name
+     * @param string        $name
      * @param Property|null $parent
      * @param array         $templates
      * @param int           $maxTemplateRecursion

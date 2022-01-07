@@ -16,6 +16,7 @@ namespace Vection\Component\Validator\Schema\Property;
 
 use Vection\Component\Validator\Schema\Exception\IllegalPropertyTypeException;
 use Vection\Component\Validator\Schema\Property;
+use Vection\Component\Validator\Schema\Property\Traits\BoolPropertyTrait;
 
 /**
  * Class BooleanProperty
@@ -25,12 +26,14 @@ use Vection\Component\Validator\Schema\Property;
  */
 class BooleanProperty extends Property
 {
+    use BoolPropertyTrait;
+
     /**
      * @inheritDoc
      */
     protected function onEvaluate(array $schema): void
     {
-        // not used
+        $this->evaluateBoolProperty($schema);
     }
 
     /**
@@ -40,8 +43,6 @@ class BooleanProperty extends Property
      */
     public function onValidate($value): void
     {
-        if ( ! is_bool($value) ) {
-            throw new IllegalPropertyTypeException($this->name, 'boolean');
-        }
+        $this->validateBoolProperty($value);
     }
 }

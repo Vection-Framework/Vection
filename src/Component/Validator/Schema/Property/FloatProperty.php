@@ -16,6 +16,8 @@ namespace Vection\Component\Validator\Schema\Property;
 
 use Vection\Component\Validator\Schema\Exception\IllegalPropertyTypeException;
 use Vection\Component\Validator\Schema\Exception\IllegalPropertyValueException;
+use Vection\Component\Validator\Schema\Property;
+use Vection\Component\Validator\Schema\Property\Traits\FloatPropertyTrait;
 
 /**
  * Class FloatProperty
@@ -23,8 +25,18 @@ use Vection\Component\Validator\Schema\Exception\IllegalPropertyValueException;
  * @package Vection\Component\Validator\Schema\Property
  * @author  David Lung <vection@davidlung.de>
  */
-class FloatProperty extends IntegerProperty
+class FloatProperty extends Property
 {
+    use FloatPropertyTrait;
+
+    /**
+     * @inheritDoc
+     */
+    protected function onEvaluate(array $schema): void
+    {
+        $this->evaluateFloatProperty($schema);
+    }
+
     /**
      * @inheritDoc
      *
@@ -33,12 +45,6 @@ class FloatProperty extends IntegerProperty
      */
     public function onValidate($value): void
     {
-        if ( ! is_float($value) ) {
-            throw new IllegalPropertyTypeException($this->name, 'float');
-        }
-
-        if ( count($this->range) > 0 && ($value < $this->range[0] || $value > $this->range[1]) ) {
-            throw new IllegalPropertyValueException($this->name, implode('-', $this->range));
-        }
+        $this->validateFloatProperty($value);
     }
 }

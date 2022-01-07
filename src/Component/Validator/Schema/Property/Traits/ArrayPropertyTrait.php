@@ -18,8 +18,12 @@ use Vection\Contracts\Validator\Schema\SchemaExceptionInterface;
  */
 trait ArrayPropertyTrait
 {
-    protected ? int $maxArraySize    = null;
-    protected ? int $maxStringLength = null;
+    use BoolPropertyTrait;
+    use FloatPropertyTrait;
+    use IntegerPropertyTrait;
+    use StringPropertyTrait;
+
+    protected ?int $maxArraySize = null;
 
     /**
      * @param array $schema
@@ -28,11 +32,8 @@ trait ArrayPropertyTrait
      */
     protected function evaluateArrayProperty(array $schema): void
     {
-        if ( isset($schema['@maxArraySize']) ) {
+        if (isset($schema['@maxArraySize'])) {
             $this->maxArraySize = (int) $schema['@maxArraySize'];
-        }
-        if ( isset($schema['@maxStringLength']) ) {
-            $this->maxStringLength = (int) $schema['@maxStringLength'];
         }
 
         $this->property = $this->createProperty('', $schema['@property']['@type']);
@@ -48,30 +49,33 @@ trait ArrayPropertyTrait
      */
     public function validateArrayProperty($values): void
     {
-        if ( ! is_array($values) ) {
+        if (!is_array($values)) {
             throw new IllegalPropertyTypeException($this->name, 'array');
         }
 
-        if ( $this->isRequired() && count($values) === 0 ) {
+        if ($this->isRequired() && count($values) === 0) {
             throw new MissingPropertyException($this->name.'.0');
         }
 
-        if ( $this->maxArraySize && count($values) > $this->maxArraySize) {
+        if ($this->maxArraySize && count($values) > $this->maxArraySize) {
             throw new InvalidPropertyValueException(
                 $this->name,
                 sprintf('The array is size exceeded. The max allowed size is "%s" elements.', $this->maxArraySize)
             );
         }
 
-        foreach ( $values as $name => $value ) {
-            if ( is_string($value) && $this->maxStringLength && strlen($value) > $this->maxStringLength) {
-                throw new InvalidPropertyValueException(
-                    $this->name,
-                    sprintf(
-                        'The string length is exceeded. The max allowed length of a single string is "%s" chars.',
-                        $this->maxArraySize
-                    )
-                );
+        foreach ($values as $name => $value) {
+            if (is_bool($value)) {
+                $this->validateBoolProperty($value);
+            }
+            if (is_float($value)) {
+                $this->validateFloatProperty($value);
+            }
+            if (is_int($value)) {
+                $this->validateIntegerProperty($value);
+            }
+            if (is_string($value)) {
+                $this->validateStringProperty($value);
             }
 
             $this->property->setName((string) $name);
