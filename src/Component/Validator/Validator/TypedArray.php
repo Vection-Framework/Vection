@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Vection\Component\Validator\Validator;
 
 use InvalidArgumentException;
-use RuntimeException;
 use Vection\Component\Validator\Validator;
 use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
 

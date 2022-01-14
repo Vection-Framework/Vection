@@ -66,6 +66,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @method ValidatorChain notNull()
  * @method ValidatorChain null()
  * @method ValidatorChain nullable()
+ * @method ValidatorChain mimeType(bool $includeWildcard)
  * @method ValidatorChain range(int $min, int $max)
  * @method ValidatorChain regex(string $pattern)
  * @method ValidatorChain startsWith(string $needle)
