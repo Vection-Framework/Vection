@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Vection\Component\Common;
 
@@ -24,11 +24,11 @@ use RuntimeException;
  */
 class Crypto
 {
-    public const HASH_CRC32 = 'crc32';
-    public const HASH_MD5 = 'md5';
-    public const HASH_SHA1 = 'sha1';
-    public const HASH_SHA256 = 'sha256';
-    public const HASH_SHA512 = 'sha512';
+    public const HASH_CRC32     = 'crc32';
+    public const HASH_MD5       = 'md5';
+    public const HASH_SHA1      = 'sha1';
+    public const HASH_SHA256    = 'sha256';
+    public const HASH_SHA512    = 'sha512';
     public const HASH_WHIRLPOOL = 'whirlpool';
 
     /**
@@ -42,8 +42,8 @@ class Crypto
     public static function identity(string $prefix = '', int $length = 7): string
     {
         return $prefix.substr(
-                preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(self::bytes($length))), 0, $length
-            );
+            preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(self::bytes($length))), 0, $length
+        );
     }
 
     /**
@@ -106,22 +106,27 @@ class Crypto
     }
 
     /**
-     * Generates a new random hash string
+     * Generates and returns a new random hash string or hashes a given value.
      *
-     * @param string $algo
+     * @param string      $algo
+     * @param string|null $string
+     * @param bool        $binary
      *
      * @return string
      */
-    public static function hash(string $algo = self::HASH_SHA1): string
+    public static function hash(
+        string $algo = self::HASH_SHA1, ?string $data = null, $binary = false): string
     {
+        $data = $data ?? self::identity('', 16);
+
         switch ($algo) {
-            case self::HASH_CRC32: return hash(self::HASH_CRC32, self::uuid4());
-            case self::HASH_MD5: return md5(self::uuid4());
-            case self::HASH_SHA256: return hash(self::HASH_SHA256, self::uuid4());
-            case self::HASH_SHA512: return hash(self::HASH_SHA512, self::uuid4());
-            case self::HASH_WHIRLPOOL: return hash(self::HASH_WHIRLPOOL, self::uuid4());
+            case self::HASH_CRC32:     return hash(self::HASH_CRC32, $data, $binary);
+            case self::HASH_MD5:       return md5($data, $binary);
+            case self::HASH_SHA256:    return hash(self::HASH_SHA256, $data, $binary);
+            case self::HASH_SHA512:    return hash(self::HASH_SHA512, $data, $binary);
+            case self::HASH_WHIRLPOOL: return hash(self::HASH_WHIRLPOOL, $data, $binary);
             case self::HASH_SHA1:
-            default: return sha1(self::uuid4());
+            default: return sha1($data, $binary);
         }
     }
 
@@ -233,7 +238,13 @@ class Crypto
      *
      * @return string
      */
-    public static function encrypt(string $content, string $key, string $secret, string $cipherAlgo = 'aes-256-gcm', string $algo = 'sha256'): string
+    public static function encrypt(
+        string $content,
+        string $key,
+        string $secret,
+        string $cipherAlgo = 'aes-256-gcm',
+        string $algo = self::HASH_SHA256
+    ): string
     {
         if ( ! extension_loaded('openssl') ) {
             throw new RuntimeException('OpenSSLEncryption requires the ext-openssl extension.');
@@ -267,7 +278,13 @@ class Crypto
      *
      * @return string|null
      */
-    public static function decrypt(string $encryptedContent, string $key, string $secret, string $cipherAlgo = 'aes-256-gcm', string $algo = 'sha256'): ? string
+    public static function decrypt(
+        string $encryptedContent,
+        string $key,
+        string $secret,
+        string $cipherAlgo = 'aes-256-gcm',
+        string $algo = self::HASH_SHA256
+    ): ? string
     {
 
         if ( ! extension_loaded('openssl') ) {
