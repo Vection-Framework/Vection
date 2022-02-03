@@ -56,7 +56,12 @@ class BetweenLength extends Validator
      */
     protected function onValidate($value): bool
     {
+        if (!is_string($value)) {
+            return false;
+        }
+
         $length = strlen($value);
+
         return $length <= $this->max && $length >= $this->min;
     }
 }
