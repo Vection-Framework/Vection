@@ -10,10 +10,11 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Vection\Component\Validator;
 
+use ReflectionClass;
 use RuntimeException;
 use Vection\Contracts\Validator\ValidatorInterface;
 
@@ -21,8 +22,7 @@ use Vection\Contracts\Validator\ValidatorInterface;
  * Class ValidatorFactory
  *
  * @package Vection\Component\Validator
- *
- * @author David Lung <vection@davidlung.de>
+ * @author  David Lung <vection@davidlung.de>
  */
 class ValidatorFactory
 {
@@ -36,10 +36,23 @@ class ValidatorFactory
     {
         $validatorClassName = __NAMESPACE__ .'\\Validator\\'. ucfirst($name);
 
-        if ( ! class_exists($validatorClassName) ) {
+        if (!class_exists($validatorClassName)) {
             throw new RuntimeException('Validator does not exists - '.$validatorClassName);
         }
 
-        return new $validatorClassName(...$constraints);
+        if (is_int(array_key_first($constraints))) {
+            $parameters = array_values($constraints);
+        } else {
+            $parameters = [];
+            if ($constructor = (new ReflectionClass($validatorClassName))->getConstructor()) {
+                foreach ($constructor->getParameters() as $constructorParameter) {
+                    if (array_key_exists($constructorParameter->name, $constraints)) {
+                        $parameters[] = $constraints[$constructorParameter->name];
+                    }
+                }
+            }
+        }
+
+        return new $validatorClassName(...$parameters);
     }
 }

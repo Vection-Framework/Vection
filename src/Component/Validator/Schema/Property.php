@@ -153,7 +153,7 @@ abstract class Property implements PropertyInterface
             foreach ( $schema['@validators'] as $validator ) {
                 $this->validators[] = (new ValidatorFactory())->create(
                     $validator['@name'],
-                    array_values(($validator['@constraints'] ?? []))
+                    $validator['@constraints'] ?? []
                 );
             }
 

@@ -37,7 +37,7 @@ class MinLength extends Validator
      */
     public function getConstraints(): array
     {
-        return ['min' => $this->length];
+        return ['length' => $this->length];
     }
 
     /**
@@ -45,7 +45,7 @@ class MinLength extends Validator
      */
     public function getMessage(): string
     {
-        return 'The length of "{value}" is too short. A minimum of {min} characters is required.';
+        return 'The length of "{value}" is too short. A minimum of {length} characters is required.';
     }
 
     /**

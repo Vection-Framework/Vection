@@ -37,7 +37,7 @@ class MaxLength extends Validator
      */
     public function getConstraints(): array
     {
-        return ['max' => $this->length];
+        return ['length' => $this->length];
     }
 
     /**
@@ -45,7 +45,7 @@ class MaxLength extends Validator
      */
     public function getMessage(): string
     {
-        return 'The length of "{value}" is too long. A maximum of {max} characters is allowed.';
+        return 'The length of "{value}" is too long. A maximum of {length} characters is allowed.';
     }
 
     /**
