@@ -31,6 +31,15 @@ class Crypto
     public const HASH_SHA512    = 'sha512';
     public const HASH_WHIRLPOOL = 'whirlpool';
 
+    protected const HASHES = [
+        self::HASH_CRC32,
+        self::HASH_MD5,
+        self::HASH_SHA1,
+        self::HASH_SHA256,
+        self::HASH_SHA512,
+        self::HASH_WHIRLPOOL,
+    ];
+
     /**
      * Generates a new identity string.
      *
@@ -115,19 +124,12 @@ class Crypto
      * @return string
      */
     public static function hash(
-        string $algo = self::HASH_SHA1, ?string $data = null, $binary = false): string
+        string $algo = self::HASH_SHA1, ?string $data = null, $binary = false
+    ): string
     {
         $data = $data ?? self::identity('', 16);
 
-        switch ($algo) {
-            case self::HASH_CRC32:     return hash(self::HASH_CRC32, $data, $binary);
-            case self::HASH_MD5:       return md5($data, $binary);
-            case self::HASH_SHA256:    return hash(self::HASH_SHA256, $data, $binary);
-            case self::HASH_SHA512:    return hash(self::HASH_SHA512, $data, $binary);
-            case self::HASH_WHIRLPOOL: return hash(self::HASH_WHIRLPOOL, $data, $binary);
-            case self::HASH_SHA1:
-            default: return sha1($data, $binary);
-        }
+        return hash($algo, $data, $binary);
     }
 
     /**
