@@ -82,6 +82,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @method ValidatorChain range(int $min, int $max)
  * @method ValidatorChain regex(string $pattern)
  * @method ValidatorChain startsWith(string $needle)
+ * @method ValidatorChain subdomain()
  * @method ValidatorChain timezone(int $group = null, string $countryCode = null)
  * @method ValidatorChain typedArray(int $type = TypedArray::STRING)
  * @method ValidatorChain url(bool $path = false, bool $query = false)

@@ -15,15 +15,14 @@ namespace Vection\Component\Validator\Validator;
 
 use Vection\Component\Validator\Validator;
 use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
-use Vection\Contracts\Validator\ViolationInterface;
 
 /**
- * Class Hostname
+ * Class Subdomain
  *
  * @package Vection\Component\Validator\Validator
  * @author  BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
-class Hostname extends Validator
+class Subdomain extends Validator
 {
     /**
      * @inheritDoc
@@ -46,27 +45,11 @@ class Hostname extends Validator
             ));
         }
 
-        // The maximum length of a hostname is 255 characters.
-        if (strlen($value) > 255) {
+        // The first and last characters of a subdomain must not be a minus.
+        if (strpos($value, '-') === 0 || substr($value, -1) === '-') {
             return false;
         }
 
-        $levels = explode('.', $value);
-
-        // Probably several consecutive points.
-        if (in_array('', $levels, true)) {
-            return false;
-        }
-
-        foreach ($levels as $level) {
-            try {
-                (new Subdomain())->validate($level);
-            }
-            catch (ViolationInterface $e) {
-                return false;
-            }
-        }
-
-        return true;
+        return preg_match('/^[a-z\d-]{1,63}$/i', $value) === 1;
     }
 }

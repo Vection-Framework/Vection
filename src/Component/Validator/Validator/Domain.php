@@ -39,14 +39,20 @@ class Domain extends Validator
     protected function onValidate($value): bool
     {
         if (!is_string($value)) {
-            throw new IllegalTypeException(
-                sprintf('The value must be of type "string", but type "%s" was passed.', gettype($value))
-            );
+            throw new IllegalTypeException(sprintf(
+                'The value must be of type "%s", but type "%s" was passed.',
+                'string',
+                gettype($value)
+            ));
         }
 
-        // The maximum length of a domain is 253 characters.
-        if (strlen($value) > 253) {
-            return false;
+        // Validate port
+        if (($pos = strpos($value, ':')) !== false) {
+            if (preg_match('/^\d{1,5}$/', substr($value, $pos + 1)) !== 1) {
+                return false;
+            }
+
+            $value =  substr($value, 0, $pos);
         }
 
         // @todo Validate TLD via IANA
