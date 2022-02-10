@@ -43,6 +43,11 @@ class Hostname extends Validator
             );
         }
 
+        // The maximum length of a hostname is 255 characters.
+        if (strlen($value) > 255) {
+            return false;
+        }
+
         $parts = explode('.', $value);
 
         // Probably several consecutive points.

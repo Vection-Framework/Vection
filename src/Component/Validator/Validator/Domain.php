@@ -44,6 +44,11 @@ class Domain extends Validator
             );
         }
 
+        // The maximum length of a domain is 253 characters.
+        if (strlen($value) > 253) {
+            return false;
+        }
+
         // @todo Validate TLD via IANA
 
         try {
