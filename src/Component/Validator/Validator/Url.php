@@ -1,9 +1,9 @@
 <?php
+
 /**
- * This file is part of the Vection-Framework project.
- * Visit project at https://github.com/Vection-Framework/Vection
+ * This file is part of the Vection package.
  *
- * (c) Vection-Framework <vection@appsdock.de>
+ * (c) David M. Lung <vection@davidlung.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -19,9 +19,36 @@ use Vection\Component\Validator\Validator;
  * Class Url
  *
  * @package Vection\Component\Validator\Validator
+ * @author  David M. Lung <vection@davidlung.de>
  */
 class Url extends Validator
 {
+    protected bool $path;
+    protected bool $query;
+
+    /**
+     * Validates a URL. Set the parameters to TRUE to require these parts.
+     *
+     * @param bool $path
+     * @param bool $query
+     */
+    public function __construct(bool $path = false, bool $query = false)
+    {
+        $this->path   = $path;
+        $this->query  = $query;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getConstraints(): array
+    {
+        return [
+            'path'   => $this->path,
+            'query'  => $this->query,
+        ];
+    }
+
     /**
      * @inheritDoc
      */
@@ -35,6 +62,10 @@ class Url extends Validator
      */
     protected function onValidate($value): bool
     {
-        return (bool) filter_var($value, FILTER_VALIDATE_URL);
+        $filter  = FILTER_VALIDATE_URL;
+        $filter += $this->path  ? FILTER_FLAG_PATH_REQUIRED  : FILTER_FLAG_NONE;
+        $filter += $this->query ? FILTER_FLAG_QUERY_REQUIRED : FILTER_FLAG_NONE;
+
+        return (bool) filter_var($value, $filter);
     }
 }
