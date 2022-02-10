@@ -15,22 +15,21 @@ namespace Vection\Component\Validator\Validator;
 
 use Vection\Component\Validator\Validator;
 use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
-use Vection\Contracts\Validator\ViolationInterface;
 
 /**
- * Class Domain
+ * Class Hostname
  *
  * @package Vection\Component\Validator\Validator
  * @author  BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
-class Domain extends Validator
+class Hostname extends Validator
 {
     /**
      * @inheritDoc
      */
     public function getMessage(): string
     {
-        return 'Value "{value}" is not a valid domain.';
+        return 'Value "{value}" is not a valid hostname.';
     }
 
     /**
@@ -44,15 +43,24 @@ class Domain extends Validator
             );
         }
 
-        // @todo Validate TLD via IANA
+        $parts = explode('.', $value);
 
-        try {
-            (new Hostname())->validate($value);
-
-            return true;
-        }
-        catch (ViolationInterface $e) {
+        // Probably several consecutive points.
+        if (in_array('', $parts, true)) {
             return false;
         }
+
+        foreach ($parts as $part) {
+            // The first and last characters of a hostname must not be a minus.
+            if (strpos($part, '-') === 0 || substr($part, -1) === '-') {
+                return false;
+            }
+
+            if (preg_match('/^[a-z\d-]{1,63}$/i', $part) !== 1) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
