@@ -59,10 +59,7 @@ class Hostname extends Validator
         }
 
         foreach ($levels as $level) {
-            try {
-                (new Subdomain())->validate($level);
-            }
-            catch (ViolationInterface $e) {
+            if ((new Subdomain())->validate($level) !== null) {
                 return false;
             }
         }

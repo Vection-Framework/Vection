@@ -57,13 +57,6 @@ class Domain extends Validator
 
         // @todo Validate TLD via IANA
 
-        try {
-            (new Hostname())->validate($value);
-
-            return true;
-        }
-        catch (ViolationInterface $e) {
-            return false;
-        }
+        return (new Hostname())->validate($value) === null;
     }
 }
