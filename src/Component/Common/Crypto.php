@@ -50,13 +50,17 @@ class Crypto
      */
     public static function identity(string $prefix = '', int $length = 7): string
     {
-        return $prefix.substr(
-            preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(self::bytes($length))), 0, $length
+        $identity = substr(
+            preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(self::bytes($length))),
+            0,
+            $length
         );
+
+        return strlen($identity) === $length ? $prefix.$identity : self::identity($prefix, $length);
     }
 
     /**
-     * Generates a new random UUID v4 string
+     * Generates a new random UUID v4 string.
      *
      * @return string
      */
@@ -133,7 +137,7 @@ class Crypto
     }
 
     /**
-     * Generates a new random bytes string
+     * Generates a new random bytes string. Note that the number of characters generated is twice the length.
      *
      * @param int $length
      *
@@ -146,16 +150,20 @@ class Crypto
         try {
             $bytes = random_bytes($length);
 
+            if (strlen($bytes) !== $length * 2) {
+                throw new Exception('The generated number of characters differs from the required number.');
+            }
+
             $retries = 0;
         }
         catch (Exception $e) {
             if ($retries >= 10) {
-                throw new RuntimeException('Unable to generate random bytes', $e->getCode(), $e);
+                throw new RuntimeException('Unable to generate random bytes.', $e->getCode(), $e);
             }
 
             $retries++;
 
-            usleep($retries * 1000);
+            usleep($retries * 100);
 
             return self::bytes($length);
         }
@@ -164,7 +172,7 @@ class Crypto
     }
 
     /**
-     * Generates a new random hexadecimal string
+     * Generates a new random hexadecimal string.
      *
      * @param int $length
      *
