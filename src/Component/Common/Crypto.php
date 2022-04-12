@@ -150,10 +150,6 @@ class Crypto
         try {
             $bytes = random_bytes($length);
 
-            if (strlen($bytes) !== $length * 2) {
-                throw new Exception('The generated number of characters differs from the required number.');
-            }
-
             $retries = 0;
         }
         catch (Exception $e) {
@@ -180,7 +176,9 @@ class Crypto
      */
     public static function hex(int $length = 64): string
     {
-        return bin2hex(substr(self::bytes((int) ceil($length / 2)),0, $length));
+        $hex = bin2hex(substr(self::bytes((int) ceil($length / 2)),0, $length));
+
+        return strlen($hex) === $length ? $hex : self::hex($length);
     }
 
     /**
