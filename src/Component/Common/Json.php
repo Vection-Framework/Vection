@@ -27,8 +27,6 @@ class Json
 
     /**
      * @param string $json
-     * @param int    $depth
-     * @param int    $options
      *
      * @return VArray
      */
@@ -48,8 +46,10 @@ class Json
     }
 
     /**
-     * @param int $flags
-     * @param int $depth
+     * @param VArray $array
+     * @param bool   $pretty
+     * @param int    $flags
+     * @param int    $depth
      *
      * @return string
      */
