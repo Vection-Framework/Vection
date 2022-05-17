@@ -18,7 +18,6 @@ use RuntimeException;
  * Class Json
  *
  * @package Vection\Component\Common\Collection
- *
  * @author  David M. Lung <vection@davidlung.de>
  */
 class Json extends ArrayCollection
@@ -67,7 +66,26 @@ class Json extends ArrayCollection
      */
     public function toString(int $flags = 0, int $depth = 512): string
     {
-        return json_encode($this, $flags|JSON_THROW_ON_ERROR, $depth);
+        return json_encode($this, $flags | JSON_THROW_ON_ERROR, $depth);
+    }
+
+    /**
+     * @param string $filePath
+     * @param bool   $pretty
+     * @param int    $flags
+     * @param int    $depth
+     *
+     * @return void
+     *
+     * @throws JsonException
+     */
+    public function toFile(string $filePath, bool $pretty = true, int $flags = 0, int $depth = 512): void
+    {
+        if ($pretty) {
+            $flags += JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_LINE_TERMINATORS;
+        }
+
+        file_put_contents($filePath, $this->toString($flags, $depth));
     }
 
     /**
