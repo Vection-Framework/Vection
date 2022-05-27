@@ -128,12 +128,28 @@ class Crypto
      * @return string
      */
     public static function hash(
-        string $algo = self::HASH_SHA1, ?string $data = null, $binary = false
+        string $algo = self::HASH_SHA1, ?string $data = null, bool $binary = false
     ): string
     {
         $data = $data ?? self::identity('', 16);
 
         return hash($algo, $data, $binary);
+    }
+
+    /**
+     * Returns the hash a given file.
+     *
+     * @param string      $path
+     * @param string|null $algo
+     * @param bool        $binary
+     *
+     * @return string
+     */
+    public static function hashFile(
+        string $path, ?string $algo = self::HASH_SHA1, bool $binary = false
+    ): string
+    {
+        return hash_file($algo, $path, $binary);
     }
 
     /**
