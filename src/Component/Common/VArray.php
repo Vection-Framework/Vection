@@ -146,12 +146,13 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
 
     /**
      * @param string $key
+     * @param bool   $usePathNotation
      *
      * @return mixed
      */
-    public function get(string $key)
+    public function get(string $key, bool $usePathNotation = true)
     {
-        return strpos($key, '.') > -1 ? $this->pathGet($this->data, $key) : ($this->data[$key] ?? null);
+        return strpos($key, '.') > -1 && $usePathNotation ? $this->pathGet($this->data, $key) : ($this->data[$key] ?? null);
     }
 
     /**
