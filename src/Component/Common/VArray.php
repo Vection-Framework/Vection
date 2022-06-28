@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Vection\Component\Common;
 
@@ -22,7 +22,7 @@ use Vection\Component\Common\Exception\RuntimeException;
 class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
 {
     protected array $data;
-    protected bool $immutable;
+    protected bool  $immutable;
 
     # region Parsing
 
@@ -92,9 +92,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
     public static function parseJSON(string $json, bool $immutable = false): VArray
     {
         try {
-            $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-
-            return  new VArray($data, $immutable);
+            return new VArray(json_decode($json, true, 512, JSON_THROW_ON_ERROR), $immutable);
         }
         catch (JsonException $e) {
             throw new RuntimeException('VArray::fromFile(yaml): Malformed json file. '. $e->getMessage());
@@ -104,8 +102,6 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
     # endregion
 
     /**
-     * VArray constructor.
-     *
      * @param array $data
      * @param bool  $immutable
      */

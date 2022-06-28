@@ -50,13 +50,17 @@ class Crypto
      */
     public static function identity(string $prefix = '', int $length = 7): string
     {
-        return $prefix.substr(
-            preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(self::bytes($length))), 0, $length
+        $identity = substr(
+            preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(self::bytes($length))),
+            0,
+            $length
         );
+
+        return strlen($identity) === $length ? $prefix.$identity : self::identity($prefix, $length);
     }
 
     /**
-     * Generates a new random UUID v4 string
+     * Generates a new random UUID v4 string.
      *
      * @return string
      */
@@ -124,7 +128,7 @@ class Crypto
      * @return string
      */
     public static function hash(
-        string $algo = self::HASH_SHA1, ?string $data = null, $binary = false
+        string $algo = self::HASH_SHA1, ?string $data = null, bool $binary = false
     ): string
     {
         $data = $data ?? self::identity('', 16);
@@ -133,7 +137,23 @@ class Crypto
     }
 
     /**
-     * Generates a new random bytes string
+     * Returns the hash a given file.
+     *
+     * @param string      $path
+     * @param string|null $algo
+     * @param bool        $binary
+     *
+     * @return string
+     */
+    public static function hashFile(
+        string $path, ?string $algo = self::HASH_SHA1, bool $binary = false
+    ): string
+    {
+        return hash_file($algo, $path, $binary);
+    }
+
+    /**
+     * Generates a new random bytes string. Note that the number of characters generated is twice the length.
      *
      * @param int $length
      *
@@ -150,12 +170,12 @@ class Crypto
         }
         catch (Exception $e) {
             if ($retries >= 10) {
-                throw new RuntimeException('Unable to generate random bytes', $e->getCode(), $e);
+                throw new RuntimeException('Unable to generate random bytes.', $e->getCode(), $e);
             }
 
             $retries++;
 
-            usleep($retries * 1000);
+            usleep($retries * 100);
 
             return self::bytes($length);
         }
@@ -164,7 +184,7 @@ class Crypto
     }
 
     /**
-     * Generates a new random hexadecimal string
+     * Generates a new random hexadecimal string.
      *
      * @param int $length
      *
@@ -172,7 +192,9 @@ class Crypto
      */
     public static function hex(int $length = 64): string
     {
-        return bin2hex(substr(self::bytes((int) ceil($length / 2)),0, $length));
+        $hex = bin2hex(substr(self::bytes((int) ceil($length / 2)),0, $length));
+
+        return strlen($hex) === $length ? $hex : self::hex($length);
     }
 
     /**
