@@ -12,6 +12,9 @@ use JsonSerializable;
 use LogicException;
 use Vection\Component\Common\Exception\IOException;
 use Vection\Component\Common\Exception\RuntimeException;
+use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
+use Vection\Contracts\Validator\Schema\SchemaExceptionInterface;
+use Vection\Contracts\Validator\Schema\SchemaValidatorInterface;
 
 /**
  * Class VArray
@@ -242,6 +245,19 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
         if ($this->immutable === true){
             throw new LogicException('An immutable collection cannot be changed.');
         }
+    }
+
+    # endregion
+
+    # region Advanced Methods
+
+    /**
+     * @throws SchemaExceptionInterface
+     * @throws PropertyExceptionInterface
+     */
+    public function validate(SchemaValidatorInterface $schemaValidator): void
+    {
+        $schemaValidator->validateArray($this->data);
     }
 
     # endregion
