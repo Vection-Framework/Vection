@@ -10,6 +10,8 @@
 
 namespace Vection\Component\Http\Exception;
 
+use Throwable;
+
 /**
  * Class HttpConflictException
  *
@@ -21,9 +23,9 @@ class HttpConflictException extends HttpException
      * HttpConflictException constructor.
      *
      * @param string $message
-     * @param \Throwable|null $previous
+     * @param Throwable|null $previous
      */
-    public function __construct($message = '', \Throwable $previous = null)
+    public function __construct(string $message = '', Throwable $previous = null)
     {
         parent::__construct($message ?: 'Conflict', 409, $previous);
     }

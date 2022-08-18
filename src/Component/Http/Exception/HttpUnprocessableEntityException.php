@@ -10,6 +10,8 @@
 
 namespace Vection\Component\Http\Exception;
 
+use Throwable;
+
 /**
  * Class HttpPreconditionFailedException
  *
@@ -21,9 +23,9 @@ class HttpUnprocessableEntityException extends HttpException
      * HttpUnprocessableEntityException constructor.
      *
      * @param string $message
-     * @param \Throwable|null $previous
+     * @param Throwable|null $previous
      */
-    public function __construct($message = '', \Throwable $previous = null)
+    public function __construct(string $message = '', Throwable $previous = null)
     {
         parent::__construct($message ?: 'Unprocessable Entity', 422, $previous);
     }

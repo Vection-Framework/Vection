@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Vection\Component\Http;
+namespace Vection\Component\Http\Common;
 
 /**
  * Class Headers
@@ -22,11 +22,8 @@ namespace Vection\Component\Http;
  */
 class Headers
 {
-    /** @var array */
-    protected $headers;
-
-    /** @var array */
-    protected $names;
+    protected array $headers;
+    protected array $names;
 
     /**
      * Headers constructor.
@@ -41,7 +38,7 @@ class Headers
             $this->names[strtolower($name)] = $name;
         }
 
-        # TODO normilize the given array to psr standard
+        # TODO normalize the given array to psr standard
     }
 
     /**
@@ -102,7 +99,7 @@ class Headers
      * @param string            $name
      * @param string|string[]   $value
      */
-    public function add(string $name, $value): void
+    public function add(string $name, mixed $value): void
     {
         $lowerName = strtolower($name);
 
@@ -112,7 +109,7 @@ class Headers
 
         $values = ($this->headers[$this->names[$lowerName]] ?? []);
 
-        if ( is_string($value) && strpos($value, ',') !== false ) {
+        if ( is_string($value) && str_contains($value, ',')) {
             # if the value is comma separated, then make array from it to aware consistency
             $value = array_map('trim', explode(',', $value));
         }
@@ -130,9 +127,9 @@ class Headers
      * @param string            $name
      * @param string|string[]   $value
      */
-    public function set(string $name, $value): void
+    public function set(string $name, mixed $value): void
     {
-        if ( is_string($value) && strpos($value, ',') !== false ) {
+        if ( is_string($value) && str_contains($value, ',')) {
             # if the value is comma separated, then make array from it to aware consistency
             $value = array_map('trim', explode(',', $value));
         }

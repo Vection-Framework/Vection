@@ -15,7 +15,7 @@ namespace Vection\Component\Http\Tests\Server\Factory;
 
 use PHPUnit\Framework\TestCase;
 use Vection\Component\Http\Server\Environment;
-use Vection\Component\Http\Server\Factory\HeadersFactory;
+use Vection\Component\Http\Common\Factory\HeadersFactory;
 
 /**
  * Class HeadersFactoryTest

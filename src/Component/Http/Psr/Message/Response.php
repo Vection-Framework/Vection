@@ -16,7 +16,7 @@ namespace Vection\Component\Http\Psr\Message;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Vection\Component\Http\Headers;
+use Vection\Component\Http\Common\Headers;
 use Vection\Component\Http\Status;
 
 /**
@@ -28,12 +28,8 @@ use Vection\Component\Http\Status;
  */
 class Response extends Message implements ResponseInterface
 {
-
-    /** @var integer */
-    protected $statusCode;
-
-    /** @var string */
-    protected $reasonPhrase;
+    protected int $statusCode;
+    protected string $reasonPhrase;
 
     /**
      * Response constructor.

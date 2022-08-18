@@ -13,7 +13,7 @@ namespace Vection\Component\Http\Psr\Message\Factory;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Vection\Component\Http\Headers;
+use Vection\Component\Http\Common\Headers;
 use Vection\Component\Http\Psr\Message\Response;
 use Vection\Component\Http\Status;
 

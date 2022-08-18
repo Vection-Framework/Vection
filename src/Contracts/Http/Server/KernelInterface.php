@@ -45,6 +45,7 @@ interface KernelInterface extends LoggerAwareInterface
      * Set true to terminate the current process after send the response to client.
      *
      * @param bool $terminate
+     * @param bool $clearUnexpectedBuffer
      */
-    public function execute(bool $terminate = true): void;
+    public function execute(bool $terminate = true, bool $clearUnexpectedBuffer = true): void;
 }

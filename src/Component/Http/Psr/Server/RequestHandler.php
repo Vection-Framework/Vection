@@ -28,9 +28,8 @@ use RuntimeException;
  */
 class RequestHandler implements RequestHandlerInterface
 {
-
     /** @var MiddlewareInterface[] */
-    protected $middleware;
+    protected array $middleware;
 
     /**
      * RequestHandler constructor.

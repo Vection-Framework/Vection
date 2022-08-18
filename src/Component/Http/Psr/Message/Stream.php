@@ -29,21 +29,11 @@ class Stream implements StreamInterface
 {
     /** @var resource */
     protected $resource;
-
-    /** @var string */
-    protected $uri;
-
-    /** @var integer */
-    protected $size;
-
-    /** @var boolean */
-    protected $readable;
-
-    /** @var boolean */
-    protected $writable;
-
-    /** @var boolean */
-    protected $seekable;
+    protected string|null $uri;
+    protected int|null $size;
+    protected bool $readable;
+    protected bool$writable;
+    protected bool $seekable;
 
     /**
      * Stream constructor.
@@ -325,7 +315,7 @@ class Stream implements StreamInterface
      *     provided. Returns a specific key value if a key is provided and the
      *     value is found, or null if the key is not found.
      */
-    public function getMetadata($key = null)
+    public function getMetadata($key = null): mixed
     {
         if ( ! $this->resource ) {
             return $key ? null : [];
@@ -354,7 +344,7 @@ class Stream implements StreamInterface
     {
         try {
             return $this->getContents();
-        } catch ( RuntimeException $e) {
+        } catch ( RuntimeException ) {
             return '';
         }
     }

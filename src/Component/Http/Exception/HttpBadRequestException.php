@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Vection package.
  *
@@ -9,6 +10,8 @@
  */
 
 namespace Vection\Component\Http\Exception;
+
+use Throwable;
 
 /**
  * Class HttpBadRequestException
@@ -21,9 +24,9 @@ class HttpBadRequestException extends HttpException
      * HttpBadRequestException constructor.
      *
      * @param string $message
-     * @param \Throwable|null $previous
+     * @param Throwable|null $previous
      */
-    public function __construct($message = '', \Throwable $previous = null)
+    public function __construct(string $message = '', Throwable $previous = null)
     {
         parent::__construct($message, 400, $previous);
     }

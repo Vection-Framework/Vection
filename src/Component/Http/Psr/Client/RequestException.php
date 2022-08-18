@@ -27,10 +27,7 @@ use Throwable;
  */
 class RequestException extends Exception implements RequestExceptionInterface
 {
-    /**
-     * @var RequestInterface
-     */
-    protected $request;
+    protected RequestInterface $request;
 
     /**
      * RequestException constructor.

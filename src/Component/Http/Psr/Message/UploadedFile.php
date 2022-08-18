@@ -27,36 +27,12 @@ use RuntimeException;
  */
 class UploadedFile implements UploadedFileInterface
 {
-
-    /**
-     * @var StreamInterface
-     */
-    protected $stream;
-
-    /**
-     * @var integer
-     */
-    protected $size;
-
-    /**
-     * @var integer
-     */
-    protected $error;
-
-    /**
-     * @var string
-     */
-    protected $clientFilename;
-
-    /**
-     * @var string
-     */
-    protected $clientMediaType;
-
-    /**
-     * @var boolean
-     */
-    protected $moved;
+    protected StreamInterface $stream;
+    protected int $size;
+    protected int $error;
+    protected string $clientFilename;
+    protected string $clientMediaType;
+    protected bool $moved;
 
     /**
      * UploadedFile constructor.
@@ -146,7 +122,7 @@ class UploadedFile implements UploadedFileInterface
             throw new InvalidArgumentException('Cannot move file, the path must be an non empty string.');
         }
 
-        if ( strpos($targetPath, '/') === 0 && ! is_writable($targetPath) ) {
+        if ( str_starts_with($targetPath, '/') && ! is_writable($targetPath) ) {
             throw new RuntimeException("Unable to move file - target path is not writeable ($targetPath)");
         }
 
@@ -155,7 +131,7 @@ class UploadedFile implements UploadedFileInterface
         $this->moved = PHP_SAPI === 'cli' ? rename($file, $targetPath) : move_uploaded_file($file, $targetPath);
 
         if ( $this->moved === false ) {
-            throw new RuntimeException("Uploaded file could not be moved to {$file}");
+            throw new RuntimeException("Uploaded file could not be moved to $file");
         }
 
         $this->stream->close() && unlink($file);

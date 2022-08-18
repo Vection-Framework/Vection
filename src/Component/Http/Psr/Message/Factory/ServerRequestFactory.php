@@ -20,10 +20,10 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\UriInterface;
-use Vection\Component\Http\Headers;
+use Vection\Component\Http\Common\Headers;
 use Vection\Component\Http\Psr\Message\ServerRequest;
 use Vection\Component\Http\Server\Environment;
-use Vection\Component\Http\Server\Factory\HeadersFactory;
+use Vection\Component\Http\Common\Factory\HeadersFactory;
 
 /**
  * Class ServerRequestFactory
@@ -34,12 +34,8 @@ use Vection\Component\Http\Server\Factory\HeadersFactory;
  */
 class ServerRequestFactory implements ServerRequestFactoryInterface
 {
-
-    /** @var StreamFactoryInterface */
-    protected $streamFactory;
-
-    /** @var UploadedFileFactory */
-    protected $uploadedFileFactory;
+    protected StreamFactoryInterface $streamFactory;
+    protected UploadedFileFactory $uploadedFileFactory;
 
     /**
      * ServerRequestFactory constructor.

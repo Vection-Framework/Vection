@@ -27,10 +27,7 @@ use Throwable;
  */
 class NetworkException extends Exception implements NetworkExceptionInterface
 {
-    /**
-     * @var RequestInterface
-     */
-    protected $request;
+    protected RequestInterface $request;
 
     /**
      * NetworkException constructor.

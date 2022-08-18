@@ -18,7 +18,7 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\UriInterface;
-use Vection\Component\Http\Headers;
+use Vection\Component\Http\Common\Headers;
 use Vection\Component\Http\Psr\Message\Request;
 
 /**
@@ -30,9 +30,7 @@ use Vection\Component\Http\Psr\Message\Request;
  */
 class RequestFactory implements RequestFactoryInterface
 {
-
-    /** @var UriFactoryInterface */
-    protected $uriFactory;
+    protected UriFactoryInterface $uriFactory;
 
     /**
      * RequestFactory constructor.

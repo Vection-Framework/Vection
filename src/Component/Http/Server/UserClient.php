@@ -14,26 +14,18 @@ declare(strict_types=1);
 namespace Vection\Component\Http\Server;
 
 /**
- * Class Client
+ * Class UserClient
  *
  * @package Vection\Component\Http\Server
  *
  * @author  David M. Lung <vection@davidlung.de>
  */
-class Client
+class UserClient
 {
-
-    /** @var string */
-    private $ip;
-
-    /** @var string */
-    private $host;
-
-    /** @var integer */
-    private $port;
-
-    /** @var string */
-    private $userAgent;
+    private string $ip;
+    private string $host;
+    private int $port;
+    private string $userAgent;
 
     /**
      * Client constructor.

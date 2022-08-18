@@ -16,7 +16,8 @@ namespace Vection\Component\Http\Psr\Message;
 use InvalidArgumentException;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
-use Vection\Component\Http\Headers;
+use Vection\Component\Http\Common\Headers;
+use Vection\Component\Http\Psr\Message\Factory\StreamFactory;
 
 /**
  * Class Message
@@ -27,24 +28,18 @@ use Vection\Component\Http\Headers;
  */
 abstract class Message implements MessageInterface
 {
-
-    /** @var string */
-    protected $protocolVersion = '1.0';
-
-    /** @var Headers */
-    protected $headers;
-
-    /** @var StreamInterface */
-    protected $stream;
+    protected string $protocolVersion = '1.0';
+    protected Headers $headers;
+    protected StreamInterface|null $stream;
 
     /**
      * Message constructor.
      *
-     * @param Headers         $headers
-     * @param StreamInterface $stream
-     * @param string          $protocolVersion
+     * @param Headers              $headers
+     * @param StreamInterface|null $stream
+     * @param string               $protocolVersion
      */
-    public function __construct(Headers $headers, ? StreamInterface $stream = null, string $protocolVersion = '1.0')
+    public function __construct(Headers $headers, StreamInterface|null $stream = null, string $protocolVersion = '1.0')
     {
         $this->headers         = $headers;
         $this->stream          = $stream;
@@ -248,7 +243,7 @@ abstract class Message implements MessageInterface
     public function getBody(): StreamInterface
     {
         if ( ! $this->stream ) {
-            $this->stream = new Stream(fopen('php://temp', 'rw+b'));
+            $this->stream = (new StreamFactory())->createStream();
         }
 
         return $this->stream;

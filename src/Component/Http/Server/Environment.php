@@ -22,9 +22,7 @@ namespace Vection\Component\Http\Server;
  */
 class Environment
 {
-
-    /** @var array */
-    protected $data;
+    protected array $data;
 
     /**
      * Environment constructor.

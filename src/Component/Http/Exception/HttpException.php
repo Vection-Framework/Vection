@@ -96,7 +96,7 @@ class HttpException extends RuntimeException
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getStatus() . ($this->message ? ' - '. $this->message : '');
     }

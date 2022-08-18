@@ -17,7 +17,7 @@ use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
-use Vection\Component\Http\Headers;
+use Vection\Component\Http\Common\Headers;
 use Vection\Component\Http\Server\Environment;
 
 /**
@@ -29,33 +29,23 @@ use Vection\Component\Http\Server\Environment;
  */
 class ServerRequest extends Request implements ServerRequestInterface
 {
-
-    /** @var array */
-    protected $environment;
-
-    /** @var array */
-    protected $cookieParams;
-
-    /** @var array */
-    protected $queryParams;
-
-    /** @var array */
-    protected $attributes;
+    protected Environment $environment;
+    protected array $cookieParams;
+    protected array $queryParams;
+    protected array $attributes;
+    protected array|object|null $parsedBody;
 
     /** @var UploadedFileInterface[] */
-    protected $uploadedFiles;
-
-    /** @var array|object|null */
-    protected $parsedBody;
+    protected array $uploadedFiles;
 
     /**
      * ServerRequest constructor.
      *
-     * @param string       $method
-     * @param UriInterface $uri
-     * @param Headers      $headers
-     * @param string       $version
-     * @param Environment  $environment
+     * @param string           $method
+     * @param UriInterface     $uri
+     * @param Headers          $headers
+     * @param string           $version
+     * @param Environment|null $environment
      */
     public function __construct(
         string $method, UriInterface $uri, Headers $headers, string $version = '1.1', Environment $environment = null
@@ -230,7 +220,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @return null|array|object The deserialized body parameters, if any.
      *     These will typically be an array or object.
      */
-    public function getParsedBody()
+    public function getParsedBody(): null|array|object
     {
         return $this->parsedBody;
     }
@@ -307,7 +297,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @return mixed
      * @see getAttributes()
      */
-    public function getAttribute($name, $default = null)
+    public function getAttribute($name, $default = null): mixed
     {
         if ( ! array_key_exists($name, $this->attributes) ) {
             return $default;

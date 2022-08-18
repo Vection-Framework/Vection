@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Vection\Component\Http\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Vection\Component\Http\Headers;
+use Vection\Component\Http\Common\Headers;
 
 /**
  * Class HeadersTest

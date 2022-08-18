@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Vection\Component\Http\Server;
 
+use function Vection\Component\Http\Common\count;
+
 /**
  * Class Proxy
  *
@@ -29,29 +31,22 @@ class Proxy
     public const HEADER_X_FORWARDED_PORT  = 'HTTP_X_FORWARDED_PORT';
     public const HEADER_X_PROXYUSER_IP    = 'HTTP_X_PROXYUSER_IP';
 
-    /** @var string */
-    protected $ips;
-
-    /** @var string */
-    protected $originHost;
-
-    /** @var string */
-    protected $originPort;
-
-    /** @var string */
-    protected $originProto;
+    protected array $ips;
+    protected ?string $originHost;
+    protected ?int $originPort;
+    protected ?string $originProto;
 
     /**
      * Proxy constructor.
      *
-     * @param array  $ips
-     * @param string $originHost
-     * @param int $originPort
-     * @param string $originProto
+     * @param array       $ips
+     * @param string|null $originHost
+     * @param int|null    $originPort
+     * @param string|null $originProto
      */
     public function __construct(array $ips, ? string $originHost, ? int $originPort, ? string $originProto)
     {
-        $this->ips         = $ips;
+        $this->ips         = $ips ?: [];
         $this->originHost  = $originHost;
         $this->originPort  = $originPort;
         $this->originProto = $originProto;

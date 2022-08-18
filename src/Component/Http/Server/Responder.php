@@ -15,7 +15,7 @@ namespace Vection\Component\Http\Server;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Vection\Component\Http\Headers;
+use Vection\Component\Http\Common\Headers;
 use Vection\Contracts\Http\Server\ResponderInterface;
 
 /**
@@ -27,16 +27,11 @@ use Vection\Contracts\Http\Server\ResponderInterface;
  */
 class Responder implements ResponderInterface
 {
+    protected string $charset = 'utf-8';
 
-    /**
-     * @var string
-     */
-    protected $charset = 'utf-8';
-
-    /**
-     * @var array
-     */
-    protected $headerReplacements = [];
+    public function __construct(
+        protected array $headerReplacements = []
+    ){}
 
     /**
      * @param string $charset
@@ -52,6 +47,15 @@ class Responder implements ResponderInterface
     public function setHeaderReplacements(array $headers): void
     {
         $this->headerReplacements = $headers;
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     */
+    public function addHeaderReplacement(string $name, string $value): void
+    {
+        $this->headerReplacements[$name] = $value;
     }
 
     /**
@@ -73,7 +77,7 @@ class Responder implements ResponderInterface
                 header($name.': '.implode(', ', $values), true, $status);
             }
 
-            header("HTTP/{$response->getProtocolVersion()} {$status} {$response->getReasonPhrase()}");
+            header("HTTP/{$response->getProtocolVersion()} $status {$response->getReasonPhrase()}");
         }
 
         if ( $status >= 200 && $request->getMethod() !== 'HEAD' && ! in_array($status, [204, 304], true) ) {

@@ -17,12 +17,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Vection\Component\Http\Psr\Message\Factory\ServerRequestFactory;
-use Vection\Component\Http\Server\Decorator\Factory\ServerRequestFactoryDecorator;
 use Vection\Component\Http\Server\Event\AfterSendRequestEvent;
 use Vection\Component\Http\Server\Event\BeforeHandleRequestEvent;
 use Vection\Component\Http\Server\Event\BeforeSendRequestEvent;
 use Vection\Component\Http\Server\Event\BeforeTerminateRequestEvent;
+use Vection\Component\Http\Server\Message\Factory\ServerRequestFactory;
 use Vection\Contracts\Event\EventDispatcherInterface;
 use Vection\Contracts\Http\Server\KernelInterface;
 use Vection\Contracts\Http\Server\ResponderInterface;
@@ -31,47 +30,41 @@ use Vection\Contracts\Http\Server\ResponderInterface;
  * Class Kernel
  *
  * @package Vection\Component\Http\Server
- *
- * @author  David M. Lung <vection@davidlung.de>
+ * @author  David Lung <david.lung@appsdock.de>
  */
 class Kernel implements KernelInterface
 {
-    /** @var ServerRequestInterface */
-    protected $request;
-
-    /** @var RequestHandlerInterface */
-    protected $requestHandler;
-
-    /** @var ResponderInterface */
-    protected $responder;
-
-    /** @var EventDispatcherInterface */
-    protected $eventDispatcher;
-
-    /** @var LoggerInterface */
-    protected $logger;
+    protected ServerRequestInterface $request;
+    protected RequestHandlerInterface $requestHandler;
+    protected ResponderInterface $responder;
+    protected LoggerInterface $logger;
+    protected ?EventDispatcherInterface     $eventDispatcher;
 
     /**
      * Kernel constructor.
      *
-     * @param RequestHandlerInterface            $requestHandler
-     * @param ServerRequestInterface             $request
-     * @param ResponderInterface|null            $responder
+     * @param RequestHandlerInterface           $requestHandler
+     * @param ServerRequestInterface|null       $request
+     * @param ResponderInterface|null           $responder
+     * @param EventDispatcherInterface|null     $eventDispatcher
+     * @param LoggerInterface|null              $logger
      */
     public function __construct(
         RequestHandlerInterface $requestHandler,
         ? ServerRequestInterface $request = null,
-        ? ResponderInterface $responder = null
+        ? ResponderInterface $responder = null,
+        ? EventDispatcherInterface $eventDispatcher = null,
+        ? LoggerInterface $logger = null,
     )
     {
-        $this->requestHandler = $requestHandler;
-        $this->request        = $request;
-        $this->responder      = $responder ?: new Responder();
-        $this->logger         = new NullLogger();
+        $this->requestHandler       = $requestHandler;
+        $this->request              = $request;
+        $this->responder            = $responder ?: new Responder();
+        $this->logger               = $logger ?: new NullLogger();
+        $this->eventDispatcher      = $eventDispatcher;
 
-        if ( ! $this->request ) {
-            $serverRequestFactory = new ServerRequestFactoryDecorator(new ServerRequestFactory());
-            $this->request        = $serverRequestFactory->createFromGlobals();
+        if (!$request) {
+            $this->request = (new ServerRequestFactory())->createServerRequestFromEnvironment();
         }
     }
 
@@ -104,16 +97,6 @@ class Kernel implements KernelInterface
     }
 
     /**
-     * @param object $event
-     */
-    protected function fireEvent(object $event): void
-    {
-        if ( $this->eventDispatcher ) {
-            $this->eventDispatcher->dispatch($event);
-        }
-    }
-
-    /**
      * Uses the request and response to execute the registered
      * request middleware handler and send the response to
      * the client.
@@ -125,30 +108,48 @@ class Kernel implements KernelInterface
      *  - BeforeTerminateRequestEvent (only if argument 1 is true)
      *
      * @param bool $terminate
+     * @param bool $clearUnexpectedBuffer
      *
      * @see Kernel::setEventDispatcher()
-     *
      */
-    public function execute(bool $terminate = true): void
+    public function execute(bool $terminate = true, bool $clearUnexpectedBuffer = true): void
     {
-        $this->logger->info(
+        $this->logger->debug(
             sprintf('Received request %s %s', $this->request->getMethod(), $this->request->getUri())
         );
 
-        $this->fireEvent(new BeforeHandleRequestEvent());
+        $this?->eventDispatcher->dispatch(new BeforeHandleRequestEvent());
+
         $response = $this->requestHandler->handle($this->request);
 
-        $this->fireEvent(new BeforeSendRequestEvent());
+        $this?->eventDispatcher->dispatch(new BeforeSendRequestEvent());
 
-        $this->logger->info(
-            sprintf('Response sent with status %d %s', $response->getStatusCode(), $response->getReasonPhrase())
-        );
+        if ($clearUnexpectedBuffer && ob_get_level() > 0) {
+            $buffer = ob_get_clean();
+
+            if( is_string($buffer) && ! empty($buffer) ){
+                $this->logger->notice(sprintf(
+                    "Unexpected buffer output which is aside from the primary response: \n%s",
+                    $buffer
+                ));
+            }
+        }
 
         $this->responder->send($response, $this->request);
-        $this->fireEvent(new AfterSendRequestEvent());
+
+        $this->logger->debug(
+            sprintf(
+                'Response sent with status %d %s after %d ms',
+                $response->getStatusCode(),
+                $response->getReasonPhrase(),
+                (int) (microtime(true) * 1000) - (int) ($_SERVER['REQUEST_TIME_FLOAT'] * 1000)
+            )
+        );
+
+        $this?->eventDispatcher->dispatch(new AfterSendRequestEvent());
 
         if ( $terminate ) {
-            $this->fireEvent(new BeforeTerminateRequestEvent());
+            $this?->eventDispatcher->dispatch(new BeforeTerminateRequestEvent());
             die(0);
         }
     }

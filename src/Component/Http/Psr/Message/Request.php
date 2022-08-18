@@ -17,7 +17,7 @@ use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
-use Vection\Component\Http\Headers;
+use Vection\Component\Http\Common\Headers;
 
 /**
  * Class Request
@@ -28,22 +28,16 @@ use Vection\Component\Http\Headers;
  */
 class Request extends Message implements RequestInterface
 {
-
-    /** @var UriInterface */
-    protected $uri;
-
-    /** @var string */
-    protected $method;
-
-    /** @var string */
-    protected $target;
+    protected UriInterface $uri;
+    protected string $method;
+    protected string $target;
 
     /**
      * Request constructor.
      *
      * @param string               $method
      * @param UriInterface         $uri
-     * @param Headers|null         $headers
+     * @param Headers              $headers
      * @param StreamInterface|null $body
      * @param string               $version
      */
@@ -215,13 +209,13 @@ class Request extends Message implements RequestInterface
             foreach ( $request->headers as $key => $header ) {
                 if ( strtolower($key) === 'host' ) {
                     unset($request->headers[$key]);
-                    $request->headers = ([$key => [$host]] + $request->headers);
+                    $request->headers = new Headers(([$key => [$host]] + $request->headers->toArray()));
                     break;
                 }
             }
 
             if ( ! $request->hasHeader('host') ) {
-                $request->headers = (['Host' => [$host]] + $request->headers);
+                $request->headers = new Headers((['Host' => [$host]] + $request->headers->toArray()));
             }
         }
 

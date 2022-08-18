@@ -25,27 +25,13 @@ use Psr\Http\Message\UriInterface;
  */
 class Uri implements UriInterface
 {
-
-    /** @var string */
-    protected $schema;
-
-    /** @var string */
-    protected $userInfo;
-
-    /** @var string */
-    protected $host;
-
-    /** @var integer */
-    protected $port;
-
-    /** @var string */
-    protected $path;
-
-    /** @var string */
-    protected $query;
-
-    /** @var string */
-    protected $fragment;
+    protected string|null $schema;
+    protected string|null $userInfo;
+    protected string|null $host;
+    protected int|null    $port;
+    protected string|null $path;
+    protected string|null $query;
+    protected string|null $fragment;
 
     /**
      * Retrieve the scheme component of the URI.
