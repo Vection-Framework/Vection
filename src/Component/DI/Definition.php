@@ -24,16 +24,16 @@ class Definition
 {
 
     /** @var string */
-    protected $id;
+    protected string $id;
 
     /** @var callable */
     protected $factory;
 
     /** @var boolean */
-    protected $shared = true;
+    protected bool $shared = true;
 
     /** @var array */
-    protected $dependencies = [];
+    protected array $dependencies = [];
 
     /**
      * Definition constructor.
@@ -77,7 +77,7 @@ class Definition
     {
         $setter = $propertyName ?: $className;
 
-        if ( strpos($setter, "\\") !== false ) {
+        if (str_contains($setter, "\\")) {
             $setter = substr(strrchr($setter, "\\"), 1);
         }
 

@@ -29,16 +29,16 @@ class TestObject implements InterfaceInjectedObjectInterface
      * @Inject("Vection\Component\DI\Tests\Fixtures\AnnotationInjectedObject")
      * @var AnnotationInjectedObject
      */
-    protected $annotationInjectedObject;
+    protected AnnotationInjectedObject $annotationInjectedObject;
 
     /** @var ConstructorInjectedObject */
-    private $constructorInjectedObject;
+    private ConstructorInjectedObject $constructorInjectedObject;
 
     /** @var ExplicitInjectedObject */
-    private $explicitInjectedObject;
+    private ExplicitInjectedObject $explicitInjectedObject;
 
     /** @var InterfaceInjectedObject */
-    protected $logger;
+    protected InterfaceInjectedObject $logger;
 
     /**
      * TestObject constructor.
@@ -58,17 +58,17 @@ class TestObject implements InterfaceInjectedObjectInterface
         $this->explicitInjectedObject = $o;
     }
 
-    public function getExplicitInjectedObject()
+    public function getExplicitInjectedObject(): ExplicitInjectedObject
     {
         return $this->explicitInjectedObject;
     }
 
-    public function getAnnotationInjectedObject()
+    public function getAnnotationInjectedObject(): AnnotationInjectedObject
     {
         return $this->annotationInjectedObject;
     }
 
-    public function getInterfaceInjectedObject()
+    public function getInterfaceInjectedObject(): InterfaceInjectedObject
     {
         return $this->logger;
     }

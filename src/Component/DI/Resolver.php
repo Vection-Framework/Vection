@@ -16,6 +16,7 @@ namespace Vection\Component\DI;
 use ArrayObject;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionNamedType;
 use Vection\Component\DI\Attributes\Inject;
 use Vection\Component\DI\Attributes\PreventInjection;
 use Vection\Component\DI\Exception\ContainerException;
@@ -46,7 +47,7 @@ class Resolver implements CacheAwareInterface
      *
      * @var CacheInterface|null
      */
-    protected $cache;
+    protected ?CacheInterface $cache;
 
     /**
      * This array object contains custom dependency definitions
@@ -54,7 +55,7 @@ class Resolver implements CacheAwareInterface
      *
      * @var ArrayObject|Definition[]
      */
-    protected $definitions;
+    protected array|ArrayObject $definitions;
 
     /**
      * This property contains all resolved dependency information
@@ -62,7 +63,7 @@ class Resolver implements CacheAwareInterface
      *
      * @var ArrayObject|string[][][]
      */
-    protected $dependencies;
+    protected array|ArrayObject $dependencies;
 
     /**
      * Resolver constructor.
@@ -186,7 +187,7 @@ class Resolver implements CacheAwareInterface
                     );
                 }
 
-                if (!$type instanceof \ReflectionNamedType || $type->isBuiltin()) {
+                if (!$type instanceof ReflectionNamedType || $type->isBuiltin()) {
                     if (!$param->isDefaultValueAvailable()) {
                         $this->dependencies[$className]['constructor_has_primitives'] = true;
                     }
@@ -315,7 +316,7 @@ class Resolver implements CacheAwareInterface
                     if (!$property->hasType()) {
                         throw new RuntimeException(
                             'The use of attribute based injection requires typed properties. '.
-                            "Property {$property->getName()} in class {$className} has no type."
+                            "Property {$property->getName()} in class $className has no type."
                         );
                     }
 
@@ -334,7 +335,7 @@ class Resolver implements CacheAwareInterface
                     }
                 }
 
-                if ($propertyType instanceof \ReflectionNamedType ) {
+                if ($propertyType instanceof ReflectionNamedType ) {
                     $dependencyClassName = $propertyType->getName();
                     $dependencies[$property->getName()] = $dependencyClassName;
                     $this->resolveDependencies($dependencyClassName);
@@ -368,7 +369,7 @@ class Resolver implements CacheAwareInterface
             foreach ( ($method->getParameters() ?? []) as $param ) {
                 if ($param->hasType()) {
                     $type = $param->getType();
-                    if ( $type instanceof \ReflectionNamedType && ! $type->isBuiltin() ) {
+                    if ( $type instanceof ReflectionNamedType && ! $type->isBuiltin() ) {
                         $dependencies[] = $type->getName();
                         continue;
                     }

@@ -24,7 +24,7 @@ trait ContainerAwareTrait
 {
 
     /** @var Container */
-    protected $container;
+    protected Container $container;
 
     /**
      * @param Container $container

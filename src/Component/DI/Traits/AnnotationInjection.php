@@ -25,7 +25,7 @@ trait AnnotationInjection
      *
      * @param array $args
      */
-    public function __annotationInjection(array $args)
+    public function __annotationInjection(array $args): void
     {
         foreach ( $args as $prop => $dep ) {
             $this->$prop = $dep;

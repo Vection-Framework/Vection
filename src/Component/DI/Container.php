@@ -47,7 +47,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      *
      * @var array
      */
-    protected $registeredNamespaces;
+    protected array $registeredNamespaces;
 
     /**
      * This class resolves all dependencies of a given class and saves
@@ -55,7 +55,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      *
      * @var Resolver
      */
-    protected $resolver;
+    protected Resolver $resolver;
 
     /**
      * The Injector is responsible for the injection of dependencies
@@ -64,7 +64,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      *
      * @var Injector
      */
-    protected $injector;
+    protected Injector $injector;
 
     /**
      * Contains all shared objects which will be only instantiate
@@ -72,7 +72,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      *
      * @var object[]
      */
-    protected $sharedObjects;
+    protected array $sharedObjects;
 
     /**
      * This array object contains custom dependency definitions
@@ -80,7 +80,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      *
      * @var Definition[]|ArrayObject
      */
-    protected $definitions;
+    protected array|ArrayObject $definitions;
 
     /**
      * This property contains all resolved dependency information
@@ -88,7 +88,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      *
      * @var string[][][]|ArrayObject
      */
-    protected $dependencies;
+    protected array|ArrayObject $dependencies;
 
     /**
      * Container constructor.
@@ -143,7 +143,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
             $definitions = require $filePath;
 
             if ( ! is_array($definitions) ) {
-                throw new RuntimeException("Cannot load definition from {$filePath}.");
+                throw new RuntimeException("Cannot load definition from $filePath.");
             }
 
             foreach ( $definitions as $definition ) {
@@ -228,7 +228,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
 
             # Check if the id is part of a registered namespace scope
             foreach ( $this->registeredNamespaces as $namespace ) {
-                if ( strpos($id, $namespace) === 0 ) {
+                if (str_starts_with($id, $namespace)) {
                     # The id matches a scope, so we allow to register a default definition for this id
                     $this->set($id);
                 }
@@ -264,7 +264,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      *
      * @return bool
      */
-    public function has($id): bool
+    public function has(string $id): bool
     {
         $className = trim($id, "\\");
         return isset($this->definitions[$className]);
@@ -274,12 +274,12 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      * Register a new entry by given identifier. The second parameter can be used
      * for entry definition
      *
-     * @param string     $className
-     * @param Definition $definition
+     * @param string          $className
+     * @param Definition|null $definition
      *
      * @return Container
      */
-    public function set(string $className, ? Definition $definition = null): Container
+    public function set(string $className, Definition|null $definition = null): Container
     {
         $className = trim($className, "\\");
         $this->definitions[$className] = $definition ?: new Definition($className);
@@ -297,7 +297,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      *
      * @return object
      */
-    public function get($id)
+    public function get(string $id): object
     {
         $className = ltrim($id, "\\");
 

@@ -27,7 +27,7 @@ use Vection\Contracts\DI\Annotation;
 final class Inject implements Annotation
 {
     /** @var string|null */
-    public $fullQualifiedClassName;
+    public ?string $fullQualifiedClassName;
 
     /**
      * Inject constructor.
