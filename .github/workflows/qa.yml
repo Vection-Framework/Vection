@@ -11,7 +11,7 @@ on:
 jobs:
 
   tests:
-    name: QA based on PHP ${{ matrix.php-versions }}
+    name: Run tests based on PHP ${{ matrix.php-versions }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -48,8 +48,12 @@ jobs:
 
   static-analysis:
 
-    name: Static Code Analysis based on PHP ${{ matrix.php-versions }}
+    name: Analyse static code based on PHP ${{ matrix.php-versions }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions:
+          - 8.1
 
     steps:
       - uses: actions/checkout@v2
