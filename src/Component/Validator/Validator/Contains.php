@@ -23,12 +23,12 @@ use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
  */
 class Contains extends Validator
 {
-    protected $needle;
+    protected mixed $needle;
 
     /**
      * @param mixed $needle
      */
-    public function __construct($needle)
+    public function __construct(mixed $needle)
     {
         $this->needle = $needle;
     }

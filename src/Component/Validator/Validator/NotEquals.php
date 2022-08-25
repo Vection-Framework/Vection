@@ -22,13 +22,9 @@ use Vection\Component\Validator\Validator;
  */
 class NotEquals extends Validator
 {
-
-    /** @var string */
-    protected $notEqualValue;
+    protected string $notEqualValue;
 
     /**
-     * NotEquals constructor.
-     *
      * @param string $notEqualValue
      */
     public function __construct(string $notEqualValue)

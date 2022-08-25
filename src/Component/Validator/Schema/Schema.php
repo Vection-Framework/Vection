@@ -23,8 +23,7 @@ use Vection\Contracts\Validator\Schema\SchemaInterface;
  * Class Schema
  *
  * @package Vection\Component\Validator\Schema
- *
- * @author David Lung <vection@davidlung.de>
+ * @author  David Lung <vection@davidlung.de>
  */
 class Schema implements SchemaInterface
 {

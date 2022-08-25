@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Vection\Component\Validator\Schema\Exception;
 
@@ -18,14 +18,11 @@ namespace Vection\Component\Validator\Schema\Exception;
  * Class MissingPropertyException
  *
  * @package Vection\Component\Validator\Schema\Exception
- *
- * @author David Lung <vection@davidlung.de>
+ * @author  David Lung <vection@davidlung.de>
  */
 class MissingPropertyException extends PropertyException
 {
     /**
-     * IllegalTypeException constructor.
-     *
      * @param string $property
      */
     public function __construct(string $property)

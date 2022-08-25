@@ -61,7 +61,7 @@ class SchemaValidator implements SchemaValidatorInterface
             throw new RuntimeException('Unable to validate file '.$path, 0, $e);
         }
 
-        throw new RuntimeException('Schema validator: Expects json or yaml, got unsupported file: '.$path.'');
+        throw new RuntimeException('Schema validator: Expects json or yaml, got unsupported file: '.$path);
     }
 
     /**

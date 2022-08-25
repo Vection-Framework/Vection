@@ -25,7 +25,7 @@ class BetweenValueTest extends TestCase
     /**
      * @dataProvider provideValidValues
      */
-    public function testValidValues($value, $min, $max)
+    public function testValidValues($value, $min, $max): void
     {
         $this->assertNull((new BetweenValue($min, $max))->validate($value));
     }
@@ -33,7 +33,7 @@ class BetweenValueTest extends TestCase
     /**
      * @dataProvider provideInvalidValues
      */
-    public function testInvalidValues($value, $min, $max)
+    public function testInvalidValues($value, $min, $max): void
     {
         $this->assertNotNull((new BetweenValue($min, $max))->validate($value));
     }
@@ -41,7 +41,7 @@ class BetweenValueTest extends TestCase
     /**
      * @return array
      */
-    public function provideValidValues()
+    public function provideValidValues(): array
     {
         return [
             [5, 1, 10],
@@ -54,7 +54,7 @@ class BetweenValueTest extends TestCase
     /**
      * @return array
      */
-    public function provideInvalidValues()
+    public function provideInvalidValues(): array
     {
         return [
             [0, 1, 10],

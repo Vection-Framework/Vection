@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Vection\Contracts\Validator\Schema;
 
@@ -18,8 +18,7 @@ namespace Vection\Contracts\Validator\Schema;
  * Interface JsonSchemaValidator
  *
  * @package Vection\Contracts\Validator\Schema
- *
- * @author David Lung <vection@davidlung.de>
+ * @author  David Lung <vection@davidlung.de>
  */
 interface SchemaValidatorInterface
 {
@@ -48,14 +47,14 @@ interface SchemaValidatorInterface
     public function validateJsonString(string $json): array;
 
     /**
-     * @param string $json
+     * @param string $yaml
      *
      * @return array
      *
      * @throws PropertyExceptionInterface
      * @throws SchemaExceptionInterface
      */
-    public function validateYamlString(string $json): array;
+    public function validateYamlString(string $yaml): array;
 
     /**
      * @param array $data

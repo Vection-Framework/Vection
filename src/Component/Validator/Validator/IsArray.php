@@ -17,7 +17,6 @@ use Vection\Component\Validator\Validator;
  * Class IsArray
  *
  * @package Vection\Component\Validator\Validator
- *
  * @author  David M. Lung <vection@davidlung.de>
  */
 class IsArray extends Validator

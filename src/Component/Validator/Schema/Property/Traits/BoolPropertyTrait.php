@@ -31,7 +31,6 @@ trait BoolPropertyTrait
      * @return void
      *
      * @throws IllegalPropertyTypeException
-     * @throws IllegalPropertyValueException
      */
     public function validateBoolProperty($value): void
     {

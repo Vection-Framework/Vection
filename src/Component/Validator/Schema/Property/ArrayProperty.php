@@ -40,8 +40,8 @@ class ArrayProperty extends Property
     /**
      * @inheritDoc
      */
-    public function onValidate($values): void
+    public function onValidate($value): void
     {
-        $this->validateArrayProperty($values);
+        $this->validateArrayProperty($value);
     }
 }

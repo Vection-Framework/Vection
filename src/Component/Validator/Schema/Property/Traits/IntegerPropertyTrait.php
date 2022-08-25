@@ -15,8 +15,8 @@ use Vection\Component\Validator\Schema\Exception\IllegalPropertyValueException;
  */
 trait IntegerPropertyTrait
 {
-    protected ?int $integerMax = null;
-    protected ?int $integerMin = null;
+    protected int|null $integerMax = null;
+    protected int|null $integerMin = null;
 
     /**
      * @param array $schema

@@ -41,7 +41,7 @@ interface ViolationInterface
      *
      * @return mixed
      */
-    public function getValue();
+    public function getValue(): mixed;
 
     /**
      * Returns an user message that contains the value and constraints

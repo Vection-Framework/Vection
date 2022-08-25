@@ -25,7 +25,6 @@ use Vection\Contracts\Validator\ViolationInterface;
  * dynamic constraints.
  *
  * @package Vection\Component\Validator
- *
  * @author  David Lung <vection@davidlung.de>
  */
 abstract class Validator implements ValidatorInterface
@@ -36,8 +35,10 @@ abstract class Validator implements ValidatorInterface
      * @param mixed $value
      *
      * @return bool
+     *
+     * @throws IllegalTypeException
      */
-    abstract protected function onValidate($value): bool;
+    abstract protected function onValidate(mixed $value): bool;
 
     /**
      * Returns an array of the validator implementation specific constraints

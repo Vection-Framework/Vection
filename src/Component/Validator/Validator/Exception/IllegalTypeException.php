@@ -23,6 +23,4 @@ use Exception;
  * @author  BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class IllegalTypeException extends Exception
-{
-
-}
+{}

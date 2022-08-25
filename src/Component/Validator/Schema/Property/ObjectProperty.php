@@ -29,8 +29,8 @@ class ObjectProperty extends Property
     use ObjectPropertyTrait;
 
     /** @var Property[] */
-    protected array     $properties = [];
-    protected ?Property $property   = null;
+    protected array         $properties = [];
+    protected Property|null $property   = null;
 
     /**
      * @inheritDoc
@@ -43,8 +43,8 @@ class ObjectProperty extends Property
     /**
      * @inheritDoc
      */
-    public function onValidate($values): void
+    public function onValidate($value): void
     {
-        $this->validateObjectProperty($values);
+        $this->validateObjectProperty($value);
     }
 }

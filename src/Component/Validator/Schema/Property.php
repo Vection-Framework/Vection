@@ -31,16 +31,16 @@ use Vection\Contracts\Validator\ValidatorInterface;
  */
 abstract class Property implements PropertyInterface
 {
-    protected string    $type;
-    protected string    $name;
-    protected ?bool     $required = null;
-    protected ?bool     $nullable = null;
+    protected string        $type;
+    protected string        $name;
+    protected bool|null     $required = null;
+    protected bool|null     $nullable = null;
     /** @var ValidatorInterface[] */
-    protected array     $validators;
-    protected array     $templates;
-    protected ?string   $template = null;
-    protected ?Property $parent;
-    protected int       $maxTemplateRecursion;
+    protected array         $validators;
+    protected array         $templates;
+    protected string|null   $template = null;
+    protected Property|null $parent;
+    protected int           $maxTemplateRecursion;
 
     /**
      * @param string        $name
@@ -49,7 +49,7 @@ abstract class Property implements PropertyInterface
      * @param int           $maxTemplateRecursion
      */
     public function __construct(
-        string $name, ? Property $parent = null, array $templates = [], int $maxTemplateRecursion = 3
+        string $name, Property|null $parent = null, array $templates = [], int $maxTemplateRecursion = 3
     )
     {
         $this->name                 = $name;
@@ -62,7 +62,7 @@ abstract class Property implements PropertyInterface
     /**
      * @inheritDoc
      */
-    public function getName(): ? string
+    public function getName(): string|null
     {
         return $this->name;
     }
@@ -201,7 +201,7 @@ abstract class Property implements PropertyInterface
      *
      * @throws PropertyExceptionInterface
      */
-    abstract protected function onValidate($value): void;
+    abstract protected function onValidate(string|int|float|array|bool $value): void;
 
     /**
      * @param string $name

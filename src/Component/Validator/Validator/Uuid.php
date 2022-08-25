@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Vection\Component\Validator\Validator;
 
 use Vection\Component\Validator\Validator;
+use function str_replace;
 
 /**
  * Class Uuid
@@ -35,7 +36,7 @@ class Uuid extends Validator
      */
     protected function onValidate($value): bool
     {
-        $value = \str_replace([ 'urn:', 'uuid:', '{', '}' ], '', $value);
+        $value = str_replace([ 'urn:', 'uuid:', '{', '}' ], '', $value);
 
         return (bool) preg_match(
             '/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/',

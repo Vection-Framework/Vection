@@ -61,10 +61,10 @@ class Iban extends Validator
     /**
      * @inheritDoc
      */
-    protected function onValidate($value): bool
+    protected function onValidate(mixed $value): bool
     {
         $iban    = $this->normalize($value);
-        $isoCode = (string) substr($value,0, 2);
+        $isoCode = substr($value,0, 2);
 
         if ( ! array_key_exists($isoCode, self::ISO_CODES) ) {
             return false;
@@ -112,7 +112,7 @@ class Iban extends Validator
         $chars = str_split($iban);
 
         foreach ($chars as $idx => $value) {
-            $char = $chars[$idx];
+            $char = $value;
             if ( ! is_numeric($char) ) {
                 $chars[$idx] = self::LETTERS[$char];
             }
@@ -133,7 +133,7 @@ class Iban extends Validator
             $n     = $mod . substr($value,0,5);
             $value = substr($value, 5);
             $mod   = ($n % 97);
-        } while (strlen($value));
+        } while ($value !== '');
 
         return $mod === 1;
     }

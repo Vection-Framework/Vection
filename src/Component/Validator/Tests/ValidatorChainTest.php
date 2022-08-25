@@ -28,7 +28,7 @@ class ValidatorChainTest extends TestCase
     /**
      *
      */
-    public function testVerifySuccess()
+    public function testVerifySuccess(): void
     {
         $chain = new ValidatorChain();
 

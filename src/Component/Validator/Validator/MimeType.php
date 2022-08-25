@@ -56,8 +56,8 @@ class MimeType extends Validator
     {
         $wildcard = $this->includeWildcard ? '|\*' : '';
 
-        $pattern = "([a-z0-9][a-z0-9!#$&-^_.+*]{1,127}{$wildcard})";
+        $pattern = "([a-z0-9][a-z0-9!#$&-^_.+*]{1,127}$wildcard)";
 
-        return preg_match("/{$pattern}\/{$pattern}/i", $value) === 1;
+        return preg_match("/$pattern\/$pattern/i", $value) === 1;
     }
 }

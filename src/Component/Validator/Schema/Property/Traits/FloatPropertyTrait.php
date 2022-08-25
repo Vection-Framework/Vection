@@ -15,8 +15,8 @@ use Vection\Component\Validator\Schema\Exception\IllegalPropertyValueException;
  */
 trait FloatPropertyTrait
 {
-    protected ?float $floatMax = null;
-    protected ?float $floatMin = null;
+    protected float|null $floatMax = null;
+    protected float|null $floatMin = null;
 
     /**
      * @param array $schema

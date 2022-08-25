@@ -18,27 +18,15 @@ namespace Vection\Component\Validator\Schema\Exception;
  * Class InvalidPropertyValueException
  *
  * @package Vection\Component\Validator\Schema\Exception
- *
- * @author David Lung <vection@davidlung.de>
+ * @author  David Lung <vection@davidlung.de>
  */
 class InvalidPropertyValueException extends PropertyException
 {
+    protected string $rawMessage;
 
     /**
-     * @var string
-     */
-    protected $details;
-
-    /**
-     * @var string
-     */
-    protected $rawMessage;
-
-    /**
-     * IllegalPropertyException constructor.
-     *
-     * @param string      $property
-     * @param string      $message
+     * @param string $property
+     * @param string $message
      */
     public function __construct(string $property, string $message)
     {

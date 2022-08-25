@@ -25,7 +25,7 @@ class AlphaNumericTest extends TestCase
     /**
      * @dataProvider provideValidValues
      */
-    public function testValidValues($value)
+    public function testValidValues($value): void
     {
         $this->assertNull((new AlphaNumeric())->validate($value));
     }
@@ -33,7 +33,7 @@ class AlphaNumericTest extends TestCase
     /**
      * @dataProvider provideInvalidValues
      */
-    public function testInvalidValues($value)
+    public function testInvalidValues($value): void
     {
         $this->assertNotNull((new AlphaNumeric())->validate($value));
     }
@@ -41,7 +41,7 @@ class AlphaNumericTest extends TestCase
     /**
      * @return array
      */
-    public function provideValidValues()
+    public function provideValidValues(): array
     {
         return [
             ['abc'],
@@ -54,7 +54,7 @@ class AlphaNumericTest extends TestCase
     /**
      * @return array
      */
-    public function provideInvalidValues()
+    public function provideInvalidValues(): array
     {
         return [
             ['123'],

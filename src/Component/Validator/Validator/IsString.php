@@ -17,7 +17,6 @@ use Vection\Component\Validator\Validator;
  * Class String
  *
  * @package Vection\Component\Validator\Validator
- *
  * @author  Bjoern Klemm <vection@bjoernklemm.de>
  */
 class IsString extends Validator

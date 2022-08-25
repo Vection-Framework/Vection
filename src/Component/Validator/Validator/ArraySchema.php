@@ -34,6 +34,7 @@ class ArraySchema extends Validator
 
     /**
      * @param array $schema
+     * @param int $maxTemplateRecursion
      */
     public function __construct(array $schema, int $maxTemplateRecursion = 3)
     {

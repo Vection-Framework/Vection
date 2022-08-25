@@ -46,7 +46,7 @@ class Subdomain extends Validator
         }
 
         // The first and last characters of a subdomain must not be a minus.
-        if (strpos($value, '-') === 0 || substr($value, -1) === '-') {
+        if (str_starts_with($value, '-') || str_ends_with($value, '-')) {
             return false;
         }
 

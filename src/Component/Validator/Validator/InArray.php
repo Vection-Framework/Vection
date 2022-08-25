@@ -18,8 +18,7 @@ use function in_array;
  * Class InArray validate that a value is in array of values
  *
  * @package Vection\Component\Validator\Validator
- *
- * @author Bjoern Klemm <bjoern.klemm@appsdock.de>
+ * @author  Bjoern Klemm <bjoern.klemm@appsdock.de>
  */
 class InArray extends Validator
 {

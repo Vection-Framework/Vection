@@ -35,6 +35,6 @@ class AlphaNumeric extends Validator
      */
     protected function onValidate($value): bool
     {
-        return (bool) preg_match('/^([a-zA-Z]{1}[a-zA-Z0-9]*)$/', $value);
+        return (bool) preg_match('/^([a-zA-Z][a-zA-Z0-9]*)$/', $value);
     }
 }

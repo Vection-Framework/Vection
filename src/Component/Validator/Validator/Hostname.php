@@ -15,7 +15,6 @@ namespace Vection\Component\Validator\Validator;
 
 use Vection\Component\Validator\Validator;
 use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
-use Vection\Contracts\Validator\ViolationInterface;
 
 /**
  * Class Hostname

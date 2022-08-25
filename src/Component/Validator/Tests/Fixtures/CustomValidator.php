@@ -11,16 +11,6 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of the AppsDock project.
- *  Visit project at https://github.com/Vection-Framework/Vection
- *
- *  (c) David Lung <vection@davidlung.de>
- *
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
- */
-
 namespace Vection\Component\Validator\Tests\Fixtures;
 
 use Vection\Component\Validator\Validator;
@@ -38,7 +28,7 @@ class CustomValidator extends Validator
      */
     protected function onValidate($value): bool
     {
-        return strpos($value, 'xxx') !== false;
+        return str_contains($value, 'xxx');
     }
 
     /**
@@ -48,7 +38,7 @@ class CustomValidator extends Validator
      *
      * E.g. "Value {value} does not match the given format {format}.
      *
-     * By default you can use the {value} token to place the current value.
+     * By default, you can use the {value} token to place the current value.
      *
      * @return string
      */

@@ -3,16 +3,20 @@
     "type": "library",
     "description": "PHP Validator for chained data validation - Vection Framework Component",
     "keywords": ["php-validator", "validator", "validation", "framework", "assertion", "assert", "php-assert"],
-    "homepage": "https://vection.de",
+    "homepage": "https://www.vection.de",
     "license": "MIT",
     "authors": [
         {
-            "name": "David Lung",
-            "email": "vection@davidlung.de"
+            "name": "David M. Lung",
+            "email": "david.lung@appsdock.de"
+        },
+        {
+            "name": "David Brucksch",
+            "email": "david.brucksch@appsdock.de"
         }
     ],
     "require": {
-        "php": "^7.4||^8.0",
+        "php": "^8.1",
         "vection-framework/contracts": "v0.*",
         "ext-ctype": "*"
     },

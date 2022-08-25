@@ -12,6 +12,7 @@
 
 namespace Vection\Component\Validator\Tests\Validator;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Vection\Component\Validator\Validator\MinLength;
 
@@ -43,7 +44,7 @@ class MinLengthTest extends TestCase
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function provideValidValues(): array
     {
@@ -57,7 +58,7 @@ class MinLengthTest extends TestCase
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function provideInvalidValues(): array
     {

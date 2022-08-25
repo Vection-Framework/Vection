@@ -27,9 +27,8 @@ use Vection\Contracts\Validator\ViolationInterface;
  */
 class Violation implements ViolationInterface, JsonSerializable
 {
-    /** @var mixed */
-    protected $value;
-    protected array $constraints;
+    protected mixed  $value;
+    protected array  $constraints;
     protected string $message;
     protected string $result = '';
     protected string $subject;
@@ -40,7 +39,7 @@ class Violation implements ViolationInterface, JsonSerializable
      * @param array  $constraints
      * @param string $message
      */
-    public function __construct(string $subject, $value, array $constraints, string $message)
+    public function __construct(string $subject, mixed $value, array $constraints, string $message)
     {
         $this->subject     = $subject;
         $this->value       = $value;
@@ -51,7 +50,7 @@ class Violation implements ViolationInterface, JsonSerializable
     /**
      * @inheritDoc
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }
@@ -109,17 +108,15 @@ class Violation implements ViolationInterface, JsonSerializable
      *
      * @return string
      */
-    private function valueToString($value): string
+    private function valueToString(mixed $value): string
     {
-        switch (gettype($value)) {
-            case 'integer':
-            case 'double':
-            case 'string':  return (string) $value;
-            case 'boolean': return $value ? 'true' : 'false';
-            case 'NULL':    return 'null';
-            case 'array':   return 'Array';
-            case 'object':  return 'Object';
-            default:        return '<unsupported-type>';
-        }
+        return match (gettype($value)) {
+            'integer', 'double', 'string' => (string)$value,
+            'boolean' => $value ? 'true' : 'false',
+            'NULL' => 'null',
+            'array' => 'Array',
+            'object' => 'Object',
+            default => '<unsupported-type>',
+        };
     }
 }

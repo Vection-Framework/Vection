@@ -23,7 +23,7 @@ class IbanTest extends TestCase
 {
 
     /** @var Iban */
-    protected $validator;
+    protected Iban $validator;
 
     public function setUp(): void
     {
@@ -33,7 +33,7 @@ class IbanTest extends TestCase
     /**
      * @dataProvider provideToArrangedValues
      */
-    public function testReArrange($actual, $expected)
+    public function testReArrange($actual, $expected): void
     {
         $actual     = $this->validator->normalize($actual);
         $rearranged = $this->validator->rearrange($actual);
@@ -43,7 +43,7 @@ class IbanTest extends TestCase
     /**
      * @dataProvider provideArrangedValues
      */
-    public function testConvertingArrangementToInteger($actual, $expected)
+    public function testConvertingArrangementToInteger($actual, $expected): void
     {
         $actual = $this->validator->convertToInteger($actual);
         $this->assertEquals($actual, $expected);
@@ -52,7 +52,7 @@ class IbanTest extends TestCase
     /**
      * @dataProvider provideValidValues
      */
-    public function testValidValues($value)
+    public function testValidValues($value): void
     {
         $this->assertNull($this->validator->validate($value));
     }
@@ -60,7 +60,7 @@ class IbanTest extends TestCase
     /**
      * @dataProvider provideInvalidValues
      */
-    public function testInvalidValues($value)
+    public function testInvalidValues($value): void
     {
         $this->assertNotNull($this->validator->validate($value));
     }
@@ -68,7 +68,7 @@ class IbanTest extends TestCase
     /**
      * @return array
      */
-    public function provideArrangedValues()
+    public function provideArrangedValues(): array
     {
         return [
             '3214282912345698765432161182' => ['WEST12345698765432GB82', '3214282912345698765432161182'],
@@ -78,7 +78,7 @@ class IbanTest extends TestCase
     /**
      * @return array
      */
-    public function provideToArrangedValues()
+    public function provideToArrangedValues(): array
     {
         return [
             'WEST12345698765432GB82' => ['GB82 WEST 1234 5698 7654 32', 'WEST12345698765432GB82'],
@@ -88,7 +88,7 @@ class IbanTest extends TestCase
     /**
      * @return array
      */
-    public function provideValidValues()
+    public function provideValidValues(): array
     {
         return [
             'GB82WEST12345698765432' => ['GB82 WEST 1234 5698 7654 32'],
@@ -98,7 +98,7 @@ class IbanTest extends TestCase
     /**
      * @return array
      */
-    public function provideInvalidValues()
+    public function provideInvalidValues(): array
     {
         return [
             'XC82WEST12345698765432'     => ['XC82 WEST 1234 5698 7654 32'],

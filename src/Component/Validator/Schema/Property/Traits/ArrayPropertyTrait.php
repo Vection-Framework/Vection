@@ -23,7 +23,7 @@ trait ArrayPropertyTrait
     use IntegerPropertyTrait;
     use StringPropertyTrait;
 
-    protected ?int $maxArraySize = null;
+    protected int|null $maxArraySize = null;
 
     /**
      * @param array $schema

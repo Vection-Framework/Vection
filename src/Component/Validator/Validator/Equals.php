@@ -22,16 +22,14 @@ use Vection\Component\Validator\Validator;
  */
 class Equals extends Validator
 {
-
-    /** @var string */
-    protected $equalValue;
+    protected string $equalValue;
 
     /**
      * Equals constructor.
      *
      * @param mixed $equalValue
      */
-    public function __construct($equalValue)
+    public function __construct(mixed $equalValue)
     {
         $this->equalValue = $equalValue;
     }

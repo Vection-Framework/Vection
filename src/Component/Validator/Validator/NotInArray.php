@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Vection\Component\Validator\Validator;
 
 use Vection\Component\Validator\Validator;
+use function in_array;
 
 /**
  * Class NotMember
@@ -25,13 +26,9 @@ use Vection\Component\Validator\Validator;
  */
 class NotInArray extends Validator
 {
-
-    /** @var array */
-    protected $haystack;
+    protected array $haystack;
 
     /**
-     * NotMember constructor.
-     *
      * @param array $haystack
      */
     public function __construct(array $haystack)
@@ -60,6 +57,6 @@ class NotInArray extends Validator
      */
     protected function onValidate($value): bool
     {
-        return ! \in_array($value, $this->haystack, true);
+        return ! in_array($value, $this->haystack, true);
     }
 }

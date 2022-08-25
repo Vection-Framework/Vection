@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Vection\Component\Validator\Schema\Exception;
 
@@ -18,30 +18,19 @@ namespace Vection\Component\Validator\Schema\Exception;
  * Class IllegalPropertyException
  *
  * @package Vection\Component\Validator\Schema\Exception
- *
- * @author David Lung <vection@davidlung.de>
+ * @author  David Lung <vection@davidlung.de>
  */
 class IllegalPropertyException extends PropertyException
 {
+    protected string|null $details;
+    protected string      $rawMessage;
 
     /**
-     * @var string|null
-     */
-    protected $details;
-
-    /**
-     * @var string
-     */
-    protected $rawMessage;
-
-    /**
-     * IllegalPropertyException constructor.
-     *
      * @param string      $property
      * @param string      $message
      * @param string|null $details
      */
-    public function __construct(string $property, string $message, ? string $details = null)
+    public function __construct(string $property, string $message, string|null $details = null)
     {
         parent::__construct(
             $details === null ? sprintf($message, $property) : sprintf($message, $property, $details)

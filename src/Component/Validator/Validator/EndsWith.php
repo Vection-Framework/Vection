@@ -22,9 +22,7 @@ use Vection\Component\Validator\Validator;
  */
 class EndsWith extends Validator
 {
-
-    /** @var string */
-    protected $needle;
+    protected string $needle;
 
     /**
      * EndsWith constructor.

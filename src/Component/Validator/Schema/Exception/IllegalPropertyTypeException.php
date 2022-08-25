@@ -18,14 +18,11 @@ namespace Vection\Component\Validator\Schema\Exception;
  * Class IllegalPropertyTypeException
  *
  * @package Vection\Component\Validator\Schema\Exception
- *
- * @author David Lung <vection@davidlung.de>
+ * @author  David Lung <vection@davidlung.de>
  */
 class IllegalPropertyTypeException extends IllegalPropertyException
 {
     /**
-     * IllegalPropertyTypeException constructor.
-     *
      * @param string $property
      * @param string $expected
      */

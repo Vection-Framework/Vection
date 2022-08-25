@@ -15,10 +15,10 @@ use Vection\Component\Validator\Schema\Exception\IllegalPropertyValueException;
  */
 trait StringPropertyTrait
 {
-    protected array   $allowed   = [];
-    protected ?int    $maxLength = null;
-    protected ?int    $minLength = null;
-    protected ?string $regex     = null;
+    protected array       $allowed   = [];
+    protected int|null    $maxLength = null;
+    protected int|null    $minLength = null;
+    protected string|null $regex     = null;
 
     /**
      * @param array $schema

@@ -22,13 +22,9 @@ use Vection\Component\Validator\Validator;
  */
 class Regex extends Validator
 {
-
-    /** @var string */
-    protected $pattern;
+    protected string $pattern;
 
     /**
-     * Regex constructor.
-     *
      * @param string $pattern
      */
     public function __construct(string $pattern)

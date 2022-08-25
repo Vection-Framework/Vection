@@ -74,6 +74,8 @@ class TypedArray extends Validator
 
     /**
      * @inheritDoc
+     *
+     * @throws IllegalTypeException
      */
     protected function onValidate($value): bool
     {

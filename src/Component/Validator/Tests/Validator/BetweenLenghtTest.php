@@ -11,6 +11,7 @@
 
 namespace Vection\Component\Validator\Tests\Validator;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Vection\Component\Validator\Validator\BetweenLength;
 
@@ -40,7 +41,7 @@ class BetweenLenghtTest extends TestCase
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function provideValidValues(): array
     {
@@ -59,7 +60,7 @@ class BetweenLenghtTest extends TestCase
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function provideInvalidValues(): array
     {

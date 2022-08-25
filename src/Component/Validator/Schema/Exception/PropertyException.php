@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Vection\Component\Validator\Schema\Exception;
 
@@ -21,14 +21,9 @@ use Vection\Contracts\Validator\Schema\PropertyExceptionInterface;
  * Class PropertyException
  *
  * @package Vection\Component\Validator\Schema\Exception
- *
- * @author David Lung <vection@davidlung.de>
+ * @author  David Lung <vection@davidlung.de>
  */
 abstract class PropertyException extends Exception implements PropertyExceptionInterface
 {
-
-    /**
-     * @var string
-     */
-    protected $property;
+    protected string $property;
 }

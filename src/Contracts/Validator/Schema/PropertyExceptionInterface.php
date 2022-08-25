@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Vection\Contracts\Validator\Schema;
 
@@ -20,8 +20,7 @@ use Throwable;
  * Interface PropertyExceptionInterface
  *
  * @package Vection\Contracts\Validator\Schema
- *
- * @author David Lung <vection@davidlung.de>
+ * @author  David Lung <vection@davidlung.de>
  */
 interface PropertyExceptionInterface extends Throwable
 {

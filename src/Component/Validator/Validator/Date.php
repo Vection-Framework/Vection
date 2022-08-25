@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Vection\Component\Validator\Validator;
 
+use DateTime;
 use Vection\Component\Validator\Validator;
 
 /**
@@ -22,13 +23,9 @@ use Vection\Component\Validator\Validator;
  */
 class Date extends Validator
 {
-
-    /** @var string */
-    protected $format;
+    protected string $format;
 
     /**
-     * Date constructor.
-     *
      * @param string $format
      *
      */
@@ -58,7 +55,7 @@ class Date extends Validator
      */
     protected function onValidate($value): bool
     {
-        $dateTime = \DateTime::createFromFormat('!' . $this->format, $value);
+        $dateTime = DateTime::createFromFormat('!' . $this->format, $value);
 
         return $dateTime !== false && $value === $dateTime->format($this->format);
     }

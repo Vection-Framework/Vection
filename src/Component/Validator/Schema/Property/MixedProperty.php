@@ -39,10 +39,10 @@ class MixedProperty extends Property
     use ObjectPropertyTrait;
     use StringPropertyTrait;
 
-    protected array     $allowed    = [];
-    protected array     $properties = [];
-    protected ?Property $property   = null;
-    protected ?string   $regex      = null;
+    protected array         $allowed    = [];
+    protected array         $properties = [];
+    protected Property|null $property   = null;
+    protected string|null   $regex      = null;
 
     /**
      * @inheritDoc
