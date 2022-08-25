@@ -23,12 +23,12 @@ class HookLoader
     /**
      * @var Provider
      */
-    private $provider;
+    private Provider $provider;
 
     /**
      * @var array
      */
-    private $contexts;
+    private array $contexts;
 
     /**
      * HookLoader constructor.
@@ -51,7 +51,7 @@ class HookLoader
     {
         $path    = $this->provider->getPath();
         $scope   = $this->provider->getScope();
-        $pattern = "{$path}/*/{$scope}.{yml,yaml,json}";
+        $pattern = "$path/*/$scope.{yml,yaml,json}";
 
         foreach ( glob($pattern, GLOB_BRACE) as $path ) {
             $_path = $path;

@@ -34,22 +34,22 @@ class Provider
     /**
      * @var string
      */
-    protected $scope;
+    protected string $scope;
 
     /**
      * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * @var string
      */
-    protected $path;
+    protected string $path;
 
     /**
      * @var string
      */
-    protected $api;
+    protected string $api;
 
     /**
      * Provider constructor.

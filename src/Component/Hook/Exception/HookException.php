@@ -23,12 +23,14 @@ declare(strict_types=1);
 
 namespace Vection\Component\Hook\Exception;
 
+use Exception;
+
 /**
  * Class HookException
  *
  * @package Vection\Component\Hook\Exception
  */
-class HookException extends \Exception
+class HookException extends Exception
 {
 
 }

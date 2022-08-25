@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Vection\Component\Hook;
 
+use RuntimeException;
 use Vection\Component\Hook\Exception\HookException;
 
 /**
@@ -34,23 +35,23 @@ class HookManager
 {
 
     /** @var array */
-    protected $configuration;
+    protected array $configuration;
 
     /** @var HookContext[][] */
-    protected $hookContexts;
+    protected array $hookContexts;
 
     /**
      * @param string $path
      */
-    public function loadConfig(string $path)
+    public function loadConfig(string $path): void
     {
         if ( ! file_exists($path) ) {
-            throw new \RuntimeException("Cannot find hook configuration by path '$path'");
+            throw new RuntimeException("Cannot find hook configuration by path '$path'");
         }
 
         if ( in_array(pathinfo($path, PATHINFO_EXTENSION), ['yml','yaml']) ) {
             if ( ! function_exists('yaml_parse_file') ) {
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     "Cannot parse hook config file: Please install yaml extension 
                     to parse yaml configuration or use json format."
                 );
@@ -64,14 +65,14 @@ class HookManager
             $this->configuration = json_decode(file_get_contents($path), true);
 
             if ( json_last_error() !== JSON_ERROR_NONE ) {
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     "Invalid hook configuration ($path): " . json_last_error_msg()
                 );
             }
         }
 
         if ( ! $this->configuration ) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 "Unsupported hook configuration file. Please use yaml or json format."
             );
         }
@@ -79,11 +80,11 @@ class HookManager
         foreach ( $this->configuration as $scope => &$config ) {
 
             $p = $config['hooks']['path'];
-            if ( strpos($p, '.') === 0 ) {
+            if (str_starts_with($p, '.')) {
                 $config['hooks']['path'] = dirname($path) . '/'.$p;
             }
 
-            $pattern = "{$config['hooks']['path']}/*/{$scope}.{yml,yaml,json}";
+            $pattern = "{$config['hooks']['path']}/*/$scope.{yml,yaml,json}";
 
             foreach ( glob($pattern, GLOB_BRACE) as $path ) {
 
