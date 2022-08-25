@@ -89,11 +89,11 @@ interface CacheProviderInterface
      * Returns the value by given key.
      *
      * @param string $key The unique key of this item in the cache.
-     * @param mixed $default Default value to return if the key does not exist.
+     * @param mixed|null $default Default value to return if the key does not exist.
      *
      * @return mixed
      */
-    public function get(string $key, $default = null);
+    public function get(string $key, mixed $default = null): mixed;
 
     /**
      * Sets the given string value into the cache.
@@ -159,7 +159,7 @@ interface CacheProviderInterface
      *
      * @return bool
      */
-    public function set(string $key, $value, int $ttl = 0): bool;
+    public function set(string $key, mixed $value, int $ttl = 0): bool;
 
     /**
      * Clears all entries of this cache. If namespace is given then

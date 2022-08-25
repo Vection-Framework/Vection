@@ -24,7 +24,7 @@ class ArrayCacheProvider implements CacheProviderInterface
 {
 
     /** @var array */
-    protected $cache = [];
+    protected array $cache = [];
 
     /**
      * Checks whether the key exists in the cache.
@@ -121,7 +121,7 @@ class ArrayCacheProvider implements CacheProviderInterface
     /**
      * @inheritDoc
      */
-    public function get(string $key, $default = null)
+    public function get(string $key, mixed $default = null): mixed
     {
         return $this->contains($key) ? $this->cache[$key] : $default;
     }
@@ -209,7 +209,7 @@ class ArrayCacheProvider implements CacheProviderInterface
     /**
      * @inheritDoc
      */
-    public function set(string $key, $value, int $ttl = 0): bool
+    public function set(string $key, mixed $value, int $ttl = 0): bool
     {
         $this->cache[$key] = $value;
 
@@ -222,7 +222,7 @@ class ArrayCacheProvider implements CacheProviderInterface
     public function clear(string $namespace = ''): bool
     {
         foreach ($this->cache as $key => $value) {
-            if (! $namespace || strpos($key, $namespace) === 0) {
+            if (! $namespace || str_starts_with($key, $namespace)) {
                 unset($this->cache[$key]);
             }
         }

@@ -34,7 +34,7 @@ class Cache implements CacheInterface
      *
      * @var string
      */
-    protected $namespace;
+    protected string $namespace;
 
     /**
      * A string that represents the separator between nested
@@ -43,7 +43,7 @@ class Cache implements CacheInterface
      *
      * @var string
      */
-    protected $nsSeparator;
+    protected string $nsSeparator;
 
     /**
      * The specific cache provider. This cache class delegates
@@ -51,7 +51,7 @@ class Cache implements CacheInterface
      *
      * @var CacheProviderInterface
      */
-    protected $cacheProvider;
+    protected CacheProviderInterface $cacheProvider;
 
     /**
      * Pools are used for different Cache instances which can be
@@ -61,7 +61,7 @@ class Cache implements CacheInterface
      *
      * @var CacheInterface[]
      */
-    protected $pools;
+    protected array $pools;
 
     /**
      * Cache constructor.
@@ -179,7 +179,7 @@ class Cache implements CacheInterface
     /**
      * @inheritDoc
      */
-    public function get(string $key, $default = null)
+    public function get(string $key, mixed $default = null): mixed
     {
         return $this->cacheProvider->get($this->getNSKey($key), $default);
     }
@@ -227,7 +227,7 @@ class Cache implements CacheInterface
     /**
      * @inheritDoc
      */
-    public function set(string $key, $value, int $ttl = 0): bool
+    public function set(string $key, mixed $value, int $ttl = 0): bool
     {
         return $this->cacheProvider->set($this->getNSKey($key), $value, $ttl);
     }

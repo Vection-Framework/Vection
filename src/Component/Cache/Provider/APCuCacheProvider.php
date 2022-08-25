@@ -13,7 +13,14 @@ declare(strict_types=1);
 
 namespace Vection\Component\Cache\Provider;
 
+use APCUIterator;
+use RuntimeException;
 use Vection\Contracts\Cache\CacheProviderInterface;
+use function apcu_clear_cache;
+use function apcu_delete;
+use function apcu_exists;
+use function apcu_fetch;
+use function apcu_store;
 
 /**
  * Class APCuCacheProvider
@@ -28,7 +35,7 @@ class APCuCacheProvider implements CacheProviderInterface
     public function __construct()
     {
         if ( ! extension_loaded('apcu') ) {
-            throw new \RuntimeException('APCuCacheProvider requires the apcu extension.');
+            throw new RuntimeException('APCuCacheProvider requires the apcu extension.');
         }
     }
 
@@ -37,7 +44,7 @@ class APCuCacheProvider implements CacheProviderInterface
      */
     public function contains(string $key): bool
     {
-        return \apcu_exists($key);
+        return apcu_exists($key);
     }
 
     /**
@@ -46,7 +53,7 @@ class APCuCacheProvider implements CacheProviderInterface
     public function delete(string $key): bool
     {
         if ( $this->contains($key) ) {
-            return \apcu_delete($key);
+            return apcu_delete($key);
         }
 
         return false;
@@ -95,9 +102,9 @@ class APCuCacheProvider implements CacheProviderInterface
     /**
      * @inheritDoc
      */
-    public function get(string $key, $default = null)
+    public function get(string $key, mixed $default = null): mixed
     {
-        return $this->contains($key) ? \apcu_fetch($key) : $default;
+        return $this->contains($key) ? apcu_fetch($key) : $default;
     }
 
     /**
@@ -105,7 +112,7 @@ class APCuCacheProvider implements CacheProviderInterface
      */
     public function setString(string $key, string $value, int $ttl = 0): bool
     {
-        return \apcu_store($key, $value, $ttl);
+        return apcu_store($key, $value, $ttl);
     }
 
     /**
@@ -113,7 +120,7 @@ class APCuCacheProvider implements CacheProviderInterface
      */
     public function setObject(string $key, object $value, int $ttl = 0): bool
     {
-        return \apcu_store($key, $value, $ttl);
+        return apcu_store($key, $value, $ttl);
     }
 
     /**
@@ -121,7 +128,7 @@ class APCuCacheProvider implements CacheProviderInterface
      */
     public function setArray(string $key, array $value, int $ttl = 0): bool
     {
-        return \apcu_store($key, $value, $ttl);
+        return apcu_store($key, $value, $ttl);
     }
 
     /**
@@ -129,7 +136,7 @@ class APCuCacheProvider implements CacheProviderInterface
      */
     public function setInt(string $key, int $value, int $ttl = 0): bool
     {
-        return \apcu_store($key, $value, $ttl);
+        return apcu_store($key, $value, $ttl);
     }
 
     /**
@@ -137,15 +144,15 @@ class APCuCacheProvider implements CacheProviderInterface
      */
     public function setFloat(string $key, float $value, int $ttl = 0): bool
     {
-        return \apcu_store($key, $value, $ttl);
+        return apcu_store($key, $value, $ttl);
     }
 
     /**
      * @inheritDoc
      */
-    public function set(string $key, $value, int $ttl = 0): bool
+    public function set(string $key, mixed $value, int $ttl = 0): bool
     {
-        return \apcu_store($key, $value, $ttl);
+        return apcu_store($key, $value, $ttl);
     }
 
     /**
@@ -154,12 +161,12 @@ class APCuCacheProvider implements CacheProviderInterface
     public function clear(string $namespace = ''): bool
     {
         if ( ! $namespace ) {
-            return \apcu_clear_cache();
+            return apcu_clear_cache();
         }
 
-        $it = new \APCUIterator('user');
+        $it = new APCUIterator('user');
         foreach ( $it as $item ) {
-            if ( strpos($item['key'], $namespace) === 0 ) {
+            if (str_starts_with($item['key'], $namespace)) {
                 $this->delete($item['key']);
             }
         }

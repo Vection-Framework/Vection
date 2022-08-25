@@ -25,6 +25,10 @@ namespace Vection\Component\Cache\Provider;
 
 use Redis;
 use Vection\Contracts\Cache\CacheProviderInterface;
+use function json_decode;
+use function json_encode;
+use function serialize;
+use function unserialize;
 
 /**
  * Class RedisCacheProvider
@@ -35,7 +39,7 @@ class RedisCacheProvider implements CacheProviderInterface
 {
 
     /** @var Redis */
-    protected $redis;
+    protected Redis $redis;
 
     /**
      * RedisCacheProvider constructor.
@@ -77,7 +81,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function getObject(string $key): ?object
     {
-        return $this->contains($key) ? \unserialize($this->redis->get($key)) : null;
+        return $this->contains($key) ? unserialize($this->redis->get($key)) : null;
     }
 
     /**
@@ -85,7 +89,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function getArray(string $key): ?array
     {
-        return $this->contains($key) ? \json_decode($this->redis->get($key), true) : null;
+        return $this->contains($key) ? json_decode($this->redis->get($key), true) : null;
     }
 
     /**
@@ -107,7 +111,7 @@ class RedisCacheProvider implements CacheProviderInterface
     /**
      * @inheritDoc
      */
-    public function get(string $key, $default = null)
+    public function get(string $key, mixed $default = null): mixed
     {
         return $this->contains($key) ? $this->redis->get($key) : $default;
     }
@@ -125,7 +129,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function setObject(string $key, object $value, int $ttl = 0): bool
     {
-        return $this->set($key, \serialize($value), $ttl);
+        return $this->set($key, serialize($value), $ttl);
     }
 
     /**
@@ -133,7 +137,7 @@ class RedisCacheProvider implements CacheProviderInterface
      */
     public function setArray(string $key, array $value, int $ttl = 0): bool
     {
-        return $this->set($key, \json_encode($value), $ttl);
+        return $this->set($key, json_encode($value), $ttl);
     }
 
     /**
@@ -155,7 +159,7 @@ class RedisCacheProvider implements CacheProviderInterface
     /**
      * @inheritDoc
      */
-    public function set(string $key, $value, int $ttl = 0): bool
+    public function set(string $key, mixed $value, int $ttl = 0): bool
     {
         return $ttl ? $this->redis->setex($key, $ttl, $value) : $this->redis->set($key, $value);
     }

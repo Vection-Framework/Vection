@@ -13,6 +13,7 @@
 namespace Vection\Component\Cache\Tests;
 
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Vection\Component\Cache\Provider\ArrayCacheProvider;
 use Vection\Contracts\Cache\CacheProviderInterface;
 
@@ -38,7 +39,7 @@ class ArrayCacheProviderTest extends TestCase
      *
      * @param CacheProviderInterface $cache
      */
-    public function testDelete(CacheProviderInterface $cache)
+    public function testDelete(CacheProviderInterface $cache): void
     {
         $cache->set('testKey', 'vection');
         $cache->delete('testKey');
@@ -52,7 +53,7 @@ class ArrayCacheProviderTest extends TestCase
      *
      * @param CacheProviderInterface $cache
      */
-    public function testGetString(CacheProviderInterface $cache)
+    public function testGetString(CacheProviderInterface $cache): void
     {
         $cache->setString('testKey', 'vection');
         $value = $cache->getString('testKey');
@@ -67,7 +68,7 @@ class ArrayCacheProviderTest extends TestCase
      *
      * @param CacheProviderInterface $cache
      */
-    public function testGetFloat(CacheProviderInterface $cache)
+    public function testGetFloat(CacheProviderInterface $cache): void
     {
         $cache->setFloat('testKey', 1.5);
         $value = $cache->getFloat('testKey');
@@ -82,7 +83,7 @@ class ArrayCacheProviderTest extends TestCase
      *
      * @param CacheProviderInterface $cache
      */
-    public function testGetArray(CacheProviderInterface $cache)
+    public function testGetArray(CacheProviderInterface $cache): void
     {
         $array = [1,2,3];
         $cache->setArray('testKey', $array);
@@ -98,7 +99,7 @@ class ArrayCacheProviderTest extends TestCase
      *
      * @param CacheProviderInterface $cache
      */
-    public function testGetInt(CacheProviderInterface $cache)
+    public function testGetInt(CacheProviderInterface $cache): void
     {
         $cache->setInt('testKey', 5);
         $value = $cache->getInt('testKey');
@@ -113,7 +114,7 @@ class ArrayCacheProviderTest extends TestCase
      *
      * @param CacheProviderInterface $cache
      */
-    public function testClear(CacheProviderInterface $cache)
+    public function testClear(CacheProviderInterface $cache): void
     {
         $cache->set('testKey1', 'vection');
         $cache->set('testKey2', 'vection');
@@ -128,7 +129,7 @@ class ArrayCacheProviderTest extends TestCase
      *
      * @param CacheProviderInterface $cache
      */
-    public function testContains(CacheProviderInterface $cache)
+    public function testContains(CacheProviderInterface $cache): void
     {
         $cache->set('testKey', 'vection');
 
@@ -140,9 +141,9 @@ class ArrayCacheProviderTest extends TestCase
      *
      * @param CacheProviderInterface $cache
      */
-    public function testGetObject(CacheProviderInterface $cache)
+    public function testGetObject(CacheProviderInterface $cache): void
     {
-        $object = new \stdClass();
+        $object = new stdClass();
         $cache->setObject('testKey', $object);
         $value = $cache->getObject('testKey');
 
@@ -156,7 +157,7 @@ class ArrayCacheProviderTest extends TestCase
      *
      * @param CacheProviderInterface $cache
      */
-    public function testGet(CacheProviderInterface $cache)
+    public function testGet(CacheProviderInterface $cache): void
     {
         $cache->set('testKey', 'vection');
         $value = $cache->get('testKey');

@@ -121,7 +121,7 @@ class VoidCacheProvider implements CacheProviderInterface
     /**
      * @inheritDoc
      */
-    public function get(string $key, $default = null)
+    public function get(string $key, mixed $default = null): mixed
     {
         return null;
     }
@@ -199,7 +199,7 @@ class VoidCacheProvider implements CacheProviderInterface
     /**
      * @inheritDoc
      */
-    public function set(string $key, $value, int $ttl = 0): bool
+    public function set(string $key, mixed $value, int $ttl = 0): bool
     {
         return true;
     }

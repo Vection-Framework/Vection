@@ -39,7 +39,7 @@ trait CacheAwareTrait
      *
      * @var CacheInterface
      */
-    protected $cache;
+    protected CacheInterface $cache;
 
     /**
      * Returns the cache instance if exists or null otherwise.
