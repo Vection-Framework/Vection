@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Vection\Component\Utility\IO;
+namespace Vection\Component\Common\IO;
 
 use RuntimeException;
 
@@ -19,7 +19,6 @@ use RuntimeException;
  * Class DotEnv
  *
  * @package Vection\Component\Utility\IO
- *
  * @author  David M. Lung <vection@davidlung.de>
  */
 class DotEnv

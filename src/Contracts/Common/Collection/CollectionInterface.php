@@ -30,20 +30,20 @@ interface CollectionInterface extends Countable, ArrayAccess, Iterator, JsonSeri
     /**
      * @param mixed $element
      */
-    public function add($element): void;
+    public function add(mixed $element): void;
 
     /**
      * @param string $key
      * @param mixed  $value
      */
-    public function set(string $key, $value): void;
+    public function set(string $key, mixed $value): void;
 
     /**
      * @param string $key
      *
      * @return mixed
      */
-    public function get(string $key);
+    public function get(string $key): mixed;
 
     /**
      * @param string $key
@@ -55,22 +55,22 @@ interface CollectionInterface extends Countable, ArrayAccess, Iterator, JsonSeri
     /**
      * @return mixed
      */
-    public function first();
+    public function first(): mixed;
 
     /**
      * @return mixed
      */
-    public function last();
+    public function last(): mixed;
 
     /**
      * @return mixed
      */
-    public function reset();
+    public function reset(): mixed;
 
     /**
      * @return mixed
      */
-    public function end();
+    public function end(): mixed;
 
     /**
      * @param callable $function

@@ -9,7 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Utility\IO;
+namespace Vection\Component\Common\IO;
+
+use function array_pad;
+use function array_shift;
+use function count;
+use function explode;
+use function implode;
+use function is_dir;
+use function rtrim;
+use function str_replace;
 
 /**
  * Class FSHelper
@@ -32,14 +41,14 @@ class FSHelper
      */
     public static function getRelativePath(string $from, string $to): string
     {
-        $from = \is_dir($from) ? \rtrim($from, '\/') . '/' : $from;
-        $to   = \is_dir($to) ? \rtrim($to, '\/') . '/' : $to;
+        $from = is_dir($from) ? rtrim($from, '\/') . '/' : $from;
+        $to   = is_dir($to) ? rtrim($to, '\/') . '/' : $to;
 
-        $from = \str_replace('\\', '/', $from);
-        $to   = \str_replace('\\', '/', $to);
+        $from = str_replace('\\', '/', $from);
+        $to   = str_replace('\\', '/', $to);
 
-        $_from = \explode('/', $from);
-        $_to   = \explode('/', $to);
+        $_from = explode('/', $from);
+        $_to   = explode('/', $to);
 
         $relPath = $_to;
 
@@ -47,21 +56,21 @@ class FSHelper
             # find first non-matching dir
             if ( $dir === $to[$depth] ) {
                 # ignore this directory
-                \array_shift($relPath);
+                array_shift($relPath);
             } else {
                 # get number of remaining dirs to $from
-                $remaining = (\count($_from) - $depth);
+                $remaining = (count($_from) - $depth);
                 if ( $remaining > 1 ) {
                     # add traversals up to first matching dir
-                    $padLength = (( \count($relPath) + $remaining - 1 ) * -1);
-                    $relPath   = \array_pad($relPath, $padLength, '..');
+                    $padLength = (( count($relPath) + $remaining - 1 ) * -1);
+                    $relPath   = array_pad($relPath, $padLength, '..');
                     break;
                 }
                 $relPath[0] = './' . $relPath[0];
             }
         }
 
-        return \implode('/', $relPath);
+        return implode('/', $relPath);
     }
 
     /**
@@ -82,7 +91,7 @@ class FSHelper
     {
         $ext = $ext ? '.' . $ext : '';
 
-        $path = (substr($path, -1) === '/') ? $path : $path . DIRECTORY_SEPARATOR;
+        $path = (str_ends_with($path, '/')) ? $path : $path . DIRECTORY_SEPARATOR;
 
         return $path . implode(DIRECTORY_SEPARATOR, $fileparts) . $ext;
     }
@@ -104,6 +113,6 @@ class FSHelper
 
         $content = file_get_contents($file);
 
-        return strpos($content,$search) !== false;
+        return str_contains($content, $search);
     }
 }

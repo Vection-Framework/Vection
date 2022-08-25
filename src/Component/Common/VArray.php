@@ -305,7 +305,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
     /**
      * @inheritDoc
      */
-    public function key(): mixed
+    public function key(): string|int|null
     {
         return key($this->data);
     }

@@ -10,10 +10,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\Utility;
+namespace Vection\Component\Common;
+
+use function preg_replace;
+use function strtolower;
+use function strtr;
+use function trim;
 
 /**
  * Class Slugifier
+ *
  * @package Vection\Component\Utility
  */
 class Slugifier
@@ -73,8 +79,8 @@ class Slugifier
      */
     public static function transform(string $text, string $separator = '-'): string
     {
-        $text = \preg_replace('/([^a-z0-9]|-)+/', $separator, \strtolower(\strtr($text, self::SLUG_CHARS)));
+        $text = preg_replace('/([^a-z0-9]|-)+/', $separator, strtolower(strtr($text, self::SLUG_CHARS)));
 
-        return \trim($text, $separator);
+        return trim($text, $separator);
     }
 }
