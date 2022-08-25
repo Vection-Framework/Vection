@@ -55,9 +55,9 @@ interface PropertyInterface
     public function evaluate(array $schema): void;
 
     /**
-     * @param string|int|float|array $value
+     * @param float|array|int|string $value
      *
      * @throws PropertyExceptionInterface
      */
-    public function validate($value): void;
+    public function validate(float|array|int|string $value): void;
 }
