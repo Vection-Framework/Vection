@@ -32,15 +32,8 @@ class EventDispatcher implements EventDispatcherInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    /**
-     * @var EventListenerProviderInterface
-     */
-    protected $listenerProvider;
-
-    /**
-     * @var bool
-     */
-    protected $catchExceptions;
+    protected bool $catchExceptions;
+    protected EventListenerProviderInterface $listenerProvider;
 
     /**
      * EventDispatcher constructor.

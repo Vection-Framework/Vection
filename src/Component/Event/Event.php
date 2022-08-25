@@ -27,10 +27,8 @@ abstract class Event implements EventInterface
     /**
      * Stops the event propagation if set to true.
      * Use this to abort the event rising.
-     *
-     * @var boolean
      */
-    protected $propagationStopped = false;
+    protected bool $propagationStopped = false;
 
     /**
      * @inheritDoc

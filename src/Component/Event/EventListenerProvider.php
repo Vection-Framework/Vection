@@ -25,15 +25,8 @@ use Vection\Contracts\Event\EventListenerProviderInterface;
  */
 class EventListenerProvider implements EventListenerProviderInterface
 {
-    /**
-     * @var array
-     */
-    protected $listeners = [];
-
-    /**
-     * @var EventListenerFactoryInterface|null
-     */
-    protected $eventListenerFactory;
+    protected array $listeners = [];
+    protected EventListenerFactoryInterface|null $eventListenerFactory;
 
     /**
      * @var callable|null
