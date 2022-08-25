@@ -31,17 +31,17 @@ class MessageRelation implements MessageRelationInterface
     /**
      * @var string
      */
-    protected $correlationId;
+    protected string $correlationId;
 
     /**
      * @var string
      */
-    protected $causationId;
+    protected string $causationId;
 
     /**
      * @var MessageInterface
      */
-    protected $message;
+    protected MessageInterface $message;
 
     /**
      * @inheritDoc

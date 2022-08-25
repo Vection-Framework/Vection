@@ -15,6 +15,7 @@ namespace Vection\Component\Messenger\Handler;
 
 use ReflectionException;
 use ReflectionMethod;
+use ReflectionNamedType;
 use Vection\Component\Messenger\Exception\RuntimeException;
 use Vection\Contracts\Messenger\MessageHandlerFactoryInterface;
 use Vection\Contracts\Messenger\MessageHandlerProviderInterface;
@@ -64,7 +65,7 @@ class MessageHandlerProvider implements MessageHandlerProviderInterface
 
             $type = $parameters[0]->getType();
 
-            if ( $type === null || ! $type instanceof \ReflectionNamedType) {
+            if ( $type === null || ! $type instanceof ReflectionNamedType) {
                 throw new RuntimeException($errorMessage);
             }
 

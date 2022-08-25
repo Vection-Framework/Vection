@@ -48,7 +48,7 @@ interface MessageBusInterface
      * the message which is passed for dispatching or a new message created by
      * one of the middleware instances.
      *
-     * @param MessageInterface|object       $message An object of type MessageInterface or an any object.
+     * @param object $message An object of type MessageInterface or an any object.
      *                                               If any object is given which is not from type MessageInterface then
      *                                               this object will be wrapped by the default Message implementation whereas
      *                                               the object is treated as the message body.

@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Vection\Component\Messenger\Tests;
 
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Vection\Component\Messenger\Message;
 use Vection\Component\Messenger\MessageHeaders;
 use Vection\Component\Messenger\MessageRelation;
@@ -43,7 +44,7 @@ class MessageRelationTest extends TestCase
     public function testWith()
     {
         $message = new Message(
-            new \stdClass(),
+            new stdClass(),
             [
                 MessageHeaders::CORRELATION_ID => 'correlation_test',
                 MessageHeaders::MESSAGE_ID => '123456abcdef',

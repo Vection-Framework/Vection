@@ -37,12 +37,12 @@ class Packer implements PackerInterface
     /**
      * @var SerializerInterface
      */
-    protected $serializer;
+    protected SerializerInterface|DefaultSerializer $serializer;
 
     /**
      * @var EncoderInterface
      */
-    protected $encoder;
+    protected Base64Encoder|EncoderInterface $encoder;
 
     /**
      * Packer constructor.

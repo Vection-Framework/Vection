@@ -35,10 +35,10 @@ class ValidationFailedException extends RuntimeException
      * InvalidPayloadException constructor.
      *
      * @param array          $violations
-     * @param int            $code
+     * @param int $code
      * @param Throwable|null $previous
      */
-    public function __construct(array $violations, $code = 0, Throwable $previous = null)
+    public function __construct(array $violations, int $code = 0, Throwable $previous = null)
     {
         parent::__construct('The message body contains invalid data.', $code, $previous);
         $this->violations = $violations;

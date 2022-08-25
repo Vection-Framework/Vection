@@ -31,7 +31,8 @@ class HandlerFailedException extends RuntimeException
     /**
      * HandlerFailedException constructor.
      *
-     * @param Throwable|null $exception
+     * @param MessageInterface $envelope
+     * @param Throwable $exception
      */
     public function __construct(MessageInterface $envelope, Throwable $exception)
     {

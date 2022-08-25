@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Vection\Component\Messenger\Transport;
 
+use ReturnTypeWillChange;
 use Vection\Contracts\Messenger\Transport\PackageInterface;
 
 /**
@@ -28,17 +29,17 @@ class Package implements PackageInterface
     /**
      * @var string[]
      */
-    protected $meta;
+    protected array $meta;
 
     /**
      * @var string[]
      */
-    protected $headers;
+    protected array $headers;
 
     /**
      * @var string
      */
-    protected $message;
+    protected string $message;
 
     /**
      * TransportData constructor.
@@ -81,7 +82,7 @@ class Package implements PackageInterface
     /**
      * @inheritDoc
      */
-    public function jsonSerialize()
+    #[ReturnTypeWillChange] public function jsonSerialize()
     {
         return $this->toArray();
     }

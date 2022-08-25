@@ -34,7 +34,7 @@ class MiddlewareSequence implements MiddlewareSequenceInterface
      *
      * @var MessageBusMiddlewareInterface[]
      */
-    protected $middleware = [];
+    protected array $middleware = [];
 
     /**
      * This property contains an closure that returns
@@ -43,7 +43,7 @@ class MiddlewareSequence implements MiddlewareSequenceInterface
      *
      * @var Closure
      */
-    protected $sequence;
+    protected Closure $sequence;
 
     /**
      * This property contains the middleware that is currently
@@ -51,7 +51,7 @@ class MiddlewareSequence implements MiddlewareSequenceInterface
      *
      * @var MessageBusMiddlewareInterface
      */
-    protected $currentMiddleware;
+    protected MessageBusMiddlewareInterface $currentMiddleware;
 
     /**
      * MiddlewareSequence constructor.
