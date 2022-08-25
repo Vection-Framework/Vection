@@ -51,7 +51,7 @@ class Crypto
     public static function identity(string $prefix = '', int $length = 7): string
     {
         $identity = substr(
-            preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(self::bytes($length))),
+            preg_replace('/[^a-zA-Z\d]/', '', base64_encode(self::bytes($length))),
             0,
             $length
         );
@@ -102,9 +102,9 @@ class Crypto
      *
      * @return string
      */
-    public static function createPasswordHash(string $password, $algo = PASSWORD_BCRYPT, array $options = []): string
+    public static function createPasswordHash(string $password, string $algo = PASSWORD_BCRYPT, array $options = []): string
     {
-        return password_hash($password, PASSWORD_BCRYPT);
+        return password_hash($password, $algo, $options);
     }
 
     /**
@@ -122,14 +122,12 @@ class Crypto
      * Generates and returns a new random hash string or hashes a given value.
      *
      * @param string      $algo
-     * @param string|null $string
+     * @param string|null $data
      * @param bool        $binary
      *
      * @return string
      */
-    public static function hash(
-        string $algo = self::HASH_SHA1, ?string $data = null, bool $binary = false
-    ): string
+    public static function hash(string $algo = self::HASH_SHA1, string|null $data = null, bool $binary = false): string
     {
         $data = $data ?? self::identity('', 16);
 
@@ -145,9 +143,7 @@ class Crypto
      *
      * @return string
      */
-    public static function hashFile(
-        string $path, ?string $algo = self::HASH_SHA1, bool $binary = false
-    ): string
+    public static function hashFile(string $path, string|null $algo = self::HASH_SHA1, bool $binary = false): string
     {
         return hash_file($algo, $path, $binary);
     }
@@ -216,7 +212,7 @@ class Crypto
 
         $encryptedContent = null;
 
-        if (strpos($keyOrFilePath, '-----') !== 0 && file_exists($keyOrFilePath)) {
+        if (! str_starts_with($keyOrFilePath, '-----') && file_exists($keyOrFilePath)) {
             $keyOrFilePath = file_get_contents($keyOrFilePath);
         }
 
@@ -244,7 +240,7 @@ class Crypto
 
         $decrypted = null;
 
-        if (strpos($keyOrFilePath, '-----') !== 0 && file_exists($keyOrFilePath)) {
+        if (! str_starts_with($keyOrFilePath, '-----') && file_exists($keyOrFilePath)) {
             $keyOrFilePath = file_get_contents($keyOrFilePath);
         }
 
@@ -275,7 +271,7 @@ class Crypto
         }
 
         if ( ! in_array($cipherAlgo, openssl_get_cipher_methods(), true) ) {
-            throw new RuntimeException("OpenSSL: Invalid cipher method '{$cipherAlgo}'.");
+            throw new RuntimeException("OpenSSL: Invalid cipher method '$cipherAlgo'.");
         }
 
         $ivLen = openssl_cipher_iv_length($cipherAlgo);
@@ -316,7 +312,7 @@ class Crypto
         }
 
         if ( ! in_array($cipherAlgo, openssl_get_cipher_methods(), true) ) {
-            throw new RuntimeException("OpenSSL: Invalid cipher method '{$cipherAlgo}'.");
+            throw new RuntimeException("OpenSSL: Invalid cipher method '$cipherAlgo'.");
         }
 
         $ivLen = openssl_cipher_iv_length($cipherAlgo);
@@ -327,7 +323,7 @@ class Crypto
 
         $info = base64_decode(str_rot13($encryptedContent));
 
-        if ($info === false || strpos($info, '||') === false) {
+        if ($info === false || ! str_contains($info, '||')) {
             return null;
         }
 

@@ -135,7 +135,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
      *
      * @return VArray
      */
-    public function set(string $key, $value): VArray
+    public function set(string $key, mixed $value): VArray
     {
         $this->assertMutable();
         $this->data[$key] = $value;
@@ -149,7 +149,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
      *
      * @return mixed
      */
-    public function get(string $key, bool $usePathNotation = true)
+    public function get(string $key, bool $usePathNotation = true): mixed
     {
         return strpos($key, '.') > -1 && $usePathNotation ? $this->pathGet($this->data, $key) : ($this->data[$key] ?? null);
     }
@@ -160,7 +160,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
      *
      * @return mixed|null
      */
-    private function pathGet(array $data, string $name)
+    private function pathGet(array $data, string $name): mixed
     {
         $parts = explode('.', $name);
 
@@ -191,7 +191,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
     /**
      * @return mixed
      */
-    public function first()
+    public function first(): mixed
     {
         $index = array_keys($this->data)[0] ?? null;
         return $index ? $this->data[$index] : null;
@@ -200,7 +200,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
     /**
      * @return mixed
      */
-    public function last()
+    public function last(): mixed
     {
         if ($keys = array_keys($this->data)) {
             $index = $keys[count($keys) - 1];
@@ -213,7 +213,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
     /**
      * @return mixed
      */
-    public function shift()
+    public function shift(): mixed
     {
         return array_shift($this->data);
     }
@@ -221,7 +221,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
     /**
      * @return mixed
      */
-    public function pop()
+    public function pop(): mixed
     {
         return array_pop($this->data);
     }
@@ -275,7 +275,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
     /**
      * @inheritDoc
      */
-    public function &offsetGet($offset)
+    public function &offsetGet($offset): mixed
     {
         return $this->data[$offset];
     }
@@ -305,7 +305,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
     /**
      * @inheritDoc
      */
-    public function key()
+    public function key(): mixed
     {
         return key($this->data);
     }
@@ -313,7 +313,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
     /**
      * @inheritDoc
      */
-    public function current()
+    public function current(): mixed
     {
         return current($this->data);
     }
@@ -337,9 +337,9 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
     /**
      * @inheritDoc
      */
-    public function next()
+    public function next(): void
     {
-        return next($this->data);
+        next($this->data);
     }
 
     # endregion
@@ -349,7 +349,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
     /**
      * @inheritDoc
      */
-    public function count()
+    public function count(): int
     {
         return count($this->data);
     }
