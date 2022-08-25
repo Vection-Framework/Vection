@@ -59,7 +59,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      * determine the HTTP method or URI, which must be provided explicitly.
      *
      * @param string              $method       The HTTP method associated with the request.
-     * @param UriInterface|string $uri          The URI associated with the request. If
+     * @param string|UriInterface $uri          The URI associated with the request. If
      *                                          the value is a string, the factory MUST create a UriInterface
      *                                          instance based on it.
      * @param array               $serverParams Array of SAPI parameters with which to seed
@@ -67,7 +67,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      *
      * @return ServerRequestInterface
      */
-    public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
+    public function createServerRequest(string $method, UriInterface|string $uri, array $serverParams = []): ServerRequestInterface
     {
         $environment    = new Environment($serverParams);
         $headersFactory = new HeadersFactory($environment);

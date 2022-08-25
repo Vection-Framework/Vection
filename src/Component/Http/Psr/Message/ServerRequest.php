@@ -247,14 +247,14 @@ class ServerRequest extends Request implements ServerRequestInterface
      * immutability of the message, and MUST return an instance that has the
      * updated body parameters.
      *
-     * @param null|array|object $data The deserialized body data. This will
+     * @param object|array|null $data The deserialized body data. This will
      *                                typically be in an array or object.
      *
      * @return static
      * @throws InvalidArgumentException if an unsupported argument type is
      *     provided.
      */
-    public function withParsedBody($data): ServerRequestInterface
+    public function withParsedBody(object|array|null $data): ServerRequestInterface
     {
         if ( ! is_object($data) && ! is_array($data) && $data !== null ) {
             throw new InvalidArgumentException('Given data to withParsedBody MUST be array, object or null.');
@@ -292,12 +292,12 @@ class ServerRequest extends Request implements ServerRequestInterface
      * specifying a default value to return if the attribute is not found.
      *
      * @param string $name    The attribute name.
-     * @param mixed  $default Default value to return if the attribute does not exist.
+     * @param mixed|null $default Default value to return if the attribute does not exist.
      *
      * @return mixed
      * @see getAttributes()
      */
-    public function getAttribute($name, $default = null): mixed
+    public function getAttribute(string $name, mixed $default = null): mixed
     {
         if ( ! array_key_exists($name, $this->attributes) ) {
             return $default;
@@ -322,7 +322,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @return static
      * @see getAttributes()
      */
-    public function withAttribute($name, $value): ServerRequestInterface
+    public function withAttribute(string $name, mixed $value): ServerRequestInterface
     {
         $request = clone $this;
         $request->attributes[$name] = $value;
@@ -344,7 +344,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @return static
      * @see getAttributes()
      */
-    public function withoutAttribute($name): ServerRequestInterface
+    public function withoutAttribute(string $name): ServerRequestInterface
     {
         $request = clone $this;
 

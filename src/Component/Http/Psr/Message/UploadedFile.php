@@ -112,7 +112,7 @@ class UploadedFile implements UploadedFileInterface
      * @throws RuntimeException on any error during the move operation, or on
      *     the second or subsequent call to the method.
      */
-    public function moveTo($targetPath): void
+    public function moveTo(string $targetPath): void
     {
         if ( $this->error !== UPLOAD_ERR_OK ) {
             throw new RuntimeException('Cannot move file with upload errors.');

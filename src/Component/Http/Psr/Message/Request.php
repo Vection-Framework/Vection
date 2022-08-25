@@ -105,7 +105,7 @@ class Request extends Message implements RequestInterface
      *
      * @return Request
      */
-    public function withRequestTarget($requestTarget): Request
+    public function withRequestTarget(mixed $requestTarget): Request
     {
         $request         = clone $this;
         $request->target = $requestTarget;
@@ -138,7 +138,7 @@ class Request extends Message implements RequestInterface
      * @return static
      * @throws InvalidArgumentException for invalid HTTP methods.
      */
-    public function withMethod($method): RequestInterface
+    public function withMethod(string $method): RequestInterface
     {
         $request         = clone $this;
         $request->method = $method;
@@ -187,11 +187,11 @@ class Request extends Message implements RequestInterface
      * @link http://tools.ietf.org/html/rfc3986#section-4.3
      *
      * @param UriInterface $uri          New request URI to use.
-     * @param bool         $preserveHost Preserve the original state of the Host header.
+     * @param bool $preserveHost Preserve the original state of the Host header.
      *
      * @return static
      */
-    public function withUri(UriInterface $uri, $preserveHost = false): RequestInterface
+    public function withUri(UriInterface $uri, bool $preserveHost = false): RequestInterface
     {
         $request      = clone $this;
         $request->uri = $uri;

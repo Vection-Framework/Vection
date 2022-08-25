@@ -72,7 +72,7 @@ abstract class Message implements MessageInterface
      *
      * @return static
      */
-    public function withProtocolVersion($version): MessageInterface
+    public function withProtocolVersion(string $version): MessageInterface
     {
         $message = clone $this;
         $message->protocolVersion = $version;
@@ -118,7 +118,7 @@ abstract class Message implements MessageInterface
      *     name using a case-insensitive string comparison. Returns false if
      *     no matching header name is found in the message.
      */
-    public function hasHeader($name): bool
+    public function hasHeader(string $name): bool
     {
         return $this->headers->has($name);
     }
@@ -138,7 +138,7 @@ abstract class Message implements MessageInterface
      *    header. If the header does not appear in the message, this method MUST
      *    return an empty array.
      */
-    public function getHeader($name): array
+    public function getHeader(string $name): array
     {
         return $this->headers->get($name);
     }
@@ -163,7 +163,7 @@ abstract class Message implements MessageInterface
      *    concatenated together using a comma. If the header does not appear in
      *    the message, this method MUST return an empty string.
      */
-    public function getHeaderLine($name): string
+    public function getHeaderLine(string $name): string
     {
         return $this->headers->getLine($name);
     }
@@ -178,13 +178,13 @@ abstract class Message implements MessageInterface
      * immutability of the message, and MUST return an instance that has the
      * new and/or updated header and value.
      *
-     * @param string          $name  Case-insensitive header field name.
+     * @param string $name  Case-insensitive header field name.
      * @param string|string[] $value Header value(s).
      *
      * @return static
      * @throws InvalidArgumentException for invalid header names or values.
      */
-    public function withHeader($name, $value): MessageInterface
+    public function withHeader(string $name, array|string $value): MessageInterface
     {
         $message = clone $this;
         $message->headers->set($name, $value);
@@ -202,13 +202,13 @@ abstract class Message implements MessageInterface
      * immutability of the message, and MUST return an instance that has the
      * new header and/or value.
      *
-     * @param string          $name  Case-insensitive header field name to add.
+     * @param string $name  Case-insensitive header field name to add.
      * @param string|string[] $value Header value(s).
      *
      * @return static
      * @throws InvalidArgumentException for invalid header names or values.
      */
-    public function withAddedHeader($name, $value): MessageInterface
+    public function withAddedHeader(string $name, array|string $value): MessageInterface
     {
         $message = clone $this;
         $message->headers->add($name, $value);
@@ -228,7 +228,7 @@ abstract class Message implements MessageInterface
      *
      * @return static
      */
-    public function withoutHeader($name): MessageInterface
+    public function withoutHeader(string $name): MessageInterface
     {
         $message = clone $this;
         $message->headers->remove($name);

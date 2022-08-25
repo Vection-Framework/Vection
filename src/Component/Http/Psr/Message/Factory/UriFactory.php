@@ -34,11 +34,11 @@ class UriFactory implements UriFactoryInterface
      *
      * @param string $uriString
      *
-     * @return UriInterface
+     * @return UriInterface|Uri
      *
      * @throws InvalidArgumentException If the given URI cannot be parsed.
      */
-    public function createUri(string $uriString = ''): UriInterface
+    public function createUri(string $uriString = '')
     {
         if ( ! $uriString ) {
             return new Uri();
