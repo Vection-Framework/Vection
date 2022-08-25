@@ -1,19 +1,22 @@
-name: Test and QA
+name: QA
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
   pull_request:
-    branches: [ master ]
+    branches:
+      - master
 
 jobs:
 
   tests:
-    name: Tests with PHP ${{ matrix.php-versions }}
+    name: QA based on PHP ${{ matrix.php-versions }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: [ '7.4', '8.0' ]
+        php-versions:
+          - 8.1
 
     steps:
       - uses: actions/checkout@v2
@@ -44,7 +47,8 @@ jobs:
         run: composer run-script test
 
   static-analysis:
-    name: Static Code Analysis with PHP 7.4
+
+    name: Static Code Analysis based on PHP ${{ matrix.php-versions }}
     runs-on: ubuntu-latest
 
     steps:
@@ -53,7 +57,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: ${{ matrix.php-versions }}
           extensions: mbstring, intl
 
       - name: Validate composer.json and composer.lock
