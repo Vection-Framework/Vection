@@ -23,26 +23,19 @@ use Vection\Component\DI\Traits\ContainerAwareTrait;
  */
 class TestObject implements InterfaceInjectedObjectInterface
 {
-    use AnnotationInjection, ContainerAwareTrait;
+    use AnnotationInjection;
+    use ContainerAwareTrait;
 
     /**
      * @Inject("Vection\Component\DI\Tests\Fixtures\AnnotationInjectedObject")
      * @var AnnotationInjectedObject
      */
-    protected AnnotationInjectedObject $annotationInjectedObject;
-
-    /** @var ConstructorInjectedObject */
-    private ConstructorInjectedObject $constructorInjectedObject;
-
-    /** @var ExplicitInjectedObject */
-    private ExplicitInjectedObject $explicitInjectedObject;
-
-    /** @var InterfaceInjectedObject */
-    protected InterfaceInjectedObject $logger;
+    protected AnnotationInjectedObject  $annotationInjectedObject;
+    private   ConstructorInjectedObject $constructorInjectedObject;
+    private   ExplicitInjectedObject    $explicitInjectedObject;
+    protected InterfaceInjectedObject   $logger;
 
     /**
-     * TestObject constructor.
-     *
      * @param ConstructorInjectedObject $constructorInjectedObject
      */
     public function __construct(ConstructorInjectedObject $constructorInjectedObject)
@@ -58,22 +51,36 @@ class TestObject implements InterfaceInjectedObjectInterface
         $this->explicitInjectedObject = $o;
     }
 
+    /**
+     * @return ExplicitInjectedObject
+     */
     public function getExplicitInjectedObject(): ExplicitInjectedObject
     {
         return $this->explicitInjectedObject;
     }
 
+    /**
+     * @return AnnotationInjectedObject
+     */
     public function getAnnotationInjectedObject(): AnnotationInjectedObject
     {
         return $this->annotationInjectedObject;
     }
 
+    /**
+     * @return InterfaceInjectedObject
+     */
     public function getInterfaceInjectedObject(): InterfaceInjectedObject
     {
         return $this->logger;
     }
 
-    public function setInterfaceInjectedObject($logger)
+    /**
+     * @param InterfaceInjectedObject $logger
+     *
+     * @return void
+     */
+    public function setInterfaceInjectedObject($logger): void
     {
         $this->logger = $logger;
     }

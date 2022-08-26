@@ -40,7 +40,7 @@ class UriFactoryTest extends TestCase
         $this->assertEquals('', $uri->getFragment());
         $this->assertEquals('', $uri->getUserInfo());
 
-        $uri = $factory->createUri('http://test.com:8080/context/path?unit=test#succes');
+        $uri = $factory->createUri('http://test.com:8080/context/path?unit=test#success');
 
         $this->assertEquals('http', $uri->getScheme());
         $this->assertEquals('test.com', $uri->getHost());
@@ -48,7 +48,7 @@ class UriFactoryTest extends TestCase
         $this->assertEquals('/context/path', $uri->getPath());
         $this->assertEquals('test.com:8080', $uri->getAuthority());
         $this->assertEquals('unit=test', $uri->getQuery());
-        $this->assertEquals('succes', $uri->getFragment());
+        $this->assertEquals('success', $uri->getFragment());
         $this->assertEquals('', $uri->getUserInfo());
 
         $uri = $factory->createUri('git://foobar:secret@test.com');

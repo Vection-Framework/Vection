@@ -47,7 +47,7 @@ class Resolver implements CacheAwareInterface
      *
      * @var CacheInterface|null
      */
-    protected ?CacheInterface $cache;
+    protected CacheInterface|null $cache = null;
 
     /**
      * This array object contains custom dependency definitions
@@ -66,8 +66,6 @@ class Resolver implements CacheAwareInterface
     protected array|ArrayObject $dependencies;
 
     /**
-     * Resolver constructor.
-     *
      * @param ArrayObject         $definitions
      * @param ArrayObject         $dependencies
      */
@@ -136,9 +134,7 @@ class Resolver implements CacheAwareInterface
                 # This is for the explicit inject by __inject method
                 $this->dependencies[$className]['explicit'] = $this->resolveExplicitDependencies($className);
 
-                if ( $this->cache ) {
-                    $this->cache->setArray('dependencies', $this->dependencies->getArrayCopy());
-                }
+                $this->cache?->setArray('dependencies', $this->dependencies->getArrayCopy());
             } catch ( ReflectionException $e ) {
                 throw new ContainerException(
                     "Reflection Error while resolving dependencies of class '$className'",
@@ -244,7 +240,7 @@ class Resolver implements CacheAwareInterface
         $dependencies = [];
 
         # Add setter injections by interfaces
-        if ( $interfaces = class_implements($className, true) ) {
+        if ( $interfaces = class_implements($className) ) {
             foreach ( $interfaces as $interface ) {
                 if ( isset($this->definitions[$interface]) ) {
                     $deps = ($this->definitions[$interface]->getDependencies()['setter'] ?? []);
@@ -257,7 +253,7 @@ class Resolver implements CacheAwareInterface
         }
 
         # Add setter injection by parent classes
-        if ( $parents = class_parents($className, true) ) {
+        if ( $parents = class_parents($className) ) {
             foreach ( $parents as $parent ) {
                 if ( $parentInterfaceDependencies = $this->resolveInterfaceDependencies($parent) ) {
                     foreach ($parentInterfaceDependencies as $method => $parentInterfaceDependency) {
@@ -289,7 +285,7 @@ class Resolver implements CacheAwareInterface
         $useInjectionTrait = isset($reflection->getTraits()[AnnotationInjection::class]);
 
         # Add annotation injection by parent classes
-        if ( $parents = class_parents($className, true) ) {
+        if ( $parents = class_parents($className) ) {
             foreach ( $parents as $parent ) {
                 if ( isset((new ReflectionClass($parent))->getTraits()[AnnotationInjection::class]) ) {
                     $useInjectionTrait = true;
@@ -323,7 +319,7 @@ class Resolver implements CacheAwareInterface
                     $propertyType = $property->getType();
 
                 }
-                else if ($doc && PHP_VERSION_ID >= 70400 && $property->hasType() && preg_match('/@Inject/', $doc)) {
+                else if ($doc && PHP_VERSION_ID >= 70400 && $property->hasType() && str_contains($doc, '@Inject')) {
 
                     $propertyType = $property->getType();
 

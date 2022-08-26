@@ -27,21 +27,9 @@ use Vection\Contracts\Messenger\MessageRelationInterface;
  */
 class MessageRelation implements MessageRelationInterface
 {
-
-    /**
-     * @var string
-     */
-    protected string $correlationId;
-
-    /**
-     * @var string
-     */
-    protected string $causationId;
-
-    /**
-     * @var MessageInterface
-     */
-    protected MessageInterface $message;
+    protected string|null           $correlationId = null;
+    protected string|null           $causationId   = null;
+    protected MessageInterface|null $message       = null;
 
     /**
      * @inheritDoc

@@ -22,11 +22,9 @@ use Vection\Component\Validator\Validator;
  */
 class Equals extends Validator
 {
-    protected string $equalValue;
+    protected mixed $equalValue;
 
     /**
-     * Equals constructor.
-     *
      * @param mixed $equalValue
      */
     public function __construct(mixed $equalValue)

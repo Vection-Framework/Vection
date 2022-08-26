@@ -38,7 +38,7 @@ class UriFactory implements UriFactoryInterface
      *
      * @throws InvalidArgumentException If the given URI cannot be parsed.
      */
-    public function createUri(string $uriString = '')
+    public function createUri(string $uriString = ''): UriInterface|Uri
     {
         if ( ! $uriString ) {
             return new Uri();

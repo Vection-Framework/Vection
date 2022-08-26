@@ -20,18 +20,17 @@ use Psr\Http\Message\UriInterface;
  * Class Uri
  *
  * @package Vection\Component\Http\Psr\Message
- *
  * @author  David M. Lung <vection@davidlung.de>
  */
 class Uri implements UriInterface
 {
-    protected string|null $schema;
-    protected string|null $userInfo;
-    protected string|null $host;
     protected int|null    $port;
-    protected string|null $path;
-    protected string|null $query;
-    protected string|null $fragment;
+    protected string|null $schema;
+    protected string|null $host;
+    protected string|null $path     = null;
+    protected string|null $query    = null;
+    protected string|null $fragment = null;
+    protected string|null $userInfo = null;
 
     /**
      * Retrieve the scheme component of the URI.
@@ -222,22 +221,9 @@ class Uri implements UriInterface
     }
 
     /**
-     * Return an instance with the specified scheme.
-     *
-     * This method MUST retain the state of the current instance, and return
-     * an instance that contains the specified scheme.
-     *
-     * Implementations MUST support the schemes "http" and "https" case
-     * insensitively, and MAY accommodate other schemes if required.
-     *
-     * An empty scheme is equivalent to removing the scheme.
-     *
-     * @param string $scheme The scheme to use with the new instance.
-     *
-     * @return static A new instance with the specified scheme.
-     * @throws InvalidArgumentException for invalid or unsupported schemes.
+     * @inheritDoc
      */
-    public function withScheme(string $scheme): UriInterface
+    public function withScheme($scheme): UriInterface
     {
         $uri         = clone $this;
         $uri->schema = $scheme;
@@ -245,21 +231,9 @@ class Uri implements UriInterface
     }
 
     /**
-     * Return an instance with the specified user information.
-     *
-     * This method MUST retain the state of the current instance, and return
-     * an instance that contains the specified user information.
-     *
-     * Password is optional, but the user information MUST include the
-     * user; an empty string for the user is equivalent to removing user
-     * information.
-     *
-     * @param string $user     The user name to use for authority.
-     * @param string|null $password The password associated with $user.
-     *
-     * @return static A new instance with the specified user information.
+     * @inheritDoc
      */
-    public function withUserInfo(string $user, string $password = null): UriInterface
+    public function withUserInfo($user, $password = null): UriInterface
     {
         $uri           = clone $this;
         $uri->userInfo = $user . ($password ? ':'.$password : '');
@@ -279,7 +253,7 @@ class Uri implements UriInterface
      * @return static A new instance with the specified host.
      * @throws InvalidArgumentException for invalid hostnames.
      */
-    public function withHost(string $host): UriInterface
+    public function withHost($host): UriInterface
     {
         $uri       = clone $this;
         $uri->host = $host;
@@ -304,7 +278,7 @@ class Uri implements UriInterface
      * @return static A new instance with the specified port.
      * @throws InvalidArgumentException for invalid ports.
      */
-    public function withPort(?int $port): UriInterface
+    public function withPort($port): UriInterface
     {
         if ( !is_int($port) || $port < 0 || $port > 0xffff ) {
             throw new InvalidArgumentException("Invalid port ($port). Expect integer between 0 and 65535.");
@@ -338,7 +312,7 @@ class Uri implements UriInterface
      * @return static A new instance with the specified path.
      * @throws InvalidArgumentException for invalid paths.
      */
-    public function withPath(string $path): UriInterface
+    public function withPath($path): UriInterface
     {
         $uri       = clone $this;
         $uri->path = $path;
@@ -361,7 +335,7 @@ class Uri implements UriInterface
      * @return static A new instance with the specified query string.
      * @throws InvalidArgumentException for invalid query strings.
      */
-    public function withQuery(string $query): UriInterface
+    public function withQuery($query): UriInterface
     {
         $uri        = clone $this;
         $uri->query = $query;
@@ -383,7 +357,7 @@ class Uri implements UriInterface
      *
      * @return static A new instance with the specified fragment.
      */
-    public function withFragment(string $fragment): UriInterface
+    public function withFragment($fragment): UriInterface
     {
         $uri           = clone $this;
         $uri->fragment = $fragment;

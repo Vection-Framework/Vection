@@ -33,7 +33,6 @@ class ResolverTest extends TestCase
      * @throws ReflectionException
      */
     public function testResolveConstructorDependencies() {
-
         $definitions = new ArrayObject(
             [
                 TestObject::class => (new Definition(TestObject::class))
