@@ -116,7 +116,7 @@ class ResolverTest extends TestCase
         $definitions[TestObject::class] = (new Definition(TestObject::class))
             ->factory(
                 function(){
-                    return new TestObject(null);
+                    return new TestObject(new ConstructorInjectedObject());
                 }
             );
 

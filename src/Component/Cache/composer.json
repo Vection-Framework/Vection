@@ -3,16 +3,20 @@
     "type": "library",
     "description": "The Vection Cache Framework Component",
     "keywords": ["php", "framework", "cache", "redis", "apcu", "lightweight"],
-    "homepage": "https://vection.de",
+    "homepage": "https://www.vection.de",
     "license": "MIT",
     "authors": [
         {
-            "name": "David Lung",
-            "email": "david@appsdock.de"
+            "name": "David M. Lung",
+            "email": "david.lung@appsdock.de"
+        },
+        {
+            "name": "David Brucksch",
+            "email": "david.brucksch@appsdock.de"
         }
     ],
     "require": {
-        "php": "^7.4||^8.0",
+        "php": "^8.1",
         "vection-framework/contracts": "v0.*"
     },
     "autoload": {

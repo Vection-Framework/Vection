@@ -3,12 +3,16 @@
     "type": "library",
     "description": "The Vection Common Framework Component",
     "keywords": ["framework", "common"],
-    "homepage": "https://vection.appsdock.org",
+    "homepage": "https://www.vection.de",
     "license": "MIT",
     "authors": [
         {
-            "name": "David Lung",
-            "email": "vection@davidlung.de"
+            "name": "David M. Lung",
+            "email": "david.lung@appsdock.de"
+        },
+        {
+            "name": "David Brucksch",
+            "email": "david.brucksch@appsdock.de"
         }
     ],
     "require": {

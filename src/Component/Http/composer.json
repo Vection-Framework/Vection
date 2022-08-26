@@ -5,12 +5,16 @@
     "keywords": [
         "http", "php-http-kernel", "request", "response", "http-middleware", "http-stack"
     ],
-    "homepage": "https://vection.appsdock.org/docs/components/http",
+    "homepage": "https://www.vection.de",
     "license": "MIT",
     "authors": [
         {
-            "name": "David Lung",
-            "email": "vection@davidlung.de"
+            "name": "David M. Lung",
+            "email": "david.lung@appsdock.de"
+        },
+        {
+            "name": "David Brucksch",
+            "email": "david.brucksch@appsdock.de"
         }
     ],
     "require": {

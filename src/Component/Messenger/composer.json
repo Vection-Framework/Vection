@@ -16,12 +16,16 @@
         "service-bus",
         "message-queue"
     ],
-    "homepage": "https://vection.appsdock.org/components/messenger",
+    "homepage": "https://www.vection.de",
     "license": "MIT",
     "authors": [
         {
-            "name": "David Lung",
-            "email": "vection@davidlung.de"
+            "name": "David M. Lung",
+            "email": "david.lung@appsdock.de"
+        },
+        {
+            "name": "David Brucksch",
+            "email": "david.brucksch@appsdock.de"
         }
     ],
     "require": {

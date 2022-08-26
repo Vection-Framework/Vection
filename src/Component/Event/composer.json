@@ -3,12 +3,16 @@
     "type": "library",
     "description": "PHP Event Dispatcher - Vection Component",
     "keywords": ["php", "framework", "event", "event", "dispatcher"],
-    "homepage": "https://vection.appsdock.org",
+    "homepage": "https://www.vection.de",
     "license": "MIT",
     "authors": [
         {
-            "name": "David Lung",
-            "email": "vection@davidlung.de"
+            "name": "David M. Lung",
+            "email": "david.lung@appsdock.de"
+        },
+        {
+            "name": "David Brucksch",
+            "email": "david.brucksch@appsdock.de"
         }
     ],
     "require": {
