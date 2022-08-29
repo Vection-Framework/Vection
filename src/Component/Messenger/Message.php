@@ -74,7 +74,7 @@ class Message implements MessageInterface
      */
     public function getBodyType(): string
     {
-        return is_object($this->body) ? str_replace('\\', '.', get_class($this->body)) : gettype($this->body);
+        return str_replace('\\', '.', get_class($this->body));
     }
 
     /**

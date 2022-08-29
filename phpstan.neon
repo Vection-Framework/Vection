@@ -1,32 +1,32 @@
 parameters:
     level: 5
-    paths:
-        - src
     inferPrivatePropertyTypeFromConstructor: true
     reportUnmatchedIgnoredErrors: false
+    treatPhpDocTypesAsCertain: false
 
-    excludes_analyse:
+    paths:
+        - src
+
+    excludePaths:
         - %rootDir%/../../../src/Component/*/Tests/*
         - %rootDir%/../../../src/Component/Http/*
 
     ignoreErrors:
-        -
-            message: "#Call to an undefined method ReflectionMethod::getAttributes\\(\\).#"
-            count: 3
-            path: src/Component/DI/Resolver.php
+        - message: "#Strict comparison using === between#"
+          count: 1
+          path: src/Component/Common/Crypto.php
+        - message: "#Strict comparison using === between#"
+          count: 1
+          path: src/Component/Validator/Schema/Property.php
 
-        -
-            message: "#PHPDoc tag @param for parameter \\$previous with type Throwable\\|null is not subtype of native type Throwable\\.#"
-            count: 1
-            path: src/Component/Messenger/Exception/HandlerFailedException.php
+        - message: "#Negated boolean expression is always true.#"
+          count: 1
+          path: src/Component/DI/Container.php
 
-        -
-            message: "#Parameter \\#2 \\$allowed_classes of function unserialize expects array\\(\\)\\|array\\('allowed_classes' => array<string>\\|bool\\), array\\(true\\) given\\.#"
-            count: 1
-            path: src/Component/Messenger/Transport/Serializer/DefaultSerializer.php
+        - message: "#Result of && is always false.#"
+          count: 1
+          path: src/Component/Validator/Schema/Property.php
 
-        # false positive
-        -
-            message: "#Strict comparison using === between string and false will always evaluate to false\\.#"
-            count: 1
-            path: src/Component/Utility/Security/OpenSSLEncryption.php
+        - message: "#HookLoader\\:\\:\\$contexts is never read, only written.#"
+          count: 1
+          path: src/Component/Hook/HookLoader.php

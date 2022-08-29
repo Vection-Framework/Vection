@@ -114,7 +114,7 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
 
         $headers = $message->getHeaders();
 
-        $bodyType = is_object($body) ? str_replace('\\', '.', get_class($body)) : gettype($body);
+        $bodyType = str_replace('\\', '.', get_class($body));
 
         $this->logger->debug(sprintf('DISPATCH %s (%s)', $headers->get(MessageHeaders::MESSAGE_ID), $bodyType));
 

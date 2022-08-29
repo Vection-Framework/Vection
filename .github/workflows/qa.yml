@@ -10,8 +10,8 @@ on:
 
 jobs:
 
-  tests:
-    name: Run tests based on PHP ${{ matrix.php-versions }}
+  unit-tests:
+    name: Unit tests on PHP ${{ matrix.php-versions }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -48,7 +48,7 @@ jobs:
 
   static-analysis:
 
-    name: Analyse static code based on PHP ${{ matrix.php-versions }}
+    name: Static analysis on PHP ${{ matrix.php-versions }}
     runs-on: ubuntu-latest
     strategy:
       matrix:

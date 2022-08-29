@@ -103,7 +103,7 @@ class ValidatorChain implements ValidatorChainInterface
      * Each entry can have multiple assertion with
      * different parameters.
      *
-     * @var Validator[][]
+     * @var ValidatorInterface[][]
      */
     protected array $chain = [];
 

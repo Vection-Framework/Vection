@@ -39,13 +39,13 @@ class HandlerFailedException extends RuntimeException
         $this->envelope = $envelope;
         $body = $envelope->getBody();
 
-        $envelope = sprintf(
+        $message = sprintf(
             'Handling for message "%s" with body "%s" failed.',
             $envelope->getHeaders()->get(MessageHeaders::MESSAGE_ID),
-            is_object($body) ? str_replace('\\', '.', get_class($body)) : gettype($body),
+            str_replace('\\', '.', get_class($body))
         );
 
-        parent::__construct($envelope, $exception->getCode(), $exception);
+        parent::__construct($message, $exception->getCode(), $exception);
     }
 
     /**

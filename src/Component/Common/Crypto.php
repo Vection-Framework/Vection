@@ -24,20 +24,46 @@ use RuntimeException;
  */
 class Crypto
 {
+    public const CIPHER_AES_128_CBC       = 'aes-128-cbc';
+    public const CIPHER_AES_128_GCM       = 'aes-128-gcm';
+    public const CIPHER_AES_192_CBC       = 'aes-192-cbc';
+    public const CIPHER_AES_192_GCM       = 'aes-192-gcm';
+    public const CIPHER_AES_256_CBC       = 'aes-256-cbc';
+    public const CIPHER_AES_256_GCM       = 'aes-256-gcm';
+    public const CIPHER_BLOWFISH          = 'blowfish';
+    public const CIPHER_CAMELLIA_128_CBC  = 'camellia-128-cbc';
+    public const CIPHER_CAMELLIA_192_CBC  = 'camellia-192-cbc';
+    public const CIPHER_CAMELLIA_256_CBC  = 'camellia-256-cbc';
+    public const CIPHER_CHACHA20_POLY1305 = 'chacha20-poly1305';
+
     public const HASH_CRC32     = 'crc32';
     public const HASH_MD5       = 'md5';
+    public const HASH_MURMUR3A  = 'murmur3a';
+    public const HASH_MURMUR3C  = 'murmur3c';
+    public const HASH_MURMUR3F  = 'murmur3f';
     public const HASH_SHA1      = 'sha1';
     public const HASH_SHA256    = 'sha256';
     public const HASH_SHA512    = 'sha512';
     public const HASH_WHIRLPOOL = 'whirlpool';
+    public const HASH_XXH3      = 'xxh3';
+    public const HASH_XXH32     = 'xxh32';
+    public const HASH_XXH64     = 'xxh64';
+    public const HASH_XXH128    = 'xxh128';
 
     protected const HASHES = [
         self::HASH_CRC32,
         self::HASH_MD5,
+        self::HASH_MURMUR3A,
+        self::HASH_MURMUR3C,
+        self::HASH_MURMUR3F,
         self::HASH_SHA1,
         self::HASH_SHA256,
         self::HASH_SHA512,
         self::HASH_WHIRLPOOL,
+        self::HASH_XXH3,
+        self::HASH_XXH32,
+        self::HASH_XXH64,
+        self::HASH_XXH128,
     ];
 
     /**
@@ -253,8 +279,8 @@ class Crypto
      * @param string $content
      * @param string $key
      * @param string $secret
-     * @param string $cipherAlgo
-     * @param string $algo
+     * @param string $cipher
+     * @param string $hashAlgo
      *
      * @return string
      */
@@ -262,19 +288,19 @@ class Crypto
         string $content,
         string $key,
         string $secret,
-        string $cipherAlgo = 'aes-256-gcm',
-        string $algo = self::HASH_SHA256
+        string $cipher   = self::CIPHER_AES_256_GCM,
+        string $hashAlgo = self::HASH_SHA256
     ): string
     {
         if ( ! extension_loaded('openssl') ) {
             throw new RuntimeException('OpenSSLEncryption requires the ext-openssl extension.');
         }
 
-        if ( ! in_array($cipherAlgo, openssl_get_cipher_methods(), true) ) {
-            throw new RuntimeException("OpenSSL: Invalid cipher method '$cipherAlgo'.");
+        if ( ! in_array($cipher, openssl_get_cipher_methods(), true) ) {
+            throw new RuntimeException("OpenSSL: Invalid cipher method '$cipher'.");
         }
 
-        $ivLen = openssl_cipher_iv_length($cipherAlgo);
+        $ivLen = openssl_cipher_iv_length($cipher);
 
         if ( $ivLen === false ) {
             throw new RuntimeException('Unable to get the cipher iv length via openSSL.');
@@ -282,8 +308,8 @@ class Crypto
 
         $iv = self::bytes($ivLen);
 
-        $encrypted  = openssl_encrypt($content, $cipherAlgo, $key, 0, $iv, $tag, '', 4);
-        $hash       = hash_hmac($algo, $encrypted, $secret);
+        $encrypted  = openssl_encrypt($content, $cipher, $key, 0, $iv, $tag, '', 4);
+        $hash       = hash_hmac($hashAlgo, $encrypted, $secret);
         $hashLength = strlen($hash);
 
         return str_rot13(base64_encode($hashLength.'||'.$iv.$hash.$tag.$encrypted));
@@ -293,8 +319,8 @@ class Crypto
      * @param string $encryptedContent
      * @param string $key
      * @param string $secret
-     * @param string $cipherAlgo
-     * @param string $algo
+     * @param string $cipher
+     * @param string $hashAlgo
      *
      * @return string|null
      */
@@ -302,8 +328,8 @@ class Crypto
         string $encryptedContent,
         string $key,
         string $secret,
-        string $cipherAlgo = 'aes-256-gcm',
-        string $algo = self::HASH_SHA256
+        string $cipher   = self::CIPHER_AES_256_GCM,
+        string $hashAlgo = self::HASH_SHA256
     ): ? string
     {
 
@@ -311,11 +337,11 @@ class Crypto
             throw new RuntimeException('OpenSSLEncryption requires the ext-openssl extension.');
         }
 
-        if ( ! in_array($cipherAlgo, openssl_get_cipher_methods(), true) ) {
-            throw new RuntimeException("OpenSSL: Invalid cipher method '$cipherAlgo'.");
+        if ( ! in_array($cipher, openssl_get_cipher_methods(), true) ) {
+            throw new RuntimeException("OpenSSL: Invalid cipher method '$cipher'.");
         }
 
-        $ivLen = openssl_cipher_iv_length($cipherAlgo);
+        $ivLen = openssl_cipher_iv_length($cipher);
 
         if ( $ivLen === false ) {
             throw new RuntimeException('Unable to get the cipher iv length via openSSL.');
@@ -334,7 +360,7 @@ class Crypto
         $tag       = substr($info, ($ivLen + $hashLength), 4);
         $encrypted = substr($info, ($ivLen + $hashLength + 4));
 
-        $decrypted = openssl_decrypt($encrypted, $cipherAlgo, $key, 0, $iv, $tag);
+        $decrypted = openssl_decrypt($encrypted, $cipher, $key, 0, $iv, $tag);
 
         if ( $decrypted === false ) {
             throw new RuntimeException(
@@ -342,7 +368,7 @@ class Crypto
             );
         }
 
-        $hashCheck = hash_hmac($algo, $encrypted, $secret);
+        $hashCheck = hash_hmac($hashAlgo, $encrypted, $secret);
 
         return hash_equals($hash, $hashCheck) ? $decrypted : null;
     }

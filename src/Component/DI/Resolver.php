@@ -362,7 +362,7 @@ class Resolver implements CacheAwareInterface
         if ( $reflection->hasMethod('__inject') ) {
             $method = $reflection->getMethod('__inject');
 
-            foreach ( ($method->getParameters() ?? []) as $param ) {
+            foreach ($method->getParameters() as $param) {
                 if ($param->hasType()) {
                     $type = $param->getType();
                     if ( $type instanceof ReflectionNamedType && ! $type->isBuiltin() ) {
