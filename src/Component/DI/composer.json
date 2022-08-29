@@ -5,7 +5,7 @@
     "keywords": [
         "php dependency injection","container", "di", "php-dic", "container", "dependency-container", "php-di", "dependency-resolver"
     ],
-    "homepage": "https://www.vection.de",
+    "homepage": "https://vection.appsdock.org",
     "license": "MIT",
     "authors": [
         {

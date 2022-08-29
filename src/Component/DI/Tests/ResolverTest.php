@@ -44,7 +44,7 @@ class ResolverTest extends TestCase
 
         $dependencies = $resolver->resolveConstructorDependencies(TestObject::class);
 
-        $this->assertEquals(['Vection\Component\DI\Tests\Fixtures\ConstructorInjectedObject'], $dependencies);
+        $this->assertEquals([], $dependencies);
     }
 
     /**

@@ -3,7 +3,7 @@
     "type": "library",
     "description": "The Vection Cache Framework Component",
     "keywords": ["php", "framework", "cache", "redis", "apcu", "lightweight"],
-    "homepage": "https://www.vection.de",
+    "homepage": "https://vection.appsdock.org",
     "license": "MIT",
     "authors": [
         {

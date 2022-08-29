@@ -3,7 +3,7 @@
     "type": "library",
     "description": "PHP Event Dispatcher - Vection Component",
     "keywords": ["php", "framework", "event", "event", "dispatcher"],
-    "homepage": "https://www.vection.de",
+    "homepage": "https://vection.appsdock.org",
     "license": "MIT",
     "authors": [
         {

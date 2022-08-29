@@ -3,7 +3,7 @@
     "type": "library",
     "description": "PHP Validator for chained data validation - Vection Framework Component",
     "keywords": ["php-validator", "validator", "validation", "framework", "assertion", "assert", "php-assert"],
-    "homepage": "https://www.vection.de",
+    "homepage": "https://vection.appsdock.org",
     "license": "MIT",
     "authors": [
         {

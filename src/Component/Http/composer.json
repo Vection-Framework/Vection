@@ -5,7 +5,7 @@
     "keywords": [
         "http", "php-http-kernel", "request", "response", "http-middleware", "http-stack"
     ],
-    "homepage": "https://www.vection.de",
+    "homepage": "https://vection.appsdock.org",
     "license": "MIT",
     "authors": [
         {
