@@ -17,7 +17,7 @@
     ],
     "support": {
         "chat": "https://discord.gg/ZhPaXkccpg",
-        "docs": "https://github.com/Vection-Framework/Contracts/README.md",
+        "docs": "https://github.com/Vection-Framework/Contracts/blob/master/README.md",
         "email": "vection@appsdock.de",
         "issues": "https://github.com/Vection-Framework/Contracts/issues",
         "source": "https://github.com/Vection-Framework/Contracts/"
@@ -28,7 +28,7 @@
         }
     },
     "require": {
-        "php": "^7.4||^8.0",
+        "php": "^8.1",
         "psr/log": "1.1.*",
         "psr/container": "1.0.*",
         "psr/event-dispatcher": "1.0.*"
