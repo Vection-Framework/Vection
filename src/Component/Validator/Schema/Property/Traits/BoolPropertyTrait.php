@@ -16,7 +16,7 @@ use Vection\Component\Validator\Schema\Exception\IllegalPropertyValueException;
 trait BoolPropertyTrait
 {
     /**
-     * @param array $schema
+     * @param mixed[] $schema
      *
      * @return void
      */
@@ -26,13 +26,13 @@ trait BoolPropertyTrait
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @return void
      *
      * @throws IllegalPropertyTypeException
      */
-    public function validateBoolProperty($value): void
+    public function validateBoolProperty(mixed $value): void
     {
         if (!is_bool($value)) {
             throw new IllegalPropertyTypeException($this->name, 'boolean');

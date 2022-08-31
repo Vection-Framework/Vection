@@ -43,7 +43,7 @@ class FloatProperty extends Property
      * @throws IllegalPropertyTypeException
      * @throws IllegalPropertyValueException
      */
-    public function onValidate($value): void
+    public function onValidate(mixed $value): void
     {
         $this->validateFloatProperty($value);
     }

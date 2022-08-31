@@ -41,7 +41,7 @@ class BooleanProperty extends Property
      *
      * @throws IllegalPropertyTypeException
      */
-    public function onValidate($value): void
+    public function onValidate(mixed $value): void
     {
         $this->validateBoolProperty($value);
     }

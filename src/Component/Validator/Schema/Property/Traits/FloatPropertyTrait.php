@@ -19,7 +19,7 @@ trait FloatPropertyTrait
     protected float|null $floatMin = null;
 
     /**
-     * @param array $schema
+     * @param mixed[] $schema
      *
      * @return void
      */
@@ -32,14 +32,14 @@ trait FloatPropertyTrait
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @return void
      *
      * @throws IllegalPropertyTypeException
      * @throws IllegalPropertyValueException
      */
-    public function validateFloatProperty($value): void
+    public function validateFloatProperty(mixed $value): void
     {
         if (!is_float($value)) {
             throw new IllegalPropertyTypeException($this->name, 'integer');

@@ -37,6 +37,7 @@ abstract class Property implements PropertyInterface
     protected bool|null     $nullable = null;
     /** @var ValidatorInterface[] */
     protected array         $validators;
+    /** @var mixed[] */
     protected array         $templates;
     protected string|null   $template = null;
     protected Property|null $parent;
@@ -45,7 +46,7 @@ abstract class Property implements PropertyInterface
     /**
      * @param string        $name
      * @param Property|null $parent
-     * @param array         $templates
+     * @param mixed[]       $templates
      * @param int           $maxTemplateRecursion
      */
     public function __construct(
@@ -190,18 +191,18 @@ abstract class Property implements PropertyInterface
     }
 
     /**
-     * @param array $schema
+     * @param mixed[] $schema
      *
      * @throws SchemaExceptionInterface
      */
     abstract protected function onEvaluate(array $schema): void;
 
     /**
-     * @param string|int|float|array|bool $value
+     * @param mixed $value
      *
      * @throws PropertyExceptionInterface
      */
-    abstract protected function onValidate(string|int|float|array|bool $value): void;
+    abstract protected function onValidate(mixed $value): void;
 
     /**
      * @param string $name
@@ -223,7 +224,7 @@ abstract class Property implements PropertyInterface
     /**
      * @param string $name
      *
-     * @return array
+     * @return mixed[]
      *
      * @throws SchemaExceptionInterface
      */
@@ -237,7 +238,7 @@ abstract class Property implements PropertyInterface
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function resolveTemplateChain(): array
     {

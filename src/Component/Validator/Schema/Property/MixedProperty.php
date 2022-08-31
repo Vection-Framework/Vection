@@ -39,7 +39,9 @@ class MixedProperty extends Property
     use ObjectPropertyTrait;
     use StringPropertyTrait;
 
+    /** @var mixed[] */
     protected array         $allowed    = [];
+    /** @var mixed[] */
     protected array         $properties = [];
     protected Property|null $property   = null;
     protected string|null   $regex      = null;
@@ -68,7 +70,7 @@ class MixedProperty extends Property
      * @throws IllegalPropertyTypeException
      * @throws IllegalPropertyValueException
      */
-    public function onValidate($value): void
+    public function onValidate(mixed $value): void
     {
         if (
             !is_array($value)   &&

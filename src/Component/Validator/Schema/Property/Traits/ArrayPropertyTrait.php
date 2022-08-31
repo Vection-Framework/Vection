@@ -26,7 +26,7 @@ trait ArrayPropertyTrait
     protected int|null $maxArraySize = null;
 
     /**
-     * @param array $schema
+     * @param mixed[] $schema
      *
      * @throws SchemaExceptionInterface
      */
@@ -41,13 +41,13 @@ trait ArrayPropertyTrait
     }
 
     /**
-     * @param $values
+     * @param mixed $values
      *
      * @throws IllegalPropertyTypeException
      * @throws MissingPropertyException
      * @throws PropertyExceptionInterface
      */
-    public function validateArrayProperty($values): void
+    public function validateArrayProperty(mixed $values): void
     {
         if (!is_array($values)) {
             throw new IllegalPropertyTypeException($this->name, 'array');

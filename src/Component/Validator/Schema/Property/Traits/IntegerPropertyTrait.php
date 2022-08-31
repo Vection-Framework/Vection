@@ -19,7 +19,7 @@ trait IntegerPropertyTrait
     protected int|null $integerMin = null;
 
     /**
-     * @param array $schema
+     * @param mixed[] $schema
      *
      * @return void
      */
@@ -32,14 +32,14 @@ trait IntegerPropertyTrait
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @return void
      *
      * @throws IllegalPropertyTypeException
      * @throws IllegalPropertyValueException
      */
-    public function validateIntegerProperty($value): void
+    public function validateIntegerProperty(mixed $value): void
     {
         if (!is_int($value)) {
             throw new IllegalPropertyTypeException($this->name, 'integer');

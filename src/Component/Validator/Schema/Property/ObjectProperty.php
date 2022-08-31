@@ -43,7 +43,7 @@ class ObjectProperty extends Property
     /**
      * @inheritDoc
      */
-    public function onValidate($value): void
+    public function onValidate(mixed $value): void
     {
         $this->validateObjectProperty($value);
     }

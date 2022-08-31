@@ -19,7 +19,7 @@ use Vection\Contracts\Validator\Schema\SchemaExceptionInterface;
 trait ObjectPropertyTrait
 {
     /**
-     * @param array $schema
+     * @param mixed[] $schema
      *
      * @throws SchemaExceptionInterface
      */
@@ -43,14 +43,14 @@ trait ObjectPropertyTrait
     }
 
     /**
-     * @param $values
+     * @param mixed $values
      *
      * @throws IllegalPropertyException
      * @throws IllegalPropertyTypeException
      * @throws MissingPropertyException
      * @throws PropertyExceptionInterface
      */
-    protected function validateObjectProperty($values): void
+    protected function validateObjectProperty(mixed $values): void
     {
         if ( $this->required === true && is_array($values) && count($values) === 0 ) {
             throw new MissingPropertyException($this->name.'.*');
