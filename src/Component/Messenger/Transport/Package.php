@@ -42,11 +42,9 @@ class Package implements PackageInterface
     protected string $message;
 
     /**
-     * TransportData constructor.
-     *
-     * @param array  $meta
-     * @param array  $headers
-     * @param string $message
+     * @param mixed[] $meta
+     * @param mixed[] $headers
+     * @param string  $message
      */
     public function __construct(array $meta, array $headers, string $message)
     {
