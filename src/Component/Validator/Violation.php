@@ -28,16 +28,17 @@ use Vection\Contracts\Validator\ViolationInterface;
 class Violation implements ViolationInterface, JsonSerializable
 {
     protected mixed  $value;
+    /** @var mixed[] */
     protected array  $constraints;
     protected string $message;
     protected string $result = '';
     protected string $subject;
 
     /**
-     * @param string $subject
-     * @param mixed  $value
-     * @param array  $constraints
-     * @param string $message
+     * @param string  $subject
+     * @param mixed   $value
+     * @param mixed[] $constraints
+     * @param string  $message
      */
     public function __construct(string $subject, mixed $value, array $constraints, string $message)
     {
@@ -86,11 +87,7 @@ class Violation implements ViolationInterface, JsonSerializable
     }
 
     /**
-     * Specify data which should be serialized to JSON
-     * @link  https://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return array data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
+     * @inheritDoc
      */
     public function jsonSerialize(): array
     {
