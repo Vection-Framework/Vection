@@ -29,7 +29,7 @@ use Vection\Contracts\Messenger\MiddlewareSequenceInterface;
 class MiddlewareSequenceFactory implements MiddlewareSequenceFactoryInterface
 {
     /**
-     * @param array $middleware
+     * @param mixed[] $middleware
      *
      * @return MiddlewareSequenceInterface
      */

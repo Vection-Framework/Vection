@@ -35,18 +35,14 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    /**
-     * @var MessageBusMiddlewareInterface[]
-     */
-    protected array $middleware;
-    protected array $defaultHeaders;
+    /** @var string[] */
+    protected array                              $defaultHeaders;
+    protected array                              $middleware;
     protected MiddlewareSequenceFactoryInterface $middlewareSequenceFactory;
-    protected MessageIdGeneratorInterface $idGenerator;
+    protected MessageIdGeneratorInterface        $idGenerator;
 
     /**
-     * MessageBus constructor.
-     *
-     * @param array                                   $defaultHeaders
+     * @param string[]                                $defaultHeaders
      * @param MiddlewareSequenceFactoryInterface|null $middlewareSequenceFactory
      * @param MessageIdGeneratorInterface|null        $idGenerator
      */

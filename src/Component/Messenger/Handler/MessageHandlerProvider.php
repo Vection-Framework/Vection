@@ -30,16 +30,15 @@ use Vection\Contracts\Messenger\MessageInterface;
  */
 class MessageHandlerProvider implements MessageHandlerProviderInterface
 {
-    protected array $map;
-    protected ?MessageHandlerFactoryInterface $factory;
+    /** @var mixed[] */
+    protected array                               $map;
+    protected MessageHandlerFactoryInterface|null $factory;
 
     /**
-     * MessageHandlerMapper constructor.
-     *
-     * @param array                               $handlerClassNames
+     * @param mixed[]                             $handlerClassNames
      * @param MessageHandlerFactoryInterface|null $factory
      */
-    public function __construct(array $handlerClassNames = [], ?MessageHandlerFactoryInterface $factory = null)
+    public function __construct(array $handlerClassNames = [], MessageHandlerFactoryInterface|null $factory = null)
     {
         $this->map     = [];
         $this->factory = $factory;

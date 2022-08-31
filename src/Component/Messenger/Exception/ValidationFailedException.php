@@ -32,10 +32,8 @@ class ValidationFailedException extends RuntimeException
     protected array $violations;
 
     /**
-     * InvalidPayloadException constructor.
-     *
-     * @param array          $violations
-     * @param int $code
+     * @param mixed[]        $violations
+     * @param int            $code
      * @param Throwable|null $previous
      */
     public function __construct(array $violations, int $code = 0, Throwable $previous = null)

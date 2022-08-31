@@ -41,12 +41,11 @@ class MessageHeaders implements MessageHeadersInterface
     public const MESSAGE_TYPE          = 'MESSAGE_TYPE';
     public const MESSAGE_TAG           = 'MESSAGE_TAG';
 
+    /** @var mixed[] */
     protected array $map;
 
     /**
-     * MessageHeaders constructor.
-     *
-     * @param array  $map
+     * @param mixed[] $map
      */
     public function __construct(array $map = [])
     {
@@ -74,7 +73,7 @@ class MessageHeaders implements MessageHeadersInterface
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function toArray(): array
     {

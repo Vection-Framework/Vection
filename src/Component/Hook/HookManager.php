@@ -33,8 +33,7 @@ use Vection\Component\Hook\Exception\HookException;
  */
 class HookManager
 {
-
-    /** @var array */
+    /** @var mixed[] */
     protected array $configuration;
 
     /** @var HookContext[][] */

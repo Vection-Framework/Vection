@@ -29,10 +29,8 @@ class Message implements MessageInterface
     protected object $body;
 
     /**
-     * Message constructor.
-     *
-     * @param object $body
-     * @param array  $headers
+     * @param object   $body
+     * @param string[] $headers
      */
     public function __construct(object $body, array $headers = [])
     {

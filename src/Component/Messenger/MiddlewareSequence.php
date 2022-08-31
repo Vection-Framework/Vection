@@ -54,9 +54,7 @@ class MiddlewareSequence implements MiddlewareSequenceInterface
     protected MessageBusMiddlewareInterface $currentMiddleware;
 
     /**
-     * MiddlewareSequence constructor.
-     *
-     * @param array $middleware
+     * @param mixed[] $middleware
      */
     public function __construct(array $middleware)
     {

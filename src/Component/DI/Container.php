@@ -45,7 +45,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      * into the registry. All classes in this namespaces no longer have
      * to be registered by the Container::set or config file.
      *
-     * @var array
+     * @var string[]
      */
     protected array $registeredNamespaces;
 
