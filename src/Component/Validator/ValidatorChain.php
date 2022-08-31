@@ -163,20 +163,20 @@ class ValidatorChain implements ValidatorChainInterface
      * This magic method is used to accept several validation
      * function which will be process later in the Validator.
      *
-     * @param string       $name
-     * @param mixed[]|null $constraints
+     * @param string  $name
+     * @param mixed[] $constraints
      *
      * @return ValidatorChain
      */
     public function __call(string $name, array $constraints = []): ValidatorChain
     {
-        if ( $name === 'nullable' ) {
+        if ($name === 'nullable') {
             # This is a virtual validator that marks the subject as nullable
             $this->nullable[key($this->chain)] = 1;
             return $this;
         }
 
-        if ( $name === 'optional' ) {
+        if ($name === 'optional') {
             # This is a virtual validator that marks the subject as optional
             $this->optional[key($this->chain)] = 1;
             return $this;
