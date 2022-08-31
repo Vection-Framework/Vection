@@ -20,16 +20,15 @@ use function in_array;
  * Class NotMember
  *
  * @package Vection\Component\Validator\Validator
- *
- * @author Bjorn Klemm <bjoern.klemm@appsdock.de>
- * @author David Lung <vection@davidlung.de>
+ * @author  David Lung <vection@davidlung.de>
  */
 class NotInArray extends Validator
 {
+    /** @var mixed[] */
     protected array $haystack;
 
     /**
-     * @param array $haystack
+     * @param mixed[] $haystack
      */
     public function __construct(array $haystack)
     {

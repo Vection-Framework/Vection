@@ -33,8 +33,8 @@ class ArraySchema extends Validator
     protected Schema                     $schema;
 
     /**
-     * @param array $schema
-     * @param int $maxTemplateRecursion
+     * @param mixed[] $schema
+     * @param int     $maxTemplateRecursion
      */
     public function __construct(array $schema, int $maxTemplateRecursion = 3)
     {

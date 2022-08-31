@@ -22,10 +22,11 @@ use function in_array;
  */
 class InArray extends Validator
 {
+    /** @var mixed[] */
     protected array $haystack;
 
     /**
-     * @param array $haystack
+     * @param mixed[] $haystack
      */
     public function __construct(array $haystack)
     {

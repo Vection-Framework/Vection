@@ -27,8 +27,8 @@ use Vection\Contracts\Validator\ValidatorInterface;
 class ValidatorFactory
 {
     /**
-     * @param string $name
-     * @param array  $constraints
+     * @param string  $name
+     * @param mixed[] $constraints
      *
      * @return ValidatorInterface
      */

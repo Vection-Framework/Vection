@@ -89,7 +89,7 @@ class Violation implements ViolationInterface, JsonSerializable
     /**
      * @inheritDoc
      */
-    public function jsonSerialize(): array
+    public function jsonSerialize(): mixed
     {
         return [
             'property' => $this->subject,

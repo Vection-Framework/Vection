@@ -163,8 +163,8 @@ class ValidatorChain implements ValidatorChainInterface
      * This magic method is used to accept several validation
      * function which will be process later in the Validator.
      *
-     * @param string $name
-     * @param array $constraints|null
+     * @param string       $name
+     * @param mixed[]|null $constraints
      *
      * @return ValidatorChain
      */
