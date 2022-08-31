@@ -73,13 +73,9 @@ class VoidCacheProvider implements CacheProviderInterface
     }
 
     /**
-     * Returns the array value by given key.
-     *
-     * @param string $key
-     *
-     * @return array|null
+     * @inheritDoc
      */
-    public function getArray(string $key): ?array
+    public function getArray(string $key): array|null
     {
         return null;
     }
@@ -145,13 +141,7 @@ class VoidCacheProvider implements CacheProviderInterface
     }
 
     /**
-     * Sets the given array value into the cache.
-     *
-     * @param string $key
-     * @param array  $value
-     * @param int    $ttl
-     *
-     * @return bool
+     * @inheritDoc
      */
     public function setArray(string $key, array $value, int $ttl = 0): bool
     {

@@ -23,7 +23,7 @@ use Vection\Contracts\Cache\CacheProviderInterface;
 class ArrayCacheProvider implements CacheProviderInterface
 {
 
-    /** @var array */
+    /** @var mixed[] */
     protected array $cache = [];
 
     /**
@@ -83,11 +83,7 @@ class ArrayCacheProvider implements CacheProviderInterface
     }
 
     /**
-     * Returns the array value by given key.
-     *
-     * @param string $key
-     *
-     * @return array|null
+     * @inheritDoc
      */
     public function getArray(string $key): ?array
     {
@@ -159,13 +155,7 @@ class ArrayCacheProvider implements CacheProviderInterface
     }
 
     /**
-     * Sets the given array value into the cache.
-     *
-     * @param string $key
-     * @param array  $value
-     * @param int    $ttl
-     *
-     * @return bool
+     * @inheritDoc
      */
     public function setArray(string $key, array $value, int $ttl = 0): bool
     {

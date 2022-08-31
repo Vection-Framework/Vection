@@ -63,9 +63,9 @@ interface CacheProviderInterface
      *
      * @param string $key
      *
-     * @return array|null
+     * @return mixed[]|null
      */
-    public function getArray(string $key): ?array;
+    public function getArray(string $key): array|null;
 
     /**
      * Returns the int value by given key.
@@ -120,9 +120,9 @@ interface CacheProviderInterface
     /**
      * Sets the given array value into the cache.
      *
-     * @param string $key
-     * @param array $value
-     * @param int $ttl
+     * @param string  $key
+     * @param mixed[] $value
+     * @param int     $ttl
      *
      * @return bool
      */

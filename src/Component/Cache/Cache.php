@@ -155,7 +155,7 @@ class Cache implements CacheInterface
     /**
      * @inheritdoc
      */
-    public function getArray(string $key): ?array
+    public function getArray(string $key): array|null
     {
         return $this->cacheProvider->getArray($this->getNSKey($key));
     }
