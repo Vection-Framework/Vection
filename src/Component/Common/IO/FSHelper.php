@@ -75,7 +75,7 @@ class FSHelper
 
     /**
      * @param string      $path
-     * @param array       $fileparts last array entry must be the filename
+     * @param string[]    $fileparts last array entry must be the filename
      * @param string|null $ext
      *
      * <example>

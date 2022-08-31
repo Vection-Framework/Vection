@@ -32,7 +32,7 @@ class DotEnv
      *
      * @param string $path The path where to find the .env or the file path of the .env.
      *
-     * @return array
+     * @return string[]
      */
     public static function parse(string $path): array
     {

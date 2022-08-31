@@ -2,7 +2,7 @@
 [![QA](https://img.shields.io/github/workflow/status/Vection-Framework/Vection/QA?label=QA&style=for-the-badge)](https://github.com/Vection-Framework/Vection/actions)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%205-blueviolet.svg?style=for-the-badge)](https://phpstan.org)
 
-# Vection Hook
+# Vection Event
 
 ~~~
 ATTENTION: PROVE OF CONCEPT / FOR EVALUATION ONLY

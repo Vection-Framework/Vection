@@ -122,9 +122,9 @@ class Crypto
     }
 
     /**
-     * @param string $password
-     * @param string $algo
-     * @param array  $options
+     * @param string  $password
+     * @param string  $algo
+     * @param mixed[] $options
      *
      * @return string
      */

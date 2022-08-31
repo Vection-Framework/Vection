@@ -16,7 +16,7 @@ use Vection\Component\Common\Exception\RuntimeException;
 class Json
 {
     /**
-     * @param array $data
+     * @param mixed[] $data
      *
      * @return VArray
      */

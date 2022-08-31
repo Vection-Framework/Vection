@@ -1,7 +1,8 @@
-# Vection Component - PHP DI Container
-[![Build Status](https://img.shields.io/github/workflow/status/Vection-Framework/Vection/Test%20and%20QA)](https://github.com/Vection-Framework/Vection/actions) 
-[![phpstan](https://img.shields.io/badge/PHPStan-level%205-brightgreen.svg?style=flat)](https://img.shields.io/badge/PHPStan-level%205-brightgreen.svg?style=flat)
-[![release](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases)](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases)
+[![release](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases&style=for-the-badge)](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases)
+[![QA](https://img.shields.io/github/workflow/status/Vection-Framework/Vection/QA?label=QA&style=for-the-badge)](https://github.com/Vection-Framework/Vection/actions)
+[![PHPStan](https://img.shields.io/badge/PHPStan-level%205-blueviolet.svg?style=for-the-badge)](https://phpstan.org)
+
+# Vection Dependency Injection
 
 ## Dependency Injection Container for PHP
 This vection component provides a powerful dependency injection container for PHP. It supports several ways of automatic injection like annotations, attributes and injection by interfaces. An optional configuration allows the mapping of interfaces and concrete implementation.
