@@ -15,13 +15,14 @@ use Vection\Component\Validator\Schema\Exception\IllegalPropertyValueException;
  */
 trait StringPropertyTrait
 {
+    /** @var mixed[] */
     protected array       $allowed   = [];
     protected int|null    $maxLength = null;
     protected int|null    $minLength = null;
     protected string|null $regex     = null;
 
     /**
-     * @param array $schema
+     * @param mixed[] $schema
      *
      * @return void
      */
@@ -37,14 +38,14 @@ trait StringPropertyTrait
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @return void
      *
      * @throws IllegalPropertyTypeException
      * @throws IllegalPropertyValueException
      */
-    public function validateStringProperty($value): void
+    public function validateStringProperty(mixed $value): void
     {
         if (!is_string($value)) {
             throw new IllegalPropertyTypeException($this->name, 'string');

@@ -28,7 +28,9 @@ use Vection\Contracts\Validator\Schema\SchemaInterface;
 class Schema implements SchemaInterface
 {
     protected int   $maxTemplateRecursion = 3;
+    /** @var mixed[] */
     protected array $schema               = [];
+    /** @var mixed[] */
     protected array $templates            = [];
 
     /**
@@ -103,7 +105,7 @@ class Schema implements SchemaInterface
     }
 
     /**
-     * @param array $schema
+     * @param mixed[] $schema
      */
     public function setSchema(array $schema): void
     {
@@ -124,7 +126,7 @@ class Schema implements SchemaInterface
     }
 
     /**
-     * @param array $templates
+     * @param mixed[] $templates
      */
     public function setTemplates(array $templates): void
     {
