@@ -32,7 +32,7 @@ class Definition
     /** @var boolean */
     protected bool $shared = true;
 
-    /** @var array */
+    /** @var string[] */
     protected array $dependencies = [];
 
     /**
@@ -112,7 +112,7 @@ class Definition
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getDependencies(): array
     {

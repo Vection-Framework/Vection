@@ -24,9 +24,10 @@ use ArrayObject;
  */
 class Injector
 {
-    protected Container $container;
+    protected Container   $container;
     protected ArrayObject $dependencies;
-    protected array $infiniteLoopPreventedObjects = [];
+    /** @var object[] */
+    protected array       $infiniteLoopPreventedObjects = [];
 
     /**
      * Resolver constructor.

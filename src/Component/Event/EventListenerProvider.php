@@ -25,6 +25,7 @@ use Vection\Contracts\Event\EventListenerProviderInterface;
  */
 class EventListenerProvider implements EventListenerProviderInterface
 {
+    /** @var mixed[] */
     protected array $listeners = [];
     protected EventListenerFactoryInterface|null $eventListenerFactory;
 
@@ -74,7 +75,8 @@ class EventListenerProvider implements EventListenerProviderInterface
     /**
      * @param object $event An event for which to return the relevant listeners.
      *
-     * @return iterable An iterable (array, iterator, or generator) of callables. Each callable MUST be type-compatible with $event.
+     * @return mixed[] An iterable (array, iterator, or generator) of callables. Each callable MUST be type-compatible
+     * with $event.
      */
     public function getListenersForEvent(object $event): iterable
     {
