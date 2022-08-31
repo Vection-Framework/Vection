@@ -80,7 +80,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      *
      * @var Definition[]|ArrayObject
      */
-    protected array|ArrayObject $definitions;
+    protected ArrayObject|array $definitions;
 
     /**
      * This property contains all resolved dependency information
@@ -90,9 +90,6 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      */
     protected array|ArrayObject $dependencies;
 
-    /**
-     * Container constructor.
-     */
     public function __construct()
     {
         $this->logger = new NullLogger();
@@ -116,7 +113,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      * for injection into other objects without the need to define them
      * in the config or by set/add methods. Pass ['*'] as wildcard to register all namespaces.
      *
-     * @param array $scopes
+     * @param string[] $scopes
      */
     public function registerNamespace(array $scopes): void
     {
@@ -159,9 +156,8 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
     }
 
     /**
-     * @param string $className
-     *
-     * @param array  $constructParams
+     * @param string  $className
+     * @param mixed[] $constructParams
      *
      * @return object
      */
@@ -328,9 +324,9 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      * second parameter is not set, otherwise the new object will be created
      * with given parameters.
      *
-     * @param string $identifier      The identifier of registered entry.
-     * @param array  $constructParams Parameter that should be passed to constructor.
-     * @param bool   $shared          Whether the new object should be shared or not.
+     * @param string  $identifier      The identifier of registered entry.
+     * @param mixed[] $constructParams Parameter that should be passed to constructor.
+     * @param bool    $shared          Whether the new object should be shared or not.
      *
      * @return object The new created object.
      */

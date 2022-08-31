@@ -34,7 +34,6 @@ use Vection\Contracts\Cache\CacheInterface;
  * they have to be injected by the Injector class.
  *
  * @package Vection\Component\DI
- *
  * @author  David M. Lung <vection@davidlung.de>
  */
 class Resolver implements CacheAwareInterface
@@ -101,7 +100,7 @@ class Resolver implements CacheAwareInterface
      *
      * @param string $className FQCN
      *
-     * @return array An array that contains dependency information.
+     * @return mixed[] An array that contains dependency information.
      */
     public function resolveDependencies(string $className): array
     {
@@ -155,7 +154,7 @@ class Resolver implements CacheAwareInterface
      *
      * @param string $className
      *
-     * @return array Contains class names of the dependencies.
+     * @return mixed[] Contains class names of the dependencies.
      *
      * @throws ReflectionException
      */
@@ -231,7 +230,7 @@ class Resolver implements CacheAwareInterface
      *
      * @param string $className
      *
-     * @return array Contains setter methods as key and class as value.
+     * @return mixed[] Contains setter methods as key and class as value.
      *
      * @throws ReflectionException
      */
@@ -274,7 +273,7 @@ class Resolver implements CacheAwareInterface
      *
      * @param string $className
      *
-     * @return array
+     * @return mixed[]
      *
      * @throws ReflectionException
      */
@@ -350,7 +349,7 @@ class Resolver implements CacheAwareInterface
      *
      * @param string $className
      *
-     * @return array
+     * @return mixed[]
      *
      * @throws ReflectionException
      */
