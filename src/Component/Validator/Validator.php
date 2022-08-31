@@ -48,7 +48,7 @@ abstract class Validator implements ValidatorInterface
      * E.g. constraints: min and max:
      * ['min' => $min, 'max' => $max]
      *
-     * @return array
+     * @return mixed[]
      */
     protected function getConstraints(): array
     {

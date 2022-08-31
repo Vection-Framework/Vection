@@ -99,13 +99,13 @@ interface CollectionInterface extends Countable, ArrayAccess, Iterator, JsonSeri
      *
      * @return $this|mixed|null
      */
-    public function __get(string $name);
+    public function __get(string $name): mixed;
 
     /**
      * @param string $name
      * @param mixed  $value
      */
-    public function __set(string $name, mixed $value);
+    public function __set(string $name, mixed $value): void;
 
     /**
      * @param string $name
