@@ -78,7 +78,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      * This array object contains custom dependency definitions
      * which will be considered by the resolving process.
      *
-     * @var Definition[]|ArrayObject
+     * @var Definition[]|ArrayObject<Definition>
      */
     protected ArrayObject|array $definitions;
 
@@ -86,7 +86,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      * This property contains all resolved dependency information
      * which will be cached and reused on each injection by the Injector class.
      *
-     * @var string[][][]|ArrayObject
+     * @var string[][][]|ArrayObject<string>
      */
     protected array|ArrayObject $dependencies;
 

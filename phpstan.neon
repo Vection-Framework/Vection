@@ -1,8 +1,9 @@
 parameters:
-    level: 5
+    level: 6
     inferPrivatePropertyTypeFromConstructor: true
     reportUnmatchedIgnoredErrors: false
     treatPhpDocTypesAsCertain: false
+    checkGenericClassInNonGenericObjectType: false
 
     paths:
         - src

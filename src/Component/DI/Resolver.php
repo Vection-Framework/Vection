@@ -52,7 +52,7 @@ class Resolver implements CacheAwareInterface
      * This array object contains custom dependency definitions
      * which will be considered by the resolving process.
      *
-     * @var ArrayObject|Definition[]
+     * @var Definition[]|ArrayObject<Definition>
      */
     protected array|ArrayObject $definitions;
 
@@ -60,7 +60,7 @@ class Resolver implements CacheAwareInterface
      * This property contains all resolved dependency information
      * which will be cached and reused on each injection by the Injector class.
      *
-     * @var ArrayObject|string[][][]
+     * @var string[][][]|ArrayObject<string>
      */
     protected array|ArrayObject $dependencies;
 
