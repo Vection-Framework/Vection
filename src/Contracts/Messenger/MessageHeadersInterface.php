@@ -44,7 +44,7 @@ interface MessageHeadersInterface
     /**
      * Returns the headers as array.
      *
-     * @return array
+     * @return string[]
      */
     public function toArray(): array;
 }

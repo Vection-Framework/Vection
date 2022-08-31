@@ -28,7 +28,7 @@ interface MiddlewareSequenceFactoryInterface
      * that executes the given middleware objects sequentially
      * in the order they are pass.
      *
-     * @param array $middleware
+     * @param mixed[] $middleware
      *
      * @return MiddlewareSequenceInterface
      */

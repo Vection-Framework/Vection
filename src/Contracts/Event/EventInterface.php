@@ -25,7 +25,7 @@ interface EventInterface extends StoppableEventInterface
     /**
      * Stops the propagation of the event to further event handlers.
      */
-    public function stopPropagation();
+    public function stopPropagation(): void;
 
     /**
      * Returns true if the further propagation has been stopped

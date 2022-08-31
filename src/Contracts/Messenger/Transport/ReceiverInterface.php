@@ -29,7 +29,7 @@ interface ReceiverInterface
      * Setup the receiver client with client specific options
      * provided by the chosen provider.
      *
-     * @param array $options
+     * @param mixed[] $options
      */
     public function setup(array $options = []): void;
 

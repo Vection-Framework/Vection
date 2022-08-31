@@ -23,18 +23,18 @@ namespace Vection\Contracts\Validator\Schema;
 interface SchemaInterface
 {
     /**
-     * @param array $schema
+     * @param mixed[] $schema
      */
     public function setSchema(array $schema): void;
 
     /**
-     * @param string $name
-     * @param array  $schema
+     * @param string  $name
+     * @param mixed[] $schema
      */
     public function addTemplate(string $name, array $schema): void;
 
     /**
-     * @param array $templates
+     * @param mixed[] $templates
      */
     public function setTemplates(array $templates): void;
 

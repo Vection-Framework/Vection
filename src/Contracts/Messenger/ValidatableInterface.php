@@ -36,7 +36,7 @@ interface ValidatableInterface
     /**
      * Returns an array that contains the data which will be validated.
      *
-     * @return array
+     * @return mixed[]
      */
     public function getValidatableData(): array;
 }

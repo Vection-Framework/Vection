@@ -26,12 +26,12 @@ use JsonSerializable;
 interface PackageInterface extends JsonSerializable
 {
     /**
-     * @return array
+     * @return mixed[]
      */
     public function getMeta(): array;
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getHeaders(): array;
 
@@ -41,7 +41,7 @@ interface PackageInterface extends JsonSerializable
     public function getMessage(): string;
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function toArray(): array;
 }

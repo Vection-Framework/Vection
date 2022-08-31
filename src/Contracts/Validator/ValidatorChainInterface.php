@@ -39,7 +39,7 @@ interface ValidatorChainInterface
      * ValidatorChainInterface::getViolations() method that returns all occurred violations or an empty
      * array if the were no violations of validation rules.
      *
-     * @param array $data
+     * @param mixed[] $data
      */
     public function verify(array $data): void;
 }

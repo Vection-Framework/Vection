@@ -27,7 +27,7 @@ interface SchemaValidatorInterface
      *
      * @param string $path
      *
-     * @return array
+     * @return mixed[]
      *
      * @throws PropertyExceptionInterface
      * @throws SchemaExceptionInterface
@@ -39,7 +39,7 @@ interface SchemaValidatorInterface
      *
      * @param string $json
      *
-     * @return array
+     * @return mixed[]
      *
      * @throws PropertyExceptionInterface
      * @throws SchemaExceptionInterface
@@ -49,7 +49,7 @@ interface SchemaValidatorInterface
     /**
      * @param string $yaml
      *
-     * @return array
+     * @return mixed[]
      *
      * @throws PropertyExceptionInterface
      * @throws SchemaExceptionInterface
@@ -57,7 +57,7 @@ interface SchemaValidatorInterface
     public function validateYamlString(string $yaml): array;
 
     /**
-     * @param array $data
+     * @param mixed[] $data
      *
      * @throws PropertyExceptionInterface
      * @throws SchemaExceptionInterface

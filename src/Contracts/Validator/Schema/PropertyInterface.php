@@ -48,14 +48,14 @@ interface PropertyInterface
     public function isNullable(): bool;
 
     /**
-     * @param array $schema
+     * @param mixed[] $schema
      *
      * @throws SchemaExceptionInterface
      */
     public function evaluate(array $schema): void;
 
     /**
-     * @param float|array|int|string $value
+     * @param float|mixed[]|int|string $value
      *
      * @throws PropertyExceptionInterface
      */
