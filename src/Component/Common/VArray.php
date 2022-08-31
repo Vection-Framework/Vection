@@ -24,6 +24,7 @@ use Vection\Contracts\Validator\Schema\SchemaValidatorInterface;
  */
 class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
 {
+    /** @var mixed[] */
     protected array $data;
     protected bool  $immutable;
 
@@ -105,8 +106,8 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
     # endregion
 
     /**
-     * @param array $data
-     * @param bool  $immutable
+     * @param mixed[] $data
+     * @param bool    $immutable
      */
     public function __construct(array $data = [], bool $immutable = false)
     {
@@ -117,7 +118,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
     # region VArray Methods
 
     /**
-     * @param $value
+     * @param mixed[] $value
      *
      * @return VArray
      */
@@ -155,8 +156,8 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
     }
 
     /**
-     * @param array  $data
-     * @param string $name
+     * @param mixed[] $data
+     * @param string  $name
      *
      * @return mixed|null
      */
@@ -357,7 +358,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
     /**
      * @inheritDoc
      */
-    public function jsonSerialize(): array
+    public function jsonSerialize(): mixed
     {
         return $this->data;
     }
@@ -366,12 +367,12 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
 
     # region Magic Methods
 
-    public function &__get(string $name)
+    public function &__get(string $name): mixed
     {
         return $this->data[$name];
     }
 
-    public function __set(string $name, $value)
+    public function __set(string $name, mixed $value): void
     {
         $this->assertMutable();
         $this->set($name, $value);
