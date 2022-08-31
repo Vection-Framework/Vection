@@ -90,7 +90,7 @@ interface CollectionInterface extends Countable, ArrayAccess, Iterator, JsonSeri
     public function isEmpty(): bool;
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function toArray(): array;
 
@@ -103,9 +103,9 @@ interface CollectionInterface extends Countable, ArrayAccess, Iterator, JsonSeri
 
     /**
      * @param string $name
-     * @param        $value
+     * @param mixed  $value
      */
-    public function __set(string $name, $value);
+    public function __set(string $name, mixed $value);
 
     /**
      * @param string $name
