@@ -15,6 +15,13 @@
             "email": "david.brucksch@appsdock.de"
         }
     ],
+    "support": {
+        "chat": "https://discord.gg/ZhPaXkccpg",
+        "docs": "https://github.com/Vection-Framework/Cache/README.md",
+        "email": "vection@appsdock.de",
+        "issues": "https://github.com/Vection-Framework/Cache/issues",
+        "source": "https://github.com/Vection-Framework/Cache/"
+    },
     "require": {
         "php": "^8.1",
         "vection-framework/contracts": "v0.*"

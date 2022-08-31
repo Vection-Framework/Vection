@@ -2,7 +2,17 @@
     "name": "vection-framework/vection",
     "type": "library",
     "description": "Vection is a PHP component library and framework.",
-    "keywords": ["framework", "enterprise", "php", "php-di"],
+    "keywords": [
+        "enterprise",
+        "framework",
+        "library",
+        "php",
+        "php-cache",
+        "php-di",
+        "php-event",
+        "php-messenger",
+        "php-validator"
+    ],
     "homepage": "https://vection.appsdock.org",
     "license": "MIT",
     "authors": [
@@ -16,9 +26,9 @@
         }
     ],
     "support": {
-        "chat": "https://slack.com/app_redirect?channel=CMZG4GGBU",
-        "docs": "https://vection.appsdock.org/docs.",
-        "email": "support@appsdock.de",
+        "chat": "https://discord.gg/ZhPaXkccpg",
+        "docs": "https://github.com/Vection-Framework/Vection/README.md",
+        "email": "vection@appsdock.de",
         "issues": "https://github.com/Vection-Framework/Vection/issues",
         "source": "https://github.com/Vection-Framework/Vection/"
     },

@@ -7,10 +7,21 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "David Lung",
-            "email": "vection@davidlung.de"
+            "name": "David M. Lung",
+            "email": "david.lung@appsdock.de"
+        },
+        {
+            "name": "David Brucksch",
+            "email": "david.brucksch@appsdock.de"
         }
     ],
+    "support": {
+        "chat": "https://discord.gg/ZhPaXkccpg",
+        "docs": "https://github.com/Vection-Framework/Contracts/README.md",
+        "email": "vection@appsdock.de",
+        "issues": "https://github.com/Vection-Framework/Contracts/issues",
+        "source": "https://github.com/Vection-Framework/Contracts/"
+    },
     "autoload": {
         "psr-4": {
             "Vection\\Contracts\\": "./"

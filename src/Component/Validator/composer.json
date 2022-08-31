@@ -15,15 +15,22 @@
             "email": "david.brucksch@appsdock.de"
         }
     ],
-    "require": {
-        "php": "^8.1",
-        "vection-framework/contracts": "v0.*",
-        "ext-ctype": "*"
+    "support": {
+        "chat": "https://discord.gg/ZhPaXkccpg",
+        "docs": "https://github.com/Vection-Framework/Validator/README.md",
+        "email": "vection@appsdock.de",
+        "issues": "https://github.com/Vection-Framework/Validator/issues",
+        "source": "https://github.com/Vection-Framework/Validator/"
     },
     "autoload": {
         "psr-4": {
             "Vection\\Component\\Validator\\": "./"
         }
+    },
+    "require": {
+        "php": "^8.1",
+        "vection-framework/contracts": "v0.*",
+        "ext-ctype": "*"
     },
     "minimum-stability": "stable"
 }

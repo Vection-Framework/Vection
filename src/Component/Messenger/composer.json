@@ -28,16 +28,23 @@
             "email": "david.brucksch@appsdock.de"
         }
     ],
-    "require": {
-        "php": "^8.0",
-        "vection-framework/common": "v0.*",
-        "vection-framework/contracts": "v0.*",
-        "psr/log": "~1.0"
+    "support": {
+        "chat": "https://discord.gg/ZhPaXkccpg",
+        "docs": "https://github.com/Vection-Framework/Messenger/README.md",
+        "email": "vection@appsdock.de",
+        "issues": "https://github.com/Vection-Framework/Messenger/issues",
+        "source": "https://github.com/Vection-Framework/Messenger/"
     },
     "autoload": {
         "psr-4": {
             "Vection\\Component\\Messenger\\": "./"
         }
+    },
+    "require": {
+        "php": "^8.1",
+        "vection-framework/common": "v0.*",
+        "vection-framework/contracts": "v0.*",
+        "psr/log": "~1.0"
     },
     "minimum-stability": "stable"
 }
