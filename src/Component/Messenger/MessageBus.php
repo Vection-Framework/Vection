@@ -37,6 +37,7 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
 
     /** @var string[] */
     protected array                              $defaultHeaders;
+    /** @var mixed[] */
     protected array                              $middleware;
     protected MiddlewareSequenceFactoryInterface $middlewareSequenceFactory;
     protected MessageIdGeneratorInterface        $idGenerator;

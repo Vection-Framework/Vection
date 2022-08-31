@@ -26,15 +26,13 @@ class HookLoader
     private Provider $provider;
 
     /**
-     * @var array
+     * @var mixed[]
      */
     private array $contexts;
 
     /**
-     * HookLoader constructor.
-     *
      * @param Provider $provider
-     * @param array    $contexts
+     * @param mixed[]  $contexts
      */
     public function __construct(Provider $provider, array $contexts)
     {
@@ -42,6 +40,9 @@ class HookLoader
         $this->contexts = $contexts;
     }
 
+    /**
+     * @return mixed[]
+     */
     public function getHookContextList(): array
     {
         return [];
@@ -60,6 +61,9 @@ class HookLoader
         return null;
     }
 
+    /**
+     * @return mixed[]
+     */
     public function loadAll(): array
     {
         return [];
