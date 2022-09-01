@@ -1,5 +1,5 @@
 {
-    "name": "vection-framework/di-container",
+    "name": "vection-framework/dependency-injection",
     "type": "library",
     "description": "Dependency Injection Container Component - Vection Framework",
     "keywords": [
