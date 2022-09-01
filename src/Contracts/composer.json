@@ -1,10 +1,4 @@
 {
-    "name": "vection-framework/contracts",
-    "type": "library",
-    "description": "The Vection Framework Contracts",
-    "keywords": ["vection", "vection-contracts", "framework"],
-    "homepage": "https://vection.appsdock.org",
-    "license": "MIT",
     "authors": [
         {
             "name": "David M. Lung",
@@ -15,6 +9,31 @@
             "email": "david.brucksch@appsdock.de"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Vection\\Contracts\\": "./"
+        }
+    },
+    "description": "The Vection contracts provide the basis for cooperation between the individual Vection components.",
+    "homepage": "https://vection.appsdock.org",
+    "keywords": [
+        "contract",
+        "dependency",
+        "interface",
+        "framework",
+        "library",
+        "php",
+        "vection"
+    ],
+    "license": "MIT",
+    "name": "vection-framework/contracts",
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^8.1",
+        "psr/log": "^1.1",
+        "psr/container": "^1.0",
+        "psr/event-dispatcher": "^1.0"
+    },
     "support": {
         "chat": "https://discord.gg/ZhPaXkccpg",
         "docs": "https://github.com/Vection-Framework/Contracts/blob/master/README.md",
@@ -22,16 +41,5 @@
         "issues": "https://github.com/Vection-Framework/Contracts/issues",
         "source": "https://github.com/Vection-Framework/Contracts/"
     },
-    "autoload": {
-        "psr-4": {
-            "Vection\\Contracts\\": "./"
-        }
-    },
-    "require": {
-        "php": "^8.1",
-        "psr/log": "1.1.*",
-        "psr/container": "1.0.*",
-        "psr/event-dispatcher": "1.0.*"
-    },
-    "minimum-stability": "stable"
+    "type": "library"
 }

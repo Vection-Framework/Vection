@@ -1,12 +1,4 @@
 {
-    "name": "vection-framework/dependency-injection",
-    "type": "library",
-    "description": "Dependency Injection Container Component - Vection Framework",
-    "keywords": [
-        "php dependency injection","container", "di", "php-dic", "container", "dependency-container", "php-di", "dependency-resolver"
-    ],
-    "homepage": "https://vection.appsdock.org",
-    "license": "MIT",
     "authors": [
         {
             "name": "David M. Lung",
@@ -17,6 +9,34 @@
             "email": "david.brucksch@appsdock.de"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Vection\\Component\\DependencyInjection\\": "./"
+        }
+    },
+    "description": "Vection Dependency Injection injects dependencies quickly and effectively.",
+    "homepage": "https://vection.appsdock.org",
+    "keywords": [
+        "component",
+        "container",
+        "dependency",
+        "di",
+        "framework",
+        "injection",
+        "library",
+        "php",
+        "resolver",
+        "vection"
+    ],
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "name": "vection-framework/dependency-injection",
+    "require": {
+        "php": "^8.1",
+        "psr/container": "^1.0",
+        "psr/log": "^1.1",
+        "vection-framework/contracts": "v0.*"
+    },
     "support": {
         "chat": "https://discord.gg/ZhPaXkccpg",
         "docs": "https://github.com/Vection-Framework/DependencyInjection/blob/master/README.md",
@@ -24,16 +44,5 @@
         "issues": "https://github.com/Vection-Framework/DependencyInjection/issues",
         "source": "https://github.com/Vection-Framework/DependencyInjection/"
     },
-    "autoload": {
-        "psr-4": {
-            "Vection\\Component\\DependencyInjection\\": "./"
-        }
-    },
-    "require": {
-        "php": "^8.1",
-        "vection-framework/contracts": "v0.*",
-        "psr/log": "~1.0",
-        "psr/container": "^1.0"
-    },
-    "minimum-stability": "stable"
+    "type": "library"
 }

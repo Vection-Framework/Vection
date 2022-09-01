@@ -1,10 +1,4 @@
 {
-    "name": "vection-framework/event",
-    "type": "library",
-    "description": "PHP Event Dispatcher - Vection Component",
-    "keywords": ["php", "framework", "event", "event", "dispatcher"],
-    "homepage": "https://vection.appsdock.org",
-    "license": "MIT",
     "authors": [
         {
             "name": "David M. Lung",
@@ -15,6 +9,31 @@
             "email": "david.brucksch@appsdock.de"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Vection\\Component\\Event\\": "./"
+        }
+    },
+    "description": "The Vection Event Dispatcher listens for events and processes them.",
+    "homepage": "https://vection.appsdock.org",
+    "keywords": [
+        "component",
+        "dispatcher",
+        "event",
+        "framework",
+        "library",
+        "php",
+        "vection"
+    ],
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "name": "vection-framework/event",
+    "require": {
+        "php": "^8.1",
+        "psr/event-dispatcher": "^1.0",
+        "psr/log": "^1.1",
+        "vection-framework/contracts": "v0.*"
+    },
     "support": {
         "chat": "https://discord.gg/ZhPaXkccpg",
         "docs": "https://github.com/Vection-Framework/Event/blob/master/README.md",
@@ -22,16 +41,5 @@
         "issues": "https://github.com/Vection-Framework/Event/issues",
         "source": "https://github.com/Vection-Framework/Event/"
     },
-    "require": {
-        "php": "^8.1",
-        "vection-framework/contracts": "v0.*",
-        "psr/event-dispatcher": "1.0.*",
-        "psr/log": "1.0.*"
-    },
-    "autoload": {
-        "psr-4": {
-            "Vection\\Component\\Event\\": "./"
-        }
-    },
-    "minimum-stability": "stable"
+    "type": "library"
 }
