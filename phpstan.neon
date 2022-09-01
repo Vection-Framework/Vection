@@ -22,7 +22,7 @@ parameters:
 
         - message: "#Negated boolean expression is always true.#"
           count: 1
-          path: src/Component/DI/Container.php
+          path: src/Component/DependencyInjection/Container.php
 
         - message: "#Result of && is always false.#"
           count: 1

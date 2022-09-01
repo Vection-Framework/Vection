@@ -16,7 +16,7 @@ Vection provides on the one hand direct full operative components and on the oth
 Vection decouples the api/interfaces (**[Contracts](https://github.com/Vection-Framework/Contracts)**) 
 and its implementation to achieve maximum flexibility. Each component has in additional its own package which can be used as a standalone dependency. Vection currently provides the following components:
 
-* The most advanced **[Dependency Injection Container](https://github.com/Vection-Framework/DI-Container)**
+* The most advanced **[Dependency Injection](https://github.com/Vection-Framework/DependencyInjection)**
 * Type save and pool based **[Cache](https://github.com/Vection-Framework/Cache)** component with support 
   for different cache providers.
 * Event type based and fully PSR compatible **[Event Dispatcher](https://github.com/Vection-Framework/Event)**
