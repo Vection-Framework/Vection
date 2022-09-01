@@ -25,6 +25,7 @@
         "vection"
     ],
     "homepage": "https://vection.appsdock.org",
+    "readme": "README.md",
     "license": "MIT",
     "authors": [
         {
@@ -43,6 +44,12 @@
         "issues": "https://github.com/Vection-Framework/Vection/issues",
         "source": "https://github.com/Vection-Framework/Vection/"
     },
+    "funding": [
+        {
+            "type": "ko-fi",
+            "url": "https://ko-fi.com/vection"
+        }
+    ],
     "require": {
         "ext-ctype": "*",
         "ext-curl": "*",
