@@ -1,5 +1,5 @@
 {
-    "name": "vection-framework/event-dispatcher",
+    "name": "vection-framework/event",
     "type": "library",
     "description": "PHP Event Dispatcher - Vection Component",
     "keywords": ["php", "framework", "event", "event", "dispatcher"],
