@@ -1,23 +1,7 @@
 {
-    "authors": [
-        {
-            "name": "David M. Lung",
-            "email": "david.lung@appsdock.de"
-        },
-        {
-            "name": "David Brucksch",
-            "email": "david.brucksch@appsdock.de"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "Vection\\Component\\Http\\": "./"
-        }
-    },
-    "description": "The Vection HTTP Kernel is a processor with middleware support.",
-    "homepage": "https://vection.appsdock.org",
-    "minimum-stability": "stable",
     "name": "vection-framework/http",
+    "description": "The Vection HTTP Kernel is a processor with middleware support.",
+    "type": "library",
     "keywords": [
         "component",
         "framework",
@@ -31,7 +15,32 @@
         "stack",
         "vection"
     ],
+    "homepage": "https://vection.appsdock.org",
+    "readme": "README.md",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "David M. Lung",
+            "email": "david.lung@appsdock.de"
+        },
+        {
+            "name": "David Brucksch",
+            "email": "david.brucksch@appsdock.de"
+        }
+    ],
+    "support": {
+        "chat": "https://discord.gg/ZhPaXkccpg",
+        "docs": "https://github.com/Vection-Framework/HTTP/blob/master/README.md",
+        "email": "vection@appsdock.de",
+        "issues": "https://github.com/Vection-Framework/HTTP/issues",
+        "source": "https://github.com/Vection-Framework/HTTP/"
+    },
+    "funding": [
+        {
+            "type": "ko-fi",
+            "url": "https://ko-fi.com/vection"
+        }
+    ],
     "require": {
         "ext-curl": "*",
         "php": "^8.1",
@@ -42,12 +51,10 @@
         "vection-framework/common": "v0.*",
         "vection-framework/contracts": "v0.*"
     },
-    "support": {
-        "chat": "https://discord.gg/ZhPaXkccpg",
-        "docs": "https://github.com/Vection-Framework/HTTP/blob/master/README.md",
-        "email": "vection@appsdock.de",
-        "issues": "https://github.com/Vection-Framework/HTTP/issues",
-        "source": "https://github.com/Vection-Framework/HTTP/"
+    "autoload": {
+        "psr-4": {
+            "Vection\\Component\\Http\\": "./"
+        }
     },
-    "type": "library"
+    "minimum-stability": "stable"
 }

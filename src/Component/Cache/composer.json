@@ -1,21 +1,7 @@
 {
-    "authors": [
-        {
-            "name": "David M. Lung",
-            "email": "david.lung@appsdock.de"
-        },
-        {
-            "name": "David Brucksch",
-            "email": "david.brucksch@appsdock.de"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "Vection\\Component\\Cache\\": "./"
-        }
-    },
+    "name": "vection-framework/cache",
     "description": "The Vection Cache offers the use of various caches such as APCu or Redis.",
-    "homepage": "https://vection.appsdock.org",
+    "type": "library",
     "keywords": [
         "apcu",
         "cache",
@@ -27,13 +13,19 @@
         "vection",
         "void"
     ],
+    "homepage": "https://vection.appsdock.org",
+    "readme": "README.md",
     "license": "MIT",
-    "minimum-stability": "stable",
-    "name": "vection-framework/cache",
-    "require": {
-        "php": "^8.1",
-        "vection-framework/contracts": "v0.*"
-    },
+    "authors": [
+        {
+            "name": "David M. Lung",
+            "email": "david.lung@appsdock.de"
+        },
+        {
+            "name": "David Brucksch",
+            "email": "david.brucksch@appsdock.de"
+        }
+    ],
     "support": {
         "chat": "https://discord.gg/ZhPaXkccpg",
         "docs": "https://github.com/Vection-Framework/Cache/blob/master/README.md",
@@ -41,5 +33,20 @@
         "issues": "https://github.com/Vection-Framework/Cache/issues",
         "source": "https://github.com/Vection-Framework/Cache/"
     },
-    "type": "library"
+    "funding": [
+        {
+            "type": "ko-fi",
+            "url": "https://ko-fi.com/vection"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "vection-framework/contracts": "v0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vection\\Component\\Cache\\": "./"
+        }
+    },
+    "minimum-stability": "stable"
 }

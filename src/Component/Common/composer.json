@@ -1,21 +1,7 @@
 {
-    "authors": [
-        {
-            "name": "David M. Lung",
-            "email": "david.lung@appsdock.de"
-        },
-        {
-            "name": "David Brucksch",
-            "email": "david.brucksch@appsdock.de"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "Vection\\Component\\Common\\": "./"
-        }
-    },
+    "name": "vection-framework/common",
     "description": "The Vection Common component provides a collection of tools.",
-    "homepage": "https://vection.appsdock.org",
+    "type": "library",
     "keywords": [
         "common",
         "framework",
@@ -26,13 +12,19 @@
         "utility",
         "vection"
     ],
+    "homepage": "https://vection.appsdock.org",
+    "readme": "README.md",
     "license": "MIT",
-    "minimum-stability": "stable",
-    "name": "vection-framework/common",
-    "require": {
-        "php": "^8.1",
-        "vection-framework/contracts": "v0.*"
-    },
+    "authors": [
+        {
+            "name": "David M. Lung",
+            "email": "david.lung@appsdock.de"
+        },
+        {
+            "name": "David Brucksch",
+            "email": "david.brucksch@appsdock.de"
+        }
+    ],
     "support": {
         "chat": "https://discord.gg/ZhPaXkccpg",
         "docs": "https://github.com/Vection-Framework/Common/blob/master/README.md",
@@ -40,5 +32,20 @@
         "issues": "https://github.com/Vection-Framework/Common/issues",
         "source": "https://github.com/Vection-Framework/Common/"
     },
-    "type": "library"
+    "funding": [
+        {
+            "type": "ko-fi",
+            "url": "https://ko-fi.com/vection"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "vection-framework/contracts": "v0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vection\\Component\\Common\\": "./"
+        }
+    },
+    "minimum-stability": "stable"
 }

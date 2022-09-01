@@ -1,21 +1,7 @@
 {
-    "authors": [
-        {
-            "name": "David M. Lung",
-            "email": "david.lung@appsdock.de"
-        },
-        {
-            "name": "David Brucksch",
-            "email": "david.brucksch@appsdock.de"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "Vection\\Component\\Messenger\\": "./"
-        }
-    },
+    "name": "vection-framework/messenger",
     "description": "The Vection Messenger provides a bus component for using as service bus (CQRS) and message transportation (queues).",
-    "homepage": "https://vection.appsdock.org",
+    "type": "library",
     "keywords": [
         "broker",
         "bus",
@@ -32,15 +18,19 @@
         "transport",
         "vection"
     ],
+    "homepage": "https://vection.appsdock.org",
+    "readme": "README.md",
     "license": "MIT",
-    "minimum-stability": "stable",
-    "name": "vection-framework/messenger",
-    "require": {
-        "php": "^8.1",
-        "psr/log": "^1.1",
-        "vection-framework/common": "v0.*",
-        "vection-framework/contracts": "v0.*"
-    },
+    "authors": [
+        {
+            "name": "David M. Lung",
+            "email": "david.lung@appsdock.de"
+        },
+        {
+            "name": "David Brucksch",
+            "email": "david.brucksch@appsdock.de"
+        }
+    ],
     "support": {
         "chat": "https://discord.gg/ZhPaXkccpg",
         "docs": "https://github.com/Vection-Framework/Messenger/blob/master/README.md",
@@ -48,5 +38,22 @@
         "issues": "https://github.com/Vection-Framework/Messenger/issues",
         "source": "https://github.com/Vection-Framework/Messenger/"
     },
-    "type": "library"
+    "funding": [
+        {
+            "type": "ko-fi",
+            "url": "https://ko-fi.com/vection"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "psr/log": "^1.1",
+        "vection-framework/common": "v0.*",
+        "vection-framework/contracts": "v0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vection\\Component\\Messenger\\": "./"
+        }
+    },
+    "minimum-stability": "stable"
 }
