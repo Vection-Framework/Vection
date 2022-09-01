@@ -90,14 +90,14 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      */
     protected array|ArrayObject $dependencies;
 
-    public function __construct()
+    public function __construct(Resolver|null $resolver = null, Injector|null $injector = null)
     {
         $this->logger = new NullLogger();
         $this->sharedObjects[self::class] = $this;
         $this->definitions  = new ArrayObject();
         $this->dependencies = new ArrayObject();
-        $this->resolver     = new Resolver($this->definitions, $this->dependencies);
-        $this->injector     = new Injector($this, $this->dependencies);
+        $this->resolver     = $resolver ?: new Resolver($this->definitions, $this->dependencies);
+        $this->injector     = $injector ?: new Injector($this, $this->dependencies);
     }
 
     /**
@@ -153,6 +153,16 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
                 $this->definitions[$definition->getId()] = $definition;
             }
         }
+    }
+
+    /**
+     * Returns the definitions for injection and object instantiation.
+     *
+     * @return ArrayObject
+     */
+    public function getDefinitions(): ArrayObject
+    {
+        return $this->definitions;
     }
 
     /**

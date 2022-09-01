@@ -44,5 +44,9 @@
         "issues": "https://github.com/Vection-Framework/DependencyInjection/issues",
         "source": "https://github.com/Vection-Framework/DependencyInjection/"
     },
+    "scripts": {
+        "phpstan": "./../../../vendor/bin/phpstan analyse --no-progress",
+        "test-no-cov": "./../../../vendor/bin/phpunit --no-coverage Tests"
+    },
     "type": "library"
 }
