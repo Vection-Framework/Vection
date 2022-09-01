@@ -170,7 +170,7 @@ abstract class Property implements PropertyInterface
     /**
      * @inheritDoc
      */
-    public function validate(float|array|int|string $value): void
+    public function validate(mixed $value): void
     {
         if ($this->nullable && $value === null) {
             return;
