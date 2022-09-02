@@ -8,16 +8,8 @@
 
 Vection is a future-proof PHP component library and framework that focuses on flexibility, developer friendly code and lightweight to rich enterprise components. Vection can be used to realize small to large enterprise applications.
 
-## !! ATTENTION !!
-
-**Vection is currently in its late development stage, api/interfaces and PHP version could still change until a 
+**ATTENTION: Vection is currently in its late development stage, api/interfaces and PHP version could still change until a 
 stable release!**
-
-### Support
-
-Support Vection via Ko-fi:
-
-[![Ko-fi](https://cdn.ko-fi.com/cdn/kofi3.png)](https://ko-fi.com/vection)
 
 ## What does Vection provide?
 
@@ -48,3 +40,9 @@ composer require vection-framework/vection
 
 The actual documentation can be found in the README files of the components. A complete documentation will be 
 provided later.
+
+## Support
+
+Support Vection via Ko-fi:
+
+[![Ko-fi](https://cdn.ko-fi.com/cdn/kofi3.png)](https://ko-fi.com/vection)
