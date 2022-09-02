@@ -4,13 +4,22 @@
 
 [![Vection logo](https://vection.appsdock.org/vection-framework.png)](https://vection.appsdock.org)
 
+# Vection - PHP Component Library and Framework
+
 Vection is a future-proof PHP component library and framework that focuses on flexibility, developer friendly code and lightweight to rich enterprise components. Vection can be used to realize small to large enterprise applications.
 
-# ATTENTION
+## !! ATTENTION !!
 
-Vection is currently in its late development stage, api/interfaces and PHP version could still change until a stable release!
+**Vection is currently in its late development stage, api/interfaces and PHP version could still change until a 
+stable release!**
 
-# What does Vection provide?
+### Support
+
+Support Vection via Ko-fi:
+
+[![Ko-fi](https://cdn.ko-fi.com/cdn/kofi3.png)](https://ko-fi.com/vection)
+
+## What does Vection provide?
 
 Vection provides on the one hand direct full operative components and on the other hand framework components which require application specific implementation. 
 Vection decouples the api/interfaces (**[Contracts](https://github.com/Vection-Framework/Contracts)**) 
@@ -26,16 +35,16 @@ and its implementation to achieve maximum flexibility. Each component has in add
   server/client, REST API and proxy support
 * **[Validator](https://github.com/Vection-Framework/Validator)** for php data and json/yaml schema validation
 
-More components coming soon.
+## Installation
 
-# Installation
-
-Vection Components supports only installation via [composer](https://getcomposer.org). So first ensure your composer is installed, configured and ready to use.
+Vection Components supports only installation via [Composer](https://getcomposer.org). So first ensure your composer 
+is installed, configured and ready to use.
 
 ~~~bash
-$ composer require vection-framework/vection
+composer require vection-framework/vection
 ~~~
 
-# Documentation
+## Documentation
 
-For the latest online documentation visit [https://vection.appsdock.org/docs](https://vection.appsdock.org/docs "Latest documentation").
+The actual documentation can be found in the README files of the components. A complete documentation will be 
+provided later.
