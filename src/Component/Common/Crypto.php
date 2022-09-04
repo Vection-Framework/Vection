@@ -74,15 +74,16 @@ class Crypto
      *
      * @return string
      */
-    public static function identity(string $prefix = '', int $length = 7): string
+    public static function identity(string $prefix = '', int $length = 16): string
     {
-        $identity = substr(
-            preg_replace('/[^a-zA-Z\d]/', '', base64_encode(self::bytes($length))),
-            0,
-            $length
-        );
-
-        return strlen($identity) === $length ? $prefix.$identity : self::identity($prefix, $length);
+        try {
+            $id = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(self::bytes($length + 1)));
+            $identity = $prefix.substr($id, strlen($prefix), $length - strlen($prefix));
+            return strlen($identity) === $length ? $identity : self::identity($prefix, $length);
+        }
+        catch (Exception $e) {
+            throw new RuntimeException('Unable to generate random bytes via random_bytes.', previous: $e);
+        }
     }
 
     /**
@@ -183,26 +184,12 @@ class Crypto
      */
     public static function bytes(int $length = 32): string
     {
-        static $retries = 0;
-
         try {
-            $bytes = random_bytes($length);
-
-            $retries = 0;
+            return random_bytes($length);
         }
         catch (Exception $e) {
-            if ($retries >= 10) {
-                throw new RuntimeException('Unable to generate random bytes.', $e->getCode(), $e);
-            }
-
-            $retries++;
-
-            usleep($retries * 100);
-
-            return self::bytes($length);
+            throw new RuntimeException('Unable to generate random bytes via random_bytes.', previous: $e);
         }
-
-        return $bytes;
     }
 
     /**
