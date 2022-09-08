@@ -42,7 +42,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
 
     /**
      * Contains namespaces which will be used for auto setting classes
-     * into the registry. All classes in this namespaces no longer have
+     * into the registry. All classes in these namespaces no longer have
      * to be registered by the Container::set or config file.
      *
      * @var string[]
@@ -52,8 +52,6 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
     /**
      * This class resolves all dependencies of a given class and saves
      * the information about the dependency and how they have to be injected.
-     *
-     * @var Resolver
      */
     protected Resolver $resolver;
 
@@ -61,8 +59,6 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      * The Injector is responsible for the injection of dependencies
      * into the given object. It uses the dependency information resolved
      * by the Resolver class.
-     *
-     * @var Injector
      */
     protected Injector $injector;
 
@@ -167,7 +163,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
 
     /**
      * @param string  $className
-     * @param mixed[] $constructParams
+     * @param array $constructParams
      *
      * @return object
      */
@@ -218,7 +214,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      */
     private function evaluate(string $id): bool
     {
-        # Check if there is an defined entry for the given id
+        # Check if there is a defined entry for the given id
         if ( ! $this->has($id) ) {
             # There is no entry for this id
 
@@ -299,9 +295,11 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      * If the requested entry has dependencies, these will be injected before
      * return this object.
      *
-     * @param string $id Identifier of the entry to look for.
+     * @template T
      *
-     * @return object
+     * @param class-string<T> $id Identifier of the entry to look for.
+     *
+     * @return T
      */
     public function get(string $id): object
     {
@@ -334,11 +332,13 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      * second parameter is not set, otherwise the new object will be created
      * with given parameters.
      *
-     * @param string  $identifier      The identifier of registered entry.
-     * @param mixed[] $constructParams Parameter that should be passed to constructor.
-     * @param bool    $shared          Whether the new object should be shared or not.
+     * @template T
      *
-     * @return object The new created object.
+     * @param class-string<T> $identifier      The identifier of registered entry.
+     * @param array           $constructParams Parameter that should be passed to constructor.
+     * @param bool            $shared          Whether the new object should be shared or not.
+     *
+     * @return T The new created object.
      */
     public function create(string $identifier, array $constructParams = [], bool $shared = true): object
     {
@@ -371,9 +371,11 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      * Adds and register a new shared object to the container. The identifier
      * will be the FQCN of the given object.
      *
-     * @param object     $object
+     * @template T
      *
-     * @return object Returns the given object.
+     * @param T $object
+     *
+     * @return T Returns the given object.
      */
     public function add(object $object): object
     {
@@ -388,7 +390,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
 }
 
 /**
- * Returns an new instance of DefinitionInterface.
+ * Returns a new instance of DefinitionInterface.
  *
  * @param string $className
  *
