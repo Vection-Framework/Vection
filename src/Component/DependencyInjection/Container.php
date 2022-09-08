@@ -163,7 +163,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
 
     /**
      * @param string  $className
-     * @param array $constructParams
+     * @param array<mixed> $constructParams
      *
      * @return object
      */
@@ -190,6 +190,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
                 if (($isNullableInterface && !isset($this->definitions[$param])) || $isPreventInjectionParam) {
                     $paramObjects[] = null;
                 }else{
+                    // @phpstan-ignore-next-line
                     $paramObjects[] = $this->get($param);
                 }
             }
@@ -295,7 +296,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      * If the requested entry has dependencies, these will be injected before
      * return this object.
      *
-     * @template T
+     * @template T of object
      *
      * @param class-string<T> $id Identifier of the entry to look for.
      *
@@ -332,10 +333,10 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      * second parameter is not set, otherwise the new object will be created
      * with given parameters.
      *
-     * @template T
+     * @template T of object
      *
      * @param class-string<T> $identifier      The identifier of registered entry.
-     * @param array           $constructParams Parameter that should be passed to constructor.
+     * @param array<mixed>    $constructParams Parameter that should be passed to constructor.
      * @param bool            $shared          Whether the new object should be shared or not.
      *
      * @return T The new created object.
@@ -371,7 +372,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      * Adds and register a new shared object to the container. The identifier
      * will be the FQCN of the given object.
      *
-     * @template T
+     * @template T of object
      *
      * @param T $object
      *

@@ -76,6 +76,7 @@ class Injector
                 if (isset($this->infiniteLoopPreventedObjects[$dependency])) {
                     $dependencyObject = $this->infiniteLoopPreventedObjects[$dependency];
                 } else {
+                    // @phpstan-ignore-next-line
                     $dependencyObject = $this->container->get($dependency);
                 }
 
@@ -100,6 +101,7 @@ class Injector
                 if (isset($this->infiniteLoopPreventedObjects[$dependency])) {
                     $dependencies[$property] = $this->infiniteLoopPreventedObjects[$dependency];
                 } else {
+                    // @phpstan-ignore-next-line
                     $dependencies[$property] = $this->container->get($dependency);
                 }
             }
@@ -123,6 +125,7 @@ class Injector
                 if (isset($this->infiniteLoopPreventedObjects[$dependency])) {
                     $dependencies[] = $this->infiniteLoopPreventedObjects[$dependency];
                 } else {
+                    // @phpstan-ignore-next-line
                     $dependencies[] = $this->container->get($dependency);
                 }
             }
