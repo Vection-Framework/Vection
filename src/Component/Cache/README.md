@@ -4,6 +4,9 @@
 
 # Vection Cache
 
+> :warning: Vection Cache is currently in development stage, so atm only pre-releases are available. Breaking changes may be made until a
+stable release!
+
 Cache with type safety support and caching pools for more cache control.
 
 ## Support

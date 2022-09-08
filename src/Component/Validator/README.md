@@ -4,6 +4,9 @@
 
 # Vection Validator
 
+> :warning: Vection Validator is currently in development stage, so atm only pre-releases are available. Breaking changes may be made until a
+stable release!
+
 ## PHP Validator for data and schema validation
 
 This vection component provides a data and schema validator for PHP. You can use it from validate simple values up to big data arrays via chained validators. This component also provides a schema based validation of data structures. The flexible and open closed aspect of vection components allows to extend and modify the most classes of this component or define custom validator classes. This component can be used for the following scenarios:

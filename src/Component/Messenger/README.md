@@ -4,6 +4,9 @@
 
 # Vection Messenger
 
+> :warning: Vection Messenger is currently in development stage, so atm only pre-releases are available. Breaking changes may be made until a
+stable release!
+
 ## A generic message bus with service (CQRS) and transport (message queues) support for PHP
 This vection component provides a generic message bus, a service bus adaption and transport support for message queues for PHP. The message bus can be setup and used in most flexible way by using custom middleware implementations.
 

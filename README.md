@@ -8,8 +8,8 @@
 
 Vection is a future-proof PHP component library and framework that focuses on flexibility, developer friendly code and lightweight to rich enterprise components. Vection can be used to realize small to large enterprise applications.
 
-**ATTENTION: Vection is currently in its late development stage, api/interfaces and PHP version could still change until a 
-stable release!**
+> :warning: Vection is currently in development stage, so atm only pre-releases are available. Breaking changes may be made until a
+stable release!
 
 ## What does Vection provide?
 
@@ -25,7 +25,7 @@ and its implementation to achieve maximum flexibility. Each component has in add
   and transport layer, async processing (MQ) support
 * PSR based **[HTTP](https://github.com/Vection-Framework/Http)** component includes kernel, responder, 
   server/client, REST API and proxy support
-* **[Validator](https://github.com/Vection-Framework/Validator)** for php data and json/yaml schema validation
+* **[Validator](https://github.com/Vection-Framework/Validator)** for PHP data and json/yaml schema validation
 
 ## Installation
 

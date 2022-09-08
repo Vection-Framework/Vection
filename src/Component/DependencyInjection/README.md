@@ -4,6 +4,9 @@
 
 # Vection Dependency Injection
 
+> :warning: Vection Dependency Injection is currently in development stage, so atm only pre-releases are available. Breaking changes may be made until a
+stable release!
+
 ## Dependency Injection Container for PHP
 This vection component provides a powerful dependency injection container for PHP. It supports several ways of automatic injection like annotations, attributes and injection by interfaces. An optional configuration allows the mapping of interfaces and concrete implementation.
 

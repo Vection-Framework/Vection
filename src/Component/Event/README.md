@@ -4,9 +4,8 @@
 
 # Vection Event
 
-~~~
-ATTENTION: PROVE OF CONCEPT / FOR EVALUATION ONLY
-~~~
+> :warning: Vection Event is currently in development stage, so atm only pre-releases are available. Breaking changes may be made until a
+stable release!
 
 ## Support
 

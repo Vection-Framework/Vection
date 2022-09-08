@@ -4,4 +4,13 @@
 
 # Vection Contracts
 
+> :warning: Vection is currently in development stage, so atm only pre-releases are available. Breaking changes may be made until a
+stable release!
+
 Dependency for Vection Components.
+
+## Support
+
+Support Vection via Ko-fi:
+
+[![Ko-fi](https://cdn.ko-fi.com/cdn/kofi3.png)](https://ko-fi.com/vection)

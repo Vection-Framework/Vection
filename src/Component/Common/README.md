@@ -4,6 +4,9 @@
 
 # Vection Common
 
+> :warning: Vection Common is currently in development stage, so atm only pre-releases are available. Breaking changes may be made until a
+stable release!
+
 ## Support
 
 Support Vection via Ko-fi:
