@@ -305,3 +305,9 @@ Symfony Bridge (Vection\Bridge\Symfony\Cache\SymfonyCacheProviderBridge).
     $container = new Container();
     $container->setCache($cache);    
 ```
+
+## Support
+
+Support Vection via Ko-fi:
+
+[![Ko-fi](https://cdn.ko-fi.com/cdn/kofi3.png)](https://ko-fi.com/vection)

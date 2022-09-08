@@ -3,3 +3,9 @@
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%206-blueviolet.svg?style=for-the-badge)](https://phpstan.org)
 
 # Vection Common
+
+## Support
+
+Support Vection via Ko-fi:
+
+[![Ko-fi](https://cdn.ko-fi.com/cdn/kofi3.png)](https://ko-fi.com/vection)

@@ -256,3 +256,9 @@ Use can use templates to reuse on different properties. The templates are define
     }
 }
 ```
+
+## Support
+
+Support Vection via Ko-fi:
+
+[![Ko-fi](https://cdn.ko-fi.com/cdn/kofi3.png)](https://ko-fi.com/vection)

@@ -7,3 +7,9 @@
 ~~~
 ATTENTION: PROVE OF CONCEPT / FOR EVALUATION ONLY
 ~~~
+
+## Support
+
+Support Vection via Ko-fi:
+
+[![Ko-fi](https://cdn.ko-fi.com/cdn/kofi3.png)](https://ko-fi.com/vection)
