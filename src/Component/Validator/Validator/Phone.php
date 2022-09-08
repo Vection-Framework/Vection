@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Vection\Component\Validator\Validator;
 
 use Vection\Component\Validator\Validator;
+use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
 
 /**
  * Class Phone
@@ -35,6 +36,16 @@ class Phone extends Validator
      */
     protected function onValidate($value): bool
     {
+        if (is_int($value)) {
+            $value = (string) $value;
+        }
+
+        if (!is_string($value)) {
+            throw new IllegalTypeException(
+                sprintf('The value must be of type "string", but type "%s" was passed.', gettype($value))
+            );
+        }
+
         // Clean phone number from visual separators
         $phone = str_replace(['-', '/', '(', ')', ' '], '', $value);
 

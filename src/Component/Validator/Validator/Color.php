@@ -15,6 +15,7 @@ namespace Vection\Component\Validator\Validator;
 
 use InvalidArgumentException;
 use Vection\Component\Validator\Validator;
+use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
 
 /**
  * Class Color
@@ -72,8 +73,13 @@ class Color extends Validator
      */
     protected function onValidate($value): bool
     {
-        $patterns = [];
+        if (!is_string($value)) {
+            throw new IllegalTypeException(
+                sprintf('The value must be of type "string", but type "%s" was passed.', gettype($value))
+            );
+        }
 
+        $patterns = [];
         if ($this->format & self::HEX) {
             $patterns[] = $this->patterns[self::HEX];
         }

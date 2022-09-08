@@ -12,34 +12,53 @@
 namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use ReflectionMethod;
 use Vection\Component\Validator\Validator\Ipv6;
 
 /**
  * Class Ipv6Test
  *
  * @package Vection\Component\Validator\Tests\Validator
+ * @author  BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class Ipv6Test extends TestCase
 {
+    /**
+     * @throws ReflectionException
+     */
+    protected function getReflectionMethodOnValidate(mixed ...$args): mixed
+    {
+        $rc = new Ipv6();
+
+        $rm = new ReflectionMethod($rc, 'onValidate');
+        $rm->setAccessible(true);
+
+        return $rm->invokeArgs($rc, $args);
+    }
 
     /**
      * @dataProvider provideValidValues
+     *
+     * @throws ReflectionException
      */
-    public function testValidValues($value): void
+    public function testValidValues(mixed $value): void
     {
-        $this->assertNull((new Ipv6())->validate($value));
+        self::assertTrue($this->getReflectionMethodOnValidate($value));
     }
 
     /**
      * @dataProvider provideInvalidValues
+     *
+     * @throws ReflectionException
      */
-    public function testInvalidValues($value): void
+    public function testInvalidValues(mixed $value): void
     {
-        $this->assertNotNull((new Ipv6())->validate($value));
+        self::assertFalse($this->getReflectionMethodOnValidate($value));
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideValidValues(): array
     {
@@ -54,18 +73,22 @@ class Ipv6Test extends TestCase
             '::ffff:7f00:1'                           => ['::ffff:7f00:1'],
             '::ffff:127.0.0.1'                        => ['::ffff:127.0.0.1'],
             '2001:0db8:1234:0000:0000:0000:0000:0000' => ['2001:0db8:1234:0000:0000:0000:0000:0000'],
-            '2001:0db8:1234:ffff:ffff:ffff:ffff:ffff' => ['2001:0db8:1234:ffff:ffff:ffff:ffff:ffff']
+            '2001:0db8:1234:ffff:ffff:ffff:ffff:ffff' => ['2001:0db8:1234:ffff:ffff:ffff:ffff:ffff'],
         ];
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideInvalidValues(): array
     {
         return [
             '2001:db8::8d3::'                         => ['2001:db8::8d3::'],
-            '1200:0000:AB00:1234:O000:2552:7777:1313' => ['1200:0000:AB00:1234:O000:2552:7777:1313']
+            '1200:0000:AB00:1234:O000:2552:7777:1313' => ['1200:0000:AB00:1234:O000:2552:7777:1313'],
+            'Empty string'                            => [''],
+            'False'                                   => [false],
+            'Null'                                    => [null],
+            'Empty array'                             => [[]],
         ];
     }
 }

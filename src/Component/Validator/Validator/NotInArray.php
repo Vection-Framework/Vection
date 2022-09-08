@@ -56,6 +56,6 @@ class NotInArray extends Validator
      */
     protected function onValidate($value): bool
     {
-        return ! in_array($value, $this->haystack, true);
+        return !in_array($value, $this->haystack, true);
     }
 }

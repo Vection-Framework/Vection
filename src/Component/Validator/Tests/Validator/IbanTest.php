@@ -12,6 +12,9 @@
 namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use ReflectionMethod;
+use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
 use Vection\Component\Validator\Validator\Iban;
 
 /**
@@ -21,8 +24,6 @@ use Vection\Component\Validator\Validator\Iban;
  */
 class IbanTest extends TestCase
 {
-
-    /** @var Iban */
     protected Iban $validator;
 
     public function setUp(): void
@@ -31,62 +32,51 @@ class IbanTest extends TestCase
     }
 
     /**
-     * @dataProvider provideToArrangedValues
+     * @throws ReflectionException
      */
-    public function testReArrange($actual, $expected): void
+    protected function getReflectionMethodOnValidate(mixed ...$args): mixed
     {
-        $actual     = $this->validator->normalize($actual);
-        $rearranged = $this->validator->rearrange($actual);
-        $this->assertEquals($rearranged, $expected, $expected);
-    }
+        $rc = new Iban();
 
-    /**
-     * @dataProvider provideArrangedValues
-     */
-    public function testConvertingArrangementToInteger($actual, $expected): void
-    {
-        $actual = $this->validator->convertToInteger($actual);
-        $this->assertEquals($actual, $expected);
+        $rm = new ReflectionMethod($rc, 'onValidate');
+        $rm->setAccessible(true);
+
+        return $rm->invokeArgs($rc, $args);
     }
 
     /**
      * @dataProvider provideValidValues
+     *
+     * @throws ReflectionException
      */
-    public function testValidValues($value): void
+    public function testValidValues(mixed $value): void
     {
-        $this->assertNull($this->validator->validate($value));
+        self::assertTrue($this->getReflectionMethodOnValidate($value));
     }
 
     /**
      * @dataProvider provideInvalidValues
+     *
+     * @throws ReflectionException
      */
-    public function testInvalidValues($value): void
+    public function testInvalidValues(mixed $value): void
     {
-        $this->assertNotNull($this->validator->validate($value));
+        self::assertFalse($this->getReflectionMethodOnValidate($value));
     }
 
     /**
-     * @return array
+     * @dataProvider provideInvalidTypes
+     *
+     * @throws ReflectionException
      */
-    public function provideArrangedValues(): array
+    public function testInvalidTypes(mixed $value): void
     {
-        return [
-            '3214282912345698765432161182' => ['WEST12345698765432GB82', '3214282912345698765432161182'],
-        ];
+        $this->expectException(IllegalTypeException::class);
+        $this->getReflectionMethodOnValidate($value);
     }
 
     /**
-     * @return array
-     */
-    public function provideToArrangedValues(): array
-    {
-        return [
-            'WEST12345698765432GB82' => ['GB82 WEST 1234 5698 7654 32', 'WEST12345698765432GB82'],
-        ];
-    }
-
-    /**
-     * @return array
+     * @return mixed[]
      */
     public function provideValidValues(): array
     {
@@ -96,13 +86,28 @@ class IbanTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideInvalidValues(): array
     {
         return [
-            'XC82WEST12345698765432'     => ['XC82 WEST 1234 5698 7654 32'],
+            'XC82WEST12345698765432'    => ['XC82 WEST 1234 5698 7654 32'],
             'GB82WEST12345698765432889' => ['GB82 WEST 1234 5698 7654 32 889'],
+            'String'                    => ['123 example'],
+            'Empty string'              => [''],
+        ];
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function provideInvalidTypes(): array
+    {
+        return [
+            'Empty array' => [[]],
+            'Null'        => [null],
+            'False'       => [false],
+            'True'        => [true],
         ];
     }
 }

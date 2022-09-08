@@ -12,6 +12,8 @@
 namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use ReflectionMethod;
 use Vection\Component\Validator\Validator\Hex;
 
 /**
@@ -21,36 +23,52 @@ use Vection\Component\Validator\Validator\Hex;
  */
 class HexTest extends TestCase
 {
+    /**
+     * @throws ReflectionException
+     */
+    protected function getReflectionMethodOnValidate(mixed ...$args): mixed
+    {
+        $rc = new Hex();
+
+        $rm = new ReflectionMethod($rc, 'onValidate');
+        $rm->setAccessible(true);
+
+        return $rm->invokeArgs($rc, $args);
+    }
 
     /**
      * @dataProvider provideValidValues
+     *
+     * @throws ReflectionException
      */
-    public function testValidValues($value): void
+    public function testValidValues(mixed $value): void
     {
-        $this->assertNull((new Hex())->validate($value));
+        self::assertTrue($this->getReflectionMethodOnValidate($value));
     }
 
     /**
      * @dataProvider provideInvalidValues
+     *
+     * @throws ReflectionException
      */
-    public function testInvalidValues($value): void
+    public function testInvalidValues(mixed $value): void
     {
-        $this->assertNotNull((new Hex())->validate($value));
+        self::assertFalse($this->getReflectionMethodOnValidate($value));
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideValidValues(): array
     {
         return [
             '0123456789ABCDEF' => ['0123456789ABCDEF'],
-            '0123456789abcdef' => ['0123456789abcdef']
+            '0123456789abcdef' => ['0123456789abcdef'],
         ];
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideInvalidValues(): array
     {
@@ -58,6 +76,10 @@ class HexTest extends TestCase
             '0123456789ABCDEFG' => ['0123456789ABCDEFG'],
             'abcdefg'           => ['abcdefg'],
             '012345 ABCDEF'     => ['012345 ABCDEF'],
+            'Empty string'     => [''],
+            'False'            => [false],
+            'Null'             => [null],
+            'Empty array'      => [[]],
         ];
     }
 }

@@ -13,34 +13,54 @@ namespace Vection\Component\Validator\Tests\Validator;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use ReflectionMethod;
 use Vection\Component\Validator\Validator\Email;
 
 /**
  * Class EmailTest
  *
  * @package Vection\Component\Validator\Tests\Validator
+ * @author  BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class EmailTest extends TestCase
 {
+    /**
+     * @throws ReflectionException
+     */
+    protected function getReflectionMethodOnValidate(mixed ...$args): mixed
+    {
+        $rc = new Email();
+
+        $rm = new ReflectionMethod($rc, 'onValidate');
+        $rm->setAccessible(true);
+
+        return $rm->invokeArgs($rc, $args);
+    }
 
     /**
      * @dataProvider provideValidValues
+     *
+     * @throws ReflectionException
      */
-    public function testValidValues($value): void
+    public function testValidValues(mixed $value): void
     {
-        $this->assertNull((new Email())->validate($value));
+        self::assertTrue($this->getReflectionMethodOnValidate($value));
     }
 
     /**
      * @dataProvider provideInvalidValues
+     *
+     * @throws ReflectionException
      */
-    public function testInvalidValues($value): void
+    public function testInvalidValues(mixed $value): void
     {
-        $this->assertNotNull((new Email())->validate($value));
+        self::assertFalse($this->getReflectionMethodOnValidate($value));
     }
 
     /**
-     * @return array
+     * @return mixed[]
+     *
      * @throws Exception
      */
     public function provideValidValues(): array
@@ -66,7 +86,8 @@ class EmailTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return mixed[]
+     *
      * @throws Exception
      */
     public function provideInvalidValues(): array
@@ -93,7 +114,11 @@ class EmailTest extends TestCase
             ['John\ still\"not\\Doe@' . $domain . $tld],
             [$local . 'a@' . $domain . $tld],
             ['John.Doe@' . $subDomain . $tld],
-            ['John.Doe@' . $domain . $local]
+            ['John.Doe@' . $domain . $local],
+            'Empty string'     => [''],
+            'False'            => [false],
+            'Null'             => [null],
+            'Empty array'      => [[]],
         ];
     }
 }

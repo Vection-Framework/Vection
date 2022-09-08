@@ -12,56 +12,99 @@
 namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use ReflectionMethod;
+use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
 use Vection\Component\Validator\Validator\Locale;
 
 /**
  * Class LocaleTest
  *
  * @package Vection\Component\Validator\Tests\Validator
- * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
+ * @author  BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class LocaleTest extends TestCase
 {
+    /**
+     * @throws ReflectionException
+     */
+    protected function getReflectionMethodOnValidate(mixed ...$args): mixed
+    {
+        $rc = new Locale();
+
+        $rm = new ReflectionMethod($rc, 'onValidate');
+        $rm->setAccessible(true);
+
+        return $rm->invokeArgs($rc, $args);
+    }
 
     /**
      * @dataProvider provideValidValues
+     *
+     * @throws ReflectionException
      */
-    public function testValidValues($locale): void
+    public function testValidValues(mixed $value): void
     {
-        self::assertNull((new Locale())->validate($locale));
+        self::assertTrue($this->getReflectionMethodOnValidate($value));
     }
 
     /**
      * @dataProvider provideInvalidValues
+     *
+     * @throws ReflectionException
      */
-    public function testInvalidValues($locale): void
+    public function testInvalidValues(mixed $value): void
     {
-        self::assertNotNull((new Locale())->validate($locale));
+        self::assertFalse($this->getReflectionMethodOnValidate($value));
     }
 
     /**
-     * @return array
+     * @dataProvider provideInvalidTypes
+     *
+     * @throws ReflectionException
+     */
+    public function testInvalidTypes(mixed $value): void
+    {
+        $this->expectException(IllegalTypeException::class);
+        $this->getReflectionMethodOnValidate($value);
+    }
+
+    /**
+     * @return mixed[]
      */
     public function provideValidValues(): array
     {
         return [
-            'de-DE' => ['de-DE'],
+            'de-DE'      => ['de-DE'],
             'zh-Hans-CN' => ['zh-Hans-CN']
         ];
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideInvalidValues(): array
     {
         return [
-            'de' => ['de'],
-            'DE' => ['DE'],
-            'de_DE' => ['de_DE'],
-            'zh-Hans' => ['zh-Hans'],
-            'Hans-CN' => ['Hans-CN'],
-            'zh_Hans_CN' => ['zh_Hans_CN']
+            'de'           => ['de'],
+            'DE'           => ['DE'],
+            'de_DE'        => ['de_DE'],
+            'zh-Hans'      => ['zh-Hans'],
+            'Hans-CN'      => ['Hans-CN'],
+            'zh_Hans_CN'   => ['zh_Hans_CN'],
+            'Empty string' => [''],
+        ];
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function provideInvalidTypes(): array
+    {
+        return [
+            'False'       => [false],
+            'Null'        => [null],
+            'Empty array' => [[]],
         ];
     }
 }

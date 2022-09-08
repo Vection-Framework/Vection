@@ -24,10 +24,6 @@ use Vection\Component\Validator\ValidatorChain;
  */
 class ValidatorChainTest extends TestCase
 {
-
-    /**
-     *
-     */
     public function testVerifySuccess(): void
     {
         $chain = new ValidatorChain();
@@ -56,9 +52,6 @@ class ValidatorChainTest extends TestCase
         $this->assertEmpty($chain->getViolations());
     }
 
-    /**
-     *
-     */
     public function testVerifyFail(): void
     {
         $chain = new ValidatorChain();
@@ -97,9 +90,6 @@ class ValidatorChainTest extends TestCase
         }
     }
 
-    /**
-     *
-     */
     public function testCustomValidator(): void
     {
         $chain = new ValidatorChain();
@@ -125,5 +115,4 @@ class ValidatorChainTest extends TestCase
 
         $this->assertSame(count($violations), 1);
     }
-
 }

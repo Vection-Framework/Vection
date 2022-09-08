@@ -22,14 +22,10 @@ use Vection\Component\Validator\Validator;
  */
 class BetweenValue extends Validator
 {
-    protected int $min;
-    protected int $max;
+    protected int|float $min;
+    protected int|float $max;
 
-    /**
-     * @param int $min
-     * @param int $max
-     */
-    public function __construct(int $min, int $max)
+    public function __construct(int|float $min, int|float $max)
     {
         $this->min = $min;
         $this->max = $max;

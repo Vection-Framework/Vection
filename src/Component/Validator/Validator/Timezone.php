@@ -24,8 +24,8 @@ use Vection\Component\Validator\Validator;
  */
 class Timezone extends Validator
 {
-    protected ?int    $group;
-    protected ?string $countryCode;
+    protected int|null    $group;
+    protected string|null $countryCode;
 
     /**
      * @param int|null    $group

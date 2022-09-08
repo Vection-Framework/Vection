@@ -59,6 +59,7 @@ class Contains extends Validator
                 sprintf('The value must be of type "array", but type "%s" was passed.', gettype($value))
             );
         }
+
         return in_array($this->needle, $value, true);
     }
 }

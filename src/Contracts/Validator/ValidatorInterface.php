@@ -34,5 +34,5 @@ interface ValidatorInterface
      *
      * @return ViolationInterface|null
      */
-    public function validate(mixed $value, string $subject = ''): ? ViolationInterface;
+    public function validate(mixed $value, string $subject = ''): ViolationInterface|null;
 }

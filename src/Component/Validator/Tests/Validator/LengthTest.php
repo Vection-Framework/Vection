@@ -13,34 +13,54 @@ namespace Vection\Component\Validator\Tests\Validator;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use ReflectionMethod;
 use Vection\Component\Validator\Validator\Length;
 
 /**
  * Class LengthTest
  *
  * @package Vection\Component\Validator\Tests\Validator
+ * @author  BloodhunterD <vection@bloodhunterd.com>
  */
 class LengthTest extends TestCase
 {
+    /**
+     * @throws ReflectionException
+     */
+    protected function getReflectionMethodOnValidate(int $length, mixed ...$args): mixed
+    {
+        $rc = new Length($length);
+
+        $rm = new ReflectionMethod($rc, 'onValidate');
+        $rm->setAccessible(true);
+
+        return $rm->invokeArgs($rc, $args);
+    }
 
     /**
      * @dataProvider provideValidValues
+     *
+     * @throws ReflectionException
      */
-    public function testValidValues($length, $value): void
+    public function testValidValues(int $length, mixed $value): void
     {
-        $this->assertNull((new Length($length))->validate($value));
+        self::assertTrue($this->getReflectionMethodOnValidate($length, $value));
     }
 
     /**
      * @dataProvider provideInvalidValues
+     *
+     * @throws ReflectionException
      */
-    public function testInvalidValues($length, $value): void
+    public function testInvalidValues(int $length, mixed $value): void
     {
-        $this->assertNotNull((new Length($length))->validate($value));
+        self::assertFalse($this->getReflectionMethodOnValidate($length, $value));
     }
 
     /**
-     * @return array
+     * @return mixed[]
+     *
      * @throws Exception
      */
     public function provideValidValues(): array
@@ -54,7 +74,8 @@ class LengthTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return mixed[]
+     *
      * @throws Exception
      */
     public function provideInvalidValues(): array

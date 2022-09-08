@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Vection\Component\Validator\Validator;
 
 use Vection\Component\Validator\Validator;
+use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
 
 /**
  * Class Min
@@ -22,12 +23,9 @@ use Vection\Component\Validator\Validator;
  */
 class Min extends Validator
 {
-    protected int $min;
+    protected int|float $min;
 
-    /**
-     * @param int $min
-     */
-    public function __construct(int $min)
+    public function __construct(int|float $min)
     {
         $this->min = $min;
     }
@@ -53,6 +51,12 @@ class Min extends Validator
      */
     protected function onValidate($value): bool
     {
+        if (!is_int($value) && !is_float($value)) {
+            throw new IllegalTypeException(
+                sprintf('The value must be of type "int" or "float", but type "%s" was passed.', gettype($value))
+            );
+        }
+
         return $value >= $this->min;
     }
 }

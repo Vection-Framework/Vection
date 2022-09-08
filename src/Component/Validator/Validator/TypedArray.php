@@ -86,7 +86,6 @@ class TypedArray extends Validator
         }
 
         $types = [];
-
         if ($this->type & self::BOOL) {
             $types[] = $this->types[self::BOOL];
         }
@@ -111,7 +110,7 @@ class TypedArray extends Validator
 
         if (!$types) {
             throw new InvalidArgumentException(
-                'Invalid generic type. Supported types are BOOL, INT, FLOAT, STRING, ARRAY, OBJECT and NULL.'
+                'Invalid type. Supported types are "array", "bool", "float", "int", "null", "object" and "string".'
             );
         }
 

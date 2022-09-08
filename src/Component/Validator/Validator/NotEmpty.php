@@ -35,6 +35,6 @@ class NotEmpty extends Validator
      */
     protected function onValidate($value): bool
     {
-        return ! empty($value);
+        return !empty($value);
     }
 }

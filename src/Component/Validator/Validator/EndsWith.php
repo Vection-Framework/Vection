@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Vection\Component\Validator\Validator;
 
 use Vection\Component\Validator\Validator;
+use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
+use function _PHPStan_9a6ded56a\RingCentral\Psr7\str;
 
 /**
  * Class EndsWith
@@ -55,6 +57,16 @@ class EndsWith extends Validator
      */
     protected function onValidate($value): bool
     {
+        if (is_int($value) || is_float($value)) {
+            $value = (string) $value;
+        }
+
+        if (!is_string($value)) {
+            throw new IllegalTypeException(
+                sprintf('The value must be of type "string", but type "%s" was passed.', gettype($value))
+            );
+        }
+
         $length = strlen($this->needle);
         if ($length === 0) {
             return true;

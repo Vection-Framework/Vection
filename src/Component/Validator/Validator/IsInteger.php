@@ -14,14 +14,13 @@ namespace Vection\Component\Validator\Validator;
 use Vection\Component\Validator\Validator;
 
 /**
- * Class Integer
+ * Class IsInteger
  *
  * @package Vection\Component\Validator\Validator
  * @author  Bjoern Klemm <vection@bjoernklemm.de>
  */
-class Integer extends Validator
+class IsInteger extends Validator
 {
-
     /**
      * @inheritDoc
      */

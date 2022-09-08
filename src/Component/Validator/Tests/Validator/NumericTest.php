@@ -12,34 +12,53 @@
 namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use ReflectionMethod;
 use Vection\Component\Validator\Validator\Numeric;
 
 /**
  * Class NumericTest
  *
  * @package Vection\Component\Validator\Tests\Validator
+ * @author  BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class NumericTest extends TestCase
 {
+    /**
+     * @throws ReflectionException
+     */
+    protected function getReflectionMethodOnValidate(mixed ...$args): mixed
+    {
+        $rc = new Numeric();
+
+        $rm = new ReflectionMethod($rc, 'onValidate');
+        $rm->setAccessible(true);
+
+        return $rm->invokeArgs($rc, $args);
+    }
 
     /**
      * @dataProvider provideValidValues
+     *
+     * @throws ReflectionException
      */
-    public function testValidValues($value): void
+    public function testValidValues(mixed $value): void
     {
-        $this->assertNull((new Numeric())->validate($value));
+        self::assertTrue($this->getReflectionMethodOnValidate($value));
     }
 
     /**
      * @dataProvider provideInvalidValues
+     *
+     * @throws ReflectionException
      */
-    public function testInvalidValues($value): void
+    public function testInvalidValues(mixed $value): void
     {
-        $this->assertNotNull((new Numeric())->validate($value));
+        self::assertFalse($this->getReflectionMethodOnValidate($value));
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideValidValues(): array
     {
@@ -55,17 +74,17 @@ class NumericTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideInvalidValues(): array
     {
         return [
             'not numeric' => ['not numeric'],
             '123 example' => ['123 example'],
-            '[]'          => [[]],
-            'NULL'        => [null],
-            'false'       => [false],
-            'true'        => [true]
+            'Empty array' => [[]],
+            'Null'        => [null],
+            'False'       => [false],
+            'True'        => [true]
         ];
     }
 }

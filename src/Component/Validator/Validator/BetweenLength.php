@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Vection\Component\Validator\Validator;
 
 use Vection\Component\Validator\Validator;
+use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
 
 /**
  * Class BetweenLength
@@ -57,7 +58,9 @@ class BetweenLength extends Validator
     protected function onValidate($value): bool
     {
         if (!is_string($value)) {
-            return false;
+            throw new IllegalTypeException(
+                sprintf('The value must be of type "string", but type "%s" was passed.', gettype($value))
+            );
         }
 
         $length = strlen($value);

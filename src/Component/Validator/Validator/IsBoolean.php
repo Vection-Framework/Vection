@@ -16,11 +16,11 @@ namespace Vection\Component\Validator\Validator;
 use Vection\Component\Validator\Validator;
 
 /**
- * Class Boolean
+ * Class IsBoolean
  *
  * @package Vection\Component\Validator\Validator
  */
-class Boolean extends Validator
+class IsBoolean extends Validator
 {
     /**
      * @inheritDoc

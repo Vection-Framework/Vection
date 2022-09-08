@@ -12,34 +12,65 @@
 namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use ReflectionMethod;
+use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
 use Vection\Component\Validator\Validator\Phone;
 
 /**
  * Class PhoneTest
  *
  * @package Vection\Component\Validator\Tests\Validator
+ * @author  BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class PhoneTest extends TestCase
 {
+    /**
+     * @throws ReflectionException
+     */
+    protected function getReflectionMethodOnValidate(mixed ...$args): mixed
+    {
+        $rc = new Phone();
+
+        $rm = new ReflectionMethod($rc, 'onValidate');
+        $rm->setAccessible(true);
+
+        return $rm->invokeArgs($rc, $args);
+    }
 
     /**
      * @dataProvider provideValidValues
+     *
+     * @throws ReflectionException
      */
-    public function testValidValues($value): void
+    public function testValidValues(mixed $value): void
     {
-        $this->assertNull((new Phone())->validate($value));
+        self::assertTrue($this->getReflectionMethodOnValidate($value));
     }
 
     /**
      * @dataProvider provideInvalidValues
+     *
+     * @throws ReflectionException
      */
-    public function testInvalidValues($value): void
+    public function testInvalidValues(mixed $value): void
     {
-        $this->assertNotNull((new Phone())->validate($value));
+        self::assertFalse($this->getReflectionMethodOnValidate($value));
     }
 
     /**
-     * @return array
+     * @dataProvider provideInvalidTypes
+     *
+     * @throws ReflectionException
+     */
+    public function testInvalidTypes(mixed $value): void
+    {
+        $this->expectException(IllegalTypeException::class);
+        $this->getReflectionMethodOnValidate($value);
+    }
+
+    /**
+     * @return mixed[]
      */
     public function provideValidValues(): array
     {
@@ -61,20 +92,32 @@ class PhoneTest extends TestCase
             '+447911123456'      => ['+447911123456'],
             '+49 611 1234'       => ['+49 611 1234'],
             '089 / 12345'        => ['089 / 12345'],
-            '089/1234'           => ['089/1234']
+            '089/1234'           => ['089/1234'],
         ];
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideInvalidValues(): array
     {
         return [
             '001-541-754-301O' => ['001-541-754-301O'],
             '001-JG1-PJG-D010' => ['001-JG1-PJG-D010'],
-            ''                 => [''],
-            ' '                => [' ']
+            '() 1234'          => ['() 1234'],
+            'Empty string'     => [''],
+        ];
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function provideInvalidTypes(): array
+    {
+        return [
+            'False'       => [false],
+            'Null'        => [null],
+            'Empty array' => [[]],
         ];
     }
 }

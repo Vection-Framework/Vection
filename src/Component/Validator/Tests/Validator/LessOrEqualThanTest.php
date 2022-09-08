@@ -12,41 +12,60 @@
 namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use ReflectionMethod;
 use Vection\Component\Validator\Validator\LessOrEqualThan;
 
 /**
  * Class LessOrEqualThanTest
  *
  * @package Vection\Component\Validator\Tests\Validator
+ * @author  BloodhunterD <vection@bloodhunterd.com>
  */
 class LessOrEqualThanTest extends TestCase
 {
+    /**
+     * @throws ReflectionException
+     */
+    protected function getReflectionMethodOnValidate(int|float $limit, mixed ...$args): mixed
+    {
+        $rc = new LessOrEqualThan($limit);
+
+        $rm = new ReflectionMethod($rc, 'onValidate');
+        $rm->setAccessible(true);
+
+        return $rm->invokeArgs($rc, $args);
+    }
 
     /**
      * @dataProvider provideValidValues
+     *
+     * @throws ReflectionException
      */
-    public function testValidValues($limit, $value): void
+    public function testValidValues(int|float $limit, mixed $value): void
     {
-        $this->assertNull((new LessOrEqualThan($limit))->validate($value));
+        self::assertTrue($this->getReflectionMethodOnValidate($limit, $value));
     }
 
     /**
      * @dataProvider provideInvalidValues
+     *
+     * @throws ReflectionException
      */
-    public function testInvalidValues($limit, $value): void
+    public function testInvalidValues(int|float $limit, mixed $value): void
     {
-        $this->assertNotNull((new LessOrEqualThan($limit))->validate($value));
+        self::assertFalse($this->getReflectionMethodOnValidate($limit, $value));
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideValidValues(): array
     {
         return [
             '1 <= 0'              => [1, 0],
             '0 <= -1'             => [0, -1],
-            'true <= false'       => [true, false],
+            'true <= false'       => [-1, false],
             '0.0000000001 <= 0.0' => [0.0000000001, 0.0],
             '0 <= 0'              => [0, 0],
             '0.001 <= 1'          => [1, 0.001]
@@ -54,15 +73,15 @@ class LessOrEqualThanTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideInvalidValues(): array
     {
         return [
-            '0 <= 1'        => [0, 1],
-            '-1 <= 0'       => [-1, 0],
-            'false <= true' => [false, true],
-            '0.0 <= 1'      => [0.0, 1]
+            '0 <= 1'    => [0, 1],
+            '-1 <= 0'   => [-1, 0],
+            '0 <= true' => [0, true],
+            '0.0 <= 1'  => [0.0, 1]
         ];
     }
 }

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Vection\Component\Validator\Validator;
 
 use Vection\Component\Validator\Validator;
+use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
 
 /**
  * Class TypedArray
@@ -54,6 +55,12 @@ class MimeType extends Validator
      */
     protected function onValidate($value): bool
     {
+        if (!is_string($value)) {
+            throw new IllegalTypeException(
+                sprintf('The value must be of type "string", but type "%s" was passed.', gettype($value))
+            );
+        }
+
         $wildcard = $this->includeWildcard ? '|\*' : '';
 
         $pattern = "([a-z0-9][a-z0-9!#$&-^_.+*]{1,127}$wildcard)";

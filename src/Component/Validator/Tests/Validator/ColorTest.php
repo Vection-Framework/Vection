@@ -12,144 +12,108 @@
 namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use ReflectionMethod;
 use Vection\Component\Validator\Validator\Color;
 
 /**
  * Class ColorTest
  *
  * @package Vection\Component\Validator\Tests\Validator
- * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
+ * @author  BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class ColorTest extends TestCase
 {
-
     /**
-     * @dataProvider provideValidHexValues
+     * @throws ReflectionException
      */
-    public function testValidHexValues($color): void
+    protected function getReflectionMethodOnValidate(int $format, mixed ...$args): mixed
     {
-        self::assertNull((new Color(Color::HEX))->validate($color));
+        $rc = new Color($format);
+
+        $rm = new ReflectionMethod($rc, 'onValidate');
+        $rm->setAccessible(true);
+
+        return $rm->invokeArgs($rc, $args);
     }
 
     /**
-     * @dataProvider provideInvalidHexValues
+     * @dataProvider provideValidValues
+     *
+     * @throws ReflectionException
      */
-    public function testInvalidHexValues($color): void
+    public function testValidValues(int $format, mixed $color): void
     {
-        self::assertNotNull((new Color(Color::HEX))->validate($color));
+        self::assertTrue($this->getReflectionMethodOnValidate($format, $color));
     }
 
     /**
-     * @dataProvider provideValidRgbValues
+     * @dataProvider provideInvalidValues
+     *
+     * @throws ReflectionException
      */
-    public function testValidRgbValues($color): void
+    public function testInvalidValues(int $format, mixed $color): void
     {
-        self::assertNull((new Color(Color::RGB))->validate($color));
+        self::assertFalse($this->getReflectionMethodOnValidate($format, $color));
     }
 
     /**
-     * @dataProvider provideInvalidRgbValues
+     * @return mixed[]
      */
-    public function testInvalidRgbValues($color): void
+    public function provideValidValues(): array
     {
-        self::assertNotNull((new Color(Color::RGB))->validate($color));
-    }
+        $colors = [
+            'HEX1' => '#abcdef',
+            'HEX2' => '#123456',
+            'HEX3' => '#98da1c',
+            'RGB1' => 'rgb(123,255,0)',
+            'RGB2' => 'rgb(99,25,100)',
+            'RGB3' => 'rgb(3,5,0)',
+        ];
 
-    /**
-     * @dataProvider provideValidCombinedValues
-     */
-    public function testValidCombinedValues($color): void
-    {
-        self::assertNull((new Color(Color::HEX | Color::RGB))->validate($color));
-    }
-
-    /**
-     * @dataProvider provideInvalidCombinedValues
-     */
-    public function testInvalidCombinedValues($color): void
-    {
-        self::assertNotNull((new Color(Color::HEX | Color::RGB))->validate($color));
-    }
-
-    /**
-     * @return array
-     */
-    public function provideValidHexValues(): array
-    {
         return [
-            '#abcdef' => ['#abcdef'],
-            '#123456' => ['#123456'],
-            '#98da1c' => ['#98da1c'],
+            'HEX: #abcdef'            => [Color::HEX, $colors['HEX1']],
+            'HEX: #123456'            => [Color::HEX, $colors['HEX2']],
+            'HEX: #98da1c'            => [Color::HEX, $colors['HEX3']],
+            'RGB: rgb(123,255,0)'     => [Color::RGB, $colors['RGB1']],
+            'RGB: rgb(99,25,100)'     => [Color::RGB, $colors['RGB2']],
+            'RGB: rgb(3,5,0)'         => [Color::RGB, $colors['RGB3']],
+            'HEX+RGB: #abcdef'        => [Color::HEX | Color::RGB, $colors['HEX1']],
+            'HEX+RGB: #123456'        => [Color::HEX | Color::RGB, $colors['HEX2']],
+            'HEX+RGB: #98da1c'        => [Color::HEX | Color::RGB, $colors['HEX3']],
+            'HEX+RGB: rgb(123,255,0)' => [Color::HEX | Color::RGB, $colors['RGB1']],
+            'HEX+RGB: rgb(99,25,100)' => [Color::HEX | Color::RGB, $colors['RGB2']],
+            'HEX+RGB: rgb(3,5,0)'     => [Color::HEX | Color::RGB, $colors['RGB3']],
         ];
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
-    public function provideInvalidHexValues(): array
+    public function provideInvalidValues(): array
     {
-        return [
-            'abc123' => ['abc123'],
-            '#defh87' => ['#defh87'],
-            '#989xq7' => ['#989xq7'],
-            '#12d' => ['#12d'],
-            'rgb(123,255,0)' => ['rgb(123,255,0)'],
+        $colors = [
+            'HEX1' => 'abc123',
+            'HEX2' => '#defh87',
+            'HEX3' => '#989xq7',
+            'HEX4' => '#12d',
+            'HEX5' => 'rgb(123,255,0)',
+            'RGB1' => 'rgb(500,12,56)',
+            'RGB2' => '99,25,100',
+            'RGB3' => '#23655d',
+            'RGB4' => 'rgba(23,65,5)',
         ];
-    }
 
-    /**
-     * @return array
-     */
-    public function provideValidRgbValues(): array
-    {
         return [
-            'rgb(123,255,0)' => ['rgb(123,255,0)'],
-            'rgb(99,25,100)' => ['rgb(99,25,100)'],
-            'rgb(3,5,0)' => ['rgb(3,5,0)'],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function provideInvalidRgbValues(): array
-    {
-        return [
-            'rgb(500,12,56)' => ['rgb(500,12,56)'],
-            '99,25,100' => ['99,25,100'],
-            'rgba(23,65,5)' => ['rgba(23,65,5)'],
-            '#23655d' => ['#23655d'],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function provideValidCombinedValues(): array
-    {
-        return [
-            '#abcdef' => ['#abcdef'],
-            '#123456' => ['#123456'],
-            '#98da1c' => ['#98da1c'],
-            'rgb(123,255,0)' => ['rgb(123,255,0)'],
-            'rgb(99,25,100)' => ['rgb(99,25,100)'],
-            'rgb(3,5,0)' => ['rgb(3,5,0)'],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function provideInvalidCombinedValues(): array
-    {
-        return [
-            'abc123' => ['abc123'],
-            '#defh87' => ['#defh87'],
-            '#989xq7' => ['#989xq7'],
-            '#12d' => ['#12d'],
-            'rgb(500,12,56)' => ['rgb(500,12,56)'],
-            '99,25,100' => ['99,25,100'],
-            'rgba(23,65,5)' => ['rgba(23,65,5)'],
+            'HEX: abc123'             => [Color::HEX, $colors['HEX1']],
+            'HEX: #defh87'            => [Color::HEX, $colors['HEX2']],
+            'HEX: #989xq7'            => [Color::HEX, $colors['HEX3']],
+            'HEX: #12d'               => [Color::HEX, $colors['HEX4']],
+            'HEX: rgb(123,255,0)'     => [Color::HEX, $colors['HEX5']],
+            'RGB: rgb(500,12,56)'     => [Color::RGB, $colors['RGB1']],
+            'RGB: 99,25,100'          => [Color::RGB, $colors['RGB2']],
+            'RGB: #23655d'            => [Color::RGB, $colors['RGB3']],
+            'RGB: rgba(23,65,5)'      => [Color::RGB, $colors['RGB4']],
         ];
     }
 }

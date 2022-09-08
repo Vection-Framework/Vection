@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Vection\Component\Validator;
 
 use Vection\Component\Validator\Validator\Color;
-use Vection\Component\Validator\Validator\IsRequired;
+use Vection\Component\Validator\Validator\Required;
 use Vection\Component\Validator\Validator\Locale;
 use Vection\Component\Validator\Validator\TypedArray;
 use Vection\Contracts\Validator\ValidatorChainInterface;
@@ -35,7 +35,6 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @method ValidatorChain arraySchema(array $schema, int $maxTemplateRecursion = 3)
  * @method ValidatorChain betweenValue(int $min, int $max)
  * @method ValidatorChain betweenLength(int $min, int $max)
- * @method ValidatorChain boolean()
  * @method ValidatorChain color(int $format = Color::HEX)
  * @method ValidatorChain contains(array $needle)
  * @method ValidatorChain date(string $format)
@@ -53,9 +52,10 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @method ValidatorChain iban()
  * @method ValidatorChain iconName(string $prefix = null, int $maxLength = null)
  * @method ValidatorChain inArray(array $haystack)
- * @method ValidatorChain integer()
  * @method ValidatorChain isArray()
- * @method ValidatorChain isRequired()
+ * @method ValidatorChain isBoolean()
+ * @method ValidatorChain isInteger()
+ * @method ValidatorChain isNull()
  * @method ValidatorChain isString()
  * @method ValidatorChain ipv4()
  * @method ValidatorChain ipv6()
@@ -73,7 +73,6 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @method ValidatorChain notInArray(array $haystack)
  * @method ValidatorChain notEmpty()
  * @method ValidatorChain notNull()
- * @method ValidatorChain null()
  * @method ValidatorChain nullable()
  * @method ValidatorChain numeric()
  * @method ValidatorChain optional()
@@ -81,6 +80,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  * @method ValidatorChain phoneE164()
  * @method ValidatorChain range(int $min, int $max)
  * @method ValidatorChain regex(string $pattern)
+ * @method ValidatorChain required()
  * @method ValidatorChain startsWith(string $needle)
  * @method ValidatorChain subdomain()
  * @method ValidatorChain timezone(int $group = null, string $countryCode = null)
@@ -90,7 +90,6 @@ use Vection\Contracts\Validator\ViolationInterface;
  */
 class ValidatorChain implements ValidatorChainInterface
 {
-
     /**
      * The factory which creating validator objects by its names.
      *
@@ -153,7 +152,7 @@ class ValidatorChain implements ValidatorChainInterface
         # Add support for multi dimension array values!
         $this->chain[$keys[0]] = [
             # All definition are required by default
-            new IsRequired()
+            new Required()
         ];
         end($this->chain);
         return $this;
@@ -234,7 +233,7 @@ class ValidatorChain implements ValidatorChainInterface
 
             foreach ( $validators as $validator ) {
 
-                if ($validator instanceof IsRequired) {
+                if ($validator instanceof Required) {
                     $violation = $validator->validate($valueExists, $subject);
                 }
                 else {

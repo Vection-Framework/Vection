@@ -12,55 +12,78 @@
 namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use ReflectionMethod;
 use Vection\Component\Validator\Validator\Timezone;
 
 /**
  * Class TimezoneTest
  *
  * @package Vection\Component\Validator\Tests\Validator
- * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
+ * @author  BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class TimezoneTest extends TestCase
 {
+    /**
+     * @throws ReflectionException
+     */
+    protected function getReflectionMethodOnValidate(mixed ...$args): mixed
+    {
+        $rc = new Timezone();
+
+        $rm = new ReflectionMethod($rc, 'onValidate');
+        $rm->setAccessible(true);
+
+        return $rm->invokeArgs($rc, $args);
+    }
 
     /**
      * @dataProvider provideValidValues
+     *
+     * @throws ReflectionException
      */
-    public function testValidValues($locale): void
+    public function testValidValues(mixed $value): void
     {
-        self::assertNull((new Timezone())->validate($locale));
+        self::assertTrue($this->getReflectionMethodOnValidate($value));
     }
 
     /**
      * @dataProvider provideInvalidValues
+     *
+     * @throws ReflectionException
      */
-    public function testInvalidValues($locale): void
+    public function testInvalidValues(mixed $value): void
     {
-        self::assertNotNull((new Timezone())->validate($locale));
+        self::assertFalse($this->getReflectionMethodOnValidate($value));
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideValidValues(): array
     {
         return [
-            'Europe/Berlin' => ['Europe/Berlin'],
+            'Europe/Berlin'    => ['Europe/Berlin'],
             'America/New_York' => ['America/New_York']
         ];
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideInvalidValues(): array
     {
         return [
-            'Europe' => ['Europe'],
-            'Europe\\Berlin' => ['Europe\\Berlin'],
-            'Europa/Berlin' => ['Europa/Berlin'],
-            'America/NewYork' => ['America/NewYork'],
-            'NewYork' => ['NewYork']
+            'Europe'           => ['Europe'],
+            'Europe\\Berlin'   => ['Europe\\Berlin'],
+            'Europa/Berlin'    => ['Europa/Berlin'],
+            'America/NewYork'  => ['America/NewYork'],
+            'America/New York' => ['America/New York'],
+            'NewYork'          => ['NewYork'],
+            'Empty string'     => [''],
+            'False'            => [false],
+            'Null'             => [null],
+            'Empty array'      => [[]],
         ];
     }
 }

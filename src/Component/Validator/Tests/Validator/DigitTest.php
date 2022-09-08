@@ -12,6 +12,8 @@
 namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use ReflectionMethod;
 use Vection\Component\Validator\Validator\Digit;
 
 /**
@@ -21,25 +23,41 @@ use Vection\Component\Validator\Validator\Digit;
  */
 class DigitTest extends TestCase
 {
+    /**
+     * @throws ReflectionException
+     */
+    protected function getReflectionMethodOnValidate(mixed ...$args): mixed
+    {
+        $rc = new Digit();
+
+        $rm = new ReflectionMethod($rc, 'onValidate');
+        $rm->setAccessible(true);
+
+        return $rm->invokeArgs($rc, $args);
+    }
 
     /**
      * @dataProvider provideValidValues
+     *
+     * @throws ReflectionException
      */
-    public function testValidValues($value): void
+    public function testValidValues(mixed $value): void
     {
-        $this->assertNull((new Digit())->validate($value));
+        self::assertTrue($this->getReflectionMethodOnValidate($value));
     }
 
     /**
      * @dataProvider provideInvalidValues
+     *
+     * @throws ReflectionException
      */
-    public function testInvalidValues($value): void
+    public function testInvalidValues(mixed $value): void
     {
-        $this->assertNotNull((new Digit())->validate($value));
+        self::assertFalse($this->getReflectionMethodOnValidate($value));
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideValidValues(): array
     {
@@ -54,7 +72,7 @@ class DigitTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideInvalidValues(): array
     {
@@ -66,7 +84,11 @@ class DigitTest extends TestCase
             '1111æ1111'                         => ['1111æ1111'],
             '1337e0'                            => [1337e0],
             '9.1'                               => [9.1],
-            '01010010010100100101001001010010 ' => ['01010010010100100101001001010010 ']
+            '01010010010100100101001001010010 ' => ['01010010010100100101001001010010 '],
+            'Empty string'                      => [''],
+            'False'                             => [false],
+            'Null'                              => [null],
+            'Empty array'                       => [[]],
         ];
     }
 }

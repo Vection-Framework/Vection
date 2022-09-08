@@ -23,7 +23,6 @@ use Vection\Contracts\Validator\Schema\SchemaExceptionInterface;
  */
 class SchemaTest extends TestCase
 {
-
     /**
      * @throws SchemaExceptionInterface
      */

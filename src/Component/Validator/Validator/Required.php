@@ -15,11 +15,11 @@ namespace Vection\Component\Validator\Validator;
 use Vection\Component\Validator\Validator;
 
 /**
- * Class IsRequired
+ * Class Required
  *
  * @package Vection\Component\Validator\Validator
  */
-class IsRequired extends Validator
+class Required extends Validator
 {
     /**
      * @inheritDoc

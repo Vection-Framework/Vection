@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Vection\Component\Validator\Validator;
 
 use Vection\Component\Validator\Validator;
+use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
 
 /**
  * Class IconName
@@ -60,6 +61,12 @@ class IconName extends Validator
      */
     protected function onValidate($value): bool
     {
+        if (!is_string($value)) {
+            throw new IllegalTypeException(
+                sprintf('The value must be of type "string", but type "%s" was passed.', gettype($value))
+            );
+        }
+
         $pattern = "/^$this->prefix[a-z0-9-]{1,$this->maxLength}$/";
 
         return preg_match($pattern, $value) === 1;

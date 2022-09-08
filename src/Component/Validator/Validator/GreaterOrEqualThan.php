@@ -22,12 +22,12 @@ use Vection\Component\Validator\Validator;
  */
 class GreaterOrEqualThan extends Validator
 {
-    protected int $limit;
+    protected int|float $limit;
 
     /**
-     * @param int $limit
+     * @param int|float $limit
      */
-    public function __construct(int $limit)
+    public function __construct(int|float $limit)
     {
         $this->limit = $limit;
     }

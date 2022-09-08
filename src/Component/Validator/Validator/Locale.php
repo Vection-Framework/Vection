@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Vection\Component\Validator\Validator;
 
 use Vection\Component\Validator\Validator;
+use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
 
 /**
  * Class Locale
@@ -60,6 +61,12 @@ class Locale extends Validator
      */
     protected function onValidate($value): bool
     {
+        if (!is_string($value)) {
+            throw new IllegalTypeException(
+                sprintf('The value must be of type "string", but type "%s" was passed.', gettype($value))
+            );
+        }
+
         $language = '[A-Za-z]{2,4}';
         $script   = '[A-Za-z]{4}';
         $region   = '[A-Za-z]{2}';

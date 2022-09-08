@@ -12,6 +12,8 @@
 namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use ReflectionMethod;
 use stdClass;
 use Vection\Component\Validator\Validator\Equals;
 
@@ -22,25 +24,41 @@ use Vection\Component\Validator\Validator\Equals;
  */
 class EqualsTest extends TestCase
 {
+    /**
+     * @throws ReflectionException
+     */
+    protected function getReflectionMethodOnValidate(mixed $value, mixed ...$args): mixed
+    {
+        $rc = new Equals($value);
+
+        $rm = new ReflectionMethod($rc, 'onValidate');
+        $rm->setAccessible(true);
+
+        return $rm->invokeArgs($rc, $args);
+    }
 
     /**
      * @dataProvider provideValidValues
+     *
+     * @throws ReflectionException
      */
-    public function testValidValues($valueA, $valueB): void
+    public function testValidValues(mixed $valueA, mixed $valueB): void
     {
-        $this->assertNull((new Equals($valueA))->validate($valueB));
+        self::assertTrue($this->getReflectionMethodOnValidate($valueA, $valueB));
     }
 
     /**
      * @dataProvider provideInvalidValues
+     *
+     * @throws ReflectionException
      */
-    public function testInvalidValues($valueA, $valueB): void
+    public function testInvalidValues(mixed $valueA, mixed $valueB): void
     {
-        $this->assertNotNull((new Equals($valueA))->validate($valueB));
+        self::assertFalse($this->getReflectionMethodOnValidate($valueA, $valueB));
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideValidValues(): array
     {
@@ -55,7 +73,7 @@ class EqualsTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideInvalidValues(): array
     {

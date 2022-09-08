@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Vection\Component\Validator\Validator;
 
 use Vection\Component\Validator\Validator;
+use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
 
 /**
  * Class Max
@@ -22,12 +23,12 @@ use Vection\Component\Validator\Validator;
  */
 class Max extends Validator
 {
-    protected int $max;
+    protected int|float $max;
 
     /**
-     * @param int $max
+     * @param int|float $max
      */
-    public function __construct(int $max)
+    public function __construct(int|float $max)
     {
         $this->max = $max;
     }
@@ -53,6 +54,12 @@ class Max extends Validator
      */
     protected function onValidate($value): bool
     {
+        if (!is_int($value) && !is_float($value)) {
+            throw new IllegalTypeException(
+                sprintf('The value must be of type "int" or "float", but type "%s" was passed.', gettype($value))
+            );
+        }
+
         return $value <= $this->max;
     }
 }

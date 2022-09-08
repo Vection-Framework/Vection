@@ -19,15 +19,16 @@ use Vection\Component\Validator\Validator;
  * Class LessOrEqualThan
  *
  * @package Vection\Component\Validator\Validator
+ * @author  BloodhunterD <vection@bloodhunterd.com>
  */
 class LessOrEqualThan extends Validator
 {
-    protected int $limit;
+    protected int|float $limit;
 
     /**
-     * @param int $limit
+     * @param int|float $limit
      */
-    public function __construct(int $limit)
+    public function __construct(int|float $limit)
     {
         $this->limit = $limit;
     }

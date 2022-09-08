@@ -12,6 +12,8 @@
 namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use ReflectionMethod;
 use stdClass;
 use Vection\Component\Validator\Validator\IsString;
 
@@ -22,48 +24,66 @@ use Vection\Component\Validator\Validator\IsString;
  */
 class IsStringTest extends TestCase
 {
+    /**
+     * @throws ReflectionException
+     */
+    protected function getReflectionMethodOnValidate(mixed ...$args): mixed
+    {
+        $rc = new IsString();
+
+        $rm = new ReflectionMethod($rc, 'onValidate');
+        $rm->setAccessible(true);
+
+        return $rm->invokeArgs($rc, $args);
+    }
 
     /**
      * @dataProvider provideValidValues
+     *
+     * @throws ReflectionException
      */
-    public function testValidValues($value): void
+    public function testValidValues(mixed $value): void
     {
-        $this->assertNull((new IsString())->validate($value));
+        self::assertTrue($this->getReflectionMethodOnValidate($value));
     }
 
     /**
      * @dataProvider provideInvalidValues
+     *
+     * @throws ReflectionException
      */
-    public function testInvalidValues($value): void
+    public function testInvalidValues(mixed $value): void
     {
-        $this->assertNotNull((new IsString())->validate($value));
+        self::assertFalse($this->getReflectionMethodOnValidate($value));
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideValidValues(): array
     {
         return [
-            'Test'      => ['Test'],
-            '123 . ""'  => [123 . ''],
-            '"" . bool' => ['' . true],
-            'bool . "" . null' => [false . '' . null]
+            'Empty string'      => [''],
+            'Test'              => ['Test'],
+            '123 . ""'          => [123 . ''],
+            '"" . True'         => ['' . true],
+            'False . "" . Null' => [false . '' . null]
         ];
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideInvalidValues(): array
     {
         return [
-            'null'      => [null],
-            'bool'      => [false],
-            'int'       => [123],
-            'float'     => [987.654],
-            'array'     => [[' ']],
-            'object'    => [new stdClass()]
+            'Null'        => [null],
+            'False'       => [false],
+            'True'        => [true],
+            'Int'         => [123],
+            'Float'       => [987.654],
+            'Empty array' => [[]],
+            'Object'      => [new stdClass()]
         ];
     }
 }

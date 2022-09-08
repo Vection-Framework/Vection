@@ -22,7 +22,6 @@ use Vection\Component\Validator\Validator;
  */
 class CustomValidator extends Validator
 {
-
     /**
      * @inheritDoc
      */

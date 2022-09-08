@@ -13,6 +13,8 @@
 namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use ReflectionMethod;
 use Vection\Component\Validator\Validator\BetweenValue;
 
 /**
@@ -23,44 +25,67 @@ use Vection\Component\Validator\Validator\BetweenValue;
 class BetweenValueTest extends TestCase
 {
     /**
-     * @dataProvider provideValidValues
+     * @throws ReflectionException
      */
-    public function testValidValues($value, $min, $max): void
+    protected function getReflectionMethodOnValidate(int|float $min, int|float $max, mixed ...$args): mixed
     {
-        $this->assertNull((new BetweenValue($min, $max))->validate($value));
+        $rc = new BetweenValue($min, $max);
+
+        $rm = new ReflectionMethod($rc, 'onValidate');
+        $rm->setAccessible(true);
+
+        return $rm->invokeArgs($rc, $args);
+    }
+
+    /**
+     * @dataProvider provideValidValues
+     *
+     * @throws ReflectionException
+     */
+    public function testValidValues(int|float $min, int|float $max, mixed $value): void
+    {
+        self::assertTrue($this->getReflectionMethodOnValidate($min, $max, $value));
     }
 
     /**
      * @dataProvider provideInvalidValues
+     *
+     * @throws ReflectionException
      */
-    public function testInvalidValues($value, $min, $max): void
+    public function testInvalidValues(int|float $min, int|float $max, mixed $value): void
     {
-        $this->assertNotNull((new BetweenValue($min, $max))->validate($value));
+        self::assertFalse($this->getReflectionMethodOnValidate($min, $max, $value));
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideValidValues(): array
     {
         return [
-            [5, 1, 10],
-            [7, -10, 20],
-            [-4, -10, 20],
-            [-2, -10, -1]
+            [1, 10, 5],
+            [-10, 20, 7],
+            [-10, 20, -4],
+            [-10, -1, -2],
+            [1.001, 8.5, 7.986],
+            [-100.09, -59.2, -59.20001],
+            [-1.78, 30.2, -0.005],
         ];
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideInvalidValues(): array
     {
         return [
-            [0, 1, 10],
-            [-11, -10, 20],
-            [21, -10, 20],
-            [1, -10, -1]
+            [1, 10, 0],
+            [-10, 20, -11],
+            [-10, 20, 21],
+            [-10, -1, 1],
+            [1.98, 5.989, -3.12864],
+            [-19.14, 87.036, -20],
+            [-4, -2, 3],
         ];
     }
 }

@@ -12,6 +12,8 @@
 namespace Vection\Component\Validator\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use ReflectionMethod;
 use stdClass;
 use Vection\Component\Validator\Validator\InArray;
 
@@ -19,28 +21,45 @@ use Vection\Component\Validator\Validator\InArray;
  * Class MemberTest
  *
  * @package Vection\Component\Validator\Tests\Validator
+ * @author  BloodhunterD <vection@bloodhunterd.com>
  */
 class InArrayTest extends TestCase
 {
+    /**
+     * @throws ReflectionException
+     */
+    protected function getReflectionMethodOnValidate(mixed $needle, mixed ...$args): mixed
+    {
+        $rc = new InArray($needle);
+
+        $rm = new ReflectionMethod($rc, 'onValidate');
+        $rm->setAccessible(true);
+
+        return $rm->invokeArgs($rc, $args);
+    }
 
     /**
      * @dataProvider provideValidValues
+     *
+     * @throws ReflectionException
      */
-    public function testValidValues($needle, $value): void
+    public function testValidValues(mixed $needle, mixed $value): void
     {
-        $this->assertNull((new InArray($needle))->validate($value));
+        self::assertTrue($this->getReflectionMethodOnValidate($needle, $value));
     }
 
     /**
      * @dataProvider provideInvalidValues
+     *
+     * @throws ReflectionException
      */
-    public function testInvalidValues($needle, $value): void
+    public function testInvalidValues(mixed $needle, mixed $value): void
     {
-        $this->assertNotNull((new InArray($needle))->validate($value));
+        self::assertFalse($this->getReflectionMethodOnValidate($needle, $value));
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideValidValues(): array
     {
@@ -57,7 +76,7 @@ class InArrayTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function provideInvalidValues(): array
     {

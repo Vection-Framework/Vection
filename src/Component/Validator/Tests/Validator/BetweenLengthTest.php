@@ -13,34 +13,53 @@ namespace Vection\Component\Validator\Tests\Validator;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use ReflectionMethod;
 use Vection\Component\Validator\Validator\BetweenLength;
 
 /**
- * Class BetweenLenghtTest
+ * Class BetweenLengthTest
  *
  * @package Vection\Component\Validator\Tests\Validator
  */
-class BetweenLenghtTest extends TestCase
+class BetweenLengthTest extends TestCase
 {
+    /**
+     * @throws ReflectionException
+     */
+    protected function getReflectionMethodOnValidate(int $min, int $max, mixed ...$args): mixed
+    {
+        $rc = new BetweenLength($min, $max);
+
+        $rm = new ReflectionMethod($rc, 'onValidate');
+        $rm->setAccessible(true);
+
+        return $rm->invokeArgs($rc, $args);
+    }
 
     /**
      * @dataProvider provideValidValues
+     *
+     * @throws ReflectionException
      */
-    public function testValidValues($min, $max, $value): void
+    public function testValidValues(int $min, int $max, mixed $value): void
     {
-        $this->assertNull((new BetweenLength($min, $max))->validate($value));
+        self::assertTrue($this->getReflectionMethodOnValidate($min, $max, $value));
     }
 
     /**
      * @dataProvider provideInvalidValues
+     *
+     * @throws ReflectionException
      */
-    public function testInvalidValues($min, $max, $value): void
+    public function testInvalidValues(int $min, int $max, mixed $value): void
     {
-        $this->assertNotNull((new BetweenLength($min, $max))->validate($value));
+        self::assertFalse($this->getReflectionMethodOnValidate($min, $max, $value));
     }
 
     /**
-     * @return array
+     * @return mixed[]
+     *
      * @throws Exception
      */
     public function provideValidValues(): array
@@ -51,15 +70,17 @@ class BetweenLenghtTest extends TestCase
             [256, 512, 256]
         ];
 
+        $return = [];
         foreach ($values as $value) {
             $return[] = [$value[0], $value[1], bin2hex(random_bytes($value[2]))];
         }
 
-        return ($return ?? []);
+        return $return;
     }
 
     /**
-     * @return array
+     * @return mixed[]
+     *
      * @throws Exception
      */
     public function provideInvalidValues(): array
@@ -70,10 +91,11 @@ class BetweenLenghtTest extends TestCase
             [256, 512, 64]
         ];
 
+        $return = [];
         foreach ($values as $value) {
             $return[] = [$value[0], $value[1], bin2hex(random_bytes($value[2]))];
         }
 
-        return ($return ?? []);
+        return $return;
     }
 }

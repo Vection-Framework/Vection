@@ -38,11 +38,9 @@ class Domain extends Validator
     protected function onValidate($value): bool
     {
         if (!is_string($value)) {
-            throw new IllegalTypeException(sprintf(
-                'The value must be of type "%s", but type "%s" was passed.',
-                'string',
-                gettype($value)
-            ));
+            throw new IllegalTypeException(
+                sprintf('The value must be of type "string", but type "%s" was passed.', gettype($value))
+            );
         }
 
         // Validate port
