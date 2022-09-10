@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Vection\Component\Common;
 
 use Exception;
+use InvalidArgumentException;
 use RuntimeException;
 
 /**
@@ -36,6 +37,20 @@ class Crypto
     public const CIPHER_CAMELLIA_256_CBC  = 'camellia-256-cbc';
     public const CIPHER_CHACHA20_POLY1305 = 'chacha20-poly1305';
 
+    public const CIPHERS = [
+        self::CIPHER_AES_128_CBC,
+        self::CIPHER_AES_192_CBC,
+        self::CIPHER_AES_128_GCM,
+        self::CIPHER_AES_192_GCM,
+        self::CIPHER_AES_256_CBC,
+        self::CIPHER_AES_256_GCM,
+        self::CIPHER_BLOWFISH,
+        self::CIPHER_CAMELLIA_128_CBC,
+        self::CIPHER_CAMELLIA_192_CBC,
+        self::CIPHER_CAMELLIA_256_CBC,
+        self::CIPHER_CHACHA20_POLY1305,
+    ];
+
     public const HASH_CRC32     = 'crc32';
     public const HASH_MD5       = 'md5';
     public const HASH_MURMUR3A  = 'murmur3a';
@@ -50,7 +65,7 @@ class Crypto
     public const HASH_XXH64     = 'xxh64';
     public const HASH_XXH128    = 'xxh128';
 
-    protected const HASHES = [
+    public const HASHES = [
         self::HASH_CRC32,
         self::HASH_MD5,
         self::HASH_MURMUR3A,
@@ -67,27 +82,30 @@ class Crypto
     ];
 
     /**
-     * Generates a new identity string.
+     * Generates new random identity string.
      *
      * @param string $prefix
      * @param int    $length
      *
      * @return string
      */
-    public static function identity(string $prefix = '', int $length = 16): string
+    public static function identity(string $prefix = '', int $length = 8): string
     {
-        try {
-            $id = preg_replace('/[^a-zA-Z0-9]/', '', base64_encode(self::bytes($length + 1)));
-            $identity = $prefix.substr($id, strlen($prefix), $length - strlen($prefix));
-            return strlen($identity) === $length ? $identity : self::identity($prefix, $length);
+        if ($length <= 0) {
+            throw new InvalidArgumentException('Length must be greater than 0');
         }
-        catch (Exception $e) {
-            throw new RuntimeException('Unable to generate random bytes via random_bytes.', previous: $e);
-        }
+
+        $identity = substr(
+            preg_replace('/[^a-zA-Z\d]/', '', base64_encode(self::bytes($length + 4))),
+            0,
+            $length
+        );
+
+        return strlen($identity) === $length ? $prefix.$identity : self::identity($prefix, $length);
     }
 
     /**
-     * Generates a new random UUID v4 string.
+     * Generates new random UUID v4 string.
      *
      * @return string
      */
@@ -135,6 +153,8 @@ class Crypto
     }
 
     /**
+     * Verifies password by hash calculated via createPasswordHash method before.
+     *
      * @param string $password
      * @param string $hash
      *
@@ -146,7 +166,7 @@ class Crypto
     }
 
     /**
-     * Generates and returns a new random hash string or hashes a given value.
+     * Generates new random hash or hashes given value.
      *
      * @param string      $algo
      * @param string|null $data
@@ -162,7 +182,7 @@ class Crypto
     }
 
     /**
-     * Returns the hash a given file.
+     * Hashes given file.
      *
      * @param string      $path
      * @param string|null $algo
@@ -176,13 +196,15 @@ class Crypto
     }
 
     /**
-     * Generates a new random bytes string. Note that the number of characters generated is twice the length.
+     * Generates new random bytes string.
+     *
+     * @note The number of characters generated is more than the given length.
      *
      * @param int $length
      *
      * @return string
      */
-    public static function bytes(int $length = 32): string
+    public static function bytes(int $length): string
     {
         try {
             return random_bytes($length);
@@ -193,7 +215,7 @@ class Crypto
     }
 
     /**
-     * Generates a new random hexadecimal string.
+     * Generates new random hexadecimal string.
      *
      * @param int $length
      *
@@ -207,65 +229,91 @@ class Crypto
     }
 
     /**
+     * Encrypts content via public key.
+     *
+     * @note Only RSA public keys are supported by OpenSSL!
+     *
+     * @see https://www.php.net/manual/de/function.openssl-public-encrypt.php For padding constants.
+     *
      * @param string $content
-     * @param string $keyOrFilePath
-     * @param int $padding One of
-     *                     OPENSSL_PKCS1_PADDING,
-     *                     OPENSSL_SSLV23_PADDING,
-     *                     OPENSSL_PKCS1_OAEP_PADDING,
-     *                     OPENSSL_NO_PADDING.
+     * @param string $keyOrPathToKeyFile
+     * @param int    $padding
      *
      * @return string
      */
-    public static function publicKeyEncrypt(string $content, string $keyOrFilePath, int $padding = 1): string
+    public static function encryptViaPublicKey(string $content, string $keyOrPathToKeyFile, int $padding = 1): string
     {
-        if ( ! extension_loaded('openssl') ) {
-            throw new RuntimeException('OpenSSLEncryption requires the ext-openssl extension.');
+        if (!extension_loaded('openssl')) {
+            throw new RuntimeException('Encryption via public key requires the OpenSSL extension.');
         }
 
-        $encryptedContent = null;
-
-        if (! str_starts_with($keyOrFilePath, '-----') && file_exists($keyOrFilePath)) {
-            $keyOrFilePath = file_get_contents($keyOrFilePath);
+        if (is_file($keyOrPathToKeyFile)) {
+            $keyOrPathToKeyFile = 'file://'.$keyOrPathToKeyFile;
         }
 
-        openssl_public_encrypt($content, $encryptedContent, $keyOrFilePath, $padding);
+        $openSslAsymmetricKey = openssl_get_publickey($keyOrPathToKeyFile);
 
-        return $encryptedContent;
+        if (!$openSslAsymmetricKey) {
+            throw new RuntimeException('The public key is malformed.'.(($e = openssl_error_string()) ? " $e" : ''));
+        }
+
+        if (!openssl_public_encrypt($content, $encrypted, $openSslAsymmetricKey, $padding)) {
+            throw new RuntimeException('An error occurred during encryption.'.(($e = openssl_error_string()) ? " $e" : ''));
+        }
+
+        return $encrypted;
     }
 
     /**
+     * Decrypts content via private key.
+     *
+     * @note Only RSA private keys are supported by OpenSSL!
+     *
+     * @see https://www.php.net/manual/de/function.openssl-public-encrypt.php For padding constants.
+     *
      * @param string $encryptedContent
-     * @param string $keyOrFilePath
-     * @param int    $padding One of
-     *                          OPENSSL_PKCS1_PADDING,
-     *                          OPENSSL_SSLV23_PADDING,
-     *                          OPENSSL_PKCS1_OAEP_PADDING,
-     *                          OPENSSL_NO_PADDING.
+     * @param string $keyOrPathToKeyFile
+     * @param int    $padding
      *
      * @return string
      */
-    public static function privateKeyDecrypt(string $encryptedContent, string $keyOrFilePath, int $padding = 1): string
+    public static function decryptViaPrivateKey(
+        string $encryptedContent,
+        string $keyOrPathToKeyFile,
+        int    $padding = 1
+    ): string
     {
-        if ( ! extension_loaded('openssl') ) {
-            throw new RuntimeException('OpenSSLEncryption requires the ext-openssl extension.');
+        if (!extension_loaded('openssl')) {
+            throw new RuntimeException('Encryption via public key requires the OpenSSL extension.');
         }
 
-        $decrypted = null;
-
-        if (! str_starts_with($keyOrFilePath, '-----') && file_exists($keyOrFilePath)) {
-            $keyOrFilePath = file_get_contents($keyOrFilePath);
+        if (is_file($keyOrPathToKeyFile)) {
+            $keyOrPathToKeyFile = 'file://'.$keyOrPathToKeyFile;
         }
 
-        openssl_private_decrypt($encryptedContent, $decrypted, $keyOrFilePath, $padding);
+        $openSslAsymmetricKey = openssl_get_privatekey($keyOrPathToKeyFile);
+
+        if (!$openSslAsymmetricKey) {
+            throw new RuntimeException('The private key is malformed.'.(($e = openssl_error_string()) ? " $e" : ''));
+        }
+
+        if (!str_starts_with($keyOrPathToKeyFile, '-----') && is_file($keyOrPathToKeyFile)) {
+            $keyOrPathToKeyFile = file_get_contents($keyOrPathToKeyFile);
+        }
+
+        if (!openssl_private_decrypt($encryptedContent, $decrypted, $keyOrPathToKeyFile, $padding)) {
+            throw new RuntimeException('An error occurred during decryption.'.(($e = openssl_error_string()) ? " $e" : ''));
+        }
 
         return $decrypted;
     }
 
     /**
+     * Encrypt content via passphrase and secret key.
+     *
      * @param string $content
-     * @param string $key
-     * @param string $secret
+     * @param string $passphrase
+     * @param string $secretKey
      * @param string $cipher
      * @param string $hashAlgo
      *
@@ -273,70 +321,72 @@ class Crypto
      */
     public static function encrypt(
         string $content,
-        string $key,
-        string $secret,
+        string $passphrase,
+        string $secretKey,
         string $cipher   = self::CIPHER_AES_256_GCM,
         string $hashAlgo = self::HASH_SHA256
     ): string
     {
-        if ( ! extension_loaded('openssl') ) {
+        if (!extension_loaded('openssl')) {
             throw new RuntimeException('OpenSSLEncryption requires the ext-openssl extension.');
         }
 
-        if ( ! in_array($cipher, openssl_get_cipher_methods(), true) ) {
+        if (!in_array($cipher, openssl_get_cipher_methods(), true)) {
             throw new RuntimeException("OpenSSL: Invalid cipher method '$cipher'.");
         }
 
         $ivLen = openssl_cipher_iv_length($cipher);
 
-        if ( $ivLen === false ) {
+        if ($ivLen === false) {
             throw new RuntimeException('Unable to get the cipher iv length via openSSL.');
         }
 
         $iv = self::bytes($ivLen);
 
-        $encrypted  = openssl_encrypt($content, $cipher, $key, 0, $iv, $tag, '', 4);
-        $hash       = hash_hmac($hashAlgo, $encrypted, $secret);
+        $encrypted  = openssl_encrypt($content, $cipher, $passphrase, 0, $iv, $tag, '', 4);
+        $hash       = hash_hmac($hashAlgo, $encrypted, $secretKey);
         $hashLength = strlen($hash);
 
         return str_rot13(base64_encode($hashLength.'||'.$iv.$hash.$tag.$encrypted));
     }
 
     /**
-     * @param string $encryptedContent
-     * @param string $key
-     * @param string $secret
+     * Decrypt content via passphrase and secret key.
+     *
+     * @param string $content
+     * @param string $passphrase
+     * @param string $secretKey
      * @param string $cipher
      * @param string $hashAlgo
      *
      * @return string|null
      */
     public static function decrypt(
-        string $encryptedContent,
-        string $key,
-        string $secret,
+        string $content,
+        string $passphrase,
+        string $secretKey,
         string $cipher   = self::CIPHER_AES_256_GCM,
         string $hashAlgo = self::HASH_SHA256
-    ): ? string
+    ): string|null
     {
 
-        if ( ! extension_loaded('openssl') ) {
+        if (!extension_loaded('openssl')) {
             throw new RuntimeException('OpenSSLEncryption requires the ext-openssl extension.');
         }
 
-        if ( ! in_array($cipher, openssl_get_cipher_methods(), true) ) {
+        if (!in_array($cipher, openssl_get_cipher_methods(), true)) {
             throw new RuntimeException("OpenSSL: Invalid cipher method '$cipher'.");
         }
 
         $ivLen = openssl_cipher_iv_length($cipher);
 
-        if ( $ivLen === false ) {
+        if ($ivLen === false) {
             throw new RuntimeException('Unable to get the cipher iv length via openSSL.');
         }
 
-        $info = base64_decode(str_rot13($encryptedContent));
+        $info = base64_decode(str_rot13($content));
 
-        if ($info === false || ! str_contains($info, '||')) {
+        if ($info === false || !str_contains($info, '||')) {
             return null;
         }
 
@@ -347,15 +397,15 @@ class Crypto
         $tag       = substr($info, ($ivLen + $hashLength), 4);
         $encrypted = substr($info, ($ivLen + $hashLength + 4));
 
-        $decrypted = openssl_decrypt($encrypted, $cipher, $key, 0, $iv, $tag);
+        $decrypted = openssl_decrypt($encrypted, $cipher, $passphrase, 0, $iv, $tag);
 
-        if ( $decrypted === false ) {
+        if ($decrypted === false) {
             throw new RuntimeException(
                 'Error while using openSSL decryption. My caused by inconsistent parameters.'
             );
         }
 
-        $hashCheck = hash_hmac($hashAlgo, $encrypted, $secret);
+        $hashCheck = hash_hmac($hashAlgo, $encrypted, $secretKey);
 
         return hash_equals($hash, $hashCheck) ? $decrypted : null;
     }
