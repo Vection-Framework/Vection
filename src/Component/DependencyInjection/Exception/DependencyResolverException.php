@@ -13,16 +13,14 @@ declare(strict_types=1);
 
 namespace Vection\Component\DependencyInjection\Exception;
 
-use Psr\Container\NotFoundExceptionInterface;
-
 /**
- * Class NotFoundException
+ * Class DependencyResolverException
  *
  * @package Vection\Component\DependencyInjection\Exception
  *
  * @author  David M. Lung <vection@davidlung.de>
  */
-class NotFoundException extends RuntimeException implements NotFoundExceptionInterface
+class DependencyResolverException extends RuntimeException
 {
 
 }

@@ -15,7 +15,6 @@ namespace Vection\Component\Validator\Validator;
 
 use Vection\Component\Validator\Validator;
 use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
-use function _PHPStan_9a6ded56a\RingCentral\Psr7\str;
 
 /**
  * Class EndsWith

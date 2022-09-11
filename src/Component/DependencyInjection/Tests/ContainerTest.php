@@ -79,7 +79,7 @@ class ContainerTest extends TestCase
     {
         $container = new Container();
         $container->load(__DIR__.'/Fixtures/container-conf-1.php');
-        $container->registerNamespace(['*']);
+        $container->setAllowedNamespacePrefixes(['*']);
 
         // @var TestObject $testObject
         $testObject = $container->get(TestObject::class);

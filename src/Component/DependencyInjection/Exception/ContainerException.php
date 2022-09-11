@@ -22,7 +22,7 @@ use Psr\Container\ContainerExceptionInterface;
  *
  * @author  David M. Lung <vection@davidlung.de>
  */
-class ContainerException extends \RuntimeException implements ContainerExceptionInterface
+class ContainerException extends RuntimeException implements ContainerExceptionInterface
 {
 
 }

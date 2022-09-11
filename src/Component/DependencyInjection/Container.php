@@ -28,8 +28,8 @@ use Vection\Contracts\Cache\CacheInterface;
 /**
  * Class Container
  *
- * This class provides dependency injection by constructor, interface, annotation
- * and explicit definition. An optional configuration file can be used to register
+ * This class provides dependency injection by constructor, interface and annotation definition.
+ * An optional configuration file can be used to register
  * and define dependencies.
  *
  * @package Vection\Component\DependencyInjection
@@ -40,52 +40,23 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
 {
     use LoggerAwareTrait;
 
-    /**
-     * Contains namespaces which will be used for auto setting classes
-     * into the registry. All classes in these namespaces no longer have
-     * to be registered by the Container::set or config file.
-     *
-     * @var string[]
-     */
-    protected array $registeredNamespaces;
-
-    /**
-     * This class resolves all dependencies of a given class and saves
-     * the information about the dependency and how they have to be injected.
-     */
+    /** @var string[] */
+    protected array $allowedNamespacePrefixes;
     protected Resolver $resolver;
-
-    /**
-     * The Injector is responsible for the injection of dependencies
-     * into the given object. It uses the dependency information resolved
-     * by the Resolver class.
-     */
     protected Injector $injector;
-
-    /**
-     * Contains all shared objects which will be only instantiate
-     * once an injected into all other objects.
-     *
-     * @var object[]
-     */
+    /** @var object[] */
     protected array $sharedObjects;
-
-    /**
-     * This array object contains custom dependency definitions
-     * which will be considered by the resolving process.
-     *
-     * @var Definition[]|ArrayObject<Definition>
-     */
+    /** @var Definition[]|ArrayObject<Definition> */
     protected ArrayObject|array $definitions;
-
-    /**
-     * This property contains all resolved dependency information
-     * which will be cached and reused on each injection by the Injector class.
-     *
-     * @var string[][][]|ArrayObject<string>
-     */
+    /** @var string[][][]|ArrayObject<string> */
     protected array|ArrayObject $dependencies;
 
+    /**
+     * Container constructor.
+     *
+     * @param Resolver|null $resolver
+     * @param Injector|null $injector
+     */
     public function __construct(Resolver|null $resolver = null, Injector|null $injector = null)
     {
         $this->logger = new NullLogger();
@@ -109,11 +80,11 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      * for injection into other objects without the need to define them
      * in the config or by set/add methods. Pass ['*'] as wildcard to register all namespaces.
      *
-     * @param string[] $scopes
+     * @param string[] $namespacePrefixes
      */
-    public function registerNamespace(array $scopes): void
+    public function setAllowedNamespacePrefixes(array $namespacePrefixes): void
     {
-        $this->registeredNamespaces = $scopes;
+        $this->allowedNamespacePrefixes = $namespacePrefixes;
     }
 
     /**
@@ -219,18 +190,18 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
         if ( ! $this->has($id) ) {
             # There is no entry for this id
 
-            if ( ! $this->registeredNamespaces ) {
+            if ( ! $this->allowedNamespacePrefixes ) {
                 # There is no entry and no scope, so return an empty array
                 return false;
             }
 
-            if ( $this->registeredNamespaces[0] === '*' ) {
+            if ( $this->allowedNamespacePrefixes[0] === '*' ) {
                 $this->set($id);
                 return true;
             }
 
             # Check if the id is part of a registered namespace scope
-            foreach ( $this->registeredNamespaces as $namespace ) {
+            foreach ($this->allowedNamespacePrefixes as $namespace ) {
                 if (str_starts_with($id, $namespace)) {
                     # The id matches a scope, so we allow to register a default definition for this id
                     $this->set($id);
@@ -238,7 +209,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
             }
 
             if ( ! $this->has($id) ) {
-                # There is no entry for this id and it is not a part of a scope
+                # There is no entry for this id, and it is not a part of a scope
                 return false;
             }
         }

@@ -20,6 +20,7 @@ use ReflectionNamedType;
 use Vection\Component\DependencyInjection\Attributes\Inject;
 use Vection\Component\DependencyInjection\Attributes\PreventInjection;
 use Vection\Component\DependencyInjection\Exception\ContainerException;
+use Vection\Component\DependencyInjection\Exception\DependencyResolverException;
 use Vection\Component\DependencyInjection\Exception\IllegalConstructorParameterException;
 use Vection\Component\DependencyInjection\Exception\RuntimeException;
 use Vection\Component\DependencyInjection\Traits\AnnotationInjection;
@@ -38,7 +39,6 @@ use Vection\Contracts\Cache\CacheInterface;
  */
 class Resolver implements CacheAwareInterface
 {
-
     /**
      * The cache saves all resolved dependency tree information
      * to avoid resolving on each request. Each new resolved information
@@ -98,9 +98,9 @@ class Resolver implements CacheAwareInterface
     /**
      * Resolves all dependencies of the given class.
      *
-     * @param string $className FQCN
+     * @param string $className
      *
-     * @return mixed[] An array that contains dependency information.
+     * @return string[] An array that contains dependency information.
      */
     public function resolveDependencies(string $className): array
     {
@@ -109,7 +109,7 @@ class Resolver implements CacheAwareInterface
                 if ( isset($this->definitions[$className]) ) {
                     $this->dependencies[$className] = $this->definitions[$className]->getDependencies();
                     if ($this->definitions[$className]->getFactory() !== null) {
-                        # If this definition has a factory, we don't need resolve the construct params
+                        # If this definition has a factory, we don't need to resolve the construct params
                         $this->dependencies[$className]['construct'] = [];
                     }
                 }
@@ -127,14 +127,15 @@ class Resolver implements CacheAwareInterface
                 # This dependencies will be passed by setter defined by interfaces
                 $this->dependencies[$className]['setter'] = $setter;
 
-                # This will used the __annotationInjection method from AnnotationInjection trait
+                # This will use the __annotationInjection method from AnnotationInjection trait
                 $this->dependencies[$className]['annotation'] = $this->resolveAnnotatedDependencies($className);
 
-                # This is for the explicit inject by __inject method
-                $this->dependencies[$className]['explicit'] = $this->resolveExplicitDependencies($className);
+                # This is for the magic inject by __inject method
+                $this->dependencies[$className]['magic'] = $this->resolveMagicInjectionDependencies($className);
 
                 $this->cache?->setArray('dependencies', $this->dependencies->getArrayCopy());
-            } catch ( ReflectionException $e ) {
+            }
+            catch ( ReflectionException $e ) {
                 throw new ContainerException(
                     "Reflection Error while resolving dependencies of class '$className'",
                     0,
@@ -154,11 +155,11 @@ class Resolver implements CacheAwareInterface
      *
      * @param string $className
      *
-     * @return mixed[] Contains class names of the dependencies.
+     * @return string[] Contains class names of the dependencies.
      *
      * @throws ReflectionException
      */
-    public function resolveConstructorDependencies(string $className): array
+    protected function resolveConstructorDependencies(string $className): array
     {
         $dependencies = [];
         $constructor  = (new ReflectionClass($className))->getConstructor();
@@ -169,7 +170,7 @@ class Resolver implements CacheAwareInterface
 
         if ( $constructor && ($constructParams = $constructor->getParameters()) ) {
 
-            if (PHP_VERSION_ID >= 80000 && $constructor->getAttributes(PreventInjection::class)) {
+            if ($constructor->getAttributes(PreventInjection::class)) {
                 return $dependencies;
             }
 
@@ -177,8 +178,8 @@ class Resolver implements CacheAwareInterface
                 $type = $param->getType();
 
                 if ($type === null) {
-                    throw new IllegalConstructorParameterException(
-                        'Constructor parameter injection requires typed parameters, no given in '.$className
+                    throw new DependencyResolverException(
+                        'Constructor parameter injection requires typed, non built-in parameters in '.$className
                     );
                 }
 
@@ -190,25 +191,26 @@ class Resolver implements CacheAwareInterface
                     break;
                 }
 
-                $clazz = new ReflectionClass($type->getName());
+                $reflection = new ReflectionClass($type->getName());
 
-                if ($clazz->isInterface() && $param->allowsNull()) {
+                if ($reflection->isInterface() && $param->allowsNull()) {
                     if (!isset($this->dependencies[$className]['constructor_nullable_interface'])) {
                         $this->dependencies[$className]['constructor_nullable_interface'] = [];
                     }
-                    $this->dependencies[$className]['constructor_nullable_interface'][] = $clazz->getName();
+                    $this->dependencies[$className]['constructor_nullable_interface'][] = $reflection->getName();
                 }
 
-                if (PHP_VERSION_ID >= 80000 && $param->allowsNull() && $param->getAttributes(PreventInjection::class)) {
+                if ($param->allowsNull() && $param->getAttributes(PreventInjection::class)) {
                     if (!isset($this->dependencies[$className]['constructor_prevent_injection'])) {
                         $this->dependencies[$className]['constructor_prevent_injection'] = [];
                     }
-                    $this->dependencies[$className]['constructor_prevent_injection'][] = $clazz->getName();
+                    $this->dependencies[$className]['constructor_prevent_injection'][] = $reflection->getName();
                 }
 
-                $dependencies[] = $clazz->getName();
-                if ( $clazz->isInstantiable() ) {
-                    $this->resolveDependencies($clazz->getName());
+                $dependencies[] = $reflection->getName();
+
+                if ( $reflection->isInstantiable() ) {
+                    $this->resolveDependencies($reflection->getName());
                 }
             }
         }
@@ -230,13 +232,13 @@ class Resolver implements CacheAwareInterface
      *
      * @param string $className
      *
-     * @return mixed[] Contains setter methods as key and class as value.
+     * @return string[] Contains setter methods as key and class as value.
      *
      * @throws ReflectionException
      */
-    public function resolveInterfaceDependencies(string $className): array
+    protected function resolveInterfaceDependencies(string $className): array
     {
-        $dependencies = [];
+        $dependencyClassNames = [];
 
         # Add setter injections by interfaces
         if ( $interfaces = class_implements($className) ) {
@@ -245,7 +247,7 @@ class Resolver implements CacheAwareInterface
                     $deps = ($this->definitions[$interface]->getDependencies()['setter'] ?? []);
                     foreach ( $deps as $method => $dependency ) {
                         $this->resolveDependencies($dependency);
-                        $dependencies[$method] = $dependency;
+                        $dependencyClassNames[$method] = $dependency;
                     }
                 }
             }
@@ -256,13 +258,13 @@ class Resolver implements CacheAwareInterface
             foreach ( $parents as $parent ) {
                 if ( $parentInterfaceDependencies = $this->resolveInterfaceDependencies($parent) ) {
                     foreach ($parentInterfaceDependencies as $method => $parentInterfaceDependency) {
-                        $dependencies[$method] = $parentInterfaceDependency;
+                        $dependencyClassNames[$method] = $parentInterfaceDependency;
                     }
                 }
             }
         }
 
-        return $dependencies;
+        return $dependencyClassNames;
     }
 
     /**
@@ -273,43 +275,34 @@ class Resolver implements CacheAwareInterface
      *
      * @param string $className
      *
-     * @return mixed[]
+     * @return string[]
      *
      * @throws ReflectionException
      */
-    public function resolveAnnotatedDependencies(string $className): array
+    protected function resolveAnnotatedDependencies(string $className): array
     {
-        $reflection        = new ReflectionClass($className);
-        $dependencies      = [];
-        $useInjectionTrait = isset($reflection->getTraits()[AnnotationInjection::class]);
+        $dependencyClassNames = [];
+        $reflection           = new ReflectionClass($className);
+        $useInjectionTrait    = isset($reflection->getTraits()[AnnotationInjection::class]);
 
-        # Add annotation injection by parent classes
-        if ( $parents = class_parents($className) ) {
-            foreach ( $parents as $parent ) {
-                if ( isset((new ReflectionClass($parent))->getTraits()[AnnotationInjection::class]) ) {
-                    $useInjectionTrait = true;
-                }
-                if ( $parentAnnotationDependencies = $this->resolveAnnotatedDependencies($parent) ) {
-                    $dependencies = $parentAnnotationDependencies;
+        foreach ( class_parents($className) ?: [] as $parentClassName ) {
+            if ( isset((new ReflectionClass($parentClassName))->getTraits()[AnnotationInjection::class]) ) {
+                $useInjectionTrait = true;
+                foreach($this->resolveAnnotatedDependencies($parentClassName) as $name => $dependencyClassName) {
+                    $dependencyClassNames[$name] = $dependencyClassName;
                 }
             }
         }
 
-        if ( $useInjectionTrait || $dependencies ) {
-
+        if ( $useInjectionTrait ) {
             foreach ( $reflection->getProperties() as $property ) {
 
-                $doc = $property->getDocComment();
                 $propertyType = null;
 
-                if (!$doc && PHP_VERSION_ID < 80000) {
-                    continue;
-                }
-
-                if (PHP_VERSION_ID >= 80000 && $property->getAttributes(Inject::class)) {
+                if ($property->getAttributes(Inject::class)) {
 
                     if (!$property->hasType()) {
-                        throw new RuntimeException(
+                        throw new DependencyResolverException(
                             'The use of attribute based injection requires typed properties. '.
                             "Property {$property->getName()} in class $className has no type."
                         );
@@ -317,45 +310,39 @@ class Resolver implements CacheAwareInterface
 
                     $propertyType = $property->getType();
 
-                }
-                else if ($doc && PHP_VERSION_ID >= 70400 && $property->hasType() && str_contains($doc, '@Inject')) {
-
-                    $propertyType = $property->getType();
-
-                }
-                else if ($doc && preg_match_all('/@Inject\(["\']+([a-zA-Z\\\\_0-9]+)["\']+\)/', $doc, $match, PREG_SET_ORDER)) {
-                    foreach ($match as $m) {
-                        $dependencies[$property->getName()] = $m[1];
-                        $this->resolveDependencies($m[1]);
+                    if (!$propertyType instanceof ReflectionNamedType || $propertyType->isBuiltin()) {
+                        throw new DependencyResolverException(
+                            'The use of attribute based injection requires non built-in typed properties. '.
+                            "Property {$property->getName()} in class $className has an invalid or built-in type."
+                        );
                     }
-                }
 
-                if ($propertyType instanceof ReflectionNamedType ) {
                     $dependencyClassName = $propertyType->getName();
-                    $dependencies[$property->getName()] = $dependencyClassName;
+                    $dependencyClassNames[$property->getName()] = $dependencyClassName;
+
                     $this->resolveDependencies($dependencyClassName);
                 }
             }
         }
 
-        return $dependencies;
+        return $dependencyClassNames;
     }
 
     /**
-     * Resolves the explicit requested dependencies by the __inject method.
+     * Resolves the magic requested dependencies by the __inject method.
      *
      * Returns an array contains the class names of the dependencies in same
      * order as defined by the given class __inject method.
      *
      * @param string $className
      *
-     * @return mixed[]
+     * @return string[]
      *
      * @throws ReflectionException
      */
-    public function resolveExplicitDependencies(string $className): array
+    protected function resolveMagicInjectionDependencies(string $className): array
     {
-        $dependencies = [];
+        $dependencyClassNames = [];
         $reflection   = new ReflectionClass($className);
 
         if ( $reflection->hasMethod('__inject') ) {
@@ -365,15 +352,17 @@ class Resolver implements CacheAwareInterface
                 if ($param->hasType()) {
                     $type = $param->getType();
                     if ( $type instanceof ReflectionNamedType && ! $type->isBuiltin() ) {
-                        $dependencies[] = $type->getName();
+                        $dependencyClassNames[] = $type->getName();
                         continue;
                     }
                 }
-                # We can only inject if ALL parameters are injectable objects
-                return [];
+
+                throw new DependencyResolverException(
+                    "Then magic $className::__inject method expects arguments to be non build-in typed parameters."
+                );
             }
         }
 
-        return $dependencies;
+        return $dependencyClassNames;
     }
 }

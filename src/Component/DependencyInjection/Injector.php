@@ -52,7 +52,7 @@ class Injector
 
         $this->injectByInterface($object);
         $this->injectByAnnotations($object);
-        $this->injectByExplicit($object);
+        $this->injectByMagic($object);
 
         unset($this->infiniteLoopPreventedObjects[get_class($object)]);
 
@@ -113,15 +113,15 @@ class Injector
     /**
      * @param object $object
      */
-    protected function injectByExplicit(object $object): void
+    protected function injectByMagic(object $object): void
     {
         $id = get_class($object);
 
-        if ( ($this->dependencies[$id]['explicit'] ?? null) ) {
+        if ( ($this->dependencies[$id]['magic'] ?? null) ) {
 
             $dependencies = [];
 
-            foreach ( $this->dependencies[$id]['explicit'] as $dependency ) {
+            foreach ( $this->dependencies[$id]['magic'] as $dependency ) {
                 if (isset($this->infiniteLoopPreventedObjects[$dependency])) {
                     $dependencies[] = $this->infiniteLoopPreventedObjects[$dependency];
                 } else {
