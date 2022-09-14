@@ -46,14 +46,14 @@ class Json
     }
 
     /**
-     * @param VArray $array
-     * @param bool   $pretty
-     * @param int    $flags
-     * @param int    $depth
+     * @param VArray|array $array
+     * @param bool         $pretty
+     * @param int          $flags
+     * @param int          $depth
      *
      * @return string
      */
-    public static function toString(VArray $array, bool $pretty = true, int $flags = 0, int $depth = 512): string
+    public static function encode(VArray|array $array, bool $pretty = true, int $flags = 0, int $depth = 512): string
     {
         if ($pretty) {
             $flags += JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_LINE_TERMINATORS;
@@ -63,7 +63,7 @@ class Json
             return json_encode($array, $flags | JSON_THROW_ON_ERROR, $depth);
         }
         catch (JsonException $e) {
-            throw new RuntimeException('Failed to encode Array to JSON: ' . $e->getMessage());
+            throw new RuntimeException('Failed to encode Array to JSON: '.$e->getMessage());
         }
     }
 
@@ -84,7 +84,7 @@ class Json
         int    $depth  = 512
     ): void
     {
-        if (!file_put_contents($filePath, self::toString($array, $pretty, $flags, $depth))) {
+        if (!file_put_contents($filePath, self::encode($array, $pretty, $flags, $depth))) {
             throw new RuntimeException('Failed to save JSON data in file.');
         }
     }

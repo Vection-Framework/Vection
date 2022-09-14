@@ -236,28 +236,26 @@ class Crypto
      * @see https://www.php.net/manual/de/function.openssl-public-encrypt.php For padding constants.
      *
      * @param string $content
-     * @param string $keyOrPathToKeyFile
+     * @param string $publicKey The public key as string or the path to the public key file.
      * @param int    $padding
      *
      * @return string
      */
-    public static function encryptViaPublicKey(string $content, string $keyOrPathToKeyFile, int $padding = 1): string
+    public static function encryptViaPublicKey(string $content, string $publicKey, int $padding = 1): string
     {
         if (!extension_loaded('openssl')) {
             throw new RuntimeException('Encryption via public key requires the OpenSSL extension.');
         }
 
-        if (is_file($keyOrPathToKeyFile)) {
-            $keyOrPathToKeyFile = 'file://'.$keyOrPathToKeyFile;
+        if (is_file($publicKey)) {
+            $publicKey = file_get_contents($publicKey);
         }
 
-        $openSslAsymmetricKey = openssl_get_publickey($keyOrPathToKeyFile);
-
-        if (!$openSslAsymmetricKey) {
-            throw new RuntimeException('The public key is malformed.'.(($e = openssl_error_string()) ? " $e" : ''));
+        if (!$publicKey) {
+            throw new RuntimeException('The public key is empty or missing.');
         }
 
-        if (!openssl_public_encrypt($content, $encrypted, $openSslAsymmetricKey, $padding)) {
+        if (!@openssl_public_encrypt($content, $encrypted, $publicKey, $padding)) {
             throw new RuntimeException('An error occurred during encryption.'.(($e = openssl_error_string()) ? " $e" : ''));
         }
 
@@ -272,36 +270,30 @@ class Crypto
      * @see https://www.php.net/manual/de/function.openssl-public-encrypt.php For padding constants.
      *
      * @param string $encryptedContent
-     * @param string $keyOrPathToKeyFile
+     * @param string $privateKey       The private key as string or the path to the private key file.
      * @param int    $padding
      *
      * @return string
      */
     public static function decryptViaPrivateKey(
         string $encryptedContent,
-        string $keyOrPathToKeyFile,
+        string $privateKey,
         int    $padding = 1
     ): string
     {
         if (!extension_loaded('openssl')) {
-            throw new RuntimeException('Encryption via public key requires the OpenSSL extension.');
+            throw new RuntimeException('Decryption via private key requires the OpenSSL extension.');
         }
 
-        if (is_file($keyOrPathToKeyFile)) {
-            $keyOrPathToKeyFile = 'file://'.$keyOrPathToKeyFile;
+        if (is_file($privateKey)) {
+            $privateKey = file_get_contents($privateKey);
         }
 
-        $openSslAsymmetricKey = openssl_get_privatekey($keyOrPathToKeyFile);
-
-        if (!$openSslAsymmetricKey) {
-            throw new RuntimeException('The private key is malformed.'.(($e = openssl_error_string()) ? " $e" : ''));
+        if (!$privateKey) {
+            throw new RuntimeException('The private key is empty or missing.');
         }
 
-        if (!str_starts_with($keyOrPathToKeyFile, '-----') && is_file($keyOrPathToKeyFile)) {
-            $keyOrPathToKeyFile = file_get_contents($keyOrPathToKeyFile);
-        }
-
-        if (!openssl_private_decrypt($encryptedContent, $decrypted, $keyOrPathToKeyFile, $padding)) {
+        if (!@openssl_private_decrypt($encryptedContent, $decrypted, $privateKey, $padding)) {
             throw new RuntimeException('An error occurred during decryption.'.(($e = openssl_error_string()) ? " $e" : ''));
         }
 
