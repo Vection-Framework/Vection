@@ -81,7 +81,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
         $data = yaml_parse($yaml);
 
         if ($data === false) {
-            throw new RuntimeException('VArray::fromFile(yaml): Malformed yaml file.');
+            throw new RuntimeException('Malformed YAML');
         }
 
         return new VArray($data, $immutable);
@@ -99,7 +99,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
             return new VArray(json_decode($json, true, 512, JSON_THROW_ON_ERROR), $immutable);
         }
         catch (JsonException $e) {
-            throw new RuntimeException('VArray::fromFile(yaml): Malformed json file. '. $e->getMessage());
+            throw new RuntimeException('Malformed JSON: '.$e->getMessage());
         }
     }
 
@@ -122,7 +122,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
      *
      * @return VArray
      */
-    public function add($value): VArray
+    public function add(mixed $value): VArray
     {
         $this->assertMutable();
         $this->data[] = $value;

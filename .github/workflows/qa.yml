@@ -78,4 +78,3 @@ jobs:
 
       - name: Static Analysis using PHPStan
         run: composer run-script phpstan
-

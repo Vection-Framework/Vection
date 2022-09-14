@@ -5,5 +5,4 @@ infection.log
 docs/html/*
 phpunit.xml
 vendor/
-composer.lock
 composer.phar

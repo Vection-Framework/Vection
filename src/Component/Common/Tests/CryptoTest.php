@@ -3,6 +3,8 @@
 namespace Vection\Component\Common\Tests;
 
 use InvalidArgumentException;
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use ValueError;
@@ -16,6 +18,62 @@ use Vection\Component\Common\Crypto;
  */
 class CryptoTest extends TestCase
 {
+    # region Setup
+
+    private string $privateKey = <<<key
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEowIBAAKCAQEApJjBfKowHdK5E9CbgqXTNyWic6zs2y7KneSBOnhRIxwaCO5C
+    rXzk9+PHWrEIpRCx6diifYrgpL3x7FPJO/BZTqfIzJlVrPNiEWIsvu0qcYjyCVsG
+    T6CbkamQ0llBdrnJKT5l8bJ4P2XByG3Mguu0KznRnRWpyinRWwZZTJNBSFlS1j9P
+    zOYt7cbJj+ciyZI+lWATShyVdcVRwL03E3BUWnwu+1a4gOPoGf9OgEC0OVOYIf6i
+    rPcVL9AppbjWeKhOyT6hJ0CSzgtLz9WccMA45R4w+TiNtOgnBD0AsfggDCcEY8fa
+    CJZbZqBwcIyMp2JN+BK8azPZlYkw6lFoV7J0owIDAQABAoIBABuyaLyllrst/l7L
+    N5/gb45UEuYMLz8ivI2dKfHA1UZnMCpYjXfMEGt2NNGaAK5mBMoo3g7qE6slG1R9
+    NNuVMjH+Idfr5XLY8aOjNYxbNE0ukivo2UME76ivM+NxiYaE9Miv60+kjH9+jAFC
+    GKvfJc4wSIl6X7vZFZWPl+8+yDl4KVLweTG7RQyAzKXN8huS+OWSZowZgPqnB2Lr
+    dXHv2QY3qYZXzjT+1Ih+Y+cGAhStbHfLltcoCccqK32253pBmorAWDM6qglAZVKP
+    qL78Qnv1y5DcE/2sF9CFdtqJj/XHc+8gD/QHM/YauFkx+frHJRlSzH1TxEdYBNkA
+    FuUoQIECgYEA0ZrkVlUb00sEx1fZ+WBcvPRlgY/lHhfQf24LnbMMYnc/cNxU4ZQn
+    N5cc9MbS3510xS5oYsxYSzZcjqj1NE7msLUZJBsArNI5fbL/TUAhaoKyLlfMml9g
+    8Kx7nyq7PUkkClFd324Kd32ZIaLWDx1wv3Hl9t6OdPdQpM+X5DhQ7VECgYEAyQeA
+    NMA0yy5GfEMiPeWEJKs1h3STFrOpMM3AudfdPK4zjljq5Eb3taJLRFXAcgchALNU
+    ikh1Kx5orgZ1VFL1aWwDP93ZQ8TLD1Ic5RawyS3z3hO74OiD1cKCKVnqR7W/PwDF
+    jg3790lZbVrMPM08rc4juQLYDemco9n7uUye9bMCgYAL1jhw26uPmhvx+fcYSyXR
+    keetkme49FVU7O0BAdyALwXJJNgySQCR9hmvhQ7hi+3NONqyQaH21WISuF3oj1Ad
+    yIxb6p52JAUVISejwCxi7HCNh23JhftefA8bJPmf82JyprerZ3Z12wTrzltSTTJR
+    zWfUMitPVawbMpH8VGXVkQKBgElD55DSICuQwPWWzgr69A8dKtQkQ1s5vUbhJgVV
+    S/dKkdWmSG1MBAl5ja7pBctJF9kWgpAnWjSNz57lEava1EBIsmJ7ayyMs2jxB0Di
+    5SldCwz76jRM6YdlbWS+tWjPL1U55cYhCJyWafY16kuajSvW/iP2imF/q6v3zQs6
+    hpCLAoGBAMD70VHBxmrBs1eZthMw+gZtOUSM9iHnvOBBfmEb9s+ofbzXW9QqNo0q
+    aMQbSN/JYrm+dz1sNqQkJZHhg9qHR/dWnbMzHVvS2y0ryMxQ4DfrHiCPTQD9fcbe
+    +mFSCyP7R4TFU86d+tqcUyBgpgIqudt2wJqTDLVetYknBaJuRn1v
+    -----END RSA PRIVATE KEY-----
+    key;
+
+    private string $publicKey = <<<key
+    -----BEGIN PUBLIC KEY-----
+    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApJjBfKowHdK5E9CbgqXT
+    NyWic6zs2y7KneSBOnhRIxwaCO5CrXzk9+PHWrEIpRCx6diifYrgpL3x7FPJO/BZ
+    TqfIzJlVrPNiEWIsvu0qcYjyCVsGT6CbkamQ0llBdrnJKT5l8bJ4P2XByG3Mguu0
+    KznRnRWpyinRWwZZTJNBSFlS1j9PzOYt7cbJj+ciyZI+lWATShyVdcVRwL03E3BU
+    Wnwu+1a4gOPoGf9OgEC0OVOYIf6irPcVL9AppbjWeKhOyT6hJ0CSzgtLz9WccMA4
+    5R4w+TiNtOgnBD0AsfggDCcEY8faCJZbZqBwcIyMp2JN+BK8azPZlYkw6lFoV7J0
+    owIDAQAB
+    -----END PUBLIC KEY-----
+    key;
+
+    // This is the encrypted string "VerySecretContent" encoded with base 64, because encrypted strings are binary.
+    private string $encrypted = 'kmdjxZQhI6oCimpVloy/ilN0xcOt7L55y1IhAwKLSr/RkxWwJ3b7RQtczuHVtCwsKcenTaaLwRuSPuVwm3qX3GOb0gS7aOTwL3giPLmMn8psUiit341pBUaD9NN/dH0mhZRwt/LPxZ3tUhQhnj/XS2KPR68bzlnRxuFSiNxm/qzUf+Xv6n6PU8U7RkbvHzfdzWBl5EGf1w5ouwhvNjhab8/LB5f2fU5KwQ11iKA1WBj/tsi92eE/+Bqapf2gZ9MW0/T7NUxE2i/kX49Y5pl/y5+rvkO4sKuwF7gGTx8HaV7QagxCZfB/R67w5eOVxA1sAgqXqVgAVo7zkSMUSbMazQ==';
+
+    private vfsStreamDirectory $fs;
+
+    public function setUp(): void
+    {
+        $this->fs = vfsStream::setup('fs');
+    }
+
+    # endregion
+
     #region Tests
 
     /**
@@ -90,22 +148,11 @@ class CryptoTest extends TestCase
      *
      * @dataProvider provideValidHashFileValues
      */
-    public function testValidHashFileValues(string $expected, string $algo, string|null $data, bool $binary): void
+    public function testValidHashFileValues(string $expected, string|null $data, string $algo, bool $binary): void
     {
-        self::assertEquals($expected, Crypto::hashFile($algo, $data, $binary));
-    }
+        $file = vfsStream::newFile('data.txt')->withContent($data)->at($this->fs);
 
-    /**
-     * @group crypto
-     * @group cryptoHashFile
-     *
-     * @dataProvider provideInvalidHashFileValues
-     */
-    public function testInvalidHashFileValues(string $path, string $algo, bool $binary): void
-    {
-        $this->expectException(ValueError::class);
-
-        Crypto::hashFile($path, $algo, $binary);
+        self::assertEquals($expected, Crypto::hashFile($file->url(), $algo, $binary));
     }
 
     /**
@@ -215,6 +262,10 @@ class CryptoTest extends TestCase
         int    $padding
     ): void
     {
+        if ($publicKey === '@file') {
+            $publicKey = vfsStream::newFile('public.pem')->withContent($this->publicKey)->at($this->fs)->url();
+        }
+
         $encrypted = Crypto::encryptViaPublicKey($content, $publicKey, $padding);
 
         self::assertEquals($content, Crypto::decryptViaPrivateKey($encrypted, $privateKey, $padding));
@@ -252,6 +303,10 @@ class CryptoTest extends TestCase
         int    $padding
     ): void
     {
+        if ($privateKey === '@file') {
+            $privateKey = vfsStream::newFile('private.pem')->withContent($this->privateKey)->at($this->fs)->url();
+        }
+
         self::assertEquals($expected, Crypto::decryptViaPrivateKey($encrypted, $privateKey, $padding));
     }
 
@@ -421,33 +476,27 @@ class CryptoTest extends TestCase
      */
     public function provideValidHashFileValues(): array
     {
-        $file = __DIR__.'/Fixtures/lorem-ipsum.txt';
+        $data = <<<data
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+At vero eos et accusam et justo duo dolores et ea rebum.
+Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+At vero eos et accusam et justo duo dolores et ea rebum.
+Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+data;
 
         return [
-            'crc32'      => ['751a2f7e', $file, Crypto::HASH_CRC32, false],
-            'md5'        => ['85778b52e9272520341d48541dc00fbe', $file, Crypto::HASH_MD5, false],
-            'sha1'       => ['8b6551cb01d2c41d48d4701224a8ef3ead7bf115', $file, Crypto::HASH_SHA1, false],
+            'crc32'      => ['751a2f7e', $data, Crypto::HASH_CRC32, false],
+            'md5'        => ['85778b52e9272520341d48541dc00fbe', $data, Crypto::HASH_MD5, false],
+            'sha1'       => ['8b6551cb01d2c41d48d4701224a8ef3ead7bf115', $data, Crypto::HASH_SHA1, false],
             'whirlpool'  => [
                 '19bae053fdaca829ced08ddf063ff16973329fda062a0803bfaa881b9468f4ba8271046fc2eec6452895682aa62f95fa83e14f00d500cfad069334890c3251aa',
-                $file,
+                $data,
                 Crypto::HASH_WHIRLPOOL,
                 false
             ],
-            'xxh3'       => ['cbc181ecba15c91e', $file, Crypto::HASH_XXH3, false],
-        ];
-    }
-
-    /**
-     * @return mixed[]
-     */
-    public function provideInvalidHashFileValues(): array
-    {
-        $file = __DIR__.'/Fixtures/lorem-ipsum.txt';
-
-        return [
-            'invalid algorithmus' => [$file, 'invalidAlgorithmus', false],
-            'missing algorithmus' => [$file, '', false],
-            'missing path'        => ['', 'md5', false],
+            'xxh3'       => ['cbc181ecba15c91e', $data, Crypto::HASH_XXH3, false],
         ];
     }
 
@@ -527,11 +576,9 @@ class CryptoTest extends TestCase
      */
     public function provideValidEncryptViaPublicKeyValues(): array
     {
-        $privateKey = __DIR__.'/Fixtures/private.pem';
-        $publicKey  = __DIR__.'/Fixtures/public.pem';
-
         return [
-            'VerySecretContent' => ['VerySecretContent', $privateKey, $publicKey, 1],
+            'string' => ['VerySecretContent', $this->privateKey, $this->publicKey, 1],
+            'file'   => ['VerySecretContent', $this->privateKey, '@file', 1],
         ];
     }
 
@@ -541,8 +588,9 @@ class CryptoTest extends TestCase
     public function provideInvalidEncryptViaPublicKeyValues(): array
     {
         return [
-            'missing public key'   => ['VerySecretContent', '', 1],
-            'malformed public key' => ['VerySecretContent', __DIR__.'/Fixtures/lorem-ipsum.txt', 1],
+            'missing'   => ['VerySecretContent', vfsStream::url('fs/public.pem'), 1],
+            'empty'     => ['VerySecretContent', '', 1],
+            'malformed' => ['VerySecretContent', '-----BEGIN PUBLIC KEY----- -----END PUBLIC KEY-----', 1],
         ];
     }
 
@@ -551,13 +599,11 @@ class CryptoTest extends TestCase
      */
     public function provideValidDecryptViaPrivateKeyValues(): array
     {
+        $encrypted = base64_decode($this->encrypted);
+
         return [
-            'encrypted binary file' => [
-                'VerySecretContent',
-                file_get_contents(__DIR__.'/Fixtures/encrypted.binary'),
-                __DIR__.'/Fixtures/private.pem',
-                1
-            ],
+            'string' => ['VerySecretContent', $encrypted, $this->privateKey, 1],
+            'file'   => ['VerySecretContent', $encrypted, '@file', 1],
         ];
     }
 
@@ -566,17 +612,12 @@ class CryptoTest extends TestCase
      */
     public function provideInvalidDecryptViaPrivateKeyValues(): array
     {
+        $encrypted = base64_decode($this->encrypted);
+
         return [
-            'no encrypted file' => [
-                file_get_contents(__DIR__.'/Fixtures/lorem-ipsum.txt'),
-                __DIR__.'/Fixtures/private.pem',
-                1
-            ],
-            'missing private key' => [
-                file_get_contents(__DIR__.'/Fixtures/encrypted.binary'),
-                '',
-                1
-            ],
+            'missing'   => [$encrypted, vfsStream::url('fs/privte.pem'), 1],
+            'empty'     => [$encrypted, '', 1],
+            'malformed' => [$encrypted, '-----BEGIN PUBLIC KEY----- -----END PUBLIC KEY-----', 1],
         ];
     }
 
