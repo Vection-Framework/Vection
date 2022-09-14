@@ -46,10 +46,10 @@ class Json
     }
 
     /**
-     * @param VArray|array $array
-     * @param bool         $pretty
-     * @param int          $flags
-     * @param int          $depth
+     * @param VArray|array<mixed> $array
+     * @param bool                $pretty
+     * @param int                 $flags
+     * @param int                 $depth
      *
      * @return string
      */
