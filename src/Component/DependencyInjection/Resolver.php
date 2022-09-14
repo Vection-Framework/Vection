@@ -19,13 +19,11 @@ use ReflectionException;
 use ReflectionNamedType;
 use Vection\Component\DependencyInjection\Attributes\Inject;
 use Vection\Component\DependencyInjection\Attributes\PreventInjection;
-use Vection\Component\DependencyInjection\Exception\ContainerException;
 use Vection\Component\DependencyInjection\Exception\DependencyResolverException;
-use Vection\Component\DependencyInjection\Exception\IllegalConstructorParameterException;
-use Vection\Component\DependencyInjection\Exception\RuntimeException;
 use Vection\Component\DependencyInjection\Traits\AnnotationInjection;
-use Vection\Contracts\Cache\CacheAwareInterface;
 use Vection\Contracts\Cache\CacheInterface;
+use Vection\Contracts\DependencyInjection\InstructionInterface;
+use Vection\Contracts\DependencyInjection\ResolverInterface;
 
 /**
  * Class Resolver
@@ -37,7 +35,7 @@ use Vection\Contracts\Cache\CacheInterface;
  * @package Vection\Component\DependencyInjection
  * @author  David M. Lung <vection@davidlung.de>
  */
-class Resolver implements CacheAwareInterface
+class Resolver implements ResolverInterface
 {
     /**
      * The cache saves all resolved dependency tree information
@@ -52,26 +50,28 @@ class Resolver implements CacheAwareInterface
      * This array object contains custom dependency definitions
      * which will be considered by the resolving process.
      *
-     * @var Definition[]|ArrayObject<Definition>
+     * @var InstructionInterface[]|ArrayObject<InstructionInterface>
      */
-    protected array|ArrayObject $definitions;
+    protected array|ArrayObject $instructions;
 
     /**
      * This property contains all resolved dependency information
      * which will be cached and reused on each injection by the Injector class.
      *
-     * @var string[][][]|ArrayObject<string>
+     * @var array<string, mixed>|ArrayObject<string>
      */
     protected array|ArrayObject $dependencies;
 
     /**
-     * @param ArrayObject         $definitions
-     * @param ArrayObject         $dependencies
+     * Resolver constructor.
+     *
+     * @param ArrayObject|null $instructions
+     * @param ArrayObject|null $dependencies
      */
-    public function __construct(ArrayObject $definitions, ArrayObject $dependencies)
+    public function __construct(ArrayObject|null $instructions = null, ArrayObject|null $dependencies = null)
     {
-        $this->definitions  = $definitions;
-        $this->dependencies = $dependencies;
+        $this->instructions  = $instructions ?: new ArrayObject();
+        $this->dependencies = $dependencies ?: new ArrayObject();
     }
 
     /**
@@ -96,52 +96,79 @@ class Resolver implements CacheAwareInterface
     }
 
     /**
-     * Resolves all dependencies of the given class.
-     *
+     * @inheritDoc
+     */
+    public function addInstruction(InstructionInterface $instruction): void
+    {
+        $this->instructions[$instruction->getClassName()] = $instruction;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInstruction(string $className): InstructionInterface|null
+    {
+        return $this->instructions[$className];
+    }
+
+    /**
      * @param string $className
      *
-     * @return string[] An array that contains dependency information.
+     * @return array<string, mixed>
+     */
+    public function getClassDependencies(string $className): array
+    {
+        return $this->dependencies[$className] ?: [];
+    }
+
+    /**
+     * @inheritDoc
      */
     public function resolveDependencies(string $className): array
     {
-        if ( ! isset($this->dependencies[$className]) ) {
-            try {
-                if ( isset($this->definitions[$className]) ) {
-                    $this->dependencies[$className] = $this->definitions[$className]->getDependencies();
-                    if ($this->definitions[$className]->getFactory() !== null) {
-                        # If this definition has a factory, we don't need to resolve the construct params
-                        $this->dependencies[$className]['construct'] = [];
-                    }
-                }
+        if (isset($this->dependencies[$className])) {
+            return $this->dependencies[$className];
+        }
 
-                if ( ! isset($this->dependencies[$className]['construct']) ) {
-                    $this->dependencies[$className]['construct'] = $this->resolveConstructorDependencies($className);
-                }
+        $this->dependencies[$className] = [
+            'by' => null,
+            'constructor' => [],
+            'setter' => [],
+            'annotation' => [],
+            'magic' => [],
+            'factory' => null,
+        ];
 
-                $setter = $this->resolveInterfaceDependencies($className);
+        try {
+            $dependencies = &$this->dependencies[$className];
 
-                if ( isset($this->dependencies[$className]['setter']) ) {
-                    $setter = array_merge($this->dependencies[$className]['setter'], $setter);
-                }
-
-                # This dependencies will be passed by setter defined by interfaces
-                $this->dependencies[$className]['setter'] = $setter;
-
-                # This will use the __annotationInjection method from AnnotationInjection trait
-                $this->dependencies[$className]['annotation'] = $this->resolveAnnotatedDependencies($className);
-
-                # This is for the magic inject by __inject method
-                $this->dependencies[$className]['magic'] = $this->resolveMagicInjectionDependencies($className);
-
-                $this->cache?->setArray('dependencies', $this->dependencies->getArrayCopy());
+            if (isset($this->instructions[$className])) {
+                $instruction  = $this->instructions[$className];
+                $dependencies['by'] = $instruction->getBy();
+                $dependencies['factory'] = $this->instructions[$className]->getFactory();
             }
-            catch ( ReflectionException $e ) {
-                throw new ContainerException(
-                    "Reflection Error while resolving dependencies of class '$className'",
-                    0,
-                    $e
-                );
+
+            if (!$dependencies['factory']) {
+                $dependencies['constructor'] = $this->resolveConstructorDependencies($className);
             }
+
+            # This dependencies will be passed by setter defined by interfaces
+            $dependencies['setter'] = $this->resolveInterfaceDependencies($className);
+
+            # This will use the __annotationInjection method from AnnotationInjection trait
+            $dependencies['annotation'] = $this->resolveAnnotatedDependencies($className);
+
+            # This is for the magic inject by __inject method
+            $dependencies['magic'] = $this->resolveMagicInjectionDependencies($className);
+
+            $this->cache?->setArray('dependencies', $this->dependencies->getArrayCopy());
+        }
+        catch ( ReflectionException $e ) {
+            throw new DependencyResolverException(
+                "Reflection Error while resolving dependencies of class '$className'",
+                0,
+                $e
+            );
         }
 
         return $this->dependencies[$className];
@@ -164,17 +191,13 @@ class Resolver implements CacheAwareInterface
         $dependencies = [];
         $constructor  = (new ReflectionClass($className))->getConstructor();
 
-        if ( isset($this->definitions[$className]) && array_key_exists('construct', $this->definitions[$className]->getDependencies())) {
-            return $dependencies;
-        }
-
-        if ( $constructor && ($constructParams = $constructor->getParameters()) ) {
+        if ($constructor && ($constructParams = $constructor->getParameters())) {
 
             if ($constructor->getAttributes(PreventInjection::class)) {
                 return $dependencies;
             }
 
-            foreach ( $constructParams as $param ) {
+            foreach ($constructParams as $param) {
                 $type = $param->getType();
 
                 if ($type === null) {
@@ -233,33 +256,17 @@ class Resolver implements CacheAwareInterface
      * @param string $className
      *
      * @return string[] Contains setter methods as key and class as value.
-     *
-     * @throws ReflectionException
      */
     protected function resolveInterfaceDependencies(string $className): array
     {
         $dependencyClassNames = [];
 
         # Add setter injections by interfaces
-        if ( $interfaces = class_implements($className) ) {
-            foreach ( $interfaces as $interface ) {
-                if ( isset($this->definitions[$interface]) ) {
-                    $deps = ($this->definitions[$interface]->getDependencies()['setter'] ?? []);
-                    foreach ( $deps as $method => $dependency ) {
-                        $this->resolveDependencies($dependency);
-                        $dependencyClassNames[$method] = $dependency;
-                    }
-                }
-            }
-        }
-
-        # Add setter injection by parent classes
-        if ( $parents = class_parents($className) ) {
-            foreach ( $parents as $parent ) {
-                if ( $parentInterfaceDependencies = $this->resolveInterfaceDependencies($parent) ) {
-                    foreach ($parentInterfaceDependencies as $method => $parentInterfaceDependency) {
-                        $dependencyClassNames[$method] = $parentInterfaceDependency;
-                    }
+        foreach (class_implements($className) ?: [] as $interface) {
+            if (isset($this->instructions[$interface])) {
+                foreach ($this->instructions[$interface]->getSetterInjections() as $method => $dependency) {
+                    $this->resolveDependencies($dependency);
+                    $dependencyClassNames[$method] = $dependency;
                 }
             }
         }

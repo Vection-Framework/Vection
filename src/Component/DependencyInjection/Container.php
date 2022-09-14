@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Vection\Component\DependencyInjection;
 
-use ArrayObject;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -24,6 +23,9 @@ use Vection\Component\DependencyInjection\Exception\NotFoundException;
 use Vection\Component\DependencyInjection\Exception\RuntimeException;
 use Vection\Contracts\Cache\CacheAwareInterface;
 use Vection\Contracts\Cache\CacheInterface;
+use Vection\Contracts\DependencyInjection\InjectorInterface;
+use Vection\Contracts\DependencyInjection\InstructionInterface;
+use Vection\Contracts\DependencyInjection\ResolverInterface;
 
 /**
  * Class Container
@@ -40,31 +42,25 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
 {
     use LoggerAwareTrait;
 
+    protected ResolverInterface $resolver;
+    protected InjectorInterface $injector;
     /** @var string[] */
-    protected array $allowedNamespacePrefixes;
-    protected Resolver $resolver;
-    protected Injector $injector;
+    protected array $allowedNamespacePrefixes = [];
     /** @var object[] */
     protected array $sharedObjects;
-    /** @var Definition[]|ArrayObject<Definition> */
-    protected ArrayObject|array $definitions;
-    /** @var string[][][]|ArrayObject<string> */
-    protected array|ArrayObject $dependencies;
 
     /**
      * Container constructor.
      *
-     * @param Resolver|null $resolver
+     * @param ResolverInterface|null $resolver
      * @param Injector|null $injector
      */
-    public function __construct(Resolver|null $resolver = null, Injector|null $injector = null)
+    public function __construct(ResolverInterface|null $resolver = null, InjectorInterface|null $injector = null)
     {
         $this->logger = new NullLogger();
         $this->sharedObjects[self::class] = $this;
-        $this->definitions  = new ArrayObject();
-        $this->dependencies = new ArrayObject();
-        $this->resolver     = $resolver ?: new Resolver($this->definitions, $this->dependencies);
-        $this->injector     = $injector ?: new Injector($this, $this->dependencies);
+        $this->resolver     = $resolver ?: new Resolver();
+        $this->injector     = $injector ?: new Injector($this, $this->resolver);
     }
 
     /**
@@ -72,7 +68,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      */
     public function setCache(CacheInterface $cache): void
     {
-        $this->resolver->setCache($cache->getPool('DI'));
+        $this->resolver->setCache($cache->getPool('DIC'));
     }
 
     /**
@@ -88,8 +84,8 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
     }
 
     /**
-     * Loads a definition file, which contains the
-     * definitions for the classes that will be handled by the
+     * Loads an instructions file, which contains the
+     * instructions for the classes that will be handled by the
      * container. This method uses glob to support paths with wildcards
      * and dynamic path types that are supported by glob too. This gives the possibility
      * to add multiple files.
@@ -104,61 +100,53 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
 
         foreach ( $pathArray as $filePath ) {
             // @noinspection PhpIncludeInspection
-            $definitions = require $filePath;
+            $instructions = require $filePath;
 
-            if ( ! is_array($definitions) ) {
-                throw new RuntimeException("Cannot load definition from $filePath.");
+            if ( ! is_array($instructions) ) {
+                throw new RuntimeException("Cannot load instruction from $filePath.");
             }
 
-            foreach ( $definitions as $definition ) {
-                if ( ! $definition instanceof Definition ) {
+            foreach ( $instructions as $instruction ) {
+                if ( ! $instruction instanceof InstructionInterface ) {
                     throw new RuntimeException(
-                        'Invalid configuration file: Each entry must be of type Definition.'
+                        'Invalid configuration file: Each entry must be of type InstructionInterface.'
                     );
                 }
 
-                $this->definitions[$definition->getId()] = $definition;
+                $this->resolver->addInstruction($instruction);
             }
         }
     }
 
     /**
-     * Returns the definitions for injection and object instantiation.
-     *
-     * @return ArrayObject
-     */
-    public function getDefinitions(): ArrayObject
-    {
-        return $this->definitions;
-    }
-
-    /**
      * @param string  $className
-     * @param array<mixed> $constructParams
+     * @param array<int, mixed> $constructParams
      *
      * @return object
      */
     private function createObject(string $className, array $constructParams = []): object
     {
-        $factory = $this->definitions[$className]->getFactory();
+        $factory = $this->resolver->getInstruction($className)?->getFactory();
 
-        if ( $constructParams && ! $factory ) {
+        if ($constructParams && !$factory) {
             return new $className(...$constructParams);
         }
 
-        if ( $factory ) {
+        if ($factory) {
             return $factory($this, ...$constructParams);
         }
 
-        if ( $constructParams = $this->dependencies[$className]['construct'] ) {
+        $dependencies = $this->resolver->getClassDependencies($className);
+
+        if ( $constructParams = $dependencies['construct'] ) {
             $paramObjects = [];
-            $nullableInterfaces = $this->dependencies[$className]['constructor_nullable_interface'] ?? [];
-            $preventInjectionParams = $this->dependencies[$className]['constructor_prevent_injection'] ?? [];
+            $nullableInterfaces = $dependencies['constructor_nullable_interface'] ?? [];
+            $preventInjectionParams = $dependencies['constructor_prevent_injection'] ?? [];
 
             foreach ( $constructParams as $param ) {
                 $isNullableInterface = in_array($param, $nullableInterfaces, true);
                 $isPreventInjectionParam = in_array($param, $preventInjectionParams, true);
-                if (($isNullableInterface && !isset($this->definitions[$param])) || $isPreventInjectionParam) {
+                if ($isPreventInjectionParam || ($isNullableInterface && !$this->resolver->getInstruction($param))) {
                     $paramObjects[] = null;
                 }else{
                     // @phpstan-ignore-next-line
@@ -168,7 +156,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
             return new $className(...$paramObjects);
         }
 
-        if (isset($this->dependencies[$className]['constructor_has_primitives']) && count($constructParams) === 0) {
+        if (isset($dependencies['constructor_has_primitives']) && count($constructParams) === 0) {
             throw new IllegalConstructorParameterException(
                 'The use of primitive parameter types at constructor injection can only be used when '.
                 'creating object with explicit construct parameters e.g. '.
@@ -187,31 +175,23 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
     private function evaluate(string $id): bool
     {
         # Check if there is a defined entry for the given id
-        if ( ! $this->has($id) ) {
-            # There is no entry for this id
+        if (!$this->has($id)) {
 
-            if ( ! $this->allowedNamespacePrefixes ) {
-                # There is no entry and no scope, so return an empty array
-                return false;
-            }
-
-            if ( $this->allowedNamespacePrefixes[0] === '*' ) {
-                $this->set($id);
-                return true;
-            }
-
-            # Check if the id is part of a registered namespace scope
-            foreach ($this->allowedNamespacePrefixes as $namespace ) {
-                if (str_starts_with($id, $namespace)) {
-                    # The id matches a scope, so we allow to register a default definition for this id
-                    $this->set($id);
+            if ($this->allowedNamespacePrefixes) {
+                # Check if the id is part of a registered namespace scope
+                foreach ($this->allowedNamespacePrefixes as $namespace) {
+                    if (str_starts_with($id, $namespace)) {
+                        # The id matches a scope, so we allow to register a default instruction for this id
+                        $this->set($id);
+                        return true;
+                    }
                 }
-            }
 
-            if ( ! $this->has($id) ) {
-                # There is no entry for this id, and it is not a part of a scope
                 return false;
             }
+
+            $this->set($id);
+            return true;
         }
 
         return true;
@@ -240,23 +220,22 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      */
     public function has(string $id): bool
     {
-        $className = trim($id, "\\");
-        return isset($this->definitions[$className]);
+        return (bool) $this->resolver->getInstruction(trim($id, "\\"));
     }
 
     /**
      * Register a new entry by given identifier. The second parameter can be used
-     * for entry definition
+     * for entry instruction
      *
-     * @param string          $className
-     * @param Definition|null $definition
+     * @param string                    $className
+     * @param InstructionInterface|null $instruction
      *
      * @return Container
      */
-    public function set(string $className, Definition|null $definition = null): Container
+    public function set(string $className, InstructionInterface|null $instruction = null): Container
     {
         $className = trim($className, "\\");
-        $this->definitions[$className] = $definition ?: new Definition($className);
+        $this->resolver->addInstruction($instruction ?: new Instruction($className));
         $this->resolver->resolveDependencies($className);
 
         return $this;
@@ -289,7 +268,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
         $object = $this->createObject($className);
         $this->injector->injectDependencies($object);
 
-        if ( ($definition = $this->definitions[$className] ?? null) && $definition->isShared() ) {
+        if ( ($instruction = $this->resolver->getInstruction($className)) && $instruction->isShared()) {
             $this->sharedObjects[$className] = $object;
         }
 
@@ -306,9 +285,9 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
      *
      * @template T of object
      *
-     * @param class-string<T> $identifier      The identifier of registered entry.
-     * @param array<mixed>    $constructParams Parameter that should be passed to constructor.
-     * @param bool            $shared          Whether the new object should be shared or not.
+     * @param class-string<T>   $identifier      The identifier of registered entry.
+     * @param array<int, mixed> $constructParams Parameter that should be passed to constructor.
+     * @param bool              $shared          Whether the new object should be shared or not.
      *
      * @return T The new created object.
      */
@@ -320,11 +299,13 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
             throw new NotFoundException('DI Container: Unregistered identifier: '.$className);
         }
 
-        if ( ! isset($this->definitions[$className]) ) {
-            $this->definitions[$className] = new Definition($className);
+        $instruction = $this->resolver->getInstruction($className);
+
+        if (!$instruction) {
+            $this->resolver->addInstruction($instruction = new Instruction($className));
         }
 
-        $this->definitions[$className]->shared($shared);
+        $instruction->asShared($shared);
 
         $this->resolver->resolveDependencies($className);
         $object = $this->createObject($className, $constructParams);
@@ -362,13 +343,13 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
 }
 
 /**
- * Returns a new instance of DefinitionInterface.
+ * Returns a new instance of InstructionInterface.
  *
  * @param string $className
  *
- * @return Definition
+ * @return Instruction
  */
-function set(string $className): Definition
+function resolve(string $className): InstructionInterface
 {
-    return new Definition($className);
+    return new Instruction($className);
 }

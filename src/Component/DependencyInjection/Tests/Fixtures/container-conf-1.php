@@ -10,13 +10,13 @@
  * file that was distributed with this source code.
  */
 
-use function Vection\Component\DependencyInjection\set;
+use function Vection\Component\DependencyInjection\resolve;
 
 return [
 
     # Object factory (closure)
-    set(Vection\Component\DependencyInjection\Tests\Fixtures\TestObject::class)
-        ->factory(
+    resolve(Vection\Component\DependencyInjection\Tests\Fixtures\TestObject::class)
+        ->viaFactory(
             function(){
             return new Vection\Component\DependencyInjection\Tests\Fixtures\TestObject(
                 new Vection\Component\DependencyInjection\Tests\Fixtures\ConstructorInjectedObject()
@@ -26,7 +26,7 @@ return [
     ,
 
     # Interface injection (setter)
-    set(Vection\Component\DependencyInjection\Tests\Fixtures\InterfaceInjectedObjectInterface::class)
-        ->inject(Vection\Component\DependencyInjection\Tests\Fixtures\InterfaceInjectedObject::class)
+    resolve(Vection\Component\DependencyInjection\Tests\Fixtures\InterfaceInjectedObjectInterface::class)
+        ->viaSetter(Vection\Component\DependencyInjection\Tests\Fixtures\InterfaceInjectedObject::class)
     ,
 ];

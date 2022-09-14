@@ -13,7 +13,8 @@ declare(strict_types=1);
 
 namespace Vection\Component\DependencyInjection;
 
-use ArrayObject;
+use Vection\Contracts\DependencyInjection\InjectorInterface;
+use Vection\Contracts\DependencyInjection\ResolverInterface;
 
 /**
  * Class Injector
@@ -22,23 +23,23 @@ use ArrayObject;
  *
  * @author  David M. Lung <vection@davidlung.de>
  */
-class Injector
+class Injector implements InjectorInterface
 {
-    protected Container   $container;
-    protected ArrayObject $dependencies;
+    protected Container $container;
     /** @var object[] */
-    protected array       $infiniteLoopPreventedObjects = [];
+    protected array             $infiniteLoopPreventedObjects = [];
+    protected ResolverInterface $resolver;
 
     /**
-     * Resolver constructor.
+     * Injector constructor.
      *
-     * @param Container $container
-     * @param ArrayObject $dependencies
+     * @param Container         $container
+     * @param ResolverInterface $resolver
      */
-    public function __construct(Container $container, ArrayObject $dependencies)
+    public function __construct(Container $container, ResolverInterface $resolver)
     {
-        $this->container    = $container;
-        $this->dependencies = $dependencies;
+        $this->container = $container;
+        $this->resolver  = $resolver;
     }
 
     /**
@@ -50,9 +51,9 @@ class Injector
     {
         $this->infiniteLoopPreventedObjects[get_class($object)] = $object;
 
-        $this->injectByInterface($object);
-        $this->injectByAnnotations($object);
-        $this->injectByMagic($object);
+        $this->injectViaSetter($object);
+        $this->injectViaAnnotations($object);
+        $this->injectViaMagic($object);
 
         unset($this->infiniteLoopPreventedObjects[get_class($object)]);
 
@@ -65,63 +66,61 @@ class Injector
     /**
      * @param object $object
      */
-    protected function injectByInterface(object $object): void
+    protected function injectViaSetter(object $object): void
     {
         $id = get_class($object);
 
-        if ( ($this->dependencies[$id]['setter'] ?? null) ) {
+        $classDependencies = $this->resolver->getClassDependencies($id);
 
-            foreach ( $this->dependencies[$id]['setter'] as $setter => $dependency ) {
+        foreach ($classDependencies['setter'] ?? [] as $setter => $dependency) {
 
-                if (isset($this->infiniteLoopPreventedObjects[$dependency])) {
-                    $dependencyObject = $this->infiniteLoopPreventedObjects[$dependency];
-                } else {
-                    // @phpstan-ignore-next-line
-                    $dependencyObject = $this->container->get($dependency);
-                }
-
-                $object->$setter($dependencyObject);
+            if (isset($this->infiniteLoopPreventedObjects[$dependency])) {
+                $dependencyObject = $this->infiniteLoopPreventedObjects[$dependency];
+            } else {
+                // @phpstan-ignore-next-line
+                $dependencyObject = $this->container->get($dependency);
             }
 
+            $object->$setter($dependencyObject);
         }
     }
 
     /**
      * @param object $object
      */
-    protected function injectByAnnotations(object $object): void
+    protected function injectViaAnnotations(object $object): void
     {
         $id = get_class($object);
 
-        if ( ($this->dependencies[$id]['annotation'] ?? null) ) {
+        $dependencies = [];
+        $classDependencies = $this->resolver->getClassDependencies($id);
 
-            $dependencies = [];
-
-            foreach ( $this->dependencies[$id]['annotation'] as $property => $dependency ) {
-                if (isset($this->infiniteLoopPreventedObjects[$dependency])) {
-                    $dependencies[$property] = $this->infiniteLoopPreventedObjects[$dependency];
-                } else {
-                    // @phpstan-ignore-next-line
-                    $dependencies[$property] = $this->container->get($dependency);
-                }
+        foreach ($classDependencies['annotation'] ?? [] as $property => $dependency ) {
+            if (isset($this->infiniteLoopPreventedObjects[$dependency])) {
+                $dependencies[$property] = $this->infiniteLoopPreventedObjects[$dependency];
+            } else {
+                // @phpstan-ignore-next-line
+                $dependencies[$property] = $this->container->get($dependency);
             }
-
-            $object->__annotationInjection($dependencies);
         }
+
+        $object->__annotationInjection($dependencies);
     }
 
     /**
      * @param object $object
      */
-    protected function injectByMagic(object $object): void
+    protected function injectViaMagic(object $object): void
     {
         $id = get_class($object);
 
-        if ( ($this->dependencies[$id]['magic'] ?? null) ) {
+        $classDependencies = $this->resolver->getClassDependencies($id);
+
+        if ($classDependencies['magic'] ?? null) {
 
             $dependencies = [];
 
-            foreach ( $this->dependencies[$id]['magic'] as $dependency ) {
+            foreach ( $classDependencies['magic'] as $dependency ) {
                 if (isset($this->infiniteLoopPreventedObjects[$dependency])) {
                     $dependencies[] = $this->infiniteLoopPreventedObjects[$dependency];
                 } else {

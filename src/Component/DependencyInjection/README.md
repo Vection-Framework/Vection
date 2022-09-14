@@ -243,8 +243,9 @@ $myApplication = $container->create(MyApplication::class, [$optional, $params], 
 ### Configuration
 The fasted way of setup does not fit the best way of usage, so lets take a look at some optional setup steps.
 The use of interface injection or some special object creations requires a configuration. This can be done by a configuration file (e.g. container.php). The benefit of a php config is the autocompletion and use of functions. The configuration file just returns an array with some definitions.
+
 ```php
-<?php use function Vection\Component\DependencyInjection\set;
+<?php use function Vection\Component\DependencyInjection\resolve;
 return [
     // configuration here
 ];
@@ -268,11 +269,11 @@ $definition->factory(....);
 The right way would look like this:
 
 ```php
-<?php use function Vection\Component\DependencyInjection\set;
+<?php use function Vection\Component\DependencyInjection\resolve;
 return [
 
-    set(My\Awesome\MegaClass::class)
-        ->factory(static function(Container $container){
+    resolve(My\Awesome\MegaClass::class)
+        ->viaFactory(static function(Container $container){
             return new My\Awesome\MegaClass('example'); 
         })
     ,
