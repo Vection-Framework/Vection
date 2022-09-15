@@ -10,15 +10,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Vection\Component\DependencyInjection\Tests\Fixtures;
+namespace Vection\Component\DependencyInjection\Tests\Fixtures\ConstructorInjection;
 
 /**
- * Class Animal
+ * Class CarTransmission
  *
- * @package Vection\Component\DependencyInjection\Tests\Fixtures
+ * @package Vection\Component\DependencyInjection\Tests\Fixtures\ConstructorInjection
  * @author  David Lung <david.lung@appsdock.de>
  */
-class Animal
+class Transmission
 {
 
     public function __construct()

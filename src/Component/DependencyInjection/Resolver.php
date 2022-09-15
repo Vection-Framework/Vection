@@ -50,23 +50,23 @@ class Resolver implements ResolverInterface
      * This array object contains custom dependency definitions
      * which will be considered by the resolving process.
      *
-     * @var InstructionInterface[]|ArrayObject<InstructionInterface>
+     * @var ArrayObject<string, InstructionInterface>
      */
-    protected array|ArrayObject $instructions;
+    protected ArrayObject $instructions;
 
     /**
      * This property contains all resolved dependency information
      * which will be cached and reused on each injection by the Injector class.
      *
-     * @var array<string, mixed>|ArrayObject<string>
+     * @var ArrayObject<string, mixed>
      */
-    protected array|ArrayObject $dependencies;
+    protected ArrayObject $dependencies;
 
     /**
      * Resolver constructor.
      *
-     * @param ArrayObject|null $instructions
-     * @param ArrayObject|null $dependencies
+     * @param ArrayObject<string, InstructionInterface>|null $instructions
+     * @param ArrayObject<string, mixed>|null $dependencies
      */
     public function __construct(ArrayObject|null $instructions = null, ArrayObject|null $dependencies = null)
     {
