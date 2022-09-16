@@ -53,7 +53,7 @@ class ResolverTest extends TestCase
         $this->assertEquals($instructionMock, $resolver->getInstruction('test\\TestClass'));
     }
 
-    public function testGetClassDependencies(): void
+    public function testGetClassDependenciesSucceeded(): void
     {
         /** @var ArrayObject<string, mixed> $dependencies */
         $dependencies = new ArrayObject([

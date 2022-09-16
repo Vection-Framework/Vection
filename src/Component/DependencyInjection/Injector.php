@@ -118,7 +118,7 @@ class Injector implements InjectorInterface
 
         $classDependencies = $this->resolver->getClassDependencies($id);
 
-        if ($classDependencies['magic'] ?? null) {
+        if ($classDependencies['magic'] ?? false) {
 
             $dependencies = [];
 

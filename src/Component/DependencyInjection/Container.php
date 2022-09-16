@@ -136,32 +136,32 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
             return $factory($this, ...$constructParams);
         }
 
-        $dependencies = $this->resolver->getClassDependencies($className);
+        if ($dependencies = $this->resolver->getClassDependencies($className)) {
+            if ($constructParams = $dependencies['constructor']) {
+                $paramObjects = [];
+                $nullableInterfaces = $dependencies['constructor_nullable_interface'] ?? [];
+                $preventInjectionParams = $dependencies['constructor_prevent_injection'] ?? [];
 
-        if ( $constructParams = $dependencies['constructor'] ) {
-            $paramObjects = [];
-            $nullableInterfaces = $dependencies['constructor_nullable_interface'] ?? [];
-            $preventInjectionParams = $dependencies['constructor_prevent_injection'] ?? [];
-
-            foreach ( $constructParams as $param ) {
-                $isNullableInterface = in_array($param, $nullableInterfaces, true);
-                $isPreventInjectionParam = in_array($param, $preventInjectionParams, true);
-                if ($isPreventInjectionParam || ($isNullableInterface && !$this->resolver->getInstruction($param))) {
-                    $paramObjects[] = null;
-                }else{
-                    // @phpstan-ignore-next-line
-                    $paramObjects[] = $this->get($param);
+                foreach ( $constructParams as $param ) {
+                    $isNullableInterface = in_array($param, $nullableInterfaces, true);
+                    $isPreventInjectionParam = in_array($param, $preventInjectionParams, true);
+                    if ($isPreventInjectionParam || ($isNullableInterface && !$this->resolver->getInstruction($param))) {
+                        $paramObjects[] = null;
+                    }else{
+                        // @phpstan-ignore-next-line
+                        $paramObjects[] = $this->get($param);
+                    }
                 }
+                return new $className(...$paramObjects);
             }
-            return new $className(...$paramObjects);
-        }
 
-        if (isset($dependencies['constructor_has_primitives']) && count($constructParams) === 0) {
-            throw new IllegalConstructorParameterException(
-                'The use of primitive parameter types at constructor injection can only be used when '.
-                'creating object with explicit construct parameters e.g. '.
-                'Container::create(class, [param1, param2,..])), occurred in class '.$className
-            );
+            if (isset($dependencies['constructor_has_primitives']) && count($constructParams) === 0) {
+                throw new IllegalConstructorParameterException(
+                    'The use of primitive parameter types at constructor injection can only be used when '.
+                    'creating object with explicit construct parameters e.g. '.
+                    'Container::create(class, [param1, param2,..])), occurred in class '.$className
+                );
+            }
         }
 
         return new $className();

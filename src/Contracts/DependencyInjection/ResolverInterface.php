@@ -39,9 +39,9 @@ interface ResolverInterface extends CacheAwareInterface
     /**
      * @param string $className
      *
-     * @return array<string, mixed>
+     * @return array<string, mixed>|null
      */
-    public function getClassDependencies(string $className): array;
+    public function getClassDependencies(string $className): array|null;
 
     /**
      * Resolves all dependencies of the given class.

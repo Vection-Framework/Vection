@@ -114,11 +114,11 @@ class Resolver implements ResolverInterface
     /**
      * @param string $className
      *
-     * @return array<string, mixed>
+     * @return array<string, mixed>|null
      */
-    public function getClassDependencies(string $className): array
+    public function getClassDependencies(string $className): array|null
     {
-        return $this->dependencies[$className] ?: [];
+        return $this->dependencies[$className] ?? null;
     }
 
     /**
