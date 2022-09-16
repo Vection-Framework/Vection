@@ -108,7 +108,7 @@ class Resolver implements ResolverInterface
      */
     public function getInstruction(string $className): InstructionInterface|null
     {
-        return $this->instructions[$className];
+        return $this->instructions[$className] ?? null;
     }
 
     /**

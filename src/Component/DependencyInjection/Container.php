@@ -138,7 +138,7 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
 
         $dependencies = $this->resolver->getClassDependencies($className);
 
-        if ( $constructParams = $dependencies['construct'] ) {
+        if ( $constructParams = $dependencies['constructor'] ) {
             $paramObjects = [];
             $nullableInterfaces = $dependencies['constructor_nullable_interface'] ?? [];
             $preventInjectionParams = $dependencies['constructor_prevent_injection'] ?? [];

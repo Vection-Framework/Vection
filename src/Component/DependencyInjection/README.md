@@ -19,17 +19,12 @@ class MyApiController implements LoggerAwareInterface // Auto injection Logger v
 {
     use AnnotationInjection; 
     
-    #[Inject]
-    private IdentityQueryService $identityQueryService;
-    
-    /** @Inject */
-    private PermissionController $permissionController;
-    
-    /** @Inject(AnotherService) */
-    private $anotherService;
+    #[Inject] private IdentityQueryService $identityQueryService;
     
     public function __construct(CommandBusInterface $commandBus) 
-    { // Auto constructor parameter injection }
+    { 
+        // Auto constructor parameter injection
+    }
 }
 ```
 
@@ -38,8 +33,8 @@ class MyApiController implements LoggerAwareInterface // Auto injection Logger v
 - **Constructor injection**<br>
 Constructor params will automatically resolved and injected by container.
 
-- **Annotation/Attribute (since PHP 8.0) injection**<br>
-Class property injection by using `@Inject` or `#[Inject]`annotation.
+- **Attribute based injection**<br>
+Class property injection by using `#[Inject]` attribute.
 
 - **Interface injection**<br>
 Mapping of interfaces and implementations that can be inject via construct, methods and property.
@@ -47,7 +42,7 @@ Mapping of interfaces and implementations that can be inject via construct, meth
 - **Interface aware injection**<br>
 Mapping of interfaces and implementations that will inject by setters defined in the interfaces.
 
-- **Explicit injection**<br>
+- **Magic injection**<br>
 Injects the dependency via property definition by using `__inject` method.
 
 - **Injection by class inheritance**<br>
@@ -57,7 +52,7 @@ Subclasses get automatically injection by parents dependencies defined in parent
 Vection Components supports only installation via [composer](https://getcomposer.org). So first ensure your composer is installed, configured and ready to use.
 
 ```bash script
-$ composer require vection-framework/di-container
+$ composer require vection-framework/dependency-injection
 ```
 
 ### How to use
@@ -80,17 +75,7 @@ class Awesome
 {
     use AnnotationInjection;
 
-    #[Inject]
-    protected FooBar $fooBar;  // supported since php >= 8.0
-    
-    /** @Inject */
-    protected FooBar $fooBar;  // supported since php >= 7.4 
-    
-    /**
-     * @Inject("My\Awesome\FooBar")  // important: use full qualified class name
-     * @var FooBar
-     */   
-    protected $fooBar;
+    #[Inject] protected FooBar $fooBar;
 }
 ```
 > **Important notice**<br>
@@ -103,8 +88,7 @@ class Awesome
 {
     use AnnotationInjection;
     
-    #[Inject]
-    protected FooBar $fooBar;
+    #[Inject] protected FooBar $fooBar;
 
     public function __construct()   
     {
@@ -112,7 +96,7 @@ class Awesome
     }
     
     // Alternative construction method, called immediately after the object is created with its dependencies
-    public function __init()
+    public function __init(): void
     {
         // Here you can access
         $this->fooBar;
@@ -137,10 +121,8 @@ class Awesome
 ```
 This kind of injection requires the following entry in the configuration file. (Detailed documentation of the configuration file you can read in the Setup -> Configuration section)
 ```php
-set(FooBarInterface::class)
-   ->factory(static function(Container $container){
-       return $container->get(FooBar::class);
-   })
+resolve(FooBarInterface::class)
+   ->viaFactory(fn(Container $container) => $container->get(FooBar::class))
 ,
 ```
 
@@ -152,9 +134,6 @@ This injection type provides the injection of dependencies by its aware interfac
 
 class Awesome implements LoggerAwareInterface
 {
-    /**
-     * @inheritDoc
-     */
     public function setLogger(LoggerInterface $logger)
     {...}
 }
@@ -164,19 +143,17 @@ This kind of injection requires the following entries in the configuration file.
 
 ```php
 # First map the interface to the implementation
-set(LoggerInterface::class)
-    ->factory(static function(Container $container){
-        return new Logger();
-    })
+resolve(LoggerInterface::class)
+    ->viaFactory(fn(Container $container) => new Logger())
 ,
 
 # Now we can map the aware interface with the LoggerInterface by using the inject() method
-set(LoggerAwareInterface::class)
-    ->inject(LoggerInterface::class, 'Logger')
+resolve(LoggerAwareInterface::class)
+    ->viaSetter('setLogger', LoggerInterface::class)
 ,
 ```
 
-The second parameter (Logger) defined the name of the setter method after "set" (setXXXXX, XXXXX = Logger)
+The second parameter (Logger) defined the name of the setter method.
 
 #### Explicit injection
 This kind of injection provides an alternative way of injection if the constructor of all other injection types does not fit any use case.
@@ -203,8 +180,7 @@ class AwesomeParent
 {
     use AnnotationInjection;
                 
-    #[Inject]
-    protected FooService $service;
+    #[Inject] protected FooService $service;
     
     public function __construct(FooBarInterface $fooBar)
     {...}
@@ -262,8 +238,8 @@ The configuration use the `set` function defined by the DI. This method takes th
 
 ```php
 // Not recommended writing type
-$definition = set(My\Awesome\MegaClass::class);
-$definition->factory(....);
+$instruction = resolve(My\Awesome\MegaClass::class);
+$instruction->viaFactory(....);
 ```
 
 The right way would look like this:
@@ -273,9 +249,7 @@ The right way would look like this:
 return [
 
     resolve(My\Awesome\MegaClass::class)
-        ->viaFactory(static function(Container $container){
-            return new My\Awesome\MegaClass('example'); 
-        })
+        ->viaFactory(fn(Container $container) => new My\Awesome\MegaClass('example'))
     ,
 
 ];
@@ -286,7 +260,7 @@ return [
 ### Third party library injection
 The DI container creates an internal tree of dependencies. This can end up in the resolving of third party library classes with unresolvable parameters (e.g. in case of primitive construct parameters of unknown library class) and exits with an error. To avoid this, it is recommended to restrict the di container to the own applications namespace.
 ```php
-$container->registerNamespace(['MyApplication', 'optionalOtherNamespaces']);
+$container->setAllowedNamespacePrefixes(['MyApplication', 'optionalOtherNamespaces']);
 ```
 But if you want to use a third party library by injection, YOU CAN. In this case you should manually create the third party library object and just add this object to the container, now you this class can be used for injection.
 ```php
