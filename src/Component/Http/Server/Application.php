@@ -27,13 +27,13 @@ use Vection\Contracts\Http\Server\ResponderInterface;
  */
 class Application
 {
-    protected ServerRequest $request;
+    protected ServerRequest|ServerRequestInterface $request;
     protected ResponderInterface $responder;
     protected EventDispatcherInterface|null $eventDispatcher;
     protected LoggerInterface $logger;
     protected ContainerInterface|null $container;
 
-    /** @var MiddlewareInterface[] */
+    /** @var array<int, string|MiddlewareInterface> */
     protected array $middlewares;
 
     /**
@@ -148,7 +148,7 @@ class Application
     }
 
     /**
-     * @param array $middlewares
+     * @param array<int, string|MiddlewareInterface> $middlewares
      *
      * @return $this
      */
@@ -167,7 +167,7 @@ class Application
      */
     public function execute(bool $terminate = true, bool $clearUnexpectedBuffer = true): void
     {
-        $this?->eventDispatcher->dispatch(new BeforeApplicationExecuteEvent($this));
+        $this->eventDispatcher?->dispatch(new BeforeApplicationExecuteEvent($this));
 
         $requestHandler = new RequestHandler();
 
@@ -203,7 +203,10 @@ class Application
 
         $kernel = new Kernel($requestHandler, $this->request, $this->responder);
         $kernel->setLogger($this->logger);
-        $kernel->setEventDispatcher($this->eventDispatcher);
+
+        if ($this->eventDispatcher) {
+            $kernel->setEventDispatcher($this->eventDispatcher);
+        }
 
         $kernel->execute($terminate, $clearUnexpectedBuffer);
     }

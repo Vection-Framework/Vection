@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Vection\Component\Http\Server;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
@@ -22,7 +23,6 @@ use Vection\Component\Http\Server\Event\BeforeHandleRequestEvent;
 use Vection\Component\Http\Server\Event\BeforeSendRequestEvent;
 use Vection\Component\Http\Server\Event\BeforeTerminateRequestEvent;
 use Vection\Component\Http\Server\Message\Factory\ServerRequestFactory;
-use Vection\Contracts\Event\EventDispatcherInterface;
 use Vection\Contracts\Http\Server\KernelInterface;
 use Vection\Contracts\Http\Server\ResponderInterface;
 
@@ -38,7 +38,7 @@ class Kernel implements KernelInterface
     protected RequestHandlerInterface $requestHandler;
     protected ResponderInterface $responder;
     protected LoggerInterface $logger;
-    protected ?EventDispatcherInterface     $eventDispatcher;
+    protected EventDispatcherInterface|null     $eventDispatcher;
 
     /**
      * Kernel constructor.
@@ -118,11 +118,11 @@ class Kernel implements KernelInterface
             sprintf('Received request %s %s', $this->request->getMethod(), $this->request->getUri())
         );
 
-        $this?->eventDispatcher->dispatch(new BeforeHandleRequestEvent());
+        $this->eventDispatcher?->dispatch(new BeforeHandleRequestEvent());
 
         $response = $this->requestHandler->handle($this->request);
 
-        $this?->eventDispatcher->dispatch(new BeforeSendRequestEvent());
+        $this->eventDispatcher?->dispatch(new BeforeSendRequestEvent());
 
         if ($clearUnexpectedBuffer && ob_get_level() > 0) {
             $buffer = ob_get_clean();
@@ -146,10 +146,10 @@ class Kernel implements KernelInterface
             )
         );
 
-        $this?->eventDispatcher->dispatch(new AfterSendRequestEvent());
+        $this->eventDispatcher?->dispatch(new AfterSendRequestEvent());
 
         if ( $terminate ) {
-            $this?->eventDispatcher->dispatch(new BeforeTerminateRequestEvent());
+            $this->eventDispatcher?->dispatch(new BeforeTerminateRequestEvent());
             die(0);
         }
     }
