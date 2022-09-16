@@ -72,7 +72,7 @@ abstract class Message implements MessageInterface
      *
      * @return static
      */
-    public function withProtocolVersion(string $version): MessageInterface
+    public function withProtocolVersion($version): MessageInterface
     {
         $message = clone $this;
         $message->protocolVersion = $version;
@@ -118,7 +118,7 @@ abstract class Message implements MessageInterface
      *     name using a case-insensitive string comparison. Returns false if
      *     no matching header name is found in the message.
      */
-    public function hasHeader(string $name): bool
+    public function hasHeader($name): bool
     {
         return $this->headers->has($name);
     }
@@ -138,7 +138,7 @@ abstract class Message implements MessageInterface
      *    header. If the header does not appear in the message, this method MUST
      *    return an empty array.
      */
-    public function getHeader(string $name): array
+    public function getHeader($name): array
     {
         return $this->headers->get($name);
     }
@@ -146,7 +146,7 @@ abstract class Message implements MessageInterface
     /**
      * Retrieves a comma-separated string of the values for a single header.
      *
-     * This method returns all of the header values of the given
+     * This method returns all header values of the given
      * case-insensitive header name as a string concatenated together using
      * a comma.
      *
@@ -163,7 +163,7 @@ abstract class Message implements MessageInterface
      *    concatenated together using a comma. If the header does not appear in
      *    the message, this method MUST return an empty string.
      */
-    public function getHeaderLine(string $name): string
+    public function getHeaderLine($name): string
     {
         return $this->headers->getLine($name);
     }
@@ -184,7 +184,7 @@ abstract class Message implements MessageInterface
      * @return static
      * @throws InvalidArgumentException for invalid header names or values.
      */
-    public function withHeader(string $name, array|string $value): MessageInterface
+    public function withHeader($name, $value): MessageInterface
     {
         $message = clone $this;
         $message->headers->set($name, $value);
@@ -208,7 +208,7 @@ abstract class Message implements MessageInterface
      * @return static
      * @throws InvalidArgumentException for invalid header names or values.
      */
-    public function withAddedHeader(string $name, array|string $value): MessageInterface
+    public function withAddedHeader($name, $value): MessageInterface
     {
         $message = clone $this;
         $message->headers->add($name, $value);
@@ -228,7 +228,7 @@ abstract class Message implements MessageInterface
      *
      * @return static
      */
-    public function withoutHeader(string $name): MessageInterface
+    public function withoutHeader($name): MessageInterface
     {
         $message = clone $this;
         $message->headers->remove($name);

@@ -92,9 +92,9 @@ class StreamFactory implements StreamFactoryInterface
      *
      * @param resource $resource PHP resource to use as basis of stream.
      *
-     * @return StreamInterface|Stream
+     * @return StreamInterface
      */
-    public function createStreamFromResource($resource)
+    public function createStreamFromResource($resource): StreamInterface
     {
         return new Stream($resource);
     }

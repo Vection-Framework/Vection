@@ -105,7 +105,7 @@ class Request extends Message implements RequestInterface
      *
      * @return Request
      */
-    public function withRequestTarget(mixed $requestTarget): Request
+    public function withRequestTarget($requestTarget): Request
     {
         $request         = clone $this;
         $request->target = $requestTarget;
@@ -138,7 +138,7 @@ class Request extends Message implements RequestInterface
      * @return static
      * @throws InvalidArgumentException for invalid HTTP methods.
      */
-    public function withMethod(string $method): RequestInterface
+    public function withMethod($method): RequestInterface
     {
         $request         = clone $this;
         $request->method = $method;
@@ -191,7 +191,7 @@ class Request extends Message implements RequestInterface
      *
      * @return static
      */
-    public function withUri(UriInterface $uri, bool $preserveHost = false): RequestInterface
+    public function withUri(UriInterface $uri, $preserveHost = false): RequestInterface
     {
         $request      = clone $this;
         $request->uri = $uri;
@@ -206,7 +206,7 @@ class Request extends Message implements RequestInterface
                 $host .= ':'.$port;
             }
 
-            foreach ( $request->headers as $key => $header ) {
+            foreach ( $request->headers->toArray() as $key => $header ) {
                 if ( strtolower($key) === 'host' ) {
                     unset($request->headers[$key]);
                     $request->headers = new Headers(([$key => [$host]] + $request->headers->toArray()));

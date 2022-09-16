@@ -177,7 +177,7 @@ class Stream implements StreamInterface
      *
      * @throws RuntimeException on failure.
      */
-    public function seek(int $offset, int $whence = SEEK_SET): void
+    public function seek($offset, $whence = SEEK_SET): void
     {
         if ( ! $this->seekable ) {
             throw new RuntimeException('The current stream is not seekable.');
@@ -229,7 +229,7 @@ class Stream implements StreamInterface
      * @return int Returns the number of bytes written to the stream.
      * @throws RuntimeException on failure.
      */
-    public function write(string $string): int
+    public function write($string): int
     {
         if ( ! $this->writable ) {
             throw new RuntimeException('Unable to write: The current stream is not writeable.');
@@ -267,7 +267,7 @@ class Stream implements StreamInterface
      *     if no bytes are available.
      * @throws RuntimeException if an error occurs.
      */
-    public function read(int $length): string
+    public function read($length): string
     {
         if ( ! $this->readable ) {
             throw new RuntimeException('Unable to read: The current stream is not readable.');
@@ -315,7 +315,7 @@ class Stream implements StreamInterface
      *     provided. Returns a specific key value if a key is provided and the
      *     value is found, or null if the key is not found.
      */
-    public function getMetadata(string $key = null): mixed
+    public function getMetadata(string $key = null)
     {
         if ( ! $this->resource ) {
             return $key ? null : [];

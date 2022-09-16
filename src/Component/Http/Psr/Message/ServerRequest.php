@@ -68,7 +68,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return array
      */
-    public function getServerParams(): array
+    public function getServerParams()
     {
         return $this->environment->toArray();
     }
@@ -83,7 +83,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return array
      */
-    public function getCookieParams(): array
+    public function getCookieParams()
     {
         return $this->cookieParams;
     }
@@ -106,7 +106,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return static
      */
-    public function withCookieParams(array $cookies): ServerRequestInterface
+    public function withCookieParams(array $cookies)
     {
         $request = clone $this;
         $request->cookieParams = $cookies;
@@ -125,7 +125,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return array
      */
-    public function getQueryParams(): array
+    public function getQueryParams()
     {
         return $this->queryParams;
     }
@@ -153,7 +153,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      *
      * @return static
      */
-    public function withQueryParams(array $query): ServerRequestInterface
+    public function withQueryParams(array $query)
     {
         $request = clone $this;
         $request->queryParams = $query;
@@ -172,7 +172,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @return array An array tree of UploadedFileInterface instances; an empty
      *     array MUST be returned if no data is present.
      */
-    public function getUploadedFiles(): array
+    public function getUploadedFiles()
     {
         return $this->uploadedFiles ?: [];
     }
@@ -184,12 +184,12 @@ class ServerRequest extends Request implements ServerRequestInterface
      * immutability of the message, and MUST return an instance that has the
      * updated body parameters.
      *
-     * @param array $uploadedFiles An array tree of UploadedFileInterface instances.
+     * @param array<UploadedFileInterface> $uploadedFiles An array tree of UploadedFileInterface instances.
      *
      * @return static
      * @throws InvalidArgumentException if an invalid structure is provided.
      */
-    public function withUploadedFiles(array $uploadedFiles): ServerRequestInterface
+    public function withUploadedFiles(array $uploadedFiles)
     {
         foreach ( $uploadedFiles as $uploadedFile ) {
             if ( ! $uploadedFile instanceof UploadedFileInterface) {
@@ -217,10 +217,10 @@ class ServerRequest extends Request implements ServerRequestInterface
      * potential types MUST be arrays or objects only. A null value indicates
      * the absence of body content.
      *
-     * @return null|array|object The deserialized body parameters, if any.
+     * @return null|array<mixed>|object The deserialized body parameters, if any.
      *     These will typically be an array or object.
      */
-    public function getParsedBody(): null|array|object
+    public function getParsedBody()
     {
         return $this->parsedBody;
     }
@@ -247,14 +247,14 @@ class ServerRequest extends Request implements ServerRequestInterface
      * immutability of the message, and MUST return an instance that has the
      * updated body parameters.
      *
-     * @param object|array|null $data The deserialized body data. This will
+     * @param object|array<mixed>|null $data The deserialized body data. This will
      *                                typically be in an array or object.
      *
      * @return static
      * @throws InvalidArgumentException if an unsupported argument type is
      *     provided.
      */
-    public function withParsedBody(object|array|null $data): ServerRequestInterface
+    public function withParsedBody($data): ServerRequestInterface
     {
         if ( ! is_object($data) && ! is_array($data) && $data !== null ) {
             throw new InvalidArgumentException('Given data to withParsedBody MUST be array, object or null.');
@@ -274,7 +274,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * deserializing non-form-encoded message bodies; etc. Attributes
      * will be application and request specific, and CAN be mutable.
      *
-     * @return array Attributes derived from the request.
+     * @return array<string, string> Attributes derived from the request.
      */
     public function getAttributes(): array
     {
@@ -297,7 +297,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @return mixed
      * @see getAttributes()
      */
-    public function getAttribute(string $name, mixed $default = null): mixed
+    public function getAttribute($name, $default = null): mixed
     {
         if ( ! array_key_exists($name, $this->attributes) ) {
             return $default;
@@ -322,7 +322,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @return static
      * @see getAttributes()
      */
-    public function withAttribute(string $name, mixed $value): ServerRequestInterface
+    public function withAttribute($name, $value): ServerRequestInterface
     {
         $request = clone $this;
         $request->attributes[$name] = $value;
@@ -344,7 +344,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @return static
      * @see getAttributes()
      */
-    public function withoutAttribute(string $name): ServerRequestInterface
+    public function withoutAttribute($name): ServerRequestInterface
     {
         $request = clone $this;
 

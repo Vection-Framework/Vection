@@ -69,7 +69,7 @@ class UploadedFile implements UploadedFileInterface
      * @throws RuntimeException in cases when no stream is available or can be
      *     created.
      */
-    public function getStream(): StreamInterface
+    public function getStream()
     {
         if ( $this->moved ) {
             throw new RuntimeException('Cannot get file content as stream after this file was moved.');
@@ -112,7 +112,7 @@ class UploadedFile implements UploadedFileInterface
      * @throws RuntimeException on any error during the move operation, or on
      *     the second or subsequent call to the method.
      */
-    public function moveTo(string $targetPath): void
+    public function moveTo($targetPath)
     {
         if ( $this->error !== UPLOAD_ERR_OK ) {
             throw new RuntimeException('Cannot move file with upload errors.');
@@ -146,7 +146,7 @@ class UploadedFile implements UploadedFileInterface
      *
      * @return int|null The file size in bytes or null if unknown.
      */
-    public function getSize(): ? int
+    public function getSize()
     {
         return $this->size ?: null;
     }
@@ -165,7 +165,7 @@ class UploadedFile implements UploadedFileInterface
      * @see http://php.net/manual/en/features.file-upload.errors.php
      * @return int One of PHP's UPLOAD_ERR_XXX constants.
      */
-    public function getError(): int
+    public function getError()
     {
         return $this->error;
     }
@@ -183,7 +183,7 @@ class UploadedFile implements UploadedFileInterface
      * @return string|null The filename sent by the client or null if none
      *     was provided.
      */
-    public function getClientFilename(): ? string
+    public function getClientFilename()
     {
         return $this->clientFilename ?: null;
     }
@@ -201,7 +201,7 @@ class UploadedFile implements UploadedFileInterface
      * @return string|null The media type sent by the client or null if none
      *     was provided.
      */
-    public function getClientMediaType(): ? string
+    public function getClientMediaType()
     {
         return $this->clientMediaType ?: null;
     }

@@ -75,7 +75,7 @@ class UriFactory implements UriFactoryInterface
     }
 
     /**
-     * @param array $urlComponents
+     * @param array<string, string> $urlComponents
      *
      * @return UriInterface
      */

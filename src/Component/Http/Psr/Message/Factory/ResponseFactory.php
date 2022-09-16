@@ -35,9 +35,9 @@ class ResponseFactory implements ResponseFactoryInterface
      *                             in generated response; if none is provided implementations MAY use
      *                             the defaults as suggested in the HTTP specification.
      *
-     * @return ResponseInterface|Response
+     * @return ResponseInterface
      */
-    public function createResponse(int $code = 200, string $reasonPhrase = '')
+    public function createResponse(int $code = 200, string $reasonPhrase = ''): ResponseInterface
     {
         $headers = new Headers();
 
