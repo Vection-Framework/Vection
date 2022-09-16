@@ -95,16 +95,18 @@ class Injector implements InjectorInterface
         $dependencies = [];
         $classDependencies = $this->resolver->getClassDependencies($id);
 
-        foreach ($classDependencies['annotation'] ?? [] as $property => $dependency ) {
-            if (isset($this->infiniteLoopPreventedObjects[$dependency])) {
-                $dependencies[$property] = $this->infiniteLoopPreventedObjects[$dependency];
-            } else {
-                // @phpstan-ignore-next-line
-                $dependencies[$property] = $this->container->get($dependency);
+        if ($classDependencies['annotation'] ?? false) {
+            foreach ($classDependencies['annotation'] ?? [] as $property => $dependency ) {
+                if (isset($this->infiniteLoopPreventedObjects[$dependency])) {
+                    $dependencies[$property] = $this->infiniteLoopPreventedObjects[$dependency];
+                } else {
+                    // @phpstan-ignore-next-line
+                    $dependencies[$property] = $this->container->get($dependency);
+                }
             }
-        }
 
-        $object->__annotationInjection($dependencies);
+            $object->__annotationInjection($dependencies);
+        }
     }
 
     /**
