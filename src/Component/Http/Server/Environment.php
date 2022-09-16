@@ -22,12 +22,13 @@ namespace Vection\Component\Http\Server;
  */
 class Environment
 {
+    /** @var array<string, mixed>  */
     protected array $data;
 
     /**
      * Environment constructor.
      *
-     * @param array $data
+     * @param array<string, mixed> $data
      */
     public function __construct(array $data = [])
     {
@@ -497,7 +498,7 @@ class Environment
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {

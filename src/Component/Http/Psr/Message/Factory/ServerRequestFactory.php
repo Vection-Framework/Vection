@@ -19,6 +19,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 use Vection\Component\Http\Common\Headers;
 use Vection\Component\Http\Psr\Message\ServerRequest;
@@ -35,7 +36,7 @@ use Vection\Component\Http\Common\Factory\HeadersFactory;
 class ServerRequestFactory implements ServerRequestFactoryInterface
 {
     protected StreamFactoryInterface $streamFactory;
-    protected UploadedFileFactory $uploadedFileFactory;
+    protected UploadedFileFactoryInterface $uploadedFileFactory;
 
     /**
      * ServerRequestFactory constructor.
@@ -58,16 +59,16 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      * of the given values is performed, and, in particular, no attempt is made to
      * determine the HTTP method or URI, which must be provided explicitly.
      *
-     * @param string              $method       The HTTP method associated with the request.
-     * @param string|UriInterface $uri          The URI associated with the request. If
-     *                                          the value is a string, the factory MUST create a UriInterface
-     *                                          instance based on it.
-     * @param array               $serverParams Array of SAPI parameters with which to seed
-     *                                          the generated request instance.
+     * @param string               $method       The HTTP method associated with the request.
+     * @param string|UriInterface  $uri          The URI associated with the request. If
+     *                                           the value is a string, the factory MUST create a UriInterface
+     *                                           instance based on it.
+     * @param array<string, mixed> $serverParams Array of SAPI parameters with which to seed
+     *                                           the generated request instance.
      *
      * @return ServerRequestInterface
      */
-    public function createServerRequest(string $method, UriInterface|string $uri, array $serverParams = []): ServerRequestInterface
+    public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
         $environment    = new Environment($serverParams);
         $headersFactory = new HeadersFactory($environment);
@@ -90,13 +91,13 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
     /**
      * Returns an array contains objects from type UploadedFile.
      *
-     * @return array
+     * @return UploadedFileInterface[]
      */
     protected function createUploadedFiles(): array
     {
         $uploadedFiles = [];
 
-        foreach ( ($_FILES ?? []) as $index => $info ) {
+        foreach ($_FILES as $index => $info) {
 
             if ( is_array($info['name']) ) {
                 $uploadedFiles[$index] = [];
@@ -141,7 +142,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      * @param StreamInterface $stream
      * @param Headers $headers
      *
-     * @return array
+     * @return array<string>
      */
     protected function parseBody(string $method, StreamInterface $stream, Headers $headers): array
     {
@@ -159,7 +160,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
                 try {
                     return json_decode($content, true, 512, JSON_THROW_ON_ERROR);
                 }
-                catch (JsonException $e) {
+                catch (JsonException) {
                     return [$content];
                 }
             }
