@@ -70,7 +70,7 @@ class Stream implements StreamInterface
      *
      * @return void
      */
-    public function close(): void
+    public function close()
     {
         if ( $this->resource ) {
             if ( is_resource($this->resource) ) {
@@ -109,7 +109,7 @@ class Stream implements StreamInterface
      *
      * @return int|null Returns the size in bytes if known, or null if unknown.
      */
-    public function getSize(): ? int
+    public function getSize()
     {
         if ( ! $this->resource ) {
             return null;
@@ -132,7 +132,7 @@ class Stream implements StreamInterface
      * @return int Position of the file pointer
      * @throws RuntimeException on error.
      */
-    public function tell(): int
+    public function tell()
     {
         $position = ftell($this->resource);
 
@@ -148,7 +148,7 @@ class Stream implements StreamInterface
      *
      * @return bool
      */
-    public function eof(): bool
+    public function eof()
     {
         return ! $this->resource || feof($this->resource);
     }
@@ -158,7 +158,7 @@ class Stream implements StreamInterface
      *
      * @return bool
      */
-    public function isSeekable(): bool
+    public function isSeekable()
     {
         return $this->seekable;
     }
@@ -177,7 +177,7 @@ class Stream implements StreamInterface
      *
      * @throws RuntimeException on failure.
      */
-    public function seek($offset, $whence = SEEK_SET): void
+    public function seek($offset, $whence = SEEK_SET)
     {
         if ( ! $this->seekable ) {
             throw new RuntimeException('The current stream is not seekable.');
@@ -206,7 +206,7 @@ class Stream implements StreamInterface
      * @link http://www.php.net/manual/en/function.fseek.php
      * @see  seek()
      */
-    public function rewind(): void
+    public function rewind()
     {
         $this->seek(0);
     }
@@ -216,7 +216,7 @@ class Stream implements StreamInterface
      *
      * @return bool
      */
-    public function isWritable(): bool
+    public function isWritable()
     {
         return $this->writable;
     }
@@ -229,7 +229,7 @@ class Stream implements StreamInterface
      * @return int Returns the number of bytes written to the stream.
      * @throws RuntimeException on failure.
      */
-    public function write($string): int
+    public function write($string)
     {
         if ( ! $this->writable ) {
             throw new RuntimeException('Unable to write: The current stream is not writeable.');
@@ -251,7 +251,7 @@ class Stream implements StreamInterface
      *
      * @return bool
      */
-    public function isReadable(): bool
+    public function isReadable()
     {
         return $this->readable;
     }
@@ -267,7 +267,7 @@ class Stream implements StreamInterface
      *     if no bytes are available.
      * @throws RuntimeException if an error occurs.
      */
-    public function read($length): string
+    public function read($length)
     {
         if ( ! $this->readable ) {
             throw new RuntimeException('Unable to read: The current stream is not readable.');
@@ -284,7 +284,7 @@ class Stream implements StreamInterface
      * @throws RuntimeException if unable to read or an error occurs while
      *     reading.
      */
-    public function getContents(): string
+    public function getContents()
     {
         if ( ! $this->resource ) {
             throw new RuntimeException('Unable to read stream. The current stream does not exists or is invalid.');
@@ -315,7 +315,7 @@ class Stream implements StreamInterface
      *     provided. Returns a specific key value if a key is provided and the
      *     value is found, or null if the key is not found.
      */
-    public function getMetadata(string $key = null)
+    public function getMetadata($key = null)
     {
         if ( ! $this->resource ) {
             return $key ? null : [];
@@ -340,7 +340,7 @@ class Stream implements StreamInterface
      * @see http://php.net/manual/en/language.oop5.magic.php#object.tostring
      * @return string
      */
-    public function __toString(): string
+    public function __toString()
     {
         try {
             return $this->getContents();
