@@ -29,8 +29,8 @@ class Stream implements StreamInterface
 {
     /** @var resource */
     protected $resource;
-    protected string|null $uri;
-    protected int|null $size;
+    protected string|null $uri = null;
+    protected int|null $size = null;
     protected bool $readable;
     protected bool$writable;
     protected bool $seekable;
