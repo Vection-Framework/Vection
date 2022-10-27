@@ -2,7 +2,7 @@
 [![QA](https://img.shields.io/github/workflow/status/Vection-Framework/Vection/QA?label=QA&style=for-the-badge)](https://github.com/Vection-Framework/Vection/actions)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%206-blueviolet.svg?style=for-the-badge)](https://phpstan.org)
 
-# Vection Dependency Injection
+# PHP DI - Dependency Injection Container
 
 > :warning: Vection Dependency Injection is currently in development stage, so atm only pre-releases are available. Breaking changes may be made until a
 stable release!
@@ -66,7 +66,7 @@ public function __construct(FooBar $fooBar)
 ```
 
 #### Annotation / Attribute injection
-The annotation injection provides a powerful possibility to injection dependencies into protected object properties by using the `@Inject` annotation on properties. The usage of annotation injection requires the use of the `AnnotationInjection` trait. Annotations also requires the fully qualified class names (< PHP 7.4)
+The annotation injection provides a powerful possibility to injection dependencies into protected object properties by using the `#[Inject]` attribute on properties. The usage of annotation injection requires the use of the `AnnotationInjection` trait. Annotations also requires the fully qualified class names (< PHP 7.4)
 
 ```php
 <?php
