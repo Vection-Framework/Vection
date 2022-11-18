@@ -7,7 +7,6 @@ namespace Vection\Component\Common;
 use ArrayAccess;
 use Countable;
 use Iterator;
-use JsonException;
 use JsonSerializable;
 use LogicException;
 use Vection\Component\Common\Exception\IOException;
@@ -74,17 +73,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
      */
     public static function parseYAML(string $yaml, bool $immutable = false): VArray
     {
-        if (!function_exists('yaml_parse')) {
-            throw new RuntimeException('VArray::fromFile(yaml) requires php-yaml extension to be enabled.');
-        }
-
-        $data = yaml_parse($yaml);
-
-        if ($data === false) {
-            throw new RuntimeException('Malformed YAML');
-        }
-
-        return new VArray($data, $immutable);
+        return Yaml::parse($yaml, $immutable);
     }
 
     /**
@@ -95,12 +84,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
      */
     public static function parseJSON(string $json, bool $immutable = false): VArray
     {
-        try {
-            return new VArray(json_decode($json, true, 512, JSON_THROW_ON_ERROR), $immutable);
-        }
-        catch (JsonException $e) {
-            throw new RuntimeException('Malformed JSON: '.$e->getMessage());
-        }
+        return Json::parse($json, $immutable);
     }
 
     # endregion

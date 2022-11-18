@@ -8,38 +8,20 @@ use JsonException;
 use Vection\Component\Common\Exception\RuntimeException;
 
 /**
- * Class Json
- *
- * @package Vection\Component\Common
- * @author  BloodhunterD <bloodhunterd@bloodhunterd.com>
+ * @author BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class Json
 {
-    /**
-     * @param mixed[] $data
-     *
-     * @return VArray
-     */
-    public static function load(array $data): VArray
+    public static function parse(string $json, bool $immutable = false): VArray
     {
-        return new VArray($data);
+        try {
+            return new VArray(json_decode($json, true, 512, JSON_THROW_ON_ERROR), $immutable);
+        }
+        catch (JsonException $e) {
+            throw new RuntimeException('Malformed JSON: '.$e->getMessage());
+        }
     }
 
-    /**
-     * @param string $json
-     *
-     * @return VArray
-     */
-    public static function parse(string $json): VArray
-    {
-        return VArray::parseJSON($json);
-    }
-
-    /**
-     * @param string $filePath
-     *
-     * @return VArray
-     */
     public static function read(string $filePath): VArray
     {
         return VArray::parseFile($filePath);
@@ -47,11 +29,6 @@ class Json
 
     /**
      * @param VArray|array<mixed> $array
-     * @param bool                $pretty
-     * @param int                 $flags
-     * @param int                 $depth
-     *
-     * @return string
      */
     public static function encode(VArray|array $array, bool $pretty = true, int $flags = 0, int $depth = 512): string
     {
@@ -67,21 +44,8 @@ class Json
         }
     }
 
-    /**
-     * @param string $filePath
-     * @param VArray $array
-     * @param bool   $pretty
-     * @param int    $flags
-     * @param int    $depth
-     *
-     * @return void
-     */
     public static function toFile(
-        string $filePath,
-        VArray $array,
-        bool   $pretty = true,
-        int    $flags  = 0,
-        int    $depth  = 512
+        string $filePath, VArray $array, bool $pretty = true, int $flags = 0, int $depth = 512
     ): void
     {
         if (!file_put_contents($filePath, self::encode($array, $pretty, $flags, $depth))) {

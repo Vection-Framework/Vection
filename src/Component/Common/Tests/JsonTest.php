@@ -32,19 +32,6 @@ class JsonTest extends TestCase
     # region Tests
 
     /**
-     * @param mixed[] $data
-     *
-     * @group json
-     * @group jsonLoad
-     *
-     * @dataProvider provideValidLoadValues
-     */
-    public function testValidLoadValues(array $data): void
-    {
-        self::assertEquals(new VArray($data), Json::load($data));
-    }
-
-    /**
      * @group json
      * @group jsonParse
      *
