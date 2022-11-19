@@ -40,19 +40,15 @@ class Yaml
             throw new RuntimeException('Yaml::encode(yaml) requires php-yaml extension to be enabled.');
         }
 
-        return yaml_emit($data);
+        return yaml_emit(!$data instanceof VArray ?: $data->jsonSerialize());
     }
 
     /**
-     * @param VArray|array<mixed>|string $data
+     * @param VArray|array<mixed> $data
      */
-    public static function toFile(string $filePath, VArray|array|string $data): void
+    public static function toFile(string $filePath, VArray|array $data): void
     {
-        if (!function_exists('yaml_emit_file')) {
-            throw new RuntimeException('Yaml::toFile(yaml) requires php-yaml extension to be enabled.');
-        }
-
-        if (!yaml_emit_file($filePath, $data)) {
+        if (!file_put_contents($filePath, self::encode($data))) {
             throw new RuntimeException('Failed to save YAML data in file.');
         }
     }
