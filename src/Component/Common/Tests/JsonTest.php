@@ -11,9 +11,6 @@ use Vection\Component\Common\Json;
 use Vection\Component\Common\VArray;
 
 /**
- * Class JsonTest
- *
- * @package Vection\Component\Common\Tests
  * @author  BloodhunterD <bloodhunterd@bloodhunterd.com>
  */
 class JsonTest extends TestCase
@@ -36,10 +33,16 @@ class JsonTest extends TestCase
      * @group jsonParse
      *
      * @dataProvider provideValidParseValues
+     *
+     * @throws JsonException
      */
-    public function testValidParseValues(string $json): void
+    public function testValidParseValues(array $data): void
     {
-        self::assertEquals(VArray::parseJSON($json), Json::parse($json));
+        $json = json_encode($data, JSON_THROW_ON_ERROR);
+
+        self::assertEquals(
+            new VArray(json_decode($json, true, 512, JSON_THROW_ON_ERROR)), Json::parse($json)
+        );
     }
 
     /**
@@ -47,12 +50,17 @@ class JsonTest extends TestCase
      * @group jsonRead
      *
      * @dataProvider provideValidReadValues
+     *
+     * @throws JsonException
      */
-    public function testValidReadValues(string $json): void
+    public function testValidReadValues(array $data): void
     {
-        $file = vfsStream::newFile('data.json')->withContent($json)->at($this->fs);
+        $json = json_encode($data, JSON_THROW_ON_ERROR);
 
-        self::assertEquals(VArray::parseFile($file->url()), Json::read($file->url()));
+        $file = vfsStream::newFile('data.json')
+            ->withContent($json)->at($this->fs);
+
+        self::assertEquals(new VArray(json_decode($json, true, 512, JSON_THROW_ON_ERROR)), Json::read($file->url()));
     }
 
     /**
@@ -105,55 +113,38 @@ class JsonTest extends TestCase
     /**
      * @return mixed[]
      */
-    public function provideValidLoadValues(): array
-    {
-        return [
-            'data' => [[
-                'bool'   => true,
-                'string' => 'Text',
-                'int'    => 123,
-                'float'  => 123.123,
-                'array'  => ['Text', 123, 123.123],
-                'object' => new StdClass(),
-            ]],
-        ];
-    }
-
-    /**
-     * @return mixed[]
-     *
-     * @throws JsonException
-     */
     public function provideValidParseValues(): array
     {
         return [
-            'json' => [json_encode([
-                'bool'   => true,
-                'string' => 'Text',
-                'int'    => 123,
-                'float'  => 123.123,
-                'array'  => ['Text', 123, 123.123],
-                'object' => new StdClass(),
-            ], JSON_THROW_ON_ERROR)],
+            'array' => [
+                [
+                    'bool'   => true,
+                    'string' => 'Text',
+                    'int'    => 123,
+                    'float'  => 123.123,
+                    'array'  => ['Text', 123, 123.123],
+                    'object' => new StdClass(),
+                ],
+            ],
         ];
     }
 
     /**
      * @return mixed[]
-     *
-     * @throws JsonException
      */
     public function provideValidReadValues(): array
     {
         return [
-            'json' => [json_encode([
-                'bool'   => true,
-                'string' => 'Text',
-                'int'    => 123,
-                'float'  => 123.123,
-                'array'  => ['Text', 123, 123.123],
-                'object' => new StdClass(),
-            ], JSON_THROW_ON_ERROR)],
+            'array' => [
+                [
+                    'bool'   => true,
+                    'string' => 'Text',
+                    'int'    => 123,
+                    'float'  => 123.123,
+                    'array'  => ['Text', 123, 123.123],
+                    'object' => new StdClass(),
+                ],
+            ],
         ];
     }
 
