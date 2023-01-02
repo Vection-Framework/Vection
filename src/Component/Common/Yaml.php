@@ -23,7 +23,7 @@ class Yaml
             throw new RuntimeException('Malformed YAML');
         }
 
-        return new VArray($data, $immutable);
+        return new VArray($data ?? [], $immutable);
     }
 
     public static function read(string $filePath): VArray
