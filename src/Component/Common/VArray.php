@@ -232,6 +232,11 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
         }
     }
 
+    public function toArray(): array
+    {
+        return $this->data;
+    }
+
     # endregion
 
     # region Advanced Methods
@@ -290,7 +295,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
     /**
      * @inheritDoc
      */
-    public function key(): string|int|null
+    public function key(): mixed
     {
         return key($this->data);
     }
