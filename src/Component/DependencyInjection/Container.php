@@ -119,6 +119,14 @@ class Container implements ContainerInterface, LoggerAwareInterface, CacheAwareI
     }
 
     /**
+     * Flush the internal storage for shared objects.
+     */
+    public function flush(): void
+    {
+        $this->sharedObjects = [];
+    }
+
+    /**
      * @param string  $className
      * @param array<int, mixed> $constructParams
      *
