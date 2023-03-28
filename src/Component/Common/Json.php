@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Vection\Component\Common;
 
 use JsonException;
+use JsonSerializable;
 use Vection\Component\Common\Exception\RuntimeException;
 
 /**
@@ -28,9 +29,9 @@ class Json
     }
 
     /**
-     * @param VArray|array<mixed> $array
+     * @param VArray|array<mixed>|JsonSerializable $array
      */
-    public static function encode(VArray|array $array, bool $pretty = true, int $flags = 0, int $depth = 512): string
+    public static function encode(VArray|array|JsonSerializable $array, bool $pretty = true, int $flags = 0, int $depth = 512): string
     {
         if ($pretty) {
             $flags += JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_LINE_TERMINATORS;
