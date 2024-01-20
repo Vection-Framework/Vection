@@ -100,10 +100,6 @@ class Violation implements ViolationInterface, JsonSerializable
 
     /**
      * Converts the given value into a string representation.
-     *
-     * @param mixed $value
-     *
-     * @return string
      */
     private function valueToString(mixed $value): string
     {
@@ -111,7 +107,7 @@ class Violation implements ViolationInterface, JsonSerializable
             'integer', 'double', 'string' => (string)$value,
             'boolean' => $value ? 'true' : 'false',
             'NULL' => 'null',
-            'array' => 'Array',
+            'array' => implode(', ', array_map(static fn ($v) => is_array($v) ? 'Array' : $v, $value)),
             'object' => 'Object',
             default => '<unsupported-type>',
         };

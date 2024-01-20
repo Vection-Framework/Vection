@@ -54,6 +54,6 @@ class InArray extends Validator
      */
     protected function getMessage(): string
     {
-        return 'Value "{value}" is not available in array "{haystack}".';
+        return 'Value "{value}" is not a member of "{haystack}".';
     }
 }

@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Vection\Component\Validator;
 
 use ReflectionClass;
+use ReflectionException;
 use RuntimeException;
 use Vection\Contracts\Validator\ValidatorInterface;
 
@@ -27,17 +28,23 @@ use Vection\Contracts\Validator\ValidatorInterface;
 class ValidatorFactory
 {
     /**
-     * @param string  $name
-     * @param mixed[] $constraints
-     *
-     * @return ValidatorInterface
+     * @throws ReflectionException
      */
     public function create(string $name, array $constraints = []): ValidatorInterface
     {
-        $validatorClassName = __NAMESPACE__ .'\\Validator\\'. ucfirst($name);
+        if (class_exists($name)) {
+            $validatorClassName = $name;
 
-        if (!class_exists($validatorClassName)) {
-            throw new RuntimeException('Validator does not exists - '.$validatorClassName);
+            if (!in_array(ValidatorInterface::class, class_implements($name), true)) {
+                throw new RuntimeException('Validator does not implement Validator interface');
+            }
+        }
+        else {
+            $validatorClassName = __NAMESPACE__ .'\\Validator\\'. ucfirst($name);
+
+            if (!class_exists($validatorClassName)) {
+                throw new RuntimeException('Validator does not exists - '.$validatorClassName);
+            }
         }
 
         if (is_int(array_key_first($constraints))) {
