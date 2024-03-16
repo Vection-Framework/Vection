@@ -32,18 +32,28 @@ class ValidatorFactory
      */
     public function create(string $name, array $constraints = []): ValidatorInterface
     {
-        if (class_exists($name)) {
-            $validatorClassName = $name;
+        if ($name === 'use') {
+            $validatorClassName = $constraints['class'];
 
-            if (!in_array(ValidatorInterface::class, class_implements($name), true)) {
-                throw new RuntimeException('Validator does not implement Validator interface');
+            if (!class_exists($validatorClassName)) {
+                throw new RuntimeException(sprintf('Validator %s does not exist.', $validatorClassName));
+            }
+
+            if (!in_array(ValidatorInterface::class, class_implements($validatorClassName), true)) {
+                throw new RuntimeException(
+                    sprintf('Validator %s does not implement required validator interface.', $validatorClassName)
+                );
+            }
+
+            if (array_key_exists('parameters', $constraints)) {
+                $constraints = $constraints['parameters'];
             }
         }
         else {
             $validatorClassName = __NAMESPACE__ .'\\Validator\\'. ucfirst($name);
 
             if (!class_exists($validatorClassName)) {
-                throw new RuntimeException('Validator does not exists - '.$validatorClassName);
+                throw new RuntimeException(sprintf('Validator %s does not exist.', $validatorClassName));
             }
         }
 

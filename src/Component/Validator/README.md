@@ -197,6 +197,38 @@ Use the array type to define an array property which contains elements by schema
 }
 ```
 
+##### Custom validator
+
+Use a custom validator class for a property. The key *parameters* is optional.
+
+~~~json
+{
+    "@type": "object",
+    "@properties": {
+        "foo": {
+            "@type": "object",
+            "@required": true,
+            "@properties": {
+                "foo": {
+                    "@type": "object",
+                    "@required": true,
+                    "@validator": {
+                        "@name": "use",
+                        "@constraints": {
+                            "class": "My\Application\Custom\Validator",
+                            "parameters": {
+                                "foo": "param 1",
+                                "bar": "param 2"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+~~~
+
 #### Schema property validators
 The schema definition can use the validators of this component to validate a schema property value.
 ```json

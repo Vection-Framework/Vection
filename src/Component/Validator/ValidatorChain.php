@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Vection\Component\Validator;
 
+use ReflectionException;
 use Vection\Component\Validator\Validator\Color;
 use Vection\Component\Validator\Validator\Required;
 use Vection\Component\Validator\Validator\Locale;
@@ -162,10 +163,12 @@ class ValidatorChain implements ValidatorChainInterface
      * This magic method is used to accept several validation
      * function which will be process later in the Validator.
      *
-     * @param string  $name
+     * @param string $name
      * @param mixed[] $constraints
      *
      * @return ValidatorChain
+     *
+     * @throws ReflectionException
      */
     public function __call(string $name, array $constraints = []): ValidatorChain
     {
