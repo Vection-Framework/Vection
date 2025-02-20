@@ -13,6 +13,7 @@
 namespace Vection\Component\Validator\Validator;
 
 use Vection\Component\Validator\Validator;
+use Vection\Component\Validator\Validator\Exception\IllegalTypeException;
 
 /**
  * Class Base64
@@ -34,6 +35,12 @@ class Base64 extends Validator
      */
     protected function onValidate($value): bool
     {
+        if (!is_string($value)) {
+            throw new IllegalTypeException(
+                sprintf('The value must be of type "string", but type "%s" was passed.', gettype($value))
+            );
+        }
+
         return ($decoded = base64_decode($value, true)) !== false && base64_encode($decoded) === $value;
     }
 }
