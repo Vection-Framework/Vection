@@ -114,11 +114,9 @@ class Kernel implements KernelInterface
      */
     public function execute(bool $terminate = true, bool $clearUnexpectedBuffer = true): void
     {
-        $this->logger->debug(sprintf(
-            'Received request %s %s',
-            $this->request->getMethod(),
-            preg_replace('/(?<=:\/\/).*?(?=@)/', '***:***', $this->request->getUri())
-        ));
+        $this->logger->debug(sprintf('Received request %s %s', $this->request->getMethod(), preg_replace(
+            '/(?<=:\/\/)([^:]+):.*?(?=@)/', '$1:***', $this->request->getUri()->__toString()
+        )));
 
         $this->eventDispatcher?->dispatch(new BeforeHandleRequestEvent());
 
