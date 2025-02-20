@@ -34,6 +34,7 @@ use Vection\Contracts\Validator\ViolationInterface;
  *
  * @method ValidatorChain alphaNumeric()
  * @method ValidatorChain arraySchema(array $schema, int $maxTemplateRecursion = 3)
+ * @method ValidatorChain base64()
  * @method ValidatorChain betweenValue(int $min, int $max)
  * @method ValidatorChain betweenLength(int $min, int $max)
  * @method ValidatorChain color(int $format = Color::HEX)
