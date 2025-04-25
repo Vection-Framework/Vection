@@ -57,14 +57,14 @@
         "ext-mbstring": "*",
         "ext-pdo": "*",
         "php": "^8.4",
-        "psr/container": "^1.0",
+        "psr/container": "^2.0",
         "psr/event-dispatcher": "^1.0",
         "psr/http-message":"^1.0",
         "psr/http-factory": "^1.0",
         "psr/http-client": "^1.0",
         "psr/http-server-handler": "^1.0",
         "psr/http-server-middleware": "^1.0",
-        "psr/log": "^1.1"
+        "psr/log": "^3.0"
     },
     "require-dev": {
         "ext-yaml": "*",
