@@ -16,6 +16,7 @@ parameters:
         - message: "#Strict comparison using === between#"
           count: 1
           path: src/Component/Common/Crypto.php
+
         - message: "#Strict comparison using === between#"
           count: 1
           path: src/Component/Validator/Schema/Property.php
@@ -27,7 +28,3 @@ parameters:
         - message: "#Result of && is always false.#"
           count: 1
           path: src/Component/Validator/Schema/Property.php
-
-        - message: "#HookLoader\\:\\:\\$contexts is never read, only written.#"
-          count: 1
-          path: src/Component/Hook/HookLoader.php
