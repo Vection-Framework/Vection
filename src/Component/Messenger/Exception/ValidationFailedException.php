@@ -36,7 +36,7 @@ class ValidationFailedException extends RuntimeException
      * @param int            $code
      * @param Throwable|null $previous
      */
-    public function __construct(array $violations, int $code = 0, Throwable $previous = null)
+    public function __construct(array $violations, int $code = 0, Throwable|null $previous = null)
     {
         parent::__construct('The message body contains invalid data.', $code, $previous);
         $this->violations = $violations;

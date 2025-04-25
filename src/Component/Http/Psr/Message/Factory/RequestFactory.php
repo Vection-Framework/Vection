@@ -37,7 +37,7 @@ class RequestFactory implements RequestFactoryInterface
      *
      * @param UriFactoryInterface|null $uriFactory
      */
-    public function __construct(UriFactoryInterface $uriFactory = null)
+    public function __construct(UriFactoryInterface|null $uriFactory = null)
     {
         $this->uriFactory = $uriFactory ?: new UriFactory();
     }

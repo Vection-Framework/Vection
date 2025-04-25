@@ -50,7 +50,7 @@ class Packer implements PackerInterface
      * @param SerializerInterface|null $serializer
      * @param EncoderInterface|null    $encoder
      */
-    public function __construct(SerializerInterface $serializer = null, EncoderInterface $encoder = null)
+    public function __construct(SerializerInterface|null $serializer = null, EncoderInterface|null $encoder = null)
     {
         $this->serializer = $serializer ?: new DefaultSerializer();
         $this->encoder    = $encoder ?: new Base64Encoder();

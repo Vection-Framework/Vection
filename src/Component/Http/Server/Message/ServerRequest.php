@@ -49,7 +49,7 @@ class ServerRequest extends PsrServerRequest
      * @inheritDoc
      */
     public function __construct(
-        string $method, UriInterface $uri, Headers $headers, string $version = '1.1', Environment $environment = null)
+        string $method, UriInterface $uri, Headers $headers, string $version = '1.1', Environment|null $environment = null)
     {
         parent::__construct($method, $uri, $headers, $version, $environment);
 

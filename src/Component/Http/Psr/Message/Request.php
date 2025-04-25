@@ -45,7 +45,7 @@ class Request extends Message implements RequestInterface
         string $method,
         UriInterface $uri,
         Headers $headers,
-        StreamInterface $body = null,
+        StreamInterface|null $body = null,
         string $version = '1.0'
     )
     {

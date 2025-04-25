@@ -39,7 +39,7 @@ class Application
     /**
      * Application constructor.
      */
-    public function __construct(Environment $environment = null)
+    public function __construct(Environment|null $environment = null)
     {
         $factory = new ServerRequestFactory();
         $this->request = $factory->createServerRequestFromEnvironment($environment ?: new Environment());

@@ -31,10 +31,10 @@ class IconName extends Validator
     protected int    $maxLength;
 
     /**
-     * @param string|null $prefix
-     * @param int|null    $maxLength
+     * @param string $prefix
+     * @param int    $maxLength
      */
-    public function __construct(string $prefix = null, int $maxLength = null)
+    public function __construct(string $prefix, int $maxLength)
     {
         $this->prefix    = $prefix;
         $this->maxLength = $maxLength;

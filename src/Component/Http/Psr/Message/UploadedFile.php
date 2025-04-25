@@ -28,7 +28,7 @@ use RuntimeException;
 class UploadedFile implements UploadedFileInterface
 {
     protected StreamInterface $stream;
-    protected int $size;
+    protected int|null $size;
     protected int $error;
     protected string $clientFilename;
     protected string $clientMediaType;
@@ -43,7 +43,7 @@ class UploadedFile implements UploadedFileInterface
      * @param string|null     $clientFilename
      * @param string|null     $clientMediaType
      */
-    public function __construct(StreamInterface $stream, int $size = null, int $error = UPLOAD_ERR_OK, string $clientFilename = null, string $clientMediaType = null)
+    public function __construct(StreamInterface $stream, int|null $size = null, int $error = UPLOAD_ERR_OK, string|null $clientFilename = null, string|null $clientMediaType = null)
     {
         $this->stream          = $stream;
         $this->size            = $size;

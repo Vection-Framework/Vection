@@ -1,6 +1,0 @@
-package: org.awesome.vection.vouchermodifier
-version: '1.0'
-name: Vection Shop Price Modifier Extension
-description:
-main: Vection\Component\Hook\Tests\Extensions\Voucher\VoucherModifier
-target: vection.shop.price.modificator

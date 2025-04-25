@@ -25,19 +25,19 @@ use RuntimeException;
  */
 class Crypto
 {
-    public const CIPHER_AES_128_CBC       = 'aes-128-cbc';
-    public const CIPHER_AES_128_GCM       = 'aes-128-gcm';
-    public const CIPHER_AES_192_CBC       = 'aes-192-cbc';
-    public const CIPHER_AES_192_GCM       = 'aes-192-gcm';
-    public const CIPHER_AES_256_CBC       = 'aes-256-cbc';
-    public const CIPHER_AES_256_GCM       = 'aes-256-gcm';
-    public const CIPHER_BLOWFISH          = 'blowfish';
-    public const CIPHER_CAMELLIA_128_CBC  = 'camellia-128-cbc';
-    public const CIPHER_CAMELLIA_192_CBC  = 'camellia-192-cbc';
-    public const CIPHER_CAMELLIA_256_CBC  = 'camellia-256-cbc';
-    public const CIPHER_CHACHA20_POLY1305 = 'chacha20-poly1305';
+    public const string CIPHER_AES_128_CBC       = 'aes-128-cbc';
+    public const string CIPHER_AES_128_GCM       = 'aes-128-gcm';
+    public const string CIPHER_AES_192_CBC       = 'aes-192-cbc';
+    public const string CIPHER_AES_192_GCM       = 'aes-192-gcm';
+    public const string CIPHER_AES_256_CBC       = 'aes-256-cbc';
+    public const string CIPHER_AES_256_GCM       = 'aes-256-gcm';
+    public const string CIPHER_BLOWFISH          = 'blowfish';
+    public const string CIPHER_CAMELLIA_128_CBC  = 'camellia-128-cbc';
+    public const string CIPHER_CAMELLIA_192_CBC  = 'camellia-192-cbc';
+    public const string CIPHER_CAMELLIA_256_CBC  = 'camellia-256-cbc';
+    public const string CIPHER_CHACHA20_POLY1305 = 'chacha20-poly1305';
 
-    public const CIPHERS = [
+    public const array CIPHERS = [
         self::CIPHER_AES_128_CBC,
         self::CIPHER_AES_192_CBC,
         self::CIPHER_AES_128_GCM,
@@ -51,21 +51,21 @@ class Crypto
         self::CIPHER_CHACHA20_POLY1305,
     ];
 
-    public const HASH_CRC32     = 'crc32';
-    public const HASH_MD5       = 'md5';
-    public const HASH_MURMUR3A  = 'murmur3a';
-    public const HASH_MURMUR3C  = 'murmur3c';
-    public const HASH_MURMUR3F  = 'murmur3f';
-    public const HASH_SHA1      = 'sha1';
-    public const HASH_SHA256    = 'sha256';
-    public const HASH_SHA512    = 'sha512';
-    public const HASH_WHIRLPOOL = 'whirlpool';
-    public const HASH_XXH3      = 'xxh3';
-    public const HASH_XXH32     = 'xxh32';
-    public const HASH_XXH64     = 'xxh64';
-    public const HASH_XXH128    = 'xxh128';
+    public const string HASH_CRC32     = 'crc32';
+    public const string HASH_MD5       = 'md5';
+    public const string HASH_MURMUR3A  = 'murmur3a';
+    public const string HASH_MURMUR3C  = 'murmur3c';
+    public const string HASH_MURMUR3F  = 'murmur3f';
+    public const string HASH_SHA1      = 'sha1';
+    public const string HASH_SHA256    = 'sha256';
+    public const string HASH_SHA512    = 'sha512';
+    public const string HASH_WHIRLPOOL = 'whirlpool';
+    public const string HASH_XXH3      = 'xxh3';
+    public const string HASH_XXH32     = 'xxh32';
+    public const string HASH_XXH64     = 'xxh64';
+    public const string HASH_XXH128    = 'xxh128';
 
-    public const HASHES = [
+    public const array HASHES = [
         self::HASH_CRC32,
         self::HASH_MD5,
         self::HASH_MURMUR3A,

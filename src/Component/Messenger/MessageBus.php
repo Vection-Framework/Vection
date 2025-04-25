@@ -49,8 +49,8 @@ class MessageBus implements MessageBusInterface, LoggerAwareInterface
      */
     public function __construct(
         array $defaultHeaders = [],
-        MiddlewareSequenceFactoryInterface $middlewareSequenceFactory = null,
-        MessageIdGeneratorInterface $idGenerator = null
+        MiddlewareSequenceFactoryInterface|null $middlewareSequenceFactory = null,
+        MessageIdGeneratorInterface|null $idGenerator = null
     )
     {
         $this->logger = new NullLogger();

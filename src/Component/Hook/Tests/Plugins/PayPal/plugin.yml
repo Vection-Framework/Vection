@@ -1,6 +1,0 @@
-package: org.awesome.vection.payment.paypal
-version: '1.0'
-name: Vection Shop Payment Plugin
-description:
-main: Vection\Component\Hook\Tests\Plugins\PayPal\PayPal
-target: vection.shop.payment

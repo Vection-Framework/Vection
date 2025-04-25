@@ -36,7 +36,7 @@ class Schema implements SchemaInterface
     /**
      * @param string|null $schemaFilePath
      */
-    public function __construct(string $schemaFilePath = null)
+    public function __construct(string|null $schemaFilePath = null)
     {
         if ( $schemaFilePath !== null ) {
 

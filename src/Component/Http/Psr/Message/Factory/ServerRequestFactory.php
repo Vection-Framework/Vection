@@ -45,7 +45,7 @@ class ServerRequestFactory implements ServerRequestFactoryInterface
      * @param UploadedFileFactoryInterface|null $uploadedFileFactory
      */
     public function __construct(
-        StreamFactoryInterface $streamFactory = null, UploadedFileFactoryInterface $uploadedFileFactory = null
+        StreamFactoryInterface|null $streamFactory = null, UploadedFileFactoryInterface|null $uploadedFileFactory = null
     )
     {
         $this->streamFactory       = $streamFactory ?: new StreamFactory();

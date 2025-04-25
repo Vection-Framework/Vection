@@ -47,7 +47,7 @@
         "psr/http-client": "^1.0",
         "psr/http-message": "^1.0",
         "psr/http-server-handler": "^1.0",
-        "psr/log": "^1.1",
+        "psr/log": "^3.0",
         "vection-framework/common": "v0.*",
         "vection-framework/contracts": "v0.*"
     },

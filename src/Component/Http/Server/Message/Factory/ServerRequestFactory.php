@@ -34,7 +34,7 @@ class ServerRequestFactory extends PsrServerRequestFactory
      *
      * @return ServerRequest
      */
-    public function createServerRequestFromEnvironment(Environment $environment = null): ServerRequest
+    public function createServerRequestFromEnvironment(Environment|null $environment = null): ServerRequest
     {
         if ( ! $environment ) {
             $environment = new Environment();

@@ -31,7 +31,7 @@ class UriFactory extends PsrUriFactory
      *
      * @return UriInterface
      */
-    public function createUriFromEnvironment(Environment $environment = null): UriInterface
+    public function createUriFromEnvironment(Environment|null $environment = null): UriInterface
     {
         if ( ! $environment ) {
             $environment = new Environment();

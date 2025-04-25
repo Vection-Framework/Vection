@@ -45,8 +45,8 @@
         }
     ],
     "require": {
-        "php": "^8.1",
-        "psr/log": "^1.1",
+        "php": "^8.4",
+        "psr/log": "^3.0",
         "vection-framework/common": "v0.*",
         "vection-framework/contracts": "v0.*"
     },

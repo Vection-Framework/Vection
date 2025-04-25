@@ -87,7 +87,7 @@ class FSHelper
      *
      * @return string
      */
-    public static function buildFilePath(string $path, array $fileparts, string $ext = null): string
+    public static function buildFilePath(string $path, array $fileparts, string|null $ext = null): string
     {
         $ext = $ext ? '.' . $ext : '';
 

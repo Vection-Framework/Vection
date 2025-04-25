@@ -41,7 +41,7 @@ class Response extends Message implements ResponseInterface
      * @param string               $reasonPhrase
      */
     public function __construct(
-        int $status = 200, Headers $headers = null, ? StreamInterface $body = null, string $version = '1.1', string $reasonPhrase = ''
+        int $status = 200, Headers|null $headers = null, StreamInterface|null $body = null, string $version = '1.1', string $reasonPhrase = ''
     )
     {
         parent::__construct($headers ?: new Headers(), $body, $version);

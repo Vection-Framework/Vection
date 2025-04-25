@@ -48,7 +48,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @param Environment|null $environment
      */
     public function __construct(
-        string $method, UriInterface $uri, Headers $headers, string $version = '1.1', Environment $environment = null
+        string $method, UriInterface $uri, Headers $headers, string $version = '1.1', Environment|null $environment = null
     )
     {
         parent::__construct($method, $uri, $headers, null, $version);

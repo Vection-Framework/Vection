@@ -1,15 +1,9 @@
 [![release](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases&style=for-the-badge)](https://img.shields.io/github/v/release/Vection-Framework/Vection?include_prereleases)
-[![QA](https://img.shields.io/github/workflow/status/Vection-Framework/Vection/QA?label=QA&style=for-the-badge)](https://github.com/Vection-Framework/Vection/actions)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%206-blueviolet.svg?style=for-the-badge)](https://phpstan.org)
-
-[![Vection logo](https://vection.appsdock.org/vection-framework.png)](https://vection.appsdock.org)
 
 # Vection - PHP Component Library and Framework
 
 Vection is a future-proof PHP component library and framework that focuses on flexibility, developer friendly code and lightweight to rich enterprise components. Vection can be used to realize small to large enterprise applications.
-
-> :warning: Vection is currently in development stage, so atm only pre-releases are available. Breaking changes may be made until a
-stable release!
 
 ## What does Vection provide?
 

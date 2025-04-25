@@ -31,7 +31,7 @@ class Timezone extends Validator
      * @param int|null    $group
      * @param string|null $countryCode
      */
-    public function __construct(int $group = null, string $countryCode = null)
+    public function __construct(int|null $group = null, string|null $countryCode = null)
     {
         $this->group = $group ?? DateTimeZone::ALL;
         $this->countryCode = $countryCode;

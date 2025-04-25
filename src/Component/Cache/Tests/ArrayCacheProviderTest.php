@@ -60,7 +60,7 @@ class ArrayCacheProviderTest extends TestCase
 
         $this->assertNotNull($value);
         $this->assertTrue(is_string($value), 'Unexpected type '.gettype($value));
-        $this->assertEquals($value,'vection');
+        $this->assertEquals('vection', $value);
     }
 
     /**
@@ -75,7 +75,7 @@ class ArrayCacheProviderTest extends TestCase
 
         $this->assertNotNull($value);
         $this->assertTrue(is_float($value), 'Unexpected type '.gettype($value));
-        $this->assertEquals($value,1.5);
+        $this->assertEquals(1.5, $value);
     }
 
     /**
@@ -106,7 +106,7 @@ class ArrayCacheProviderTest extends TestCase
 
         $this->assertNotNull($value);
         $this->assertTrue(is_int($value), 'Unexpected type '.gettype($value));
-        $this->assertEquals($value,5);
+        $this->assertEquals(5, $value);
     }
 
     /**
@@ -163,6 +163,6 @@ class ArrayCacheProviderTest extends TestCase
         $value = $cache->get('testKey');
 
         $this->assertNotNull($value);
-        $this->assertEquals($value, 'vection');
+        $this->assertEquals('vection', $value);
     }
 }
