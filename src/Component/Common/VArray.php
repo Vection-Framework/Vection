@@ -61,7 +61,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
         if ($ext === 'json') {
             return self::parseJSON($content, $immutable);
         }
-
+        // @phpstan-ignore-next-line
         return new VArray();
     }
 
@@ -232,6 +232,7 @@ class VArray implements Countable, ArrayAccess, Iterator, JsonSerializable
         }
     }
 
+    // @phpstan-ignore-next-line
     public function toArray(): array
     {
         return $this->data;

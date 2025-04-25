@@ -28,7 +28,10 @@ use Vection\Contracts\Validator\ValidatorInterface;
 class ValidatorFactory
 {
     /**
-     * @throws ReflectionException
+     * @param string $name
+     * @param mixed[]  $constraints
+     *
+     * @return ValidatorInterface
      */
     public function create(string $name, array $constraints = []): ValidatorInterface
     {

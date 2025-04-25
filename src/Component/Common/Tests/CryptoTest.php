@@ -532,7 +532,7 @@ data;
     public function provideValidCreatePasswordHashValues(): array
     {
         return [
-            'BCRYPT' => ['$2y$10$', 'SecretPassword123', PASSWORD_BCRYPT, []],
+            'BCRYPT' => ['$2y$12$', 'SecretPassword123', PASSWORD_BCRYPT, []],
         ];
     }
 

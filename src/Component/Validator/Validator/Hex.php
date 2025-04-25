@@ -27,7 +27,7 @@ class Hex extends Validator
      */
     protected function onValidate($value): bool
     {
-        return ctype_xdigit($value);
+        return is_string($value) && ctype_xdigit($value);
     }
 
     /**
